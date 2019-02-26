@@ -11,7 +11,7 @@ class YcWeight(models.Model):
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號")
     # 要改成自動編號
-    date = fields.Date("過磅日期")
+    date = fields.Date("過磅日期") 
     weightime = fields.Char("過磅時間")
     person_id = fields.Many2one("yc.hr", string="過磅員")
     car_no = fields.Char("車次序號")
