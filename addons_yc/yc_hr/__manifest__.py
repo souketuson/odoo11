@@ -2,7 +2,7 @@
     'name': "yc_hr",
 
     'summary': """
-        軟體的文字說明a
+        軟體的文字說明a132143
     """,
 
     'description': """
