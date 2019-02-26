@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- view weight tree -->
+        <record model="ir.ui.view" id="weight_tree">
+            <field name="name">weight.tree</field>
+            <field name="model">yc.weight</field>
+            <field name="arch" type="xml">
+                <tree string="Weight Tree">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="time"/>
+                    <field name="driver_id"/>
+                    <field name="person_id"/>
+                    <field name="car_no"/>
+                    <field name="in_out"/>
+                    <field name="factory"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- view weight form-->
+        <record model="ir.ui.view" id="weight_fom">
+            <field name="name">weight.form</field>
+            <field name="model">yc.weight</field>
+            <field name="arch" type="xml">
+                <form string="Weight form">
+                    <sheet>
+                        <group string="過磅單" colspan="4" col="4">
+                            <field name="name"/>
+                            <field name="person_id"/>
+
+                            <field name="driver_id"/>
+                            <field name="date"/>
+                            <field name="time"/>
+
+                            <field name="car_no"/>
+                            <field name="factory"/>
+                            <field name="in_out"/>
+                            <!--</group>-->
+                            <!--<group string="基本資料" col="4" >-->
+                            <field name="purchase_times"/>
+                            <field name="plate_no"/>
+                            <field name="ship_times"/>
+                            <field name="total_weight"/>
+                            <field name="curb_weight"/>
+                            <field name="ept_buc_weight"/>
+                            <field name="net_weight"/>
+                            <field name="refine_weight"/>
+                            <field name="carburize_weight"/>
+                            <field name="other1"/>
+                            <field name="other2"/>
+                        </group>
+                        <!-- One2Many -->
+                        <notebook>
+                            <page string="客戶明細">
+
+                                <field name="customer_detail_ids">
+                                    <tree string="Customer Details">
+                                        <field name="customer_id"/>
+                                        <field name="processing_id"/>
+                                        <field name="note"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="customer_id"/>
+                                            <field name="processing_id"/>
+                                            <field name="note"/>
+                                        </group>
+                                    </form>
+                                </field>
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!--&lt;!&ndash;weight action & menuitem level&ndash;&gt;-->
+    <!--&lt;!&ndash;parent level&ndash;&gt;-->
+    <!--<menuitem id="main_produce_menu" name="生產"/>-->
+    <!--<menuitem id="produce_menu" name="生產" parent="main_produce_menu"/>-->
+    <!--<menuitem id="purchase_menu" name="進貨作業" parent="produce_menu" sequence="10"/>-->
+
+    <!--&lt;!&ndash;son level of weight&ndash;&gt;-->
+    <!--<menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="10"-->
+    <!--action="weight_list_action" />-->
+    <!--&lt;!&ndash;groups="group_op_back_office,group_op_back_office_admin" 作用未知 &ndash;&gt;-->
+
+    <record model="ir.actions.act_window" id="weight_list_action">
+        <field name="name">過磅單作業</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">yc.weight</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <record model="ir.actions.act_window.view" id="weight_list_action_form">
+        <field name="act_window_id" ref="weight_list_action"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="weight_fom"/>
+    </record>
+
+
+    <record model="ir.actions.act_window.view" id="weight_list_action_tree">
+        <field name="act_window_id" ref="weight_list_action"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="weight_tree"/>
+    </record>
+
+
+</data>
+        </odoo>

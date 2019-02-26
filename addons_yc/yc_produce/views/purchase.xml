@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- view of purchase tree -->
+        <record model="ir.ui.view" id="purchase_tree">
+            <field name="name">purchase.tree</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- view of purchase form-->
+        <record model="ir.ui.view" id="purchase_form">
+            <field name="name">purchase.form</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <form string="Purchase form">
+                    <sheet>
+                    <field name="name"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!--&lt;!&ndash; purchase action & menuitem level&ndash;&gt;-->
+            <!--&lt;!&ndash;parent level&ndash;&gt;-->
+        <!--<menuitem id="main_produce_menu" name="生產"/>-->
+        <!--<menuitem id="produce_menu" name="生產" parent="main_produce_menu"/>-->
+        <!--<menuitem id="purchase_menu" name="進貨作業" parent="produce_menu" sequence="10"/>-->
+
+            <!--&lt;!&ndash;son level of purchase&ndash;&gt;-->
+        <!--<menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="20"-->
+                  <!--action="purchase_list_action" />-->
+
+        <record model="ir.actions.act_window" id="purchase_list_action">
+            <field name="name">進貨單作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="purchase_list_action_form">
+            <field name="act_window_id" ref="purchase_list_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_form"/>
+        </record>
+
+
+        <record model="ir.actions.act_window.view" id="purchase_list_action_tree">
+            <field name="act_window_id" ref="purchase_list_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_tree"/>
+        </record>
+
+
+    </data>
+</odoo>

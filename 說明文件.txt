@@ -1,0 +1,20 @@
+﻿[options]
+; This is the password that allows database operations:
+; admin_passwd = admin
+db_host = localhost
+db_port = 5432
+db_user = odoo
+db_password = odoo
+xmlrpc_port = 8069
+pg_path = C:\Program Files\PostgreSQL\9.6\bin
+addons_path = addons,odoo\addons,,..\addons_yc,..\addons
+
+
+odoo directory structure:	
+odoo ┬─ \.git        -- git control file
+     ├─ \addons      -- standard or 3rd party app
+     ├─ \addons_yc   -- project
+     ├─ \odoo -11.0  -- odoo origin setting don't edit
+     ├─ \venv	     -- vertual enviroment setting
+     ├─ .gitignore   -- git ignore file or directory
+     └─ description -- configuration
