@@ -10,7 +10,7 @@
                 <tree string="Weight Tree">
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="time"/>
+                    <field name="weightime"/>
                     <field name="driver_id"/>
                     <field name="person_id"/>
                     <field name="car_no"/>
@@ -34,7 +34,7 @@
 
                             <field name="driver_id"/>
                             <field name="date"/>
-                            <field name="time"/>
+                            <field name="weightime"/>
 
                             <field name="car_no"/>
                             <field name="factory"/>
