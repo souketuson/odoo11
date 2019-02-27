@@ -56,7 +56,7 @@ class YcHR(models.Model):
     post_no = fields.Char("郵局局號")
     post_ac = fields.Char("郵局帳號")
     ac_name = fields.Char("戶名")
-    seniority = fields.Char(string="年資", compute="_get_year")
+    seniority = fields.Char(string="年資", compute="_get_year", store= True)
 
     # 特休日數
     # annual_leave_total

@@ -2,7 +2,7 @@
 
 
 from odoo import models, fields, api
-from datetime import datetime
+from datetime import datetime as dt
 
 
 class YcWeight(models.Model):
@@ -11,48 +11,78 @@ class YcWeight(models.Model):
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號")
     # 要改成自動編號
-    date = fields.Date("過磅日期") 
+    @api.model
+    def _generate(self):
+        """
+        SN190227
+        :return:
+        """
+        _prefix = 'SN' + dt.today().strftime("%y%m%d")
+        # obj = self.env['yc.weight'].search([('name', '=like', _prefix + "%")], limit=1, order='name DESC')
+        _prefix += '001'
+
+        self.name = _prefix
+
+    day = fields.Date("過磅日期", default=dt.today())
     weightime = fields.Char("過磅時間")
     person_id = fields.Many2one("yc.hr", string="過磅員")
     car_no = fields.Char("車次序號")
     in_out = fields.Selection([('i', '進貨'), ('o', '出貨')], '進出貨')
     factory = fields.Many2one("yc.factory", string="所屬工廠")
 
-    purchase_times = fields.Integer("進貨次數", compute="_count")
-    ship_times = fields.Integer("出貨次數", compute="_count")
+    purchase_times = fields.Integer("進貨次數", compute="_count", store= True)
+    ship_times = fields.Integer("出貨次數", compute="_count", store= True)
 
     # 進出貨次數要改成自動記錄
 
-    @api.multi
-    @api.onchange("weight_ids")
     def _count(self):
         """條件
         如 車號 日期 類型 為空 pass
         同車號&同天&同類型 以及 分類1 進貨次數+1
         同車號&同天&同類型 以及 分類2 出貨次數+1
           """
-     #   tday = datetime.strptime(self.date, "%Y-%m-%d")
-     #   self.purchase_times = len(self.env["yc.weight"].search(['date', '=', tday]))
+        check_day = dt.strptime(self.day, "%Y-%m-%d")
+        io = self.in_out
+        pn = self.plate_no
+        d = self.day
+        env = self.env["yc.weight"]
 
-        # self.ship_times = len(self.env["yc.weight"].search(['date', '=', tday]))
+        # 1. E01 io = i, pn=123, d=today i=1
+        # 2. E02 io = o, pn=123, d=today i=1 o=1
 
-    weight_ids = fields.One2many("yc.weight", "plate_no")
+        if io == 'i':
+            if pn and d:
+                self.purchase_times = len(
+                    env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)])) +1
+                self.ship_times = len(env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)]))
+            else:
+                self.purchase_times = 0
+        elif io == 'o':
+            if pn and d:
+                self.purchase_times = len(
+                    env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)]))
+                self.ship_times = len(env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)])) +1
+            else:
+                self.ship_times = 0
+        else:
+            self.ship_times = 0
+            self.purchase_times = 0
 
-    plate_no = fields.Char("車號")
-    total_weight = fields.Char("總重 (KG)")
-    curb_weight = fields.Char("空車重 (KG)")
-    ept_buc_weight = fields.Char("空桶重 (KG)")
-    net_weight = fields.Char("淨重 (KG)")
+    plate_no = fields.Char("車號", required= True)
+    total_weight = fields.Integer("總重 (KG)")
+    curb_weight = fields.Integer("空車重 (KG)")
+    ept_buc_weight = fields.Integer("空桶重 (KG)")
+    net_weight = fields.Integer("淨重 (KG)", compute="_NetWeight")
 
     # 改成自動計算
-    def _netweight(self):
-        if self.total_weight or self.curb_weight or self.ept_buc_weight == 0:
-            pass
-        else:
-            self.net_weight = self.total_weight - self.curb_weight - self.ept_buc_weight
 
-    refine_weight = fields.Char("調質重量 (KG)")
-    carburize_weight = fields.Char("滲碳單價")
+    def _NetWeight(self):
+        self.net_weight = self.total_weight - self.curb_weight - self.ept_buc_weight
+
+
+
+    refine_weight = fields.Integer("調質重量 (KG)")
+    carburize_weight = fields.Float("滲碳單價")
     other1 = fields.Char("其他1")
     other2 = fields.Char("其他2")
 
