@@ -10,6 +10,7 @@ class YcWeight(models.Model):
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號")
+
     # 要改成自動編號
     @api.model
     def _generate(self):
@@ -30,45 +31,37 @@ class YcWeight(models.Model):
     in_out = fields.Selection([('i', '進貨'), ('o', '出貨')], '進出貨')
     factory = fields.Many2one("yc.factory", string="所屬工廠")
 
-    purchase_times = fields.Integer("進貨次數", compute="_count", store= True)
-    ship_times = fields.Integer("出貨次數", compute="_count", store= True)
+    purchase_times = fields.Integer("進貨次數", compute="_count", store=True)
+    ship_times = fields.Integer("出貨次數", compute="_count", store=True)
 
     # 進出貨次數要改成自動記錄
-
+    @api.depends('in_out')
     def _count(self):
         """條件
         如 車號 日期 類型 為空 pass
-        同車號&同天&同類型 以及 分類1 進貨次數+1
-        同車號&同天&同類型 以及 分類2 出貨次數+1
+        同車號&同天&同類型 以及 進貨 進貨次數+1
+        同車號&同天&同類型 以及 出貨 出貨次數+1
           """
-        check_day = dt.strptime(self.day, "%Y-%m-%d")
-        io = self.in_out
-        pn = self.plate_no
-        d = self.day
-        env = self.env["yc.weight"]
+        for rec in self:
+            check_day = dt.strptime(rec.day, "%Y-%m-%d")
+            pn = rec.plate_no
+            d = rec.day
+            i = rec.env["yc.weight"].search([('in_out', '=', 'i'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            o = rec.env["yc.weight"].search([('in_out', '=', 'o'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            if rec.in_out:
+                if pn and d:
+                    rec.purchase_times = len(i)
+                    rec.ship_times = len(o)
+                else:
+                    if rec.in_out == 'i':
+                        rec.purchase_times = 0
+                    elif rec.in_out == 'o':
+                        rec.ship_times = 0
+                    else:
+                        rec.ship_times = 0
+                        rec.purchase_times = 0
 
-        # 1. E01 io = i, pn=123, d=today i=1
-        # 2. E02 io = o, pn=123, d=today i=1 o=1
-
-        if io == 'i':
-            if pn and d:
-                self.purchase_times = len(
-                    env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)])) +1
-                self.ship_times = len(env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)]))
-            else:
-                self.purchase_times = 0
-        elif io == 'o':
-            if pn and d:
-                self.purchase_times = len(
-                    env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)]))
-                self.ship_times = len(env.search([('in_out', '=', io), ('day', '=', check_day), ('plate_no', '=', pn)])) +1
-            else:
-                self.ship_times = 0
-        else:
-            self.ship_times = 0
-            self.purchase_times = 0
-
-    plate_no = fields.Char("車號", required= True)
+    plate_no = fields.Char("車號", required=True)
     total_weight = fields.Integer("總重 (KG)")
     curb_weight = fields.Integer("空車重 (KG)")
     ept_buc_weight = fields.Integer("空桶重 (KG)")
@@ -78,8 +71,6 @@ class YcWeight(models.Model):
 
     def _NetWeight(self):
         self.net_weight = self.total_weight - self.curb_weight - self.ept_buc_weight
-
-
 
     refine_weight = fields.Integer("調質重量 (KG)")
     carburize_weight = fields.Float("滲碳單價")
