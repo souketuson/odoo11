@@ -20,7 +20,7 @@ class YcWeight(models.Model):
         """
         _prefix = 'SN' + dt.today().strftime("%y%m%d")
         # obj = self.env['yc.weight'].search([('name', '=like', _prefix + "%")], limit=1, order='name DESC')
-        _prefix += '001'
+        _prefix += '001' 
 
         self.name = _prefix
 
