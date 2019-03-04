@@ -9,25 +9,30 @@ class YcWeight(models.Model):
     _name = "yc.weight"
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
-    name = fields.Char("過磅單號")
+    name = fields.Char("過磅單號", default= lambda self: self.env["ir.sequence"].next_by_code("code.sequence"))
 
     # 要改成自動編號
     @api.model
     def _generate(self):
         """
-        SN190227
+        SN + 190227 + 001...999\
+        2    +  6          + 3
         :return:
         """
-        _prefix = 'SN' + dt.today().strftime("%y%m%d")
-        # obj = self.env['yc.weight'].search([('name', '=like', _prefix + "%")], limit=1, order='name DESC')
-        _prefix += '001' 
+        _serial = 'SN' + dt.today().strftime("%y%m%d")
+        obj = self.env['yc.weight'].search([('name', '=like', _serial + "%")], limit=1, order='name DESC')
+        # 如果有系列碼
+        if obj:
+            pass
+        elif not obj:
+            _serial += '001'
 
-        self.name = _prefix
+        self.name = _serial
 
     day = fields.Date("過磅日期", default=dt.today())
     weightime = fields.Char("過磅時間")
     person_id = fields.Many2one("yc.hr", string="過磅員")
-    car_no = fields.Char("車次序號")
+    car_no = fields.Char("車次序號", default= lambda self: self.env["ir.sequence"].next_by_code("ordinal.code"))
     in_out = fields.Selection([('i', '進貨'), ('o', '出貨')], '進出貨')
     factory = fields.Many2one("yc.factory", string="所屬工廠")
 
@@ -37,29 +42,26 @@ class YcWeight(models.Model):
     # 進出貨次數要改成自動記錄
     @api.depends('in_out')
     def _count(self):
-        """條件
-        如 車號 日期 類型 為空 pass
-        同車號&同天&同類型 以及 進貨 進貨次數+1
-        同車號&同天&同類型 以及 出貨 出貨次數+1
+        """
           """
         for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
             pn = rec.plate_no
-            d = rec.day
-            i = rec.env["yc.weight"].search([('in_out', '=', 'i'), ('day', '=', check_day), ('plate_no', '=', pn)])
-            o = rec.env["yc.weight"].search([('in_out', '=', 'o'), ('day', '=', check_day), ('plate_no', '=', pn)])
-            if rec.in_out:
-                if pn and d:
-                    rec.purchase_times = len(i)
-                    rec.ship_times = len(o)
-                else:
-                    if rec.in_out == 'i':
-                        rec.purchase_times = 0
-                    elif rec.in_out == 'o':
-                        rec.ship_times = 0
-                    else:
-                        rec.ship_times = 0
-                        rec.purchase_times = 0
+            check_in = rec.env["yc.weight"].search(
+                [('in_out', '=', 'i'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            check_out = rec.env["yc.weight"].search(
+                [('in_out', '=', 'o'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            if rec.in_out: # 進出貨有值
+                if pn and rec.day: # 車牌&日期 有值
+                    rec.purchase_times = len(check_in)
+                    rec.ship_times = len(check_out)
+                else: # 進出貨 空值
+                    pass
+
+    @api.constrains("in_out")
+    def _verify(self):
+        if not self.in_out:
+            raise Warning("進出貨分類空值")
 
     plate_no = fields.Char("車號", required=True)
     total_weight = fields.Integer("總重 (KG)")
