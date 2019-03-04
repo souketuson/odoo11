@@ -56,18 +56,11 @@
                             <page string="客戶明細">
 
                                 <field name="customer_detail_ids">
-                                    <tree string="Customer Details">
+                                    <tree string="Customer Details" editable="bottom">
                                         <field name="customer_id"/>
                                         <field name="processing_id"/>
                                         <field name="note"/>
                                     </tree>
-                                    <form>
-                                        <group>
-                                            <field name="customer_id"/>
-                                            <field name="processing_id"/>
-                                            <field name="note"/>
-                                        </group>
-                                    </form>
                                 </field>
 
                             </page>
@@ -89,6 +82,7 @@
         <record id="auto_number_weight_ordinal " model="ir.sequence">
             <field name="name">Ordinal Code</field>
             <field name="code">ordinal.code</field>
+            <field name="implementation">no_gap</field>
             <field name="prefix"></field>
             <field name="padding">3</field>
         </record>

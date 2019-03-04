@@ -7,21 +7,20 @@ from datetime import datetime as dt
 
 class YcHR(models.Model):
     _name = 'yc.hr'
-
-    name = fields.Char(string="員工姓名", required=True)
     code = fields.Char(string="員工代號")
-
+    password = fields.Char(string="密碼")
     factory_id = fields.Many2one("yc.factory", string="廠別")
-    employee_type = fields.Char(string="僱用關係")
     dep_id = fields.Many2one('yc.department', string="所屬部門")
-    idcard = fields.Char(string="身分證號")
-    birth_date = fields.Date('出生日期')
-    gender = fields.Selection(
-        [('m', '男性'), ('f', '女性'),
-         ('o', '其他')], '性別')
+    employee_type = fields.Char(string="僱用關係")
     job_title1 = fields.Char("職稱代碼1")
     job_title2 = fields.Char("職稱代碼2")
     job_title3 = fields.Char("職稱代碼3")
+    name = fields.Char(string="員工姓名", required=True)
+    gender = fields.Selection(
+        [('m', '男性'), ('f', '女性'),
+         ('o', '其他')], '性別')
+    idcard = fields.Char(string="身分證號")
+    birth_date = fields.Date('出生日期')
     birthplace = fields.Char("籍貫")
     marrige = fields.Selection([("m", "已婚"), ("s", "未婚"), ("o", "其他")], "婚姻")
     children = fields.Char("子女數")
@@ -37,10 +36,10 @@ class YcHR(models.Model):
     duty_date = fields.Date("到職日")
     leave_date = fields.Date("離職日")
     note = fields.Text("備註")
-
-    # 最後登入時間
-    # last_login_time
+    lastlogtime = fields.Char("最後登入時間")
     log_state = fields.Selection([("y", "是"), ("n", "否")], "允許登入")
+
+
 
     pay = fields.Char("基本薪資")
     raise_no = fields.Char("扶養人數")

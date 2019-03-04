@@ -22,8 +22,7 @@ class YcWeight(models.Model):
         # search db of today's last one data
         obj = self.env['yc.weight'].search([('name', '=like', _serial + "%")], limit=1, order='name DESC')
         if obj:  # 如果有系列碼
-            sub = obj[0].name[8:]
-            _next = int(sub) + 1
+            _next = int(obj[0].name[8:]) + 1
             _serial += '%03d' % _next
         elif not obj:
             _serial += '001'
