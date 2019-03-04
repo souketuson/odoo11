@@ -19,30 +19,6 @@
             </field>
         </record>
 
-        <record id="auto_number_weight" model="ir.sequence">
-            <field name="name">Weight list code</field>
-            <field name="code">code.sequence</field>
-            <field name="prefix">SN%(y)s%(month)s%(day)s</field>
-            <field name="padding">3</field>
-        </record>
-
-        <record id="auto_number_weight_ordinal " model="ir.sequence">
-            <field name="name">Ordinal Code</field>
-            <field name="code">ordinal.code</field>
-            <field name="prefix"></field>
-            <field name="padding">3</field>
-        </record>
-        <!--<record model="ir.ui.view" id="weight_tree">-->
-            <!--<field name="name">weight.tree></field>-->
-            <!--<field name="model">yc.weight</field>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<tree string="Weight Tree">-->
-                    <!--<field name="name"/>-->
-                <!--</tree>-->
-            <!--</field>-->
-        <!--</record>-->
-
-
         <!-- view weight form-->
         <record model="ir.ui.view" id="weight_fom">
             <field name="name">weight.form</field>
@@ -51,7 +27,7 @@
                 <form string="Weight form">
                     <sheet>
                         <group string="過磅單" colspan="4" col="4">
-                            <field name="name"/>
+                            <field name="name" readonly="1"/>
                             <field name="person_id"/>
 
                             <field name="driver_id"/>
@@ -102,6 +78,20 @@
             </field>
         </record>
 
+        <!-- auto generate number-->
+        <record id="auto_number_weight" model="ir.sequence">
+            <field name="name">Weight List Code</field>
+            <field name="code">WeightList.sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">WL%(y)s%(month)s%(day)s</field>
+            <field name="padding">3</field>
+        </record>
+        <record id="auto_number_weight_ordinal " model="ir.sequence">
+            <field name="name">Ordinal Code</field>
+            <field name="code">ordinal.code</field>
+            <field name="prefix"></field>
+            <field name="padding">3</field>
+        </record>
 
         <!--&lt;!&ndash;weight action & menuitem level&ndash;&gt;-->
         <!--&lt;!&ndash;parent level&ndash;&gt;-->
