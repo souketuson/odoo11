@@ -3,6 +3,7 @@
 
 from odoo import models, fields, api
 from datetime import datetime as dt
+from time import gmtime, strftime
 
 
 class YcWeight(models.Model):
@@ -30,7 +31,9 @@ class YcWeight(models.Model):
         self.name = _serial
 
     day = fields.Date("過磅日期", default=dt.today())
-    weightime = fields.Char("過磅時間")
+
+    weightime = fields.Datetime("過磅時間", default=lambda self: dt.strptime(strftime("%Y-%m-%d %H:%M:%S", gmtime()),
+                                                                         "%Y-%m-%d %H:%M:%S"))
     person_id = fields.Many2one("yc.hr", string="過磅員")
     car_no = fields.Char("車次序號", default=lambda self: self.env["ir.sequence"].next_by_code("ordinal.code"))
     in_out = fields.Selection([('i', '進貨'), ('o', '出貨')], '進出貨')

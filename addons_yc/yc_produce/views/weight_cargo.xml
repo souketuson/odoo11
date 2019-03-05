@@ -72,6 +72,8 @@
         </record>
 
         <!-- auto generate number-->
+        <!-- problem 1. will two man fetch same serial number at once?
+                     2. if cancel form serial number will hop sequence-->
         <record id="auto_number_weight" model="ir.sequence">
             <field name="name">Weight List Code</field>
             <field name="code">WeightList.sequence</field>
@@ -83,7 +85,7 @@
             <field name="name">Ordinal Code</field>
             <field name="code">ordinal.code</field>
             <field name="implementation">no_gap</field>
-            <field name="prefix"></field>
+            <!--<field name="prefix"></field>-->
             <field name="padding">3</field>
         </record>
 
