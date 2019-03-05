@@ -12,9 +12,9 @@
                     <field name="weightime"/>
                     <field name="driver_id"/>
                     <field name="person_id"/>
-                    <field name="car_no"/>
+                    <field name="carno"/>
                     <field name="in_out"/>
-                    <field name="factory"/>
+                    <field name="factory_id"/>
                 </tree>
             </field>
         </record>
@@ -29,31 +29,34 @@
                         <group string="過磅單" colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="person_id"/>
-
                             <field name="driver_id"/>
+                            <field name="weighbridge"/>
                             <field name="day"/>
                             <field name="weightime"/>
-
-                            <field name="car_no"/>
-                            <field name="factory"/>
+                            <field name="carno"/>
                             <field name="in_out"/>
-                            <!--</group>-->
-                            <!--<group string="基本資料" col="4" >-->
-                            <field name="purchase_times"/>
+                            <field name="factory_id"/>
                             <field name="plate_no"/>
+                            <field name="purchase_times"/>
+
                             <field name="ship_times"/>
-                            <field name="total_weight"/>
-                            <field name="curb_weight"/>
-                            <field name="ept_buc_weight"/>
-                            <field name="net_weight"/>
-                            <field name="refine_weight"/>
-                            <field name="carburize_weight"/>
-                            <field name="other1"/>
-                            <field name="other2"/>
+
                         </group>
                         <!-- One2Many -->
                         <notebook>
-                            <page string="客戶明細">
+                            <page string="重量" >
+                                <group name="weight form" col="4" colspan="4">
+                                    <field name="total"/>
+                                    <field name="curbweight"/>
+                                    <field name="emptybucket"/>
+                                    <field name="net"/>
+                                    <field name="refine"/>
+                                    <field name="carbur"/>
+                                    <field name="other"/>
+                                    <field name="other1"/>
+                                </group>
+                            </page>
+                            <page string="明細">
 
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
@@ -72,8 +75,8 @@
         </record>
 
         <!-- auto generate number-->
-        <!-- problem 1. will two man fetch same serial number at once?
-                     2. if cancel form serial number will hop sequence-->
+        <!-- 使用ir.sequence 模組，可能問題 1. 兩人同時登入使用，產生單號可能會相同
+                                            2. 取消創建會跳號 implement 設no gap一樣-->
         <record id="auto_number_weight" model="ir.sequence">
             <field name="name">Weight List Code</field>
             <field name="code">WeightList.sequence</field>
@@ -88,17 +91,6 @@
             <!--<field name="prefix"></field>-->
             <field name="padding">3</field>
         </record>
-
-        <!--&lt;!&ndash;weight action & menuitem level&ndash;&gt;-->
-        <!--&lt;!&ndash;parent level&ndash;&gt;-->
-        <!--<menuitem id="main_produce_menu" name="生產"/>-->
-        <!--<menuitem id="produce_menu" name="生產" parent="main_produce_menu"/>-->
-        <!--<menuitem id="purchase_menu" name="進貨作業" parent="produce_menu" sequence="10"/>-->
-
-        <!--&lt;!&ndash;son level of weight&ndash;&gt;-->
-        <!--<menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="10"-->
-        <!--action="weight_list_action" />-->
-        <!--&lt;!&ndash;groups="group_op_back_office,group_op_back_office_admin" 作用未知 &ndash;&gt;-->
 
         <record model="ir.actions.act_window" id="weight_list_action">
             <field name="name">過磅單作業</field>

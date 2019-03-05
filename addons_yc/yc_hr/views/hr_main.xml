@@ -106,12 +106,8 @@
         <record model="ir.actions.act_window" id="hr_main_list_action">
             <field name="name">員工主檔</field>
             <field name="res_model">yc.hr</field>
-
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">Create the first course</p>
-            </field>
         </record>
 
         <menuitem id="main_hr_menu" name="人事薪資主檔"/>
