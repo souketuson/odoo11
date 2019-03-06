@@ -17,12 +17,12 @@ class YcHR(models.Model):
     job_title3 = fields.Char("職稱代碼3")
     name = fields.Char(string="員工姓名", required=True)
     gender = fields.Selection(
-        [('m', '男性'), ('f', '女性'),
-         ('o', '其他')], '性別')
+        [('M', '男性'), ('F', '女性'),
+         ('O', '其他')], '性別')
     idcard = fields.Char(string="身分證號")
     birth_date = fields.Date('出生日期')
     birthplace = fields.Char("籍貫")
-    marrige = fields.Selection([("m", "已婚"), ("s", "未婚"), ("o", "其他")], "婚姻")
+    marrige = fields.Selection([("已婚", "已婚"), ("未婚", "未婚"), ("其他", "其他")], "婚姻")
     children = fields.Char("子女數")
     phone1 = fields.Char("電話")
     phone2 = fields.Char("手機")
@@ -37,7 +37,7 @@ class YcHR(models.Model):
     leave_date = fields.Date("離職日")
     note = fields.Text("備註")
     lastlogtime = fields.Char("最後登入時間")
-    log_state = fields.Selection([("y", "是"), ("n", "否")], "允許登入")
+    log_state = fields.Selection([("Y", "是"), ("N", "否")], "允許登入")
 
 
 
@@ -66,12 +66,14 @@ class YcHR(models.Model):
 
     @api.depends("duty_date", "leave_date")
     def _get_year(self):
-        """
-        用@api.depemds decorator 隨時更新數值
+
+        '''用@api.depemds decorator 隨時更新數值
         判斷離職或非離職，用datetime模組
         strptime 和 strftime方法格式化日期
-        :return: 年資
-        """
+
+        問題：如果非透過網頁創建資料 而是直接在postgre匯入資料 資料庫不會自動計算年資
+        一定要經過邏輯層
+        '''
         if self.duty_date == False:
             pass
         else:
@@ -79,7 +81,7 @@ class YcHR(models.Model):
             now = dt.now().strftime("%Y-%m-%d")
             form_now = dt.strptime(now, "%Y-%m-%d")
 
-            if self.leave_date:
+            if self.leave_date and self.leave_date !='':
                 delta = dt.strptime(self.leave_date, "%Y-%m-%d") - duty_date
             else:
                 delta = form_now - duty_date

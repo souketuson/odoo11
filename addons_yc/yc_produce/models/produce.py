@@ -9,13 +9,15 @@ class YcWeight(models.Model):
     _name = "yc.weight"
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
-    name = fields.Char("過磅單號",  default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
+    name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
 
     # 要改成自動編號 & 上鎖
-    @api.model
+    @api.multi
+    @api.onchange("name")
     def _generate(self):
         '''WL + 190227 + 001...999
                     2    +  6          + 3
+
                     '''
         # prefix WL + yymmdd
         _serial = 'WL' + dt.today().strftime("%y%m%d")
@@ -34,7 +36,13 @@ class YcWeight(models.Model):
     weightime = fields.Datetime("過磅時間", default=lambda self:  dt.strptime(dt.now().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S"))
     person_id = fields.Many2one("yc.hr", string="過磅員")
     weighbridge = fields.Char("地磅序號")
-    carno = fields.Char("車次序號", default=lambda self: self.env["ir.sequence"].next_by_code("ordinal.code"))
+    carno = fields.Char("車次序號")
+
+    # carno = S1+S2+S3+S4+S5
+    def _generate_carno(self):
+        if dt.now().strftime("%Y-%m-%d"):
+            pass
+
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
 
@@ -66,7 +74,16 @@ class YcWeight(models.Model):
         if not self.in_out:
             raise Warning("進出貨分類空值")
 
-    plate_no = fields.Char("車號", required=True)
+    plate_no = fields.Char("車號", compute="_auto_fetch_plateno", store= True)
+    # 選完司機名稱 車牌自動帶入
+    @api.depends("driver_id")
+    def _auto_fetch_plateno(self):
+        if self.driver_id:
+            self.plate_no = self.env["yc.driver"].search([('name', '=', self.driver_id.name)]).plate_no
+        else:
+            pass
+
+
     total = fields.Integer("總重 (KG)")
     curbweight = fields.Integer("空車重 (KG)")
     other = fields.Integer("其他重量 (KG)")
