@@ -54,7 +54,7 @@ class YcWeight(models.Model):
     @api.multi
     @api.depends('in_out')
     def _count(self):
-        for rec in self:
+        for rec in self: 
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
             pn = rec.plate_no
             check_in = rec.env["yc.weight"].search(
