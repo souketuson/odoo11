@@ -37,12 +37,59 @@ class YcWeight(models.Model):
                                                                          "%Y-%m-%d %H:%M:%S"))
     person_id = fields.Many2one("yc.hr", string="過磅員")
     weighbridge = fields.Char("地磅序號")
-    carno = fields.Char("車次序號")
+    carno = fields.Char("車次序號", compute="_generate_carno", store=True)
 
     # carno = S1+S2+S3+S4+S5
+    @api.depends("driver_id")
     def _generate_carno(self):
-        if dt.now().strftime("%Y-%m-%d"):
-            pass
+        year = str(dt.now().year)
+        month = "%02d" % (dt.now().month)
+        day = "%02d" % (dt.now().day)
+        # S1
+        if year[3:] == "0":
+            S1 = "A"
+        elif year[3:] == "1":
+            S1 = "B"
+        elif year[3:] == "2":
+            S1 = "C"
+        elif year[3:] == "3":
+            S1 = "D"
+        else:
+            S1 = year[3:]
+
+        # S2
+        if month == "10":
+            S2 = "A"
+        elif month == "11":
+            S2 = "B"
+        elif month == "12":
+            S2 = "C"
+        else:
+            S2 = month[1:]
+
+        # S3
+        day_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+                    'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+                    'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
+        S3 = day_list[int(day) - 1]
+
+        # S4
+        for rec in self:
+            if rec.driver_id:
+                S4 = rec.env["yc.driver"].search([('name', '=', self.driver_id.name)])
+            else:
+                pass
+
+        # S5
+        for rec in self:
+            check_day = dt.strptime(rec.day, "%Y-%m-%d")
+            check = rec.env["yc.weight"].search(
+                [('driver_id', '=', rec.driver_id), ('day', '=', check_day)])
+            if check:
+                S5 = len(check)
+            else:
+                S5 = 1
+        self.carno = str(S1 + S2 + S3 + S4 + S5)
 
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
@@ -54,7 +101,7 @@ class YcWeight(models.Model):
     @api.multi
     @api.depends('in_out')
     def _count(self):
-        for rec in self: 
+        for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
             pn = rec.plate_no
             check_in = rec.env["yc.weight"].search(
@@ -86,7 +133,7 @@ class YcWeight(models.Model):
     def _auto_fetch_plateno(self):
         for rec in self:
             if rec.driver_id:
-                rec.plate_no = self.env["yc.driver"].search([('name', '=', self.driver_id.name)]).plate_no
+                self.plate_no = self.env["yc.driver"].search([('name', '=', self.driver_id.name)]).plate_no
             else:
                 pass
 
