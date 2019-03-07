@@ -28,8 +28,6 @@
                     <sheet>
                         <group string="過磅單" colspan="4" col="4">
                             <field name="name" readonly="1"/>
-
-
                             <field name="driver_id"/>
                             <field name="day"/>
                             <field name="weightime"/>
@@ -40,14 +38,12 @@
                             <field name="in_out"/>
                             <field name="plate_no"/>
                             <field name="purchase_times"/>
-
                             <field name="ship_times"/>
 
                         </group>
-                        <!-- One2Many -->
                         <notebook>
                             <page string="重量">
-                                <group name="weight form" col="4" colspan="4">
+                                <group name="car weight" col="4" colspan="4">
                                     <field name="total"/>
                                     <field name="curbweight"/>
                                     <field name="emptybucket"/>
@@ -56,6 +52,7 @@
                                     <field name="carbur"/>
                                     <field name="other"/>
                                     <field name="other1"/>
+                                    <field name="count" readonly="1"/>
                                 </group>
                             </page>
                             <page string="明細">

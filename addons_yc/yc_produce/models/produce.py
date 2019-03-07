@@ -22,7 +22,6 @@ class YcWeight(models.Model):
         # prefix WL + yymmdd
         _serial = 'WL' + dt.today().strftime("%y%m%d")
         # search today's last one data on db
-        _next = 0
         obj = self.env['yc.weight'].search([('name', '=like', _serial + "%")], limit=1, order='name DESC')
         if obj:  # 如果無/有系列碼
             _next = int(obj[0].name[8:]) + 1
@@ -39,9 +38,7 @@ class YcWeight(models.Model):
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號", compute="_generate_carno", store=True)
 
-
     # carno = S1+S2+S3+S4+S5
-    #
     @api.depends("driver_id")
     def _generate_carno(self):
         '''
@@ -103,66 +100,86 @@ class YcWeight(models.Model):
             pass
 
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
-    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-
-    purchase_times = fields.Integer("進貨次數", compute="_count", store=True)
-    ship_times = fields.Integer("出貨次數", compute="_count", store=True)
-
-    # 進出貨次數自動記錄
-    @api.multi
-    @api.depends('in_out')
-    def _count(self):
-        for rec in self:
-            check_day = dt.strptime(rec.day, "%Y-%m-%d")
-            pn = rec.plate_no
-            check_in = rec.env["yc.weight"].search(
-                [('in_out', '=', 'I'), ('day', '=', check_day), ('plate_no', '=', pn)])
-            check_out = rec.env["yc.weight"].search(
-                [('in_out', '=', 'O'), ('day', '=', check_day), ('plate_no', '=', pn)])
-            if rec.in_out:  # 進出貨有值
-                if pn and rec.day:  # 車牌&日期 有值
-                    if rec.in_out == 'I':
-                        self.ship_times = len(check_out)
-                        self.purchase_times = len(check_in) + 1
-                    elif rec.in_out == 'O':
-                        self.ship_times = len(check_out) + 1
-                        self.purchase_times = len(check_in)
-                else:  # 進出貨 空值
-                    pass
-            else:
-                pass
 
     @api.constrains("in_out")
     def _verify(self):
         if not self.in_out:
             raise Warning("進出貨分類空值")
 
-    plate_no = fields.Char("車號", compute="_auto_fetch_plateno", store=True)
+    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+
+    purchase_times = fields.Integer("進貨次數")
+    ship_times = fields.Integer("出貨次數")
+
+    # 進出貨次數自動記錄
+    @api.multi
+    @api.onchange('in_out')
+    def _count(self):
+        for rec in self:
+            check_day = dt.strptime(rec.day, "%Y-%m-%d")
+            pn = self.plate_no
+            check_in = self.env["yc.weight"].search(
+                [('in_out', '=', 'I'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            check_out = self.env["yc.weight"].search(
+                [('in_out', '=', 'O'), ('day', '=', check_day), ('plate_no', '=', pn)])
+
+            # 如果新建 + 1 如果修改 update
+            if rec.in_out:  # 進出貨有值
+                if pn and rec.day:  # 車牌&日期 有值
+                    self.ship_times = len(check_out)
+                    self.purchase_times = len(check_in)
+                    if rec.in_out == 'I':
+                        rec.ship_times = self.ship_times
+                        rec.purchase_times = self.purchase_times + 1
+                    elif rec.in_out == 'O':
+                        rec.ship_times = self.ship_times + 1
+                        rec.purchase_times = self.purchase_times
+
+    plate_no = fields.Char("車號")
 
     # 選完司機名稱 車牌自動帶入
-    @api.depends("driver_id")
+    @api.multi
+    @api.onchange("driver_id")
     def _auto_fetch_plateno(self):
         for rec in self:
-            if rec.driver_id:
-                self.plate_no = self.env["yc.driver"].search([('name', '=', self.driver_id.name)]).plate_no
+            if self.driver_id:
+                self.plate_no = self.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).plate_no
+                rec.plate_no = self.plate_no
             else:
                 pass
 
     total = fields.Integer("總重 (KG)")
     curbweight = fields.Integer("空車重 (KG)")
-    other = fields.Integer("其他重量 (KG)")
     emptybucket = fields.Integer("空桶重 (KG)")
-    net = fields.Integer("淨重 (KG)", compute="_NetWeight")
+    net = fields.Integer("淨重 (KG)")
     note = fields.Char("備註")
 
     # 改成自動計算
-
+    @api.multi
+    @api.onchange("total", "curbweight", "emptybucket")
     def _NetWeight(self):
-        self.net = self.total - self.curbweight - self.emptybucket
+        for rec in self:
+            self.net = self.total - self.curbweight - self.emptybucket
+            rec.net = self.net
 
     refine = fields.Integer("調質重量 (KG)")
     carbur = fields.Float("滲碳單價")
+    other = fields.Integer("其他重量 (KG)")
     other1 = fields.Integer("其他重量1")
+    count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
+
+    @api.constrains("refine", "carbur", "other", "other1")
+    def _verify_weight(self):
+        total = self.refine + self.carbur + self.other + self.other1
+        if self.net and total != self.net:
+            raise Warning("調質重量+滲碳單價+其他重量+其他重量1 應等於 淨重")
+        else:
+            pass
+
+    @api.onchange("refine", "carbur", "other", "other1")
+    def _check_weight(self):
+        total = self.refine + self.carbur + self.other + self.other1
+        self.count = total
 
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
