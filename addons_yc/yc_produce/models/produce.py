@@ -118,20 +118,36 @@ class YcWeight(models.Model):
         for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
             pn = self.plate_no
-            check_in = self.env["yc.weight"].search(
-                [('in_out', '=', 'I'), ('day', '=', check_day), ('plate_no', '=', pn)])
-            check_out = self.env["yc.weight"].search(
-                [('in_out', '=', 'O'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            _in = self.env["yc.weight"].search(
+                [('day', '=', check_day), ('plate_no', '=', pn)], limit=2, order='name DESC')
+            _out = self.env["yc.weight"].search(
+                [('day', '=', check_day), ('plate_no', '=', pn)], limit=2, order='name DESC')
 
-            # 如果新建 + 1 如果修改 update
+            if _in[1]:
+                pre_in = _in[1].purchase_times
+            else:
+                pre_in = 0
+            if _out[1]:
+                pre_out = _out[1].ship_times
+            else:
+                pre_out = 0
+
             if rec.in_out:  # 進出貨有值
                 if pn and rec.day:  # 車牌&日期 有值
-                    self.ship_times = len(check_out)
-                    self.purchase_times = len(check_in)
-                    if rec.in_out == 'I':
+                    if pre_in:
+                        self.purchase_times = pre_in
+                    else:
+                        self.purchase_times = 0
+
+                    if pre_out:
+                        self.ship_times = pre_out
+                    else:
+                        self.ship_times = 0
+
+                    if rec.in_out == "I":
                         rec.ship_times = self.ship_times
                         rec.purchase_times = self.purchase_times + 1
-                    elif rec.in_out == 'O':
+                    else:
                         rec.ship_times = self.ship_times + 1
                         rec.purchase_times = self.purchase_times
 

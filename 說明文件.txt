@@ -11,10 +11,9 @@ addons_path = addons,odoo\addons,,..\addons_yc,..\addons
 
 
 odoo directory structure:	
-odoo ┬─ \.git        -- git control file
-     ├─ \addons      -- standard or 3rd party app
-     ├─ \addons_yc   -- project
-     ├─ \odoo -11.0  -- odoo origin setting don't edit
-     ├─ \venv	     -- vertual enviroment setting
-     ├─ .gitignore   -- git ignore file or directory
-     └─ description -- configuration
+odoo11 ┬─ \.git        -- git control file
+       ├─ \addons      -- standard or 3rd party app
+       ├─ \addons_yc   -- project
+       ├─ \odoo -11.0  -- odoo origin setting don't edit
+       ├─ .gitignore   -- git ignore file or directory
+       └─ description -- configuration
