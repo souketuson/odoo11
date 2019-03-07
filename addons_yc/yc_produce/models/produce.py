@@ -39,9 +39,13 @@ class YcWeight(models.Model):
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號", compute="_generate_carno", store=True)
 
+
     # carno = S1+S2+S3+S4+S5
+    #
     @api.depends("driver_id")
     def _generate_carno(self):
+        '''
+        '''
         year = str(dt.now().year)
         month = "%02d" % (dt.now().month)
         day = "%02d" % (dt.now().day)
@@ -76,20 +80,27 @@ class YcWeight(models.Model):
         # S4
         for rec in self:
             if rec.driver_id:
-                S4 = rec.env["yc.driver"].search([('name', '=', self.driver_id.name)])
+                S4 = rec.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).code
             else:
                 pass
 
         # S5
         for rec in self:
-            check_day = dt.strptime(rec.day, "%Y-%m-%d")
-            check = rec.env["yc.weight"].search(
-                [('driver_id', '=', rec.driver_id), ('day', '=', check_day)])
-            if check:
-                S5 = len(check)
-            else:
-                S5 = 1
-        self.carno = str(S1 + S2 + S3 + S4 + S5)
+            if rec.driver_id:
+                check_day = dt.strptime(rec.day, "%Y-%m-%d")
+                check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
+                if check:
+                    S5 = str(len(check))
+                else:
+                    S5 = "1"
+
+                if S1 and S2 and S3 and S4 and S5:
+                    self.carno = str(S1 + S2 + S3 + S4 + S5)
+                else:
+                    pass
+
+        else:
+            pass
 
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
