@@ -38,11 +38,9 @@ class YcWeight(models.Model):
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號", compute="_generate_carno", store=True)
 
-    # carno = S1+S2+S3+S4+S5
+    @api.multi
     @api.depends("driver_id")
     def _generate_carno(self):
-        '''
-        '''
         year = str(dt.now().year)
         month = "%02d" % (dt.now().month)
         day = "%02d" % (dt.now().day)
@@ -74,16 +72,11 @@ class YcWeight(models.Model):
                     'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
         S3 = day_list[int(day) - 1]
 
-        # S4
+        # S4 S5
         for rec in self:
             if rec.driver_id:
                 S4 = rec.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).code
-            else:
-                pass
 
-        # S5
-        for rec in self:
-            if rec.driver_id:
                 check_day = dt.strptime(rec.day, "%Y-%m-%d")
                 check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
                 if check:
@@ -92,12 +85,7 @@ class YcWeight(models.Model):
                     S5 = "1"
 
                 if S1 and S2 and S3 and S4 and S5:
-                    self.carno = str(S1 + S2 + S3 + S4 + S5)
-                else:
-                    pass
-
-        else:
-            pass
+                    rec.carno = str(S1 + S2 + S3 + S4 + S5)
 
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
 
@@ -107,49 +95,31 @@ class YcWeight(models.Model):
             raise Warning("進出貨分類空值")
 
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-
-    purchase_times = fields.Integer("進貨次數")
-    ship_times = fields.Integer("出貨次數")
+    purchase_times = fields.Integer("進貨次數", compute="_count", store=True)
+    ship_times = fields.Integer("出貨次數", compute="_count", store=True)
 
     # 進出貨次數自動記錄
     @api.multi
-    @api.onchange('in_out')
+    @api.depends('in_out')
     def _count(self):
         for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
             pn = self.plate_no
-            _in = self.env["yc.weight"].search(
-                [('day', '=', check_day), ('plate_no', '=', pn)], limit=2, order='name DESC')
-            _out = self.env["yc.weight"].search(
-                [('day', '=', check_day), ('plate_no', '=', pn)], limit=2, order='name DESC')
-
-            if _in[1]:
-                pre_in = _in[1].purchase_times
-            else:
-                pre_in = 0
-            if _out[1]:
-                pre_out = _out[1].ship_times
-            else:
-                pre_out = 0
+            _db = rec.env["yc.weight"]
 
             if rec.in_out:  # 進出貨有值
                 if pn and rec.day:  # 車牌&日期 有值
-                    if pre_in:
-                        self.purchase_times = pre_in
-                    else:
-                        self.purchase_times = 0
-
-                    if pre_out:
-                        self.ship_times = pre_out
-                    else:
-                        self.ship_times = 0
+                    pre_in = len(_db.search(
+                        [("in_out", "=", "I"), ('day', '=', check_day), ('plate_no', '=', pn)]))
+                    pre_out = len(
+                        _db.search([("in_out", "=", "O"), ('day', '=', check_day), ('plate_no', '=', pn)]))
 
                     if rec.in_out == "I":
-                        rec.ship_times = self.ship_times
-                        rec.purchase_times = self.purchase_times + 1
+                        self.ship_times = pre_out
+                        self.purchase_times = pre_in
                     else:
-                        rec.ship_times = self.ship_times + 1
-                        rec.purchase_times = self.purchase_times
+                        self.ship_times = pre_out
+                        self.purchase_times = pre_in
 
     plate_no = fields.Char("車號")
 
