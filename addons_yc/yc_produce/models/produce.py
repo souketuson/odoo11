@@ -95,31 +95,34 @@ class YcWeight(models.Model):
             raise Warning("進出貨分類空值")
 
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-    purchase_times = fields.Integer("進貨次數", compute="_count", store=True)
-    ship_times = fields.Integer("出貨次數", compute="_count", store=True)
+    purchase_times = fields.Integer("進貨次數", readonly=True)
+    ship_times = fields.Integer("出貨次數", readonly=True)
 
     # 進出貨次數自動記錄
     @api.multi
-    @api.depends('in_out')
+    @api.onchange('in_out')
     def _count(self):
         for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
             pn = self.plate_no
-            _db = rec.env["yc.weight"]
+            check_in = self.env["yc.weight"].search(
+                [('in_out', '=', 'I'), ('day', '=', check_day), ('plate_no', '=', pn)])
+            check_out = self.env["yc.weight"].search(
+                [('in_out', '=', 'O'), ('day', '=', check_day), ('plate_no', '=', pn)])
 
+            # 如果新建 + 1 如果修改 update
+            # 判斷新建還是修改 看單號有沒有在資料庫
             if rec.in_out:  # 進出貨有值
                 if pn and rec.day:  # 車牌&日期 有值
-                    pre_in = len(_db.search(
-                        [("in_out", "=", "I"), ('day', '=', check_day), ('plate_no', '=', pn)]))
-                    pre_out = len(
-                        _db.search([("in_out", "=", "O"), ('day', '=', check_day), ('plate_no', '=', pn)]))
-
-                    if rec.in_out == "I":
-                        self.ship_times = pre_out
-                        self.purchase_times = pre_in
-                    else:
-                        self.ship_times = pre_out
-                        self.purchase_times = pre_in
+                    self.ship_times = len(check_out)
+                    self.purchase_times = len(check_in)
+                    if not self.env["yc.weight"].search([("name", "=", self.name)]):
+                        if rec.in_out == 'I':
+                            rec.ship_times = self.ship_times
+                            rec.purchase_times = self.purchase_times + 1
+                        elif rec.in_out == 'O':
+                            rec.ship_times = self.ship_times + 1
+                            rec.purchase_times = self.purchase_times
 
     plate_no = fields.Char("車號")
 

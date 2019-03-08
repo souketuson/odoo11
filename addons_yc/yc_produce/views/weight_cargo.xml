@@ -35,7 +35,7 @@
                             <field name="weighbridge"/>
                             <field name="factory_id"/>
                             <field name="carno"/>
-                            <field name="in_out"/>
+                            <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="plate_no"/>
                             <field name="purchase_times"/>
                             <field name="ship_times"/>
