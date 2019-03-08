@@ -36,56 +36,58 @@ class YcWeight(models.Model):
                                                                          "%Y-%m-%d %H:%M:%S"))
     person_id = fields.Many2one("yc.hr", string="過磅員")
     weighbridge = fields.Char("地磅序號")
-    carno = fields.Char("車次序號", compute="_generate_carno", store=True)
+    carno = fields.Char("車次序號")
 
     @api.multi
-    @api.depends("driver_id")
+    @api.onchange("driver_id")
     def _generate_carno(self):
-        year = str(dt.now().year)
-        month = "%02d" % (dt.now().month)
-        day = "%02d" % (dt.now().day)
-        # S1
-        if year[3:] == "0":
-            S1 = "A"
-        elif year[3:] == "1":
-            S1 = "B"
-        elif year[3:] == "2":
-            S1 = "C"
-        elif year[3:] == "3":
-            S1 = "D"
-        else:
-            S1 = year[3:]
-
-        # S2
-        if month == "10":
-            S2 = "A"
-        elif month == "11":
-            S2 = "B"
-        elif month == "12":
-            S2 = "C"
-        else:
-            S2 = month[1:]
-
-        # S3
-        day_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
-                    'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-                    'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
-        S3 = day_list[int(day) - 1]
-
-        # S4 S5
         for rec in self:
             if rec.driver_id:
+                year = str(dt.now().year)
+                month = "%02d" % (dt.now().month)
+                day = "%02d" % (dt.now().day)
+                # S1
+                if year[3:] == "0":
+                    S1 = "A"
+                elif year[3:] == "1":
+                    S1 = "B"
+                elif year[3:] == "2":
+                    S1 = "C"
+                elif year[3:] == "3":
+                    S1 = "D"
+                else:
+                    S1 = year[3:]
+
+                # S2
+                if month == "10":
+                    S2 = "A"
+                elif month == "11":
+                    S2 = "B"
+                elif month == "12":
+                    S2 = "C"
+                else:
+                    S2 = month[1:]
+
+                # S3
+                day_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+                            'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+                            'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
+                S3 = day_list[int(day) - 1]
+
+                # S4 S5
+
                 S4 = rec.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).code
 
                 check_day = dt.strptime(rec.day, "%Y-%m-%d")
                 check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
                 if check:
-                    S5 = str(len(check))
+                    S5 = str(len(check)+1)
                 else:
                     S5 = "1"
 
                 if S1 and S2 and S3 and S4 and S5:
-                    rec.carno = str(S1 + S2 + S3 + S4 + S5)
+                    self.carno = str(S1 + S2 + S3 + S4 + S5)
+                    rec.carno = self.carno
 
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
 
@@ -95,8 +97,8 @@ class YcWeight(models.Model):
             raise Warning("進出貨分類空值")
 
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-    purchase_times = fields.Integer("進貨次數", readonly=True)
-    ship_times = fields.Integer("出貨次數", readonly=True)
+    purchase_times = fields.Integer("進貨次數")
+    ship_times = fields.Integer("出貨次數")
 
     # 進出貨次數自動記錄
     @api.multi
@@ -152,7 +154,7 @@ class YcWeight(models.Model):
             rec.net = self.net
 
     refine = fields.Integer("調質重量 (KG)")
-    carbur = fields.Float("滲碳單價")
+    carbur = fields.Integer("滲碳重量")
     other = fields.Integer("其他重量 (KG)")
     other1 = fields.Integer("其他重量1")
     count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")

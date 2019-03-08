@@ -34,11 +34,11 @@
                             <field name="person_id"/>
                             <field name="weighbridge"/>
                             <field name="factory_id"/>
-                            <field name="carno"/>
+                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="plate_no"/>
-                            <field name="purchase_times"/>
-                            <field name="ship_times"/>
+                            <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}"/>
 
                         </group>
                         <notebook>
