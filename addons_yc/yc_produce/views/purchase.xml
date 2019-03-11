@@ -9,6 +9,12 @@
             <field name="arch" type="xml">
                 <tree string="Purchase tree">
                     <field name="name"/>
+                    <field name="day"/>
+                    <field name="time"/>
+                    <field name="car_no"/>
+                    <field name="state"/>
+                    <field name="weighstate"/>
+                    <field name="checkstate"/>
                 </tree>
             </field>
         </record>
@@ -21,23 +27,23 @@
             <field name="arch" type="xml">
                 <form string="Purchase form">
                     <sheet>
-                    <field name="name"/>
+                        <group string="進貨單" colspan="4" col="4">
+                            <field name="name"/>
+                            <field name="day"/>
+                            <field name="time"/>
+                            <field name="car_no"/>
+                            <field name="state"/>
+                            <field name="weighstate"/>
+                            <field name="checkstate"/>
+                            <field name="factory_id"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
 
-        <!--&lt;!&ndash; purchase action & menuitem level&ndash;&gt;-->
-            <!--&lt;!&ndash;parent level&ndash;&gt;-->
-        <!--<menuitem id="main_produce_menu" name="生產"/>-->
-        <!--<menuitem id="produce_menu" name="生產" parent="main_produce_menu"/>-->
-        <!--<menuitem id="purchase_menu" name="進貨作業" parent="produce_menu" sequence="10"/>-->
-
-            <!--&lt;!&ndash;son level of purchase&ndash;&gt;-->
-        <!--<menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="20"-->
-                  <!--action="purchase_list_action" />-->
-
+        <!-- action -->
         <record model="ir.actions.act_window" id="purchase_list_action">
             <field name="name">進貨單作業</field>
             <field name="type">ir.actions.act_window</field>

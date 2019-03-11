@@ -81,7 +81,7 @@ class YcWeight(models.Model):
                 check_day = dt.strptime(rec.day, "%Y-%m-%d")
                 check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
                 if check:
-                    S5 = str(len(check)+1)
+                    S5 = str(len(check) + 1)
                 else:
                     S5 = "1"
 
@@ -112,7 +112,6 @@ class YcWeight(models.Model):
             check_out = self.env["yc.weight"].search(
                 [('in_out', '=', 'O'), ('day', '=', check_day), ('plate_no', '=', pn)])
 
-            # 如果新建 + 1 如果修改 update
             # 判斷新建還是修改 看單號有沒有在資料庫
             if rec.in_out:  # 進出貨有值
                 if pn and rec.day:  # 車牌&日期 有值
@@ -152,6 +151,16 @@ class YcWeight(models.Model):
         for rec in self:
             self.net = self.total - self.curbweight - self.emptybucket
             rec.net = self.net
+        # self.net = self.total - self.curbweight - self.emptybucket
+        # for rec in self:
+        #     if self.env["yc.weight"].search([("name", "=", self.name)]):
+        #         db = rec.env["yc.weight"].search([("name", "=", self.name)])
+        #         db.write({"net": self.net})
+        #
+        #     else:
+        #         rec.net = self.net
+
+
 
     refine = fields.Integer("調質重量 (KG)")
     carbur = fields.Integer("滲碳重量")
@@ -189,3 +198,11 @@ class YcPurchase(models.Model):
     _name = "yc.purchase"
 
     name = fields.Char("進貨單號")
+
+    day = fields.Char("日期")
+    time = fields.Char("時間")
+    car_no = fields.Char("車次序號")
+    state = fields.Char("狀態")
+    weighstate = fields.Char("過磅狀態")
+    checkstate = fields.Char("檢驗狀態")
+    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
