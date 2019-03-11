@@ -1,0 +1,400 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* automatic_backup
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-07 03:35+0000\n"
+"PO-Revision-Date: 2018-06-07 03:35+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: automatic_backup
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_rule_form_view
+msgid "<b attrs=\"{'invisible': [('backup_destination', 'not in', ['dropbox', 'google_drive'])]}\">Please visit this URL for the Authentication Code<br/></b>"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_s3_access_key_secret
+msgid "Acces key secret"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_s3_access_key
+msgid "Access key"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_channel_ids
+msgid "Add Channels"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_partner_ids
+msgid "Add Followers"
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_destination:0
+msgid "Amazon S3"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_authorization_code
+msgid "Authorization Code"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_authorize_url
+msgid "Authorize URL"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.actions.act_window,name:automatic_backup.automatic_backup_action
+#: model:ir.model,name:automatic_backup.model_automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_automatic_backup_id
+#: model:ir.ui.menu,name:automatic_backup.automatic_backup_menu
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_form_view
+msgid "Automatic Backup"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_automatic_backup_rule_ids
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_rule_form_view
+msgid "Automatic Backup Rule"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:473
+#: code:addons/automatic_backup/models/automatic_backup.py:483
+#: code:addons/automatic_backup/models/automatic_backup.py:491
+#, python-format
+msgid "Automatic backup failed!"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_form_view
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_rule_form_view
+msgid "Backup"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:414
+#: code:addons/automatic_backup/models/automatic_backup.py:440
+#: code:addons/automatic_backup/models/automatic_backup.py:475
+#, python-format
+msgid "Backup Destination: "
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_backup_destination
+msgid "Backup Destionation"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_path
+msgid "Backup Path"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_backup_type
+msgid "Backup Type"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:413
+#: code:addons/automatic_backup/models/automatic_backup.py:439
+#: code:addons/automatic_backup/models/automatic_backup.py:474
+#, python-format
+msgid "Backup Type: "
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:412
+#: code:addons/automatic_backup/models/automatic_backup.py:423
+#: code:addons/automatic_backup/models/automatic_backup.py:431
+#, python-format
+msgid "Backup created successfully!"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_s3_bucket_name
+msgid "Bucket name"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_form_view
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_rule_form_view
+msgid "Check Settings"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_create_date
+msgid "Created on"
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_type:0
+msgid "Database Only"
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_type:0
+msgid "Database and Filestore"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_delete_old_backups
+msgid "Delete Old Backups"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_delete_days
+msgid "Delete backups older than [days]"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_destination:0
+msgid "Dropbox"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_access_token
+msgid "Dropbox Access Token"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_authorize_url_rel
+msgid "Dropbox Authorize Url Rel"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_flow
+msgid "Dropbox Flow"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_dropbox_user_id
+msgid "Dropbox User"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_template_id
+msgid "Email Template"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.ui.view,arch_db:automatic_backup.automatic_backup_form_view
+msgid "Emails separated by comma"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:481
+#, python-format
+msgid "Exception: "
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_destination:0
+msgid "FTP"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:419
+#: code:addons/automatic_backup/models/automatic_backup.py:445
+#: code:addons/automatic_backup/models/automatic_backup.py:479
+#, python-format
+msgid "FTP Adress: "
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:420
+#: code:addons/automatic_backup/models/automatic_backup.py:446
+#: code:addons/automatic_backup/models/automatic_backup.py:480
+#, python-format
+msgid "FTP Path: "
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_failed_backup_notify_emails
+msgid "Failed Backup Notification"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_filename
+msgid "Filename"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:421
+#: code:addons/automatic_backup/models/automatic_backup.py:447
+#, python-format
+msgid "Filename: "
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_destination:0
+msgid "Folder"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_folder_path
+msgid "Folder Path"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:417
+#: code:addons/automatic_backup/models/automatic_backup.py:443
+#: code:addons/automatic_backup/models/automatic_backup.py:477
+#, python-format
+msgid "Folder Path: "
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_destination:0
+msgid "Google Drive"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_id
+msgid "ID"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_ftp_login
+msgid "Login"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:80
+#, python-format
+msgid "Minimal Delete Days = 1"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:156
+#: code:addons/automatic_backup/models/automatic_backup.py:195
+#, python-format
+msgid "Missing required PyDrive python package\n"
+"https://pypi.python.org/pypi/PyDrive"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:207
+#, python-format
+msgid "Missing required boto3 python package\n"
+"https://pypi.python.org/pypi/boto3"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:141
+#: code:addons/automatic_backup/models/automatic_backup.py:181
+#, python-format
+msgid "Missing required dropbox python package\n"
+"https://pypi.python.org/pypi/dropbox"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:136
+#: code:addons/automatic_backup/models/automatic_backup.py:176
+#, python-format
+msgid "Missing required pysftp python package\n"
+"https://pypi.python.org/pypi/pysftp"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_name
+msgid "Name"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:438
+#: code:addons/automatic_backup/models/automatic_backup.py:449
+#: code:addons/automatic_backup/models/automatic_backup.py:457
+#, python-format
+msgid "Old backup deleted!"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_ftp_password
+msgid "Password"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_ftp_path
+msgid "Path"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_ftp_port
+msgid "Port"
+msgstr ""
+
+#. module: automatic_backup
+#: selection:ir.cron,backup_destination:0
+msgid "SFTP"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model,name:automatic_backup.model_ir_cron
+msgid "Scheduled Actions"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:408
+#, python-format
+msgid "Settings are correct."
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_automatic_backup_successful_backup_notify_emails
+msgid "Successful Backup Notification"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_ftp_address
+msgid "URL"
+msgstr ""
+
+#. module: automatic_backup
+#: model:ir.model.fields,field_description:automatic_backup.field_ir_cron_s3_username
+msgid "Username"
+msgstr ""
+
+#. module: automatic_backup
+#: code:addons/automatic_backup/models/automatic_backup.py:468
+#, python-format
+msgid "Wrong method parameters"
+msgstr ""
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="ListviewColumns">
+        <div class="btn-group btn-group-sm" role="group" id="th_columns">
+            <button type="button" id="dyncolbtn" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-bars fa-rotate-90"/>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu th_ul" role="menu">
+                <li class="list-group-item no-sort">
+                    <input class="form-control" id="dycolsrch" autofocus="autofocus" type="text" placeholder="Search Column" autocomplete="off" data-seq="-1" />
+                </li>
+                <li role="separator" class="divider no-sort"></li>
+                <li t-foreach="columns" t-as="col" class="list-group-item" id="dycollist">
+                    <div class="row">
+                      <div class="col-md-8" style="padding-right: 0px;" id="ld"><t t-esc="col.string"/></div>
+                      <div class="col-md-2" style="margin-left: 10px;">
+                          <div class="material-switch">
+                              <input t-att-id="col.name" class="columnCheckbox" type="checkbox" t-att-name="col.name" data-seq="100"/>
+                              <label t-att-for="col.name" class="label-primary"></label>
+                          </div>
+                      </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </t>
+    
+    <t t-name="th_list_reset">
+        <li role="separator" class="divider no-sort" style="margin:0"></li>
+        <li class="list-group-item no-sort text-center">
+            <div class="btn-group">
+              <button id="restore_list" type="button" class="btn btn-sm btn-primary" title="Restore list"><i class="fa fa-refresh"/> Restore</button>
+            </div>
+        </li>
+    </t>
+    
+</templates>
