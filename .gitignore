@@ -3,3 +3,5 @@
 /.idea
 /odoo-11.0
 .idea
+.vscode
+/env
