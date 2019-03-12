@@ -26,20 +26,27 @@
             <field name="arch" type="xml">
                 <form string="Weight form">
                     <sheet>
-                        <group string="過磅單" colspan="4" col="4">
-                            <field name="name" readonly="1"/>
-                            <field name="driver_id"/>
+                        <group string="過磅單" col="6">
                             <field name="day"/>
                             <field name="weightime"/>
+
+                            <field name="name" readonly="1"/>
+                            <!-- -->
+                            <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"/>
+                            <field name="driver_id"/>
                             <field name="person_id"/>
-                            <field name="weighbridge"/>
-                            <field name="factory_id"/>
-                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
+
+                            <!-- -->
+
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"/>
 
+                            <!-- -->
+                            <field name="weighbridge"/>
+                            <field name="factory_id" />
+                            <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <!-- -->
                         </group>
                         <notebook>
                             <page string="重量">
