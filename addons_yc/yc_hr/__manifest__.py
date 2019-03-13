@@ -2,14 +2,10 @@
     'name': "yc_hr",
 
     'summary': """
-        軟體的文字說明a132143123
-        123
-        123
-        
     """,
 
     'description': """
-        軟體更長的文字說明
+        YC_HR v.1
     """,
 
     'author': "ArJhe",
@@ -25,6 +21,6 @@
     ],
     # only loaded in demonstration mode
     'demo': [
-        'demo/demo.xml',
+
     ],
 }

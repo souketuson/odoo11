@@ -1,12 +1,11 @@
 {
-    'name': "yc_produce",
+    'name': "yc_root",
 
     'summary': """
-        軟體的文字說明
     """,
 
     'description': """
-        製造
+        YC_ROOT v.6
     """,
 
     'author': "ArJhe",
@@ -17,12 +16,18 @@
     'depends': ['base'],
 
     'data': [
-        'views/weight_cargo.xml',
         'views/purchase.xml',
-        # 'menuitem/produce_core_menu.xml',
+        'views/weight_cargo.xml',
+        'views/driver.xml',
+        'views/hr_main.xml',
+
+        'menuitem/root_core.xml',
+
     ],
+
+
     # only loaded in demonstration mode
     'demo': [
-        'demo/demo.xml',
+
     ],
 }

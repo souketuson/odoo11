@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!--weight action & menuitem level-->
-            <!--parent level-->
+        <!--parent level-->
+        <!-- root menu -->
         <menuitem id="main_produce_menu" name="生產"/>
+
+        <!-- bar menu -->
         <menuitem id="produce_menu" name="生產" parent="main_produce_menu"/>
         <menuitem id="purchase_menu" name="進貨作業" parent="produce_menu" sequence="10"/>
 
