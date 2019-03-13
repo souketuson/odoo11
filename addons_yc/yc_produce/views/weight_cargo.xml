@@ -38,11 +38,11 @@
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}" />
                             <!-- -->
-                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}" colspan="4"/>
+                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="factory_id" colspan="4"/>
+                            <field name="factory_id"/>
                             <!-- -->
-                            <field name="weighbridge"/>
+                            <field namse="weighbridge"/>
                             <field name="total"/>
                             <field name="curbweight"/>
                             <field name="emptybucket"/>
@@ -62,7 +62,6 @@
                             <!--</group>-->
                             <!--</page>-->
                             <page string="明細">
-
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
                                         <field name="customer_id"/>

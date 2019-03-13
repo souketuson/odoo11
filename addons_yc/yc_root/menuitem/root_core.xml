@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <menuitem id="main_root_menu" name="陽成"/>
-        <!-- bar menu -->
-        <menuitem id="main_hr_menu" name="人事" sequence="10" parent="main_root_menu"/>
-        <menuitem id="hr_menu" name="人事薪資主檔" parent="main_hr_menu"/>
+        <!-- root -->
+        <menuitem id="main_root_menu" name="陽成 ERP" web_icon="yc_root,static/description/icon.png"/>
+            <!-- bar menu -->
+            <menuitem id="main_hr_menu" name="人事" sequence="10" parent="main_root_menu"/>
+            <menuitem id="main_produce_menu" name="生產" sequence="11" parent="main_root_menu"/>
 
-        <menuitem id="main_produce_menu" name="生產" sequence="11" parent="main_root_menu"/>
-        <menuitem id="purchase_menu" name="進貨作業" parent="main_produce_menu" sequence="10"/>
+                <!-- category(no action) -->
+                <menuitem id="hr_menu" name="人事薪資主檔" parent="main_hr_menu"/>
+                <menuitem id="purchase_menu" name="進貨作業" parent="main_produce_menu"/>
 
+                    <!--action level(list)-->
+                    <menuitem id="hr_main" name="員工主檔" parent="hr_menu" sequence="10" action="hr_main_list_action"/>
+                    <menuitem id="driver_main" name="司機主檔" parent="hr_menu" sequence="11" action="driver_list_action"/>
 
-        <!--son level-->
-
-        <menuitem id="hr_main" name="員工主檔" parent="hr_menu" sequence="10" action="hr_main_list_action"/>
-        <menuitem id="driver_main" name="司機主檔" parent="hr_menu" sequence="11" action="driver_list_action"/>
-
-        <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="10" action="weight_list_action"/>
-        <menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="20" action="purchase_list_action"/>
-
+                    <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="10" action="weight_list_action"/>
+                    <menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="11" action="purchase_list_action"/>
     </data>
 </odoo>

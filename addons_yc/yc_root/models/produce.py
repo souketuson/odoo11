@@ -33,6 +33,7 @@ class YcWeight(models.Model):
     day = fields.Date("過磅日期", default=dt.today())
 
     weightime = fields.Char("過磅時間", default=lambda self: self._get_time())
+
     @api.model
     def _get_time(self):
         # fields weightime
@@ -162,18 +163,29 @@ class YcWeight(models.Model):
     def _NetWeight(self):
         self.net = self.total - self.emptybucket - self.curbweight
 
+    # onchange 下的儲存
     @api.model
     def create(self, vals):
         _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
         vals.update({"net": _net})
         return super(YcWeight, self).create(vals)
 
-    # @api.multi
-    # def write(self, vals):
-    #
-    #     return super(YcWeight, self).write(vals)
+    # onchange 下的修改
+    @api.multi
+    def write(self, vals):
+        # 沒有修改 vals(dict)就沒有值
+        # 如果沒有值 就等於self 如果有值就沿用
+        _net_parameter = ["total", "curbweight", "emptybucket"]
+        for key in _net_parameter:
+            if key in vals:
+                pass
+            else:
+                vals[key] = self[key]
 
+        _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
 
+        vals.update({"net": _net})
+        return super(YcWeight, self).write(vals)
 
     refine = fields.Integer("調質重量 (KG)")
     carbur = fields.Integer("滲碳重量")
