@@ -32,8 +32,20 @@ class YcWeight(models.Model):
 
     day = fields.Date("過磅日期", default=dt.today())
 
-    weightime = fields.Datetime("過磅時間", default=lambda self: dt.strptime(dt.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                                                         "%Y-%m-%d %H:%M:%S"))
+    weightime = fields.Char("過磅時間", default=lambda self: self._get_time())
+
+    @api.model
+    def _get_time(self):
+        # 不知道為什麼 odoo 會自動把時間-8小時
+        hour = dt.now().hour + 8
+        minute = dt.now().minute
+        sec = dt.now().second
+        if hour > 24:
+            hour -= 24
+
+        time = "%02d:%02d:%02d" % (hour, minute, sec)
+        return time
+
     person_id = fields.Many2one("yc.hr", string="過磅員")
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號")
@@ -145,20 +157,20 @@ class YcWeight(models.Model):
     note = fields.Char("備註")
 
     # 改成自動計算
-    @api.multi
     @api.onchange("total", "curbweight", "emptybucket")
     def _NetWeight(self):
-        for rec in self:
-            self.net = self.total - self.curbweight - self.emptybucket
-            rec.net = self.net
-        # self.net = self.total - self.curbweight - self.emptybucket
-        # for rec in self:
-        #     if self.env["yc.weight"].search([("name", "=", self.name)]):
-        #         db = rec.env["yc.weight"].search([("name", "=", self.name)])
-        #         db.write({"net": self.net})
-        #
-        #     else:
-        #         rec.net = self.net
+        self.net = self.total - self.emptybucket - self.curbweight
+
+    @api.model
+    def create(self, vals):
+        _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
+        vals.update({"net": _net})
+        return super(YcWeight, self).create(vals)
+
+    # @api.multi
+    # def write(self, vals):
+    #
+    #     return super(YcWeight, self).write(vals)
 
 
 
