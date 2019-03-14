@@ -588,7 +588,7 @@ class ResConfigSettings(models.TransientModel):
                     "refine_price": row.調質單價,
                     "carburize_price": row.滲碳單價,
                     "note": row.備註,
-                })
+                }) 
 
         except Exception as e:
             pass
