@@ -12,23 +12,23 @@ class YcWeight(models.Model):
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
 
     # 要改成自動編號 & 上鎖
-    @api.multi
-    @api.onchange("name")
-    def _generate(self):
-        '''WL + 190227 + 001...999
-                    2    +  6          + 3
-
-                    '''
-        # prefix WL + yymmdd
-        _serial = 'WL' + dt.today().strftime("%y%m%d")
-        # search today's last one data on db
-        obj = self.env['yc.weight'].search([('name', '=like', _serial + "%")], limit=1, order='name DESC')
-        if obj:  # 如果無/有系列碼
-            _next = int(obj[0].name[8:]) + 1
-            _serial += '%03d' % _next
-        else:
-            _serial += '001'
-        self.name = _serial
+    # @api.multi
+    # @api.onchange("name")
+    # def _generate(self):
+    #     '''WL + 190227 + 001...999
+    #                 2    +  6          + 3
+    #
+    #                 '''
+    #     # prefix WL + yymmdd
+    #     _serial = 'WL' + dt.today().strftime("%y%m%d")
+    #     # search today's last one data on db
+    #     obj = self.env['yc.weight'].search([('name', '=like', _serial + "%")], limit=1, order='name DESC')
+    #     if obj:  # 如果無/有系列碼
+    #         _next = int(obj[0].name[8:]) + 1
+    #         _serial += '%03d' % _next
+    #     else:
+    #         _serial += '001'
+    #     self.name = _serial
 
     day = fields.Date("過磅日期", default=dt.today())
 
@@ -231,3 +231,16 @@ class YcPurchase(models.Model):
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+
+
+class YcPurchaseStore(models.Model):
+   _name = "yc.purchasestore"
+
+   name = fields.Char("進貨庫存單號")
+
+class YcPurchaseStore(models.Model):
+    _name = "yc.purchasereport"
+
+    name = fields.Char("客戶進貨統計表")
+
+

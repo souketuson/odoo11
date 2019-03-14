@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- view weight tree -->
+        <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>
             <field name="model">yc.weight</field>
@@ -19,7 +19,7 @@
             </field>
         </record>
 
-        <!-- view weight form-->
+        <!-- form view -->
         <record model="ir.ui.view" id="weight_fom">
             <field name="name">weight.form</field>
             <field name="model">yc.weight</field>
@@ -36,13 +36,13 @@
                             <field name="driver_id"/>
                             <field name="person_id"/>
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}" />
+                            <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <!-- -->
-                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}" colspan="4"/>
                             <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="factory_id"/>
+                            <field name="factory_id" colspan="4"/>
                             <!-- -->
-                            <field namse="weighbridge"/>
+                            <field name="weighbridge"/>
                             <field name="total"/>
                             <field name="curbweight"/>
                             <field name="emptybucket"/>
@@ -61,7 +61,8 @@
                             <!---->
                             <!--</group>-->
                             <!--</page>-->
-                            <page string="明細">
+
+                            <page>
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
                                         <field name="customer_id"/>
@@ -69,8 +70,8 @@
                                         <field name="note"/>
                                     </tree>
                                 </field>
-
                             </page>
+
                         </notebook>
 
                     </sheet>

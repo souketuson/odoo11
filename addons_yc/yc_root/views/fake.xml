@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="fake_tree">
+            <field name="name">fake.tree</field>
+            <field name="model">yc.fake</field>
+            <field name="arch" type="xml">
+                <tree string="fake Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- form view -->
+        <record model="ir.ui.view" id="fake_form">
+            <field name="name">fake.form</field>
+            <field name="model">yc.fake</field>
+            <field name="arch" type="xml">
+                <form string="fake form">
+                    <sheet>
+                        <group string="">
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- search -->
+        <record model="ir.ui.view" id="fake_search_view">
+            <field name="name">fake.search</field>
+            <field name="model">yc.fake</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- action -->
+        <record model="ir.actions.act_window" id="fake_action">
+            <field name="name">假的</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.fake</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record model="ir.actions.act_window.view" id="fake_action_form">
+            <field name="act_window_id" ref="fake_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="fake_form"/>
+        </record>
+
+
+        <record model="ir.actions.act_window.view" id="fake_action_tree">
+            <field name="act_window_id" ref="fake_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="fake_tree"/>
+        </record>
+
+
+    </data>
+</odoo>
