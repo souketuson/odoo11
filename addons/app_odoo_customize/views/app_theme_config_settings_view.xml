@@ -18,7 +18,9 @@
                         </div>
                         <label string="Online Support"/>
                         <h4>
-                            <a href="http://www.sunpop.cn" class="text-danger" target="_blank">Visit our website for more apps and Support. http://www.sunpop.cn</a>
+                            <a href="http://www.sunpop.cn" class="text-danger" target="_blank">Visit our website for
+                                more apps and Support. http://www.sunpop.cn
+                            </a>
                         </h4>
                     </group>
                     <group string="User Menu">
@@ -104,11 +106,13 @@
                         </div>
                         <label string="POS"/>
                         <div class="mb4">
-                            <button string="Delete All POS Order" type="object" name="remove_pos" confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            <button string="Delete All POS Order" type="object" name="remove_pos"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
                         </div>
                         <label string="Purchase"/>
                         <div class="mb4">
-                            <button string="Delete All Purchase Order and Requisition" type="object" name="remove_purchase"
+                            <button string="Delete All Purchase Order and Requisition" type="object"
+                                    name="remove_purchase"
                                     confirm="Please confirm to delete the select data?" class="oe_highlight"/>
                         </div>
                         <label string="MRP"/>
@@ -153,13 +157,17 @@
                         </div>
                         <label string="All Business"/>
                         <div class="mb4">
-                            <button string="Delete All MRP/Sale/Purchase/Account/MRP/Inventory/Project/Message/Workflow" type="object" name="remove_all_biz"
+                            <button string="Delete All MRP/Sale/Purchase/Account/MRP/Inventory/Project/Message/Workflow"
+                                    type="object" name="remove_all_biz"
                                     confirm="Please confirm to delete the select data?" class="oe_highlight"/>
                         </div>
 
                         <label string="陽成"/>
                         <div class="mb4">
-                            <button string="過磅單" type="object" name="insert_yc"
+                            <button string="員工主檔" type="object" name="insert_yc_hr"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="司機主檔" type="object" name="insert_yc_driver"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
                         </div>
                     </group>

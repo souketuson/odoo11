@@ -24,10 +24,13 @@ class ResConfigSettings(models.TransientModel):
     app_show_enterprise = fields.Boolean('Show Enterprise Tag', help=u"Uncheck to hide the Enterprise tag")
     app_show_share = fields.Boolean('Show Share Dashboard', help=u"Uncheck to hide the Odoo Share Dashboard")
     app_show_poweredby = fields.Boolean('Show Powered by Odoo', help=u"Uncheck to hide the Powered by text")
-    app_stop_subscribe = fields.Boolean('Stop Odoo Subscribe(Performance Improve)', help=u"Check to stop Odoo Subscribe function")
-    group_show_author_in_apps = fields.Boolean(string="Show Author in Apps Dashboard", implied_group='app_odoo_customize.group_show_author_in_apps',
+    app_stop_subscribe = fields.Boolean('Stop Odoo Subscribe(Performance Improve)',
+                                        help=u"Check to stop Odoo Subscribe function")
+    group_show_author_in_apps = fields.Boolean(string="Show Author in Apps Dashboard",
+                                               implied_group='app_odoo_customize.group_show_author_in_apps',
                                                help=u"Uncheck to Hide Author and Website in Apps Dashboard")
-    group_show_quick_upgrade = fields.Boolean(string="Show Quick Upgrade in Apps Dashboard", implied_group='app_odoo_customize.group_show_quick_upgrade',
+    group_show_quick_upgrade = fields.Boolean(string="Show Quick Upgrade in Apps Dashboard",
+                                              implied_group='app_odoo_customize.group_show_quick_upgrade',
                                               help=u"Uncheck to show normal install in Apps Dashboard")
 
     app_documentation_url = fields.Char('Documentation Url')
@@ -54,9 +57,9 @@ class ResConfigSettings(models.TransientModel):
         app_stop_subscribe = True if ir_config.get_param('app_stop_subscribe') == "True" else False
 
         app_documentation_url = ir_config.get_param('app_documentation_url',
-                                                           default='http://www.sunpop.cn/documentation/user/10.0/en/index.html')
+                                                    default='http://www.sunpop.cn/documentation/user/10.0/en/index.html')
         app_documentation_dev_url = ir_config.get_param('app_documentation_dev_url',
-                                                               default='http://www.sunpop.cn/documentation/10.0/index.html')
+                                                        default='http://www.sunpop.cn/documentation/10.0/index.html')
         app_support_url = ir_config.get_param('app_support_url', default='http://www.sunpop.cn/trial/')
         app_account_title = ir_config.get_param('app_account_title', default='My Online Account')
         app_account_url = ir_config.get_param('app_account_url', default='http://www.sunpop.cn/my-account/')
@@ -519,15 +522,74 @@ class ResConfigSettings(models.TransientModel):
         return True
 
     @api.multi
-    def insert_yc(self):
+    def insert_yc_hr(self):
         try:
-            cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
-            cursor.execute("SELECT * FROM s_一層代碼檔")
+            cursor.execute("SELECT * FROM 員工主檔")
             rows = cursor.fetchall()
+            hr = self.env["yc.hr"].search([])
+
+            sql = "delete from yc_hr"
+            self._cr.execute(sql)
+
             for row in rows:
-                print(row.一層代碼, row.類別)
+                factory_id_check = self.env["yc.factory"].search([("code", '=', row.廠別代碼)])
+                dep_id_check = self.env["yc.department"].search([("code", '=', row.部門代碼)])
+                hr.create({
+                    "code": row.員工代號, "password": row.密碼,
+                    "factory_id": factory_id_check.id, "dep_id": dep_id_check.id,
+                    "employee_type": row.僱用性質代碼, "job_title1": row.職稱代碼1,
+                    "job_title2": row.職稱代碼2, "job_title3": row.職稱代碼3,
+                    "name": row.姓名, "gender": row.性別,
+                    "idcard": row.身份證號, "birthday": row.出生日期,
+                    "birthplace": row.籍貫, "marrige": row.婚姻,
+                    "children": row.子女數, "phone1": row.電話,
+                    "phone2": row.手機, "email": row.E_Mail,
+                    "address1": row.通訊地址, "address2": row.戶籍地址,
+                    "nok": row.緊急聯絡人, "relationship": row.關係,
+                    "emergency_phone1": row.聯絡電話, "emergency_phone2": row.聯絡手機,
+                    "duty_date": row.到職日期, "leave_date": row.離職日期,
+                    "note": row.備註, "lastlogtime": row.最後登入時間,
+                    "log_state": row.登入否,
+                })
+
         except Exception as e:
             pass
         return True
 
+    @api.multi
+    def insert_yc_driver(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM 司機主檔")
+            rows = cursor.fetchall()
+            driver = self.env["yc.driver"].search([])
+            sql = "delete from yc_driver"
+            self._cr.execute(sql)
+
+            for row in rows:
+                driver.create({
+                    "code": row.司機代號,
+                    "category": row.分類,
+                    "user_code": row.員工代號,
+                    "plate_no": row.車牌號碼,
+                    "name": row.姓名,
+                    "gender": row.性別,
+                    "birthday": row.出生日期,
+                    "birthplace": row.籍貫,
+                    "phone1": row.電話,
+                    "phone2": row.手機,
+                    "address2": row.戶籍地址,
+                    "address1": row.通訊地址,
+                    "refine_price": row.調質單價,
+                    "carburize_price": row.滲碳單價,
+                    "note": row.備註,
+                })
+
+        except Exception as e:
+            pass
+        return True

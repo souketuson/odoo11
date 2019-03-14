@@ -23,12 +23,6 @@
             <field name="arch" type="xml">
                 <form string="Driver form">
                     <sheet>
-                        <group col="4" colspan="2">
-                            <field name="adder"/>
-                            <field name="add_date"/>
-                            <field name="editor"/>
-                            <field name="edit_date"/>
-                        </group>
 
                         <group col="4">
                             <field name="name"/>
@@ -36,7 +30,7 @@
                             <field name="code"/>
                             <field name="category"/>
                             <field name="idcard"/>
-                            <field name="birth_date"/>
+                            <field name="birthday"/>
                             <field name="gender"/>
                             <field name="birthplace"/>
                             <field name="phone1"/>

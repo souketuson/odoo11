@@ -15,12 +15,12 @@ class YcHR(models.Model):
     job_title1 = fields.Char("職稱代碼1")
     job_title2 = fields.Char("職稱代碼2")
     job_title3 = fields.Char("職稱代碼3")
-    name = fields.Char(string="員工姓名", required=True)
+    name = fields.Char(string="員工姓名")
     gender = fields.Selection(
         [('M', '男性'), ('F', '女性'),
          ('O', '其他')], '性別')
     idcard = fields.Char(string="身分證號")
-    birth_date = fields.Date('出生日期')
+    birthday = fields.Date('出生日期')
     birthplace = fields.Char("籍貫")
     marrige = fields.Selection([("已婚", "已婚"), ("未婚", "未婚"), ("其他", "其他")], "婚姻")
     children = fields.Char("子女數")
@@ -92,16 +92,16 @@ class YcHR(models.Model):
 class YcDriver(models.Model):
     _name = "yc.driver"
 
-    name = fields.Char("司機姓名", required=True)
+    name = fields.Char("姓名", required=True)
     code = fields.Char("司機代號")
     category = fields.Char("分類")
     user_code = fields.Char("員工代號")
     plate_no = fields.Char("車牌號碼")
     gender = fields.Selection(
-        [('m', '男性'), ('f', '女性'),
-         ('o', '其他')], '性別')
+        [('M', '男性'), ('F', '女性'),
+         ('O', '其他')], '性別')
     idcard = fields.Char(string="身分證號")
-    birth_date = fields.Date("出生日期")
+    birthday = fields.Date("出生日期")
     birthplace = fields.Char("籍貫")
     phone1 = fields.Char("電話")
     phone2 = fields.Char("手機")
@@ -110,10 +110,6 @@ class YcDriver(models.Model):
     refine_price = fields.Char("調質單價")
     carburize_price = fields.Char("滲碳單價")
     note = fields.Text("備註")
-    adder = fields.Many2one("yc.hr", "建立人員")
-    add_date = fields.Date("建立日期", compute="_fetch")
-    editor = fields.Many2one("yc.hr", "修改人員")
-    edit_date = fields.Date("修改日期", compute="_fetch")
 
     def _fetch(self):
         # fetch create_date and write_date in database
@@ -135,14 +131,14 @@ class YcFactory(models.Model):
 
 
 class YcJobTitle(models.Model):
-    _name = "yc.job_title"
+    _name = "yc.jobtitle"
 
     name = "職稱"
     code = "職稱代碼"
 
 
 class YcSalaryItem(models.Model):
-    _name = "yc.salary.item"
+    _name = "yc.salaryitem"
 
     name = "薪資項目名稱"
     code = "薪資項目代碼"

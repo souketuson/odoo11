@@ -14,7 +14,7 @@
                     <field name="employee_type"/>
                     <field name="dep_id"/>
                     <field name="idcard"/>
-                    <field name="birth_date"/>
+                    <field name="birthday"/>
                 </tree>
             </field>
         </record>
@@ -33,7 +33,7 @@
                             <field name="employee_type"/>
                             <field name="dep_id"/>
                             <field name="idcard"/>
-                            <field name="birth_date"/>
+                            <field name="birthday"/>
                             <field name="gender"/>
 
                         </group>

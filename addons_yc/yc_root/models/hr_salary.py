@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 
-class Salary(models.Model):
-    _name = "hr.salary"
+class YcSalary(models.Model):
+    _name = "yc.salary"
 
 
     pay_code = fields.Char(string='薪資代碼')
