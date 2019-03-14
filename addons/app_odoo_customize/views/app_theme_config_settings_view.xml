@@ -159,7 +159,7 @@
 
                         <label string="陽成"/>
                         <div class="mb4">
-                            <button string="過磅單" type="object" name="insert_yc"
+                            <button string="轉入司機" type="object" name="insert_driver"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
                         </div>
                     </group>

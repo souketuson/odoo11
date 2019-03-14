@@ -531,3 +531,21 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
+
+    @api.multi
+    def insert_driver(self):
+        try:
+            cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM 司機主檔")
+            rows = cursor.fetchall()
+            driver = self.env['yc.driver'].search([])
+            for row in rows:
+                driver.create({
+                    'name': row.姓名,
+                    'code': row.司機代號,
+                })
+
+        except Exception as e:
+            pass
+        return True
