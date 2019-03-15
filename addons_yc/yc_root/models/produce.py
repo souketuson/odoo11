@@ -10,6 +10,29 @@ class YcWeight(models.Model):
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
+    day = fields.Date("過磅日期", default=dt.today())
+    weightime = fields.Char("過磅時間", default=lambda self: self._get_time())
+    person_id = fields.Many2one("yc.hr", string="過磅員")
+    weighbridge = fields.Char("地磅序號")
+    carno = fields.Char("車次序號")
+    in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
+    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+    purchase_times = fields.Integer("進貨次數")
+    ship_times = fields.Integer("出貨次數")
+    plate_no = fields.Char("車號")
+    total = fields.Integer("總重 (KG)")
+    curbweight = fields.Integer("空車重 (KG)")
+    emptybucket = fields.Integer("空桶重 (KG)")
+    net = fields.Integer("淨重 (KG)")
+    note = fields.Char("備註")
+    refine = fields.Integer("調質重量 (KG)")
+    carbur = fields.Integer("滲碳重量")
+    other = fields.Integer("其他重量 (KG)")
+    other1 = fields.Integer("其他重量1")
+    count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
+    # 一張過磅單 上面的貨物可能含有多家客戶
+    customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
+
 
     # 要改成自動編號 & 上鎖
     # @api.multi
@@ -30,10 +53,6 @@ class YcWeight(models.Model):
     #         _serial += '001'
     #     self.name = _serial
 
-    day = fields.Date("過磅日期", default=dt.today())
-
-    weightime = fields.Char("過磅時間", default=lambda self: self._get_time())
-
     @api.model
     def _get_time(self):
         # fields weightime
@@ -46,10 +65,6 @@ class YcWeight(models.Model):
 
         time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
-
-    person_id = fields.Many2one("yc.hr", string="過磅員")
-    weighbridge = fields.Char("地磅序號")
-    carno = fields.Char("車次序號")
 
     @api.multi
     @api.onchange("driver_id")
@@ -102,16 +117,11 @@ class YcWeight(models.Model):
                     self.carno = str(S1 + S2 + S3 + S4 + S5)
                     rec.carno = self.carno
 
-    in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
 
     @api.constrains("in_out")
     def _verify(self):
         if not self.in_out:
             raise Warning("進出貨分類空值")
-
-    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-    purchase_times = fields.Integer("進貨次數")
-    ship_times = fields.Integer("出貨次數")
 
     # 進出貨次數自動記錄
     @api.multi
@@ -139,7 +149,6 @@ class YcWeight(models.Model):
                             rec.ship_times = self.ship_times + 1
                             rec.purchase_times = self.purchase_times
 
-    plate_no = fields.Char("車號")
 
     # 選完司機名稱 車牌自動帶入
     @api.multi
@@ -152,11 +161,6 @@ class YcWeight(models.Model):
             else:
                 pass
 
-    total = fields.Integer("總重 (KG)")
-    curbweight = fields.Integer("空車重 (KG)")
-    emptybucket = fields.Integer("空桶重 (KG)")
-    net = fields.Integer("淨重 (KG)")
-    note = fields.Char("備註")
 
     # 改成自動計算
     @api.onchange("total", "curbweight", "emptybucket")
@@ -187,11 +191,6 @@ class YcWeight(models.Model):
         vals.update({"net": _net})
         return super(YcWeight, self).write(vals)
 
-    refine = fields.Integer("調質重量 (KG)")
-    carbur = fields.Integer("滲碳重量")
-    other = fields.Integer("其他重量 (KG)")
-    other1 = fields.Integer("其他重量1")
-    count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
 
     @api.constrains("refine", "carbur", "other", "other1")
     def _verify_weight(self):
@@ -206,14 +205,56 @@ class YcWeight(models.Model):
         total = self.refine + self.carbur + self.other + self.other1
         self.count = total
 
-    # 一張過磅單 上面的貨物可能含有多家客戶
-    customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
-
+    # max_line_sequence = fields.Integer(string='明細數',
+    #                                    compute='_compute_max_line_sequence',
+    #                                    store=True)
+    #
+    # @api.multi
+    # @api.depends('customer_detail_ids')
+    # def _compute_max_line_sequence(self):
+    #     for sale in self:
+    #         sale.max_line_sequence = (
+    #             max(sale.mapped('order_line.sequence') or [0]) + 1)
+    #
+    # @api.multi
+    # def _reset_sequence(self):
+    #     for rec in self:
+    #         current_sequence = 1
+    #         for line in rec.customer_detail_ids:
+    #             line.sequence = current_sequence
+    #             current_sequence += 1
 
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete="cascade")
+    no = fields.Integer("序號")
+
+    # sequence = fields.Integer(help="Gives the sequence of this line when "
+    #                                "displaying the sale order.",
+    #                           default=9999)
+    #
+    # @api.model
+    # def create(self, values):
+    #     line = super(YcWeightDetails, self).create(values)
+    #     if self.env.context.get('keep_line_sequence'):
+    #         line.order_id._reset_sequence()
+    #     return line
+
+    # @api.onchange("no")
+    # def _number_of_weight_details(self):
+    #     # 看weight_details裡 有沒有 符合name的值
+    #     # self.name: 這邊的name fields 是m2o 無法直接取值
+    #     weight_id = self.name._context.get("params")["id"]
+    #     for rec in self:
+    #         if weight_id:
+    #             _no = self.env["yc.weight.details"].search([("name","=", weight_id)])
+    #         else:
+    #             _no = []
+    #
+    #     rec.no = len(_no) + 1
+
+
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
@@ -234,13 +275,12 @@ class YcPurchase(models.Model):
 
 
 class YcPurchaseStore(models.Model):
-   _name = "yc.purchasestore"
+    _name = "yc.purchasestore"
 
-   name = fields.Char("進貨庫存單號")
+    name = fields.Char("進貨庫存單號")
+
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasereport"
 
     name = fields.Char("客戶進貨統計表")
-
-

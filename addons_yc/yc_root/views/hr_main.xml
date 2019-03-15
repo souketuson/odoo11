@@ -89,7 +89,7 @@
 
         <record model="ir.ui.view" id="salary_form_view">
             <field name="name">salary.form</field>
-            <field name="model">hr.salary</field>
+            <field name="model">yc.salary</field>
             <field name="arch" type="xml">
                 <form string="Salary Form">
                     <sheet>

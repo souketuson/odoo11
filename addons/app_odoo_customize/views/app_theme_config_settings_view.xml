@@ -164,15 +164,16 @@
 
                         <label string="陽成"/>
                         <div class="mb4">
-<<<<<<< HEAD
                             <button string="員工主檔" type="object" name="insert_yc_hr"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
                             |
                             <button string="司機主檔" type="object" name="insert_yc_driver"
-=======
-                            <button string="轉入司機" type="object" name="insert_driver"
->>>>>>> 6fc176d9ec08f66a67591b11388dbe27a3520e5e
                                     confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="過磅單" type="object" name="insert_yc_weight"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+
+
                         </div>
                     </group>
                 </form>

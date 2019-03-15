@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+
         <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>
@@ -56,15 +57,11 @@
                             <!-- -->
                         </group>
                         <notebook>
-                            <!--<page string="重量">-->
-                            <!--<group name="car weight" col="4" colspan="4">-->
-                            <!---->
-                            <!--</group>-->
-                            <!--</page>-->
 
                             <page>
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
+                                        <field name="no"/>
                                         <field name="customer_id"/>
                                         <field name="processing_id"/>
                                         <field name="note"/>

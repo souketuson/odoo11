@@ -521,6 +521,8 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
+    # 以下進舊資料庫拉資料到pgsql
+    # 員工主檔轉資料庫 ERPALL > pgsql
     @api.multi
     def insert_yc_hr(self):
         try:
@@ -559,6 +561,7 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
+    # 司機主檔轉資料庫 ERPALL > pgsql
     @api.multi
     def insert_yc_driver(self):
         try:
@@ -572,6 +575,7 @@ class ResConfigSettings(models.TransientModel):
             self._cr.execute(sql)
 
             for row in rows:
+                row.司機代號 = row.司機代號.replace(' ', '')
                 driver.create({
                     "code": row.司機代號,
                     "category": row.分類,
@@ -588,7 +592,71 @@ class ResConfigSettings(models.TransientModel):
                     "refine_price": row.調質單價,
                     "carburize_price": row.滲碳單價,
                     "note": row.備註,
-                }) 
+                })
+
+        except Exception as e:
+            pass
+        return True
+
+    # 過磅單主檔轉資料庫 ERPALL > pgsql
+    @api.multi
+    def insert_yc_weight(self):
+        try:
+            cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM 過磅單主檔")
+            rows = cursor.fetchall()
+            weight = self.env["yc.weight"].search([])
+            sql = "delete from yc_weight"
+            self._cr.execute(sql)
+
+
+
+            for row in rows:
+                driver_id = self.env["yc.driver"].search([("code", '=', row.司機代號)])
+                person_id = self.env["yc.hr"].search([("code", '=', row.過磅人員)])
+                factory_id = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
+                weight.create({
+                    "name": row.過磅單號,
+                    "in_out": row.分類,
+                    "driver_id": driver_id.id,
+                    "day": row.日期,
+                    "weightime": row.時間,
+                    "carno": row.車次序號,
+                    "person_id": person_id.id,
+                    "weighbridge": row.地磅序號,
+                    "plate_no": row.車號,
+                    "refine": row.調質重量,
+                    "total": row.總重,
+                    "carbur": row.滲碳重量,
+                    "curbweight": row.空車重,
+                    "other": row.其他重量,
+                    "emptybucket": row.空桶重,
+                    "net": row.淨重,
+                    "purchase_times": row.進貨次數,
+                    "ship_times": row.出貨次數,
+                    "note": row.備註,
+                    "other1": row.其他重量1,
+                    "factory_id": factory_id.id,
+                })
+
+            cursor.execute("SELECT * FROM 過磅單項目檔")
+            rows = cursor.fetchall()
+            weight_item = self.env["yc.weight.details"].search([])
+            sql = "delete from yc_weight_details"
+            self._cr.execute(sql)
+
+            for row in rows:
+                customer_id = self.env["yc.customer"].search([("code", '=', row.客戶代號)])
+                processing_id = self.env["yc.processing"].search([("code", '=', row.加工廠代號)])
+                weight_item.create({
+                    "name": row.過磅單號,
+                    "no": row.序號,
+                    "客戶代號": customer_id.id,
+                    "加工廠代號": processing_id.id,
+                    "note": row.備註,
+                })
+
 
         except Exception as e:
             pass
