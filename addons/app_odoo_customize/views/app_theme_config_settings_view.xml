@@ -169,10 +169,22 @@
                             |
                             <button string="司機主檔" type="object" name="insert_yc_driver"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
+                            <!--|-->
+                            <!--<button string="過磅單" type="object" name="insert_yc_weight"-->
+                                    <!--confirm="是否確認轉入?" class="oe_highlight"/>-->
                             |
-                            <button string="過磅單" type="object" name="insert_yc_weight"
+                            <button string="過磅單主檔" type="object" name="insert_weight_main"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="過磅單項目檔" type="object" name="insert_weight_details"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
 
+                            <!--|-->
+                            <!--<button string="加工廠" type="object" name="insert_processing"-->
+                                    <!--confirm="是否確認轉入?" class="oe_highlight"/>-->
+                            <!--|-->
+                            <!--<button string="客戶主檔" type="object" name="insert_customer"-->
+                                    <!--confirm="是否確認轉入?" class="oe_highlight"/>-->
 
                         </div>
                     </group>

@@ -598,11 +598,11 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
-    # 過磅單主檔轉資料庫 ERPALL > pgsql
     @api.multi
-    def insert_yc_weight(self):
+    def insert_weight_main(self):
         try:
-            cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單主檔")
             rows = cursor.fetchall()
@@ -610,36 +610,44 @@ class ResConfigSettings(models.TransientModel):
             sql = "delete from yc_weight"
             self._cr.execute(sql)
 
-
-
             for row in rows:
                 driver_id = self.env["yc.driver"].search([("code", '=', row.司機代號)])
                 person_id = self.env["yc.hr"].search([("code", '=', row.過磅人員)])
                 factory_id = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
-                weight.create({
-                    "name": row.過磅單號,
-                    "in_out": row.分類,
-                    "driver_id": driver_id.id,
-                    "day": row.日期,
-                    "weightime": row.時間,
-                    "carno": row.車次序號,
-                    "person_id": person_id.id,
-                    "weighbridge": row.地磅序號,
-                    "plate_no": row.車號,
-                    "refine": row.調質重量,
-                    "total": row.總重,
-                    "carbur": row.滲碳重量,
-                    "curbweight": row.空車重,
-                    "other": row.其他重量,
-                    "emptybucket": row.空桶重,
-                    "net": row.淨重,
-                    "purchase_times": row.進貨次數,
-                    "ship_times": row.出貨次數,
-                    "note": row.備註,
-                    "other1": row.其他重量1,
-                    "factory_id": factory_id.id,
-                })
+                if row.司機代號:
+                    weight.create({
+                        "name": row.過磅單號,
+                        "in_out": row.分類,
+                        "driver_id": driver_id.id,
+                        "day": row.日期,
+                        "weightime": row.時間,
+                        "carno": row.車次序號,
+                        "person_id": person_id.id,
+                        "weighbridge": row.地磅序號,
+                        "plate_no": row.車號,
+                        "refine": row.調質重量,
+                        "total": row.總重,
+                        "carbur": row.滲碳重量,
+                        "curbweight": row.空車重,
+                        "other": row.其他重量,
+                        "emptybucket": row.空桶重,
+                        "net": row.淨重,
+                        "purchase_times": row.進貨次數,
+                        "ship_times": row.出貨次數,
+                        "note": row.備註,
+                        "other1": row.其他重量1,
+                        "factory_id": factory_id.id,
+                    })
+        except Exception as e:
+            pass
+        return True
 
+    @api.multi
+    def insert_weight_details(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單項目檔")
             rows = cursor.fetchall()
             weight_item = self.env["yc.weight.details"].search([])
@@ -647,17 +655,86 @@ class ResConfigSettings(models.TransientModel):
             self._cr.execute(sql)
 
             for row in rows:
+                if row.客戶代號 != None:
+                    row.客戶代號 = row.客戶代號.strip("\x00")
+                if row.加工廠代號 != None:
+                    row.加工廠代號 = row.加工廠代號.strip("\x00")
+
                 customer_id = self.env["yc.customer"].search([("code", '=', row.客戶代號)])
                 processing_id = self.env["yc.processing"].search([("code", '=', row.加工廠代號)])
+                name_id = self.env["yc.weight"].search([("name", "=", row.過磅單號)])
+
                 weight_item.create({
-                    "name": row.過磅單號,
+                    "name": name_id.id,
                     "no": row.序號,
-                    "客戶代號": customer_id.id,
-                    "加工廠代號": processing_id.id,
+                    "customer_id": customer_id.id,
+                    "processing_id": processing_id.id,
                     "note": row.備註,
                 })
-
-
         except Exception as e:
             pass
         return True
+
+    # 過磅單主檔轉資料庫 ERPALL > pgsql
+    @api.multi
+    def insert_yc_weight(self):
+        insert_weight_main = ResConfigSettings.insert_weight_main
+        insert_weight_details = ResConfigSettings.insert_weight_details
+        funcs = insert_weight_main, insert_weight_details
+        for func in funcs:
+            func(self)
+
+    @api.multi
+    def insert_processing(self):
+        cnxn = pyodbc.connect(
+            'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT * FROM 加工廠主檔")
+        rows = cursor.fetchall()
+        processing = self.env["yc.processing"].search([])
+        sql = "delete from yc_processing"
+        self._cr.execute(sql)
+
+        for row in rows:
+            processing.create({
+                "name": row.公司名稱,
+                "code": row.加工廠代號,
+            })
+
+    @api.multi
+    def insert_customer(self):
+        cnxn = pyodbc.connect(
+            'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+        cursor = cnxn.cursor()
+        cursor.execute("SELECT * FROM 客戶主檔")
+        rows = cursor.fetchall()
+        customer = self.env["yc.customer"].search([])
+        sql = "delete from yc_customer"
+        self._cr.execute(sql)
+
+        for row in rows:
+            customer.create({
+                "name": row.公司名稱,
+                "code": row.客戶代號,
+            })
+
+# class DataBaseConnection(models.Model):
+#     def __init__(self, origin_db, to_db, d_sql, kwarg):
+#         '''
+#         :param origin_db: 來源資料庫
+#         :param to_db:  目標資料庫
+#         :param d_sql: 清空目標資料庫
+#         :param kwarg: 新增欄位
+#         '''
+#         cnxn = pyodbc.connect(
+#             'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+#         cursor = cnxn.cursor()
+#         cursor.execute("SELECT * FROM %s") % origin_db
+#         rows = cursor.fetchall()
+#         db = self.env["%s"].search([]) % to_db
+#         self.d_sql = d_sql
+#
+#     def _delete(self):
+#         sql = "delete from %s" % self.d_sql
+#         self._cr.execute(sql)
+
