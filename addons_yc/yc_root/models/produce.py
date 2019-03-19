@@ -32,7 +32,7 @@ class YcWeight(models.Model):
     count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
-
+    
     # 要改成自動編號 & 上鎖
     # @api.multi
     # @api.onchange("name")
