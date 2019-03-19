@@ -575,7 +575,11 @@ class ResConfigSettings(models.TransientModel):
             self._cr.execute(sql)
 
             for row in rows:
-                row.司機代號 = row.司機代號.replace(' ', '')
+                # 先去除空白
+                for x in range(len(row)):
+                    if row[x] != None and type(row[x]) == str:
+                        row[x] = row[x].replace(' ', '')
+
                 driver.create({
                     "code": row.司機代號,
                     "category": row.分類,
@@ -598,6 +602,7 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
+    # 過磅單主檔
     @api.multi
     def insert_weight_main(self):
         try:
@@ -605,12 +610,17 @@ class ResConfigSettings(models.TransientModel):
                 'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單主檔")
-            rows = cursor.fetchall()
+            rows = cursor.fetchmany(500)
             weight = self.env["yc.weight"].search([])
             sql = "delete from yc_weight"
             self._cr.execute(sql)
 
             for row in rows:
+                # 先去除空白
+                for x in range(len(row)):
+                    if row[x] != None and type(row[x]) == str:
+                        row[x] = row[x].replace(' ', '')
+
                 driver_id = self.env["yc.driver"].search([("code", '=', row.司機代號)])
                 person_id = self.env["yc.hr"].search([("code", '=', row.過磅人員)])
                 factory_id = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
@@ -642,24 +652,35 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
+    # 過磅單項目檔
     @api.multi
     def insert_weight_details(self):
         try:
             cnxn = pyodbc.connect(
                 'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
-            cursor.execute("SELECT * FROM 過磅單項目檔")
+            weight = self.env["yc.weight"].search([]).name_get()
+            _string = ''
+            for x in range(len(weight)):
+                if x != len(weight) - 1:
+                    _string += "'" + weight[x][1] + "',"
+                else:
+                    _string += "'" + weight[x][1] + "'"
+            # SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN('xxxxxxxxx','oooooo')
+            db_sql = "SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN(%s)" % _string
+            cursor.execute(db_sql)
+
             rows = cursor.fetchall()
             weight_item = self.env["yc.weight.details"].search([])
             sql = "delete from yc_weight_details"
             self._cr.execute(sql)
 
             for row in rows:
+
                 if row.客戶代號 != None:
                     row.客戶代號 = row.客戶代號.strip("\x00")
                 if row.加工廠代號 != None:
                     row.加工廠代號 = row.加工廠代號.strip("\x00")
-
                 customer_id = self.env["yc.customer"].search([("code", '=', row.客戶代號)])
                 processing_id = self.env["yc.processing"].search([("code", '=', row.加工廠代號)])
                 name_id = self.env["yc.weight"].search([("name", "=", row.過磅單號)])
@@ -675,9 +696,9 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
-    # 過磅單主檔轉資料庫 ERPALL > pgsql
+    #
     @api.multi
-    def insert_yc_weight(self):
+    def iinsert_yc_weight(self):
         insert_weight_main = ResConfigSettings.insert_weight_main
         insert_weight_details = ResConfigSettings.insert_weight_details
         funcs = insert_weight_main, insert_weight_details
@@ -737,4 +758,3 @@ class ResConfigSettings(models.TransientModel):
 #     def _delete(self):
 #         sql = "delete from %s" % self.d_sql
 #         self._cr.execute(sql)
-
