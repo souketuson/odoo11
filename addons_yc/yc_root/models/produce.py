@@ -32,7 +32,7 @@ class YcWeight(models.Model):
     count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
-    
+
     # 要改成自動編號 & 上鎖
     # @api.multi
     # @api.onchange("name")
@@ -235,7 +235,7 @@ class YcWeightDetails(models.Model):
 class YcPurchase(models.Model):
     _name = "yc.purchase"
 
-    name = fields.Char("進貨單號")
+    name = fields.Char("工令號碼")
 
     day = fields.Char("日期")
     time = fields.Char("時間")
@@ -243,12 +243,54 @@ class YcPurchase(models.Model):
     state = fields.Char("狀態")
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
+
+    driver_id = fields.Many2one("yc.driver", string="司機名稱")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+    processing_id = fields.Many2one("yc.processing", "加工廠名稱")
+    # 自動帶入
+    processing_phone = fields.Char("加工廠電話")
+    # 自動帶入
+    processing_contact = fields.Char("負責人")
     pre_order = fields.Many2one("前工令號碼")
     car_no = fields.Many2one("車次序號")
-    processing_id = fields.Many2one("yc.processing", "加工廠名稱")
+
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
-    driver_id = fields.Many2one("yc.driver", string="司機名稱")
+    # 自動帶入
+    customer_phone = fields.Char("客戶電話")
+    # 自動帶入
+    customer_contact = fields.Char("客戶聯絡人")
+    batch = fields.Many2one("客戶批號")
+    customer_no =fields.Char("客戶單號")
+    person = fields.Many2one("yc.hr", string="開單人員")
+
+    # 產品機械性質主檔
+    clsf_code = fields.Many2one("", string="品名分類")
+    tenslevel = fields.Many2one("", string="'強度級數")
+    # no store
+    material_type = fields.Many2one("", string="規格")
+
+    # 下面兩個欄位資料都從一層代碼檔的同一欄位攜出?
+    # 一層代碼檔 帶出 no store
+    product_code = fields.Many2one("", string="品名")
+    # 一層代碼檔
+    txtur_code = fields.Many2one("", string="'材質")
+
+    len_code = fields.Char("長度")
+    proces_code = fields.Char("加工方式")
+    surface_code = fields.Char("表面處理")
+    elecpl_code = fields.Char("電鍍別")
+
+
+
+
+
+
+
+
+
+
+
+
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
