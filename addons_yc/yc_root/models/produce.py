@@ -214,20 +214,20 @@ class YcWeightDetails(models.Model):
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
 
-    max_no = fields.Integer(help="最大項目數",default=lambda self: self._max_no())
-    @api.multi
-    @api.onchange("max_no")
-    def _max_no(self):
-
-        for detail in self:
-            _name = detail.name_get()[0][1]
-            detail.max_no = len(detail.env["yc.weight.details"].search([('name', '=', _name)])) + 1
-
-
-    @api.model
-    def create(self, vals):
-        vals.update({"no": self.max_no + 1})
-        return super(YcWeightDetails, self).create(vals)
+    # max_no = fields.Integer(help="最大項目數",default=lambda self: self._max_no())
+    # @api.multi
+    # @api.onchange("max_no")
+    # def _max_no(self):
+    #
+    #     for detail in self:
+    #         _name = detail.name_get()[0][1]
+    #         detail.max_no = len(detail.env["yc.weight.details"].search([('name', '=', _name)])) + 1
+    #
+    #
+    # @api.model
+    # def create(self, vals):
+    #     vals.update({"no": self.max_no + 1})
+    #     return super(YcWeightDetails, self).create(vals)
 
 
 
@@ -244,7 +244,11 @@ class YcPurchase(models.Model):
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-
+    pre_order = fields.Many2one("前工令號碼")
+    car_no = fields.Many2one("車次序號")
+    processing_id = fields.Many2one("yc.processing", "加工廠名稱")
+    customer_id = fields.Many2one("yc.customer", "客戶名稱")
+    driver_id = fields.Many2one("yc.driver", string="司機名稱")
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
