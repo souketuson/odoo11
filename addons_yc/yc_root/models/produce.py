@@ -33,7 +33,6 @@ class YcWeight(models.Model):
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
 
-
     # 要改成自動編號 & 上鎖
     # @api.multi
     # @api.onchange("name")
@@ -66,6 +65,7 @@ class YcWeight(models.Model):
         time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
+    # 車次序號產生
     @api.multi
     @api.onchange("driver_id")
     def _generate_carno(self):
@@ -117,13 +117,13 @@ class YcWeight(models.Model):
                     self.carno = str(S1 + S2 + S3 + S4 + S5)
                     rec.carno = self.carno
 
-
+    # 檢查進出貨分類是否填寫
     @api.constrains("in_out")
     def _verify(self):
         if not self.in_out:
             raise Warning("進出貨分類空值")
 
-    # 進出貨次數自動記錄
+    # 進出貨次數自動計算
     @api.multi
     @api.onchange('in_out')
     def _count(self):
@@ -149,8 +149,7 @@ class YcWeight(models.Model):
                             rec.ship_times = self.ship_times + 1
                             rec.purchase_times = self.purchase_times
 
-
-    # 選完司機名稱 車牌自動帶入
+    # 選完司機名稱，車牌自動帶入
     @api.multi
     @api.onchange("driver_id")
     def _auto_fetch_plateno(self):
@@ -161,8 +160,7 @@ class YcWeight(models.Model):
             else:
                 pass
 
-
-    # 改成自動計算
+    # 淨重自動計算
     @api.onchange("total", "curbweight", "emptybucket")
     def _NetWeight(self):
         self.net = self.total - self.emptybucket - self.curbweight
@@ -191,7 +189,7 @@ class YcWeight(models.Model):
         vals.update({"net": _net})
         return super(YcWeight, self).write(vals)
 
-
+    # 檢查淨重是否等於貨重
     @api.constrains("refine", "carbur", "other", "other1")
     def _verify_weight(self):
         total = self.refine + self.carbur + self.other + self.other1
@@ -200,64 +198,38 @@ class YcWeight(models.Model):
         else:
             pass
 
+    # 貨重計算(調值、滲碳、其他、其他1)
     @api.onchange("refine", "carbur", "other", "other1")
     def _check_weight(self):
         total = self.refine + self.carbur + self.other + self.other1
         self.count = total
 
-    # max_line_sequence = fields.Integer(string='明細數',
-    #                                    compute='_compute_max_line_sequence',
-    #                                    store=True)
-    #
-    # @api.multi
-    # @api.depends('customer_detail_ids')
-    # def _compute_max_line_sequence(self):
-    #     for sale in self:
-    #         sale.max_line_sequence = (
-    #             max(sale.mapped('order_line.sequence') or [0]) + 1)
-    #
-    # @api.multi
-    # def _reset_sequence(self):
-    #     for rec in self:
-    #         current_sequence = 1
-    #         for line in rec.customer_detail_ids:
-    #             line.sequence = current_sequence
-    #             current_sequence += 1
 
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete="cascade")
     no = fields.Integer("序號")
-
-    # sequence = fields.Integer(help="Gives the sequence of this line when "
-    #                                "displaying the sale order.",
-    #                           default=9999)
-    #
-    # @api.model
-    # def create(self, values):
-    #     line = super(YcWeightDetails, self).create(values)
-    #     if self.env.context.get('keep_line_sequence'):
-    #         line.order_id._reset_sequence()
-    #     return line
-
-    # @api.onchange("no")
-    # def _number_of_weight_details(self):
-    #     # 看weight_details裡 有沒有 符合name的值
-    #     # self.name: 這邊的name fields 是m2o 無法直接取值
-    #     weight_id = self.name._context.get("params")["id"]
-    #     for rec in self:
-    #         if weight_id:
-    #             _no = self.env["yc.weight.details"].search([("name","=", weight_id)])
-    #         else:
-    #             _no = []
-    #
-    #     rec.no = len(_no) + 1
-
-
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
+
+    max_no = fields.Integer(help="最大項目數",default=lambda self: self._max_no())
+    @api.multi
+    @api.onchange("max_no")
+    def _max_no(self):
+
+        for detail in self:
+            _name = detail.name_get()[0][1]
+            detail.max_no = len(detail.env["yc.weight.details"].search([('name', '=', _name)])) + 1
+
+
+    @api.model
+    def create(self, vals):
+        vals.update({"no": self.max_no + 1})
+        return super(YcWeightDetails, self).create(vals)
+
+
 
 
 class YcPurchase(models.Model):

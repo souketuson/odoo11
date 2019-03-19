@@ -19,7 +19,6 @@
             </field>
         </record>
 
-
         <!-- view of purchase form-->
         <record model="ir.ui.view" id="purchase_form">
             <field name="name">purchase.form</field>

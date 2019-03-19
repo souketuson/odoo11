@@ -581,20 +581,13 @@ class ResConfigSettings(models.TransientModel):
                         row[x] = row[x].replace(' ', '')
 
                 driver.create({
-                    "code": row.司機代號,
-                    "category": row.分類,
-                    "user_code": row.員工代號,
-                    "plate_no": row.車牌號碼,
-                    "name": row.姓名,
-                    "gender": row.性別,
-                    "birthday": row.出生日期,
-                    "birthplace": row.籍貫,
-                    "phone1": row.電話,
-                    "phone2": row.手機,
-                    "address2": row.戶籍地址,
-                    "address1": row.通訊地址,
-                    "refine_price": row.調質單價,
-                    "carburize_price": row.滲碳單價,
+                    "code": row.司機代號, "category": row.分類,
+                    "user_code": row.員工代號, "plate_no": row.車牌號碼,
+                    "name": row.姓名, "gender": row.性別,
+                    "birthday": row.出生日期, "birthplace": row.籍貫,
+                    "phone1": row.電話, "phone2": row.手機,
+                    "address2": row.戶籍地址, "address1": row.通訊地址,
+                    "refine_price": row.調質單價, "carburize_price": row.滲碳單價,
                     "note": row.備註,
                 })
 
@@ -626,33 +619,23 @@ class ResConfigSettings(models.TransientModel):
                 factory_id = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
                 if row.司機代號:
                     weight.create({
-                        "name": row.過磅單號,
-                        "in_out": row.分類,
-                        "driver_id": driver_id.id,
-                        "day": row.日期,
-                        "weightime": row.時間,
-                        "carno": row.車次序號,
-                        "person_id": person_id.id,
-                        "weighbridge": row.地磅序號,
-                        "plate_no": row.車號,
-                        "refine": row.調質重量,
-                        "total": row.總重,
-                        "carbur": row.滲碳重量,
-                        "curbweight": row.空車重,
-                        "other": row.其他重量,
-                        "emptybucket": row.空桶重,
-                        "net": row.淨重,
-                        "purchase_times": row.進貨次數,
-                        "ship_times": row.出貨次數,
-                        "note": row.備註,
-                        "other1": row.其他重量1,
+                        "name": row.過磅單號, "in_out": row.分類,
+                        "driver_id": driver_id.id, "day": row.日期,
+                        "weightime": row.時間, "carno": row.車次序號,
+                        "person_id": person_id.id, "weighbridge": row.地磅序號,
+                        "plate_no": row.車號, "refine": row.調質重量,
+                        "total": row.總重, "carbur": row.滲碳重量,
+                        "curbweight": row.空車重, "other": row.其他重量,
+                        "emptybucket": row.空桶重, "net": row.淨重,
+                        "purchase_times": row.進貨次數, "ship_times": row.出貨次數,
+                        "note": row.備註, "other1": row.其他重量1,
                         "factory_id": factory_id.id,
                     })
         except Exception as e:
             pass
         return True
 
-    # 過磅單項目檔
+    # 過磅單項目檔 處理完主檔才能處理項目檔
     @api.multi
     def insert_weight_details(self):
         try:
@@ -666,7 +649,7 @@ class ResConfigSettings(models.TransientModel):
                     _string += "'" + weight[x][1] + "',"
                 else:
                     _string += "'" + weight[x][1] + "'"
-            # SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN('xxxxxxxxx','oooooo')
+            # SQL strict form: SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN('xxxxxxxxx','oooooo')
             db_sql = "SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN(%s)" % _string
             cursor.execute(db_sql)
 
@@ -676,7 +659,7 @@ class ResConfigSettings(models.TransientModel):
             self._cr.execute(sql)
 
             for row in rows:
-
+                # 防止 ValueError
                 if row.客戶代號 != None:
                     row.客戶代號 = row.客戶代號.strip("\x00")
                 if row.加工廠代號 != None:
@@ -696,9 +679,9 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
-    #
+    # 過磅單主檔 & 項目檔合併 一鍵完成
     @api.multi
-    def iinsert_yc_weight(self):
+    def insert_yc_weight(self):
         insert_weight_main = ResConfigSettings.insert_weight_main
         insert_weight_details = ResConfigSettings.insert_weight_details
         funcs = insert_weight_main, insert_weight_details

@@ -41,11 +41,15 @@
 
         <!-- action -->
         <record model="ir.actions.act_window" id="fake_action">
-            <field name="name">假的</field>
+            <field name="name">開發中頁面</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">yc.fake</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="fake">開發中
+                </p>
+            </field>
         </record>
 
 
