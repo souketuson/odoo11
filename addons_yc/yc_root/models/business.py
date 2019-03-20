@@ -16,3 +16,5 @@ class YcProcessing(models.Model):
 
     code = fields.Char("加工廠編號")
     name = fields.Char("加工廠名稱")
+    phone = fields.Char("電話")
+    contact = fields.Char("負責人")

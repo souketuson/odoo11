@@ -26,16 +26,143 @@
             <field name="arch" type="xml">
                 <form string="Purchase form">
                     <sheet>
-                        <group string="進貨單" colspan="4" col="4">
-                            <field name="name"/>
-                            <field name="day"/>
-                            <field name="time"/>
-                            <field name="car_no"/>
-                            <field name="state"/>
-                            <field name="weighstate"/>
-                            <field name="checkstate"/>
-                            <field name="factory_id"/>
-                        </group>
+                        <notebook>
+                            <page string="基本資料">
+                                <group string="進貨單" col="10">
+                                    <!-- -->
+                                    <field name="day"/>
+                                    <field name="create_date" attrs="{'readonly': True }" string="製表日期"/>
+                                    <field name="time"/>
+                                    <field name="factory_id"/>
+                                    <field name="pre_order"/>
+                                    <!-- -->
+                                    <field name="car_no"/>
+                                    <field name="processing_id"/>
+                                    <field name="customer_id"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="driver_id"/>
+                                    <seperate name="processing_phone">前加電話</seperate>
+                                    <seperate name="processing_contact">負責人</seperate>
+                                    <field name="processing_phone"/>
+                                    <field name="processing_contact"/>
+                                    <!-- -->
+                                    <field name="name"/>
+                                    <field name="batch"/>
+                                    <seperate>客戶單號</seperate>
+                                    <seperate/>
+                                    <field name="person"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="clsf_code"/>
+                                    <field name="product_code"/>
+                                    <seperate></seperate>
+                                    <seperate></seperate>
+                                    <field name="tenslevel"/>
+                                    <field name="txtur_code"/>
+                                    <!-- -->
+                                    <field name="norm_code"/>
+                                    <field name="len_code"/>
+                                    <field name="len_descript"/>
+                                    <seperate colspan="2">全牙or半牙</seperate>
+                                    <!-- -->
+                                    <field name="proces_code"/>
+                                    <field name="surface_code"/>
+                                    <field name="elecpl_code"/>
+                                    <field name="portage"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="num1"/>
+                                    <seperate name="unit1">單位1</seperate>
+                                    <seperate name="num2">數量2</seperate>
+                                    <seperate name="unit2">單位2</seperate>
+                                    <seperate name="num3">數量3</seperate>
+                                    <seperate name="unit3">單位3</seperate>
+                                    <seperate name="num4">數量4</seperate>
+                                    <seperate name="unit4">單位4</seperate>
+                                    <seperate name="storeplace">存放位置</seperate>
+                                    <!-- -->
+                                    <field name="net"/>
+                                    <field name="process1"/>
+                                    <field name="totalpack"/>
+                                    <field name="process2"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="standard"/>
+                                    <field name="wire_furn"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="surfhrd"/>
+                                    <field name="corehrd"/>
+                                    <field name="piece"/>
+                                    <field name="norcls"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="tensihrd"/>
+                                    <field name="carburlayer"/>
+                                    <field name="pre_furn"/>
+                                    <field name="wxr_txtur"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="torsion"/>
+                                    <field name="retempt"/>
+                                    <field name="order_furn"/>
+                                    <field name="wxrhard"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="notices1"/>
+                                    <field name="notices2"/>
+                                    <field name="notices3"/>
+                                    <field name="notices4"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="qcnote1"/>
+                                    <field name="qcnote2"/>
+                                    <field name="qcnote3"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="prodnote1"/>
+                                    <field name="prodnote2"/>
+                                    <field name="prodnote3"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <!--<field name="state"/>-->
+                                    <!--<field name="weighstate"/>-->
+                                    <!--<field name="checkstate"/>-->
+                                    <!--<field name="customer_phone"/>-->
+                                    <!--<field name="customer_contact"/>-->
+                                    <!--<field name="customer_no"/>-->
+                                </group>
+                            </page>
+
+                            <page string="作業條件">
+                                <group col="10">
+                                    <field name="flow"/>
+                                    <field name="cp"/>
+                                    <field name="nh31"/>
+                                    <field name="nh32"/>
+                                    <field name="nh33"/>
+                                    <field name="nh34"/>
+                                    <field name="heat1"/>
+                                    <field name="heat2"/>
+                                    <field name="heat3"/>
+                                    <field name="heat4"/>
+                                    <field name="heat5"/>
+                                    <field name="heat6"/>
+                                    <field name="heat7"/>
+                                    <field name="heat8"/>
+                                    <field name="heattemp"/>
+                                    <field name="heatsped"/>
+                                    <field name="tempturing1"/>
+                                    <field name="tempturing2"/>
+                                    <field name="tempturing3"/>
+                                    <field name="tempturing4"/>
+                                    <field name="tempturing5"/>
+                                    <field name="tempturing6"/>
+                                    <field name="tempturisped"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -57,7 +184,6 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="purchase_form"/>
         </record>
-
 
         <record model="ir.actions.act_window.view" id="purchase_list_action_tree">
             <field name="act_window_id" ref="purchase_list_action"/>

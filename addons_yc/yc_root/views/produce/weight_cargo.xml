@@ -38,10 +38,12 @@
                             <field name="person_id"/>
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <newline/>
                             <!-- -->
-                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}" colspan="4"/>
+                            <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="factory_id" colspan="4"/>
+                            <field name="factory_id"/>
+                            <newline/>
                             <!-- -->
                             <field name="weighbridge"/>
                             <field name="total"/>

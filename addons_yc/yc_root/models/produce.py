@@ -236,11 +236,10 @@ class YcPurchase(models.Model):
     name = fields.Char("工令號碼")
 
     day = fields.Char("日期")
-    time = fields.Char("時間")
+    time = fields.Char("時間", default=lambda self: YcWeight._get_time(self))
     state = fields.Char("狀態")
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
-
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
@@ -262,7 +261,7 @@ class YcPurchase(models.Model):
 
     # 產品機械性質主檔
     clsf_code = fields.Many2one("", string="品名分類")
-    tenslevel = fields.Many2one("", string="'強度級數")
+    tenslevel = fields.Many2one("", string="強度級數")
     # no store
     norm_code = fields.Many2one("", string="規格")
 
@@ -270,7 +269,7 @@ class YcPurchase(models.Model):
     # 一層代碼檔 帶出 no store
     product_code = fields.Many2one("", string="品名")
     # 一層代碼檔
-    txtur_code = fields.Many2one("", string="'材質")
+    txtur_code = fields.Many2one("", string="材質")
 
     len_code = fields.Char("長度")
     len_descript = fields.Char("長度說明")
@@ -289,7 +288,7 @@ class YcPurchase(models.Model):
     storeplace = fields.Char("存放位置")
     net = fields.Char("淨重")
     process1 = fields.Char("次加工廠")
-    process1 = fields.Char("二次加工")
+    process2 = fields.Char("二次加工")
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
     wire_furn = fields.Char("線材爐號")
@@ -299,6 +298,7 @@ class YcPurchase(models.Model):
     tensihrd = fields.Char("抗拉強度")
     carburlayer = fields.Char("滲碳層")
     torsion = fields.Char("扭力")
+    retempt = fields.Char("回火溫度")
     pre_furn = fields.Char("以前爐號")
     order_furn = fields.Char("預排爐號")
     norcls = fields.Char("規範分類")
@@ -346,6 +346,15 @@ class YcPurchase(models.Model):
     tempturing5 = fields.Char("回火爐5")
     tempturing6 = fields.Char("回火爐6")
     tempturisped = fields.Char("回火爐速度")
+
+    # 加工廠電話、負責人攜出
+    @api.onchange("processing_id")
+    def _fetch_processing_info(self):
+        for rec in self:
+            processing = rec.env["yc.processing"].search([("id","=",rec.processing_id.id)])
+            self.processing_phone = processing.phone
+            rec.processing_phone = self.processing_phone
+
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
