@@ -230,8 +230,6 @@ class YcWeightDetails(models.Model):
     #     return super(YcWeightDetails, self).create(vals)
 
 
-
-
 class YcPurchase(models.Model):
     _name = "yc.purchase"
 
@@ -239,7 +237,6 @@ class YcPurchase(models.Model):
 
     day = fields.Char("日期")
     time = fields.Char("時間")
-    car_no = fields.Char("車次序號")
     state = fields.Char("狀態")
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
@@ -252,7 +249,7 @@ class YcPurchase(models.Model):
     # 自動帶入
     processing_contact = fields.Char("負責人")
     pre_order = fields.Many2one("前工令號碼")
-    car_no = fields.Many2one("車次序號")
+    car_no = fields.Char("車次序號")
 
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     # 自動帶入
@@ -260,14 +257,14 @@ class YcPurchase(models.Model):
     # 自動帶入
     customer_contact = fields.Char("客戶聯絡人")
     batch = fields.Many2one("客戶批號")
-    customer_no =fields.Char("客戶單號")
+    customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
 
     # 產品機械性質主檔
     clsf_code = fields.Many2one("", string="品名分類")
     tenslevel = fields.Many2one("", string="'強度級數")
     # no store
-    material_type = fields.Many2one("", string="規格")
+    norm_code = fields.Many2one("", string="規格")
 
     # 下面兩個欄位資料都從一層代碼檔的同一欄位攜出?
     # 一層代碼檔 帶出 no store
@@ -276,21 +273,79 @@ class YcPurchase(models.Model):
     txtur_code = fields.Many2one("", string="'材質")
 
     len_code = fields.Char("長度")
+    len_descript = fields.Char("長度說明")
     proces_code = fields.Char("加工方式")
     surface_code = fields.Char("表面處理")
     elecpl_code = fields.Char("電鍍別")
+    portage = fields.Char("運費種類")
+    num1 = fields.Integer("數量1")
+    unit1 = fields.Char("單位代號1")
+    num2 = fields.Integer("數量2")
+    unit2 = fields.Char("單位代號2")
+    num3 = fields.Integer("數量3")
+    unit3 = fields.Char("單位代號3")
+    num4 = fields.Integer("數量4")
+    unit4 = fields.Char("單位代號4")
+    storeplace = fields.Char("存放位置")
+    net = fields.Char("淨重")
+    process1 = fields.Char("次加工廠")
+    process1 = fields.Char("二次加工")
+    totalpack = fields.Char("裝袋合計")
+    standard = fields.Char("依據標準")
+    wire_furn = fields.Char("線材爐號")
+    surfhrd = fields.Char("表面硬度")
+    corehrd = fields.Char("心部硬度")
+    piece = fields.Char("試片")
+    tensihrd = fields.Char("抗拉強度")
+    carburlayer = fields.Char("滲碳層")
+    torsion = fields.Char("扭力")
+    pre_furn = fields.Char("以前爐號")
+    order_furn = fields.Char("預排爐號")
+    norcls = fields.Char("規範分類")
+    wxr_txtur = fields.Char("華司材質")
+    wxrhard = fields.Char("華司硬度")
+
+    notices1 = fields.Char("注意事項1")
+    notices2 = fields.Char("注意事項2")
+    notices3 = fields.Char("注意事項3")
+    notices4 = fields.Char("注意事項4")
 
 
+    qcnote1 = fields.Char("品管備註1")
+    qcnote2 = fields.Char("品管備註2")
+    qcnote3 = fields.Char("品管備註3")
+    prodnote1 = fields.Char("製造備註1")
+    prodnote2 = fields.Char("製造備註2")
+    prodnote3 = fields.Char("製造備註3")
+
+    # 作業條件page
+
+    flow = fields.Char("流量")
+    cp = fields.Char("CP值")
+    nh31 = fields.Char("氨值1")
+    nh32 = fields.Char("氨值2")
+    nh33 = fields.Char("氨值3")
+    nh34 = fields.Char("氨值4")
+
+    heat1 = fields.Char("加熱爐1")
+    heat2 = fields.Char("加熱爐2")
+    heat3 = fields.Char("加熱爐3")
+    heat4 = fields.Char("加熱爐4")
+    heat5 = fields.Char("加熱爐5")
+    heat6 = fields.Char("加熱爐6")
+    heat7 = fields.Char("加熱爐7")
+    heat8 = fields.Char("加熱爐8")
 
 
-
-
-
-
-
-
-
-
+    heattemp = fields.Char("加熱爐油溫")
+    heatsped = fields.Char("加熱爐速度")
+    tempturing1 = fields.Char("回火爐1")
+    tempturing2 = fields.Char("回火爐2")
+    tempturing3 = fields.Char("回火爐3")
+    tempturing4 = fields.Char("回火爐4")
+    tempturing5 = fields.Char("回火爐5")
+    tempturing6 = fields.Char("回火爐6")
+    tempturisped = fields.Char("回火爐速度")
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
