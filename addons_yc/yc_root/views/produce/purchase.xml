@@ -2,6 +2,14 @@
 <odoo>
     <data>
 
+        <!--css-->
+        <!--<template id="assets_backend" name="static_resources_demo assets" inherit_id="web.assets_backend">-->
+            <!--<xpath expr="." position="inside">-->
+		<!--&lt;!&ndash;These links will be called when loading your Odoo &ndash;&gt;-->
+                <!--<link rel="stylesheet" href="/yc_root/static/src/css/cssfile.css"/>-->
+            <!--</xpath>-->
+        <!--</template>-->
+
         <!-- view of purchase tree -->
         <record model="ir.ui.view" id="purchase_tree">
             <field name="name">purchase.tree</field>
@@ -28,7 +36,7 @@
                     <sheet>
                         <notebook>
                             <page string="基本資料">
-                                <group string="進貨單" col="10">
+                                <group string="進貨單" col="10" colspan="2">
                                     <!-- -->
                                     <field name="day"/>
                                     <field name="create_date" attrs="{'readonly': True }" string="製表日期"/>
@@ -136,7 +144,7 @@
                             </page>
 
                             <page string="作業條件">
-                                <group col="10">
+                                <group col="10" colspan="2">
                                     <field name="flow"/>
                                     <field name="cp"/>
                                     <field name="nh31"/>

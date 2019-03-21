@@ -235,7 +235,7 @@ class YcPurchase(models.Model):
 
     name = fields.Char("工令號碼")
 
-    day = fields.Char("日期")
+    day = fields.Date("日期", default=dt.today())
     time = fields.Char("時間", default=lambda self: YcWeight._get_time(self))
     state = fields.Char("狀態")
     weighstate = fields.Char("過磅狀態")
@@ -248,7 +248,7 @@ class YcPurchase(models.Model):
     # 自動帶入
     processing_contact = fields.Char("負責人")
     pre_order = fields.Many2one("前工令號碼")
-    car_no = fields.Char("車次序號")
+    car_no = fields.Many2one("yc.weight", string="車次序號")
 
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     # 自動帶入
@@ -310,7 +310,6 @@ class YcPurchase(models.Model):
     notices3 = fields.Char("注意事項3")
     notices4 = fields.Char("注意事項4")
 
-
     qcnote1 = fields.Char("品管備註1")
     qcnote2 = fields.Char("品管備註2")
     qcnote3 = fields.Char("品管備註3")
@@ -336,7 +335,6 @@ class YcPurchase(models.Model):
     heat7 = fields.Char("加熱爐7")
     heat8 = fields.Char("加熱爐8")
 
-
     heattemp = fields.Char("加熱爐油溫")
     heatsped = fields.Char("加熱爐速度")
     tempturing1 = fields.Char("回火爐1")
@@ -347,13 +345,20 @@ class YcPurchase(models.Model):
     tempturing6 = fields.Char("回火爐6")
     tempturisped = fields.Char("回火爐速度")
 
+    # domainlist = fields.Char()
+
+
     # 加工廠電話、負責人攜出
     @api.onchange("processing_id")
     def _fetch_processing_info(self):
         for rec in self:
-            processing = rec.env["yc.processing"].search([("id","=",rec.processing_id.id)])
+            processing = rec.env["yc.processing"].search([("id", "=", rec.processing_id.id)])
             self.processing_phone = processing.phone
             rec.processing_phone = self.processing_phone
+
+    @api.onchange("day")
+    def _filter_car_no(self):
+        return {'domain': {"car_no": [("day", "=", self.day)]}}
 
 
 class YcPurchaseStore(models.Model):

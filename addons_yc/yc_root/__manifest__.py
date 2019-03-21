@@ -27,6 +27,7 @@
         'menuitem/root_core.xml',
 
     ],
+    'css': ['static/src/css/cssfile.css'],
 
     # only loaded in demonstration mode
     'demo': [
