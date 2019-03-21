@@ -204,6 +204,16 @@ class YcWeight(models.Model):
         total = self.refine + self.carbur + self.other + self.other1
         self.count = total
 
+    # many2one這個資料庫時 會用這裡的name 而不是(name)單號
+    # 和 _rec_name = "carno" 一樣效果
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            name = record.carno
+            result.append((record.id, name))
+        return result
+
 
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
@@ -260,22 +270,22 @@ class YcPurchase(models.Model):
     person = fields.Many2one("yc.hr", string="開單人員")
 
     # 產品機械性質主檔
-    clsf_code = fields.Many2one("", string="品名分類")
-    tenslevel = fields.Many2one("", string="強度級數")
+    clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
+    strength_level = fields.Many2one("yc.setstrength", string="強度級數")
     # no store
-    norm_code = fields.Many2one("", string="規格")
+    norm_code = fields.Many2one("yc.setnorm", string="規格")
 
     # 下面兩個欄位資料都從一層代碼檔的同一欄位攜出?
     # 一層代碼檔 帶出 no store
-    product_code = fields.Many2one("", string="品名")
+    product_code = fields.Many2one("yc.setproduct", string="品名")
     # 一層代碼檔
-    txtur_code = fields.Many2one("", string="材質")
+    txtur_code = fields.Many2one("yc.settexture", string="材質")
 
-    len_code = fields.Char("長度")
+    len_code = fields.Many2one("yc.setlength", string="長度")
     len_descript = fields.Char("長度說明")
-    proces_code = fields.Char("加工方式")
-    surface_code = fields.Char("表面處理")
-    elecpl_code = fields.Char("電鍍別")
+    proces_code = fields.Many2one("yc.setprocess", string="加工方式")
+    surface_code = fields.Many2one("yc.setsurface", string="表面處理")
+    elecpl_code = fields.Many2one("yc.setelectroplating", string="電鍍別")
     portage = fields.Char("運費種類")
     num1 = fields.Integer("數量1")
     unit1 = fields.Char("單位代號1")
@@ -347,7 +357,6 @@ class YcPurchase(models.Model):
 
     # domainlist = fields.Char()
 
-
     # 加工廠電話、負責人攜出
     @api.onchange("processing_id")
     def _fetch_processing_info(self):
@@ -356,9 +365,79 @@ class YcPurchase(models.Model):
             self.processing_phone = processing.phone
             rec.processing_phone = self.processing_phone
 
+    # 過濾該天幾張過磅單 並在car_no fields 顯示 該天單號之車次序號
     @api.onchange("day")
     def _filter_car_no(self):
         return {'domain': {"car_no": [("day", "=", self.day)]}}
+
+    # 填完車次序號 帶出該次司機
+    @api.onchange("car_no")
+    def _driver_id(self):
+        for rec in self:
+            rec.driver_id = self.car_no.driver_id.id
+
+
+class YcSetproduct(models.Model):
+    # 產品資料 S03N0001
+    _name = "yc.setproduct"
+    name = fields.Char("產品名稱")
+    code = fields.Char("產品代碼")
+
+
+class YcSetstrength(models.Model):
+    # 強度級數 S03N0002
+    _name = "yc.setstrength"
+    name = fields.Char("強度名稱")
+    code = fields.Char("強度代碼")
+
+
+class YcSetproductclassify(models.Model):
+    # 產品分類 S03N0003
+    _name = "yc.setproductclassify"
+    name = fields.Char("分類名稱")
+    code = fields.Char("分類代碼")
+
+
+class YcSetnorm(models.Model):
+    # 規格 S03N0004
+    _name = "yc.setnorm"
+    name = fields.Char("規格名稱")
+    code = fields.Char("規格代碼")
+
+
+class YcSetlength(models.Model):
+    # 長度 S03N0005
+    _name = "yc.setlength"
+    name = fields.Char("長度名稱")
+    code = fields.Char("長度代碼")
+
+
+class YcSetprocess(models.Model):
+    #  加工方式 S03N0006
+    _name = "yc.setprocess"
+    name = fields.Char("加工方式")
+    code = fields.Char("加工方式代碼")
+
+
+class YcSetlength(models.Model):
+    # 材質 S03N0007
+    _name = "yc.settexture"
+    name = fields.Char("材質名稱")
+    code = fields.Char("材質代碼")
+
+
+class YcSetsurface(models.Model):
+    # 表面處理 S03N0008
+    _name = "yc.setsurface"
+    name = fields.Char("表面處理名稱")
+    code = fields.Char("表面處理代碼")
+
+
+class YcSetelectroplating(models.Model):
+    # 電鍍 S03N0009
+    _name = "yc.setelectroplating"
+    name = fields.Char("電鍍名稱")
+    code = fields.Char("電鍍代碼")
 
 
 class YcPurchaseStore(models.Model):
