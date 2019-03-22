@@ -207,11 +207,18 @@ class YcWeight(models.Model):
     # many2one這個資料庫時 會用這裡的name 而不是(name)單號
     # 和 _rec_name = "carno" 一樣效果
     @api.multi
-    def name_get(self):
+    def name_get(self, context= None):
+        if context is None:
+            context={}
         result = []
-        for record in self:
-            name = record.carno
-            result.append((record.id, name))
+        if context.get('special_display_name','carno'):
+            for record in self:
+                name = record.carno
+                result.append((record.id, name))
+        elif context.get('special_display_name','process'):
+            for record in self:
+                name = record.processing_id
+                result.append((record.id, name))
         return result
 
 
@@ -252,59 +259,51 @@ class YcPurchase(models.Model):
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-    processing_id = fields.Many2one("yc.processing", "加工廠名稱")
+    processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     # 自動帶入
     processing_phone = fields.Char("加工廠電話")
     # 自動帶入
     processing_contact = fields.Char("負責人")
-    pre_order = fields.Many2one("前工令號碼")
+    pre_order = fields.Char("前工令號碼")
     car_no = fields.Many2one("yc.weight", string="車次序號")
-
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     # 自動帶入
     customer_phone = fields.Char("客戶電話")
     # 自動帶入
     customer_contact = fields.Char("客戶聯絡人")
-    batch = fields.Many2one("客戶批號")
+    batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
 
-    # 產品機械性質主檔
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
-    # no store
     norm_code = fields.Many2one("yc.setnorm", string="規格")
-
-    # 下面兩個欄位資料都從一層代碼檔的同一欄位攜出?
-    # 一層代碼檔 帶出 no store
     product_code = fields.Many2one("yc.setproduct", string="品名")
-    # 一層代碼檔
     txtur_code = fields.Many2one("yc.settexture", string="材質")
-
     len_code = fields.Many2one("yc.setlength", string="長度")
     len_descript = fields.Char("長度說明")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     elecpl_code = fields.Many2one("yc.setelectroplating", string="電鍍別")
-    portage = fields.Char("運費種類")
+    portage = fields.Selection([('C', '含運費'), ('U', '運費自付')], '運費種類')
     num1 = fields.Integer("數量1")
-    unit1 = fields.Char("單位代號1")
+    unit1 = fields.Many2one("yc.setunit", string="單位代號1")
     num2 = fields.Integer("數量2")
-    unit2 = fields.Char("單位代號2")
+    unit2 = fields.Many2one("yc.setunit", string="單位代號2")
     num3 = fields.Integer("數量3")
-    unit3 = fields.Char("單位代號3")
+    unit3 = fields.Many2one("yc.setunit", string="單位代號3")
     num4 = fields.Integer("數量4")
-    unit4 = fields.Char("單位代號4")
+    unit4 = fields.Many2one("yc.setunit", string="單位代號4")
     storeplace = fields.Char("存放位置")
     net = fields.Char("淨重")
-    process1 = fields.Char("次加工廠")
-    process2 = fields.Char("二次加工")
+    process1 = fields.Many2one("yc.processing", "次加工廠")
+    process2 = fields.Many2one("yc.processing", "二次加工")
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
     wire_furn = fields.Char("線材爐號")
     surfhrd = fields.Char("表面硬度")
     corehrd = fields.Char("心部硬度")
-    piece = fields.Char("試片")
+    piece = fields.Selection([('Y', '是'), ('N', '否')], '試片')
     tensihrd = fields.Char("抗拉強度")
     carburlayer = fields.Char("滲碳層")
     torsion = fields.Char("扭力")
@@ -314,12 +313,12 @@ class YcPurchase(models.Model):
     norcls = fields.Char("規範分類")
     wxr_txtur = fields.Char("華司材質")
     wxrhard = fields.Char("華司硬度")
+    fullorhalf = fields.Selection([('H', '半牙'), ('F', '全牙'), ('N', '無')], '全或半牙')
 
     notices1 = fields.Char("注意事項1")
     notices2 = fields.Char("注意事項2")
     notices3 = fields.Char("注意事項3")
     notices4 = fields.Char("注意事項4")
-
     qcnote1 = fields.Char("品管備註1")
     qcnote2 = fields.Char("品管備註2")
     qcnote3 = fields.Char("品管備註3")
@@ -328,7 +327,6 @@ class YcPurchase(models.Model):
     prodnote3 = fields.Char("製造備註3")
 
     # 作業條件page
-
     flow = fields.Char("流量")
     cp = fields.Char("CP值")
     nh31 = fields.Char("氨值1")
@@ -375,6 +373,11 @@ class YcPurchase(models.Model):
     def _driver_id(self):
         for rec in self:
             rec.driver_id = self.car_no.driver_id.id
+
+    # 選完車次序號 顯示該車次之加工廠(找單號)
+    @api.onchange("car_no")
+    def _filter_processing(self):
+        return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
 
 
 class YcSetproduct(models.Model):
@@ -438,6 +441,13 @@ class YcSetelectroplating(models.Model):
     _name = "yc.setelectroplating"
     name = fields.Char("電鍍名稱")
     code = fields.Char("電鍍代碼")
+
+
+class YcSeteunit(models.Model):
+    # 電鍍 S03N0010
+    _name = "yc.setunit"
+    name = fields.Char("單位名稱")
+    code = fields.Char("單位代碼")
 
 
 class YcPurchaseStore(models.Model):
