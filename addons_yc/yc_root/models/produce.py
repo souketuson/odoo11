@@ -238,7 +238,6 @@ class YcWeightDetails(models.Model):
     def _get_sequnce(self):
         pass
 
-
     # max_no = fields.Integer(help="最大項目數",default=lambda self: self._max_no())
     # @api.multi
     # @api.onchange("max_no")
@@ -262,6 +261,7 @@ class YcPurchase(models.Model):
 
     day = fields.Date("日期", default=dt.today())
     time = fields.Char("時間", default=lambda self: YcWeight._get_time(self))
+    copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
     state = fields.Char("狀態")
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
@@ -370,6 +370,9 @@ class YcPurchase(models.Model):
     #         processing = rec.env["yc.processing"].search([("id", "=", rec.processing_id.id)])
     #         self.processing_phone = processing.phone
     #         rec.processing_phone = self.processing_phone
+    @api.model
+    def _fetch_create_date(self):
+        self.copy_createdate = self.create_date[:10]
 
     # 1.過濾該天幾張過磅單 並在car_no fields 顯示 該天單號之車次序號
     @api.onchange("day")

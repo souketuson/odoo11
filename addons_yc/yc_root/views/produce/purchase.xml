@@ -3,11 +3,11 @@
     <data>
 
         <!--css-->
-        <template id="assets_backend" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
-            </xpath>
-        </template>
+        <!--<template id="assets_backend" inherit_id="web.assets_backend">-->
+        <!--<xpath expr="." position="inside">-->
+        <!--<link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>-->
+        <!--</xpath>-->
+        <!--</template>-->
 
         <!-- view of purchase tree -->
         <record model="ir.ui.view" id="purchase_tree">
@@ -33,27 +33,29 @@
             <field name="arch" type="xml">
                 <form string="Purchase form">
                     <sheet>
+                        <group string="進貨資訊" col="8">
+                            <field name="name" readonly="1" colspan="4"/>
+                            <field name="pre_order" colspan="4"/>
+                            <field name="day" colspan="4"/>
+                            <field name="time" colspan="4"/>
+
+
+                            <!--<field name="copy_createdate" attrs="{'readonly': True }" colspan="2"/>-->
+                            <newline/>
+                            <field name="factory_id"/>
+                            <field name="person"/>
+                            <field name="driver_id" attrs="{'readonly': True }"/>
+                            <newline/>
+                            <field name="car_no"/>
+                            <field name="processing_attache"/>
+                            <field name="processing_phone" readonly="1"/>
+                            <field name="processing_contact" readonly="1"/>
+                            <field name="customer_id"/>
+                            <field name="batch"/>
+                        </group>
                         <notebook>
                             <page string="基本資料">
-                                <group string="進貨資訊" col="6" class="o1">
-                                    <field name="name" readonly="1"/>
-                                    <newline/>
-                                    <field name="day" colspan="3"/>
-                                    <field name="create_date" attrs="{'readonly': True }" string="製表日期" colspan="3"/>
-                                    <field name="time"/>
-                                    <field name="factory_id"/>
-                                    <field name="pre_order"/>
-                                    <field name="car_no"/>
-                                    <field name="driver_id"/>
-                                    <field name="person"/>
-                                    <field name="processing_attache"/>
-                                    <field name="customer_id"/>
-                                    <field name="processing_phone" placeholder="前加電話"/>
-                                    <field name="processing_contact"/>
-                                    <field name="batch"/>
-                                    <!--<seperate>客戶單號</seperate>-->
-                                </group>
-                                <group string="規格明細" col="6" class="o1">
+                                <group string="規格明細" col="6">
                                     <field name="clsf_code"/>
                                     <field name="product_code"/>
                                     <field name="strength_level"/>
@@ -65,14 +67,31 @@
                                     <field name="surface_code"/>
                                     <field name="elecpl_code"/>
                                     <field name="portage"/>
-                                    <field name="num1"/>
-                                    <field name="unit1">單位1</field>
-                                    <field name="num2">數量2</field>
-                                    <field name="unit2">單位2</field>
-                                    <field name="num3">數量3</field>
-                                    <field name="unit3">單位3</field>
-                                    <field name="num4">數量4</field>
-                                    <field name="unit4">單位4</field>
+                                    <newline/>
+                                </group>
+                                <group col="6">
+                                    <div>
+                                        <label string="數量　" class="oe_inline"/>
+                                        <field name="num1" style="width:100px"/>
+                                        <field name="unit1" nolabel="1" class="oe_inline" style="width:20%%"/>
+                                    </div>
+                                    <div>
+                                        <label string="數量　" class="oe_inline"/>
+                                        <field name="num2" style="width:100px"/>
+                                        <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
+                                    </div>
+                                    <div>
+                                        <label string="數量　" class="oe_inline"/>
+                                        <field name="num3" style="width:100px"/>
+                                        <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
+                                    </div>
+                                    <div>
+                                        <label string="數量　" class="oe_inline"/>
+                                        <field name="num4" style="width:100px"/>
+                                        <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
+                                    </div>
+                                </group>
+                                <group col="6">
                                     <field name="storeplace">存放位置</field>
                                     <field name="net"/>
                                     <field name="process1"/>
