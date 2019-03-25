@@ -35,63 +35,61 @@
                     <sheet>
                         <notebook>
                             <page string="基本資料">
-                                    <group string="進貨資訊" col="6" class="o1">
-                                        <field name="day" id="test"/>
-                                        <field name="create_date" attrs="{'readonly': True }" string="製表日期"/>
-                                        <field name="time"/>
-                                        <field name="factory_id"/>
-                                        <field name="pre_order"/>
-                                        <field name="car_no" context="{'special_display_name': 'carno'}"/>
-                                        <field name="processing_attache" context="{'special_display_name': 'process'}"/>
-                                        <field name="customer_id"/>
-                                        <field name="driver_id"/>
-                                        <!--<seperate name="processing_phone">前加電話</seperate>-->
-                                        <!--<seperate name="processing_contact">負責人</seperate>-->
-                                        <field name="processing_phone"/>
-                                        <field name="processing_contact"/>
-                                        <field name="name"/>
-                                        <field name="batch"/>
-                                        <!--<seperate>客戶單號</seperate>-->
-                                        <field name="person"/>
+                                <group string="進貨資訊" col="6" class="o1">
+                                    <field name="name" readonly="1"/>
+                                    <newline/>
+                                    <field name="day" colspan="3"/>
+                                    <field name="create_date" attrs="{'readonly': True }" string="製表日期" colspan="3"/>
+                                    <field name="time"/>
+                                    <field name="factory_id"/>
+                                    <field name="pre_order"/>
+                                    <field name="car_no"/>
+                                    <field name="driver_id"/>
+                                    <field name="person"/>
+                                    <field name="processing_attache"/>
+                                    <field name="customer_id"/>
+                                    <field name="processing_phone" placeholder="前加電話"/>
+                                    <field name="processing_contact"/>
+                                    <field name="batch"/>
+                                    <!--<seperate>客戶單號</seperate>-->
+                                </group>
+                                <group string="規格明細" col="6" class="o1">
+                                    <field name="clsf_code"/>
+                                    <field name="product_code"/>
+                                    <field name="strength_level"/>
+                                    <field name="txtur_code"/>
+                                    <field name="norm_code"/>
+                                    <field name="len_code"/>
+                                    <field name="len_descript"/>
+                                    <field name="proces_code"/>
+                                    <field name="surface_code"/>
+                                    <field name="elecpl_code"/>
+                                    <field name="portage"/>
+                                    <field name="num1"/>
+                                    <field name="unit1">單位1</field>
+                                    <field name="num2">數量2</field>
+                                    <field name="unit2">單位2</field>
+                                    <field name="num3">數量3</field>
+                                    <field name="unit3">單位3</field>
+                                    <field name="num4">數量4</field>
+                                    <field name="unit4">單位4</field>
+                                    <field name="storeplace">存放位置</field>
+                                    <field name="net"/>
+                                    <field name="process1"/>
+                                    <field name="totalpack"/>
+                                    <field name="process2"/>
+                                    <field name="standard"/>
+                                    <field name="wire_furn"/>
+                                    <field name="fullorhalf"/>
+                                    <!--<field name="state"/>-->
+                                    <!--<field name="weighstate"/>-->
+                                    <!--<field name="checkstate"/>-->
+                                    <!--<field name="customer_phone"/>-->
+                                    <!--<field name="customer_contact"/>-->
+                                    <!--<field name="customer_no"/>-->
+                                </group>
 
-
-                                        <field name="clsf_code"/>
-                                        <field name="product_code"/>
-                                        <field name="strength_level"/>
-                                        <field name="txtur_code"/>
-                                        <field name="norm_code"/>
-                                        <field name="len_code"/>
-                                        <field name="len_descript"/>
-                                        <!--<seperate colspan="2">全牙or半牙</seperate>-->
-                                        <field name="proces_code"/>
-                                        <field name="surface_code"/>
-                                        <field name="elecpl_code"/>
-                                        <field name="portage"/>
-                                        <field name="num1"/>
-                                        <field name="unit1">單位1</field>
-                                        <field name="num2">數量2</field>
-                                        <field name="unit2">單位2</field>
-                                        <field name="num3">數量3</field>
-                                        <field name="unit3">單位3</field>
-                                        <field name="num4">數量4</field>
-                                        <field name="unit4">單位4</field>
-                                        <field name="storeplace">存放位置</field>
-                                        <field name="net"/>
-                                        <field name="process1"/>
-                                        <field name="totalpack"/>
-                                        <field name="process2"/>
-                                        <field name="standard"/>
-                                        <field name="wire_furn"/>
-                                        <field name="fullorhalf"/>
-                                        <!--<field name="state"/>-->
-                                        <!--<field name="weighstate"/>-->
-                                        <!--<field name="checkstate"/>-->
-                                        <!--<field name="customer_phone"/>-->
-                                        <!--<field name="customer_contact"/>-->
-                                        <!--<field name="customer_no"/>-->
-                                    </group>
-
-                                <group string="其他" col="6">
+                                <group string="其他" col="8">
                                     <field name="surfhrd"/>
                                     <field name="corehrd"/>
                                     <field name="piece" widget="radio"/>

@@ -207,18 +207,11 @@ class YcWeight(models.Model):
     # many2one這個資料庫時 會用這裡的name 而不是(name)單號
     # 和 _rec_name = "carno" 一樣效果
     @api.multi
-    def name_get(self, context= None):
-        if context is None:
-            context={}
+    def name_get(self):
         result = []
-        if context.get('special_display_name','carno'):
-            for record in self:
-                name = record.carno
-                result.append((record.id, name))
-        elif context.get('special_display_name','process'):
-            for record in self:
-                name = record.processing_id
-                result.append((record.id, name))
+        for record in self:
+            name = record.carno
+            result.append((record.id, name))
         return result
 
 
@@ -227,9 +220,24 @@ class YcWeightDetails(models.Model):
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete="cascade")
     no = fields.Integer("序號")
+    max_sequence = fields.Integer(string="最大數", default=lambda self: self._get_sequnce())
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            processing = record.env['yc.processing'].search([('code', '=', record.processing_id.code)])
+            name = processing.name
+            result.append((record.id, name))
+        return result
+
+    @api.model
+    def _get_sequnce(self):
+        pass
+
 
     # max_no = fields.Integer(help="最大項目數",default=lambda self: self._max_no())
     # @api.multi
@@ -261,7 +269,7 @@ class YcPurchase(models.Model):
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     # 自動帶入
-    processing_phone = fields.Char("加工廠電話")
+    processing_phone = fields.Char("加工廠電話", default=lambda self: self._get_number(self))
     # 自動帶入
     processing_contact = fields.Char("負責人")
     pre_order = fields.Char("前工令號碼")
@@ -356,28 +364,38 @@ class YcPurchase(models.Model):
     # domainlist = fields.Char()
 
     # 加工廠電話、負責人攜出
-    @api.onchange("processing_id")
-    def _fetch_processing_info(self):
-        for rec in self:
-            processing = rec.env["yc.processing"].search([("id", "=", rec.processing_id.id)])
-            self.processing_phone = processing.phone
-            rec.processing_phone = self.processing_phone
+    # @api.onchange("processing_id")
+    # def _fetch_processing_info(self):
+    #     for rec in self:
+    #         processing = rec.env["yc.processing"].search([("id", "=", rec.processing_id.id)])
+    #         self.processing_phone = processing.phone
+    #         rec.processing_phone = self.processing_phone
 
-    # 過濾該天幾張過磅單 並在car_no fields 顯示 該天單號之車次序號
+    # 1.過濾該天幾張過磅單 並在car_no fields 顯示 該天單號之車次序號
     @api.onchange("day")
     def _filter_car_no(self):
         return {'domain': {"car_no": [("day", "=", self.day)]}}
 
-    # 填完車次序號 帶出該次司機
+    # 2.填完車次序號 自動帶出該次司機
     @api.onchange("car_no")
     def _driver_id(self):
         for rec in self:
             rec.driver_id = self.car_no.driver_id.id
 
-    # 選完車次序號 顯示該車次之加工廠(找單號)
+    # 3.選完車次序號 篩選出該車次之加工廠(找單號)
     @api.onchange("car_no")
     def _filter_processing(self):
         return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
+
+    @api.onchange('processing_attache')
+    def _get_number_name(self):
+        for rec in self:
+            rec.processing_phone = self.processing_attache.processing_id.phone
+            rec.processing_contact = self.processing_attache.processing_id.contact
+
+    # 選擇規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
+
+    # 表面處理(surface_code)選擇電鍍帶出電鍍處理(electp_code)
 
 
 class YcSetproduct(models.Model):
@@ -422,7 +440,7 @@ class YcSetprocess(models.Model):
     code = fields.Char("加工方式代碼")
 
 
-class YcSetlength(models.Model):
+class YcSettexture(models.Model):
     # 材質 S03N0007
     _name = "yc.settexture"
     name = fields.Char("材質名稱")
@@ -444,7 +462,7 @@ class YcSetelectroplating(models.Model):
 
 
 class YcSeteunit(models.Model):
-    # 電鍍 S03N0010
+    # 單位 S03N0011
     _name = "yc.setunit"
     name = fields.Char("單位名稱")
     code = fields.Char("單位代碼")
