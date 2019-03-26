@@ -722,22 +722,75 @@ class ResConfigSettings(models.TransientModel):
                 "code": row.客戶代號,
             })
 
-# class DataBaseConnection(models.Model):
-#     def __init__(self, origin_db, to_db, d_sql, kwarg):
-#         '''
-#         :param origin_db: 來源資料庫
-#         :param to_db:  目標資料庫
-#         :param d_sql: 清空目標資料庫
-#         :param kwarg: 新增欄位
-#         '''
-#         cnxn = pyodbc.connect(
-#             'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
-#         cursor = cnxn.cursor()
-#         cursor.execute("SELECT * FROM %s") % origin_db
-#         rows = cursor.fetchall()
-#         db = self.env["%s"].search([]) % to_db
-#         self.d_sql = d_sql
-#
-#     def _delete(self):
-#         sql = "delete from %s" % self.d_sql
-#         self._cr.execute(sql)
+    # class DataBaseConnection(models.Model):
+    #     def __init__(self, origin_db, to_db, d_sql, kwarg):
+    #         '''
+    #         :param origin_db: 來源資料庫
+    #         :param to_db:  目標資料庫
+    #         :param d_sql: 清空目標資料庫
+    #         :param kwarg: 新增欄位
+    #         '''
+    #         cnxn = pyodbc.connect(
+    #             'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+    #         cursor = cnxn.cursor()
+    #         cursor.execute("SELECT * FROM %s") % origin_db
+    #         rows = cursor.fetchall()
+    #         db = self.env["%s"].search([]) % to_db
+    #         self.d_sql = d_sql
+    #         for row in rows:
+    #             for key,val in kwarg:
+    #                 db.create({kwarg[key]:row[val]})
+    #
+    #     def _delete(self):
+    #         sql = "delete from %s" % self.d_sql
+    #         self._cr.execute(sql)
+
+    def insert_yc_mechanicalproperty(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM 產品機械性質主檔")
+            rows = cursor.fetchall()
+            mp = self.env["yc.mechanicalproperty"].search([])
+            sql = "delete from yc_mechanicalproperty"
+            self._cr.execute(sql)
+
+            for row in rows:
+                # 先去除空白
+                for x in range(len(row)):
+                    if row[x] != None and type(row[x]) == str:
+                        row[x] = row[x].rstrip(' ')
+
+                product_cls = self.env["yc.setproductclassify"].search([('name', '=', row.產品分類代號)])
+                strength_lv = self.env["yc.setstrength"].search([('name', '=', row.強度級數)])
+                mp.create({
+                    "name": row.自動編號,
+                    "standard": row.依據標準,
+                    "clsf_code": product_cls.id,
+                    "stdcodeinit": row.規格代碼起,
+                    "stdcodeend": row.規格代碼迄,
+                    "stdreviewinit": row.規格對照起,
+                    "stdreviewend": row.規格對照迄,
+                    "strength_level": strength_lv.id,
+                    "surfaceform": row.表面規格,
+                    "surfhrd": row.表面硬度,
+                    "coreform": row.心部規格,
+                    "corehrd": row.心部硬度,
+                    "tensihrd": row.抗拉強度,
+                    "commitstrenth": row.保證強度,
+                    "elongation": row.伸長率,
+                    "sectionshrink": row.斷面收縮,
+                    "ystrength": row.降伏點強度,
+                    "carburlayer": row.滲碳層,
+                    "safeload": row.安全負荷,
+                    "headshot": row.頭部敲擊,
+                    "innertensihrd": row.內部抗拉強度,
+                    "innercarburlayer": row.內部滲碳層,
+                    "innersurfhrd": row.內部表面硬度,
+                    "innercorehrd": row.內部心部硬度,
+                    "note": row.備註,
+                })
+        except Exception as e:
+            pass
+        return True

@@ -172,6 +172,9 @@
                             |
                             <button string="過磅單" type="object" name="insert_yc_weight"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="機械主檔" type="object" name="insert_yc_mechanicalproperty"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
                             <!--|-->
                             <!--<button string="過磅單主檔" type="object" name="insert_weight_main"-->
                                     <!--confirm="是否確認轉入?" class="oe_highlight"/>-->

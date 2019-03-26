@@ -269,7 +269,7 @@ class YcPurchase(models.Model):
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     # 自動帶入
-    processing_phone = fields.Char("加工廠電話", default=lambda self: self._get_number(self))
+    processing_phone = fields.Char("加工廠電話")
     # 自動帶入
     processing_contact = fields.Char("負責人")
     pre_order = fields.Char("前工令號碼")
@@ -370,6 +370,11 @@ class YcPurchase(models.Model):
     #         processing = rec.env["yc.processing"].search([("id", "=", rec.processing_id.id)])
     #         self.processing_phone = processing.phone
     #         rec.processing_phone = self.processing_phone
+
+    # def _fetch_date(self):
+    #     if self.day:
+    #         self.day = self.day
+
     @api.model
     def _fetch_create_date(self):
         self.copy_createdate = self.create_date[:10]
@@ -392,11 +397,39 @@ class YcPurchase(models.Model):
 
     @api.onchange('processing_attache')
     def _get_number_name(self):
-        for rec in self:
-            rec.processing_phone = self.processing_attache.processing_id.phone
-            rec.processing_contact = self.processing_attache.processing_id.contact
+        self.processing_phone = self.processing_attache.processing_id.phone
+        self.processing_contact = self.processing_attache.processing_id.contact
+
+    # onchange 下的儲存
+    @api.model
+    def create(self, vals):
+        # 針對 processing_phone & processing_contact 的新增資料寫法
+        processing = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).processing_id.id
+        vals["processing_phone"] = self.env["yc.processing"].search([("id", "=", processing)]).phone
+        vals["processing_contact"] = self.env["yc.processing"].search([("id", "=", processing)]).contact
+        return super(YcPurchase, self).create(vals)
+
+    # onchange 下的修改
+    @api.multi
+    def write(self, vals):
+        # 針對 processing_phone & processing_contact 的修改資料寫法
+        # 除以上兩者，其餘已被放進vals字典 並返還修改
+
+        # Issue 進編輯畫面 refresh day的資訊觸發onchange 否則資訊會無法啟動過濾機制
+        if vals.get('processing_attache'):
+            shift_processing = vals['processing_attache']
+            processing_id = self.env['yc.weight.details'].search([('id', '=', shift_processing)]).processing_id.id
+            vals['processing_phone'] = self.env['yc.processing'].search([('id', '=', processing_id)]).phone
+            vals['processing_contact'] = self.env['yc.processing'].search([('id', '=', processing_id)]).contact
+
+        return super(YcPurchase, self).write(vals)
 
     # 選擇規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
+    # 以norm_code 的 parameter1值 去找落在 產品機械性質主檔的 規格代碼起訖內(cast to float) 之資料
+    @api.onchange("norm_code")
+    def _fetch_norm_code_info(self):
+        for rec in self:
+            rec.standard
 
     # 表面處理(surface_code)選擇電鍍帶出電鍍處理(electp_code)
 
@@ -427,6 +460,9 @@ class YcSetnorm(models.Model):
     _name = "yc.setnorm"
     name = fields.Char("規格名稱")
     code = fields.Char("規格代碼")
+    parmeter1 = fields.Char("參數1")
+    parmeter2 = fields.Char("參數2")
+    parmeter3 = fields.Char("參數3")
 
 
 class YcSetlength(models.Model):
