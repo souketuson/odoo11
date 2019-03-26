@@ -257,7 +257,7 @@ class YcWeightDetails(models.Model):
 class YcPurchase(models.Model):
     _name = "yc.purchase"
 
-    name = fields.Char("工令號碼")
+    name = fields.Char("工令號碼", default=lambda self: self.env["ir.sequence"].next_by_code("Purchase.sequence"))
 
     day = fields.Date("日期", default=dt.today())
     time = fields.Char("時間", default=lambda self: YcWeight._get_time(self))
@@ -424,12 +424,31 @@ class YcPurchase(models.Model):
 
         return super(YcPurchase, self).write(vals)
 
-    # 選擇規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
+    # 品名分類(clsf_code)以及規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
     # 以norm_code 的 parameter1值 去找落在 產品機械性質主檔的 規格代碼起訖內(cast to float) 之資料
+    # ! 舊資料庫 一層代碼的S03N0004 規格 裡面參數1資料不乾淨 造成查詢資料出現bug 須提供新的資料
+    # ?怪怪的 select * from 產品機械性質主檔 a WHERE a.產品分類代號 = 品名分類代碼.SelectedValue \
+    #  and a.強度級數 = 強度級數.SelectedValue \
+    #  and CAST(a.規格對照起 AS float) <=" + 直徑規格數字.ToString \
+    #  and CAST(a.規格對照迄 AS float) >=" + 直徑規格數字.ToString \
     @api.onchange("norm_code")
     def _fetch_norm_code_info(self):
         for rec in self:
-            rec.standard
+            norm_parameter = rec.env["yc.setnorm"].search([('id', '=', rec.norm_code.id)]).parmeter1
+            # clsf = self.env["yc.setproductclassify"].search([('id','=',self.clsf_code)])
+            mechaine_name = rec.env["yc.mechanicalproperty"].search( \
+                [('clsf_code', '=', rec.clsf_code.id), ("strength_level", "=", rec.strength_level.id), \
+                 ('stdreviewinit', '<=', norm_parameter), ('stdreviewend', '>=', norm_parameter)])
+            if bool(mechaine_name):
+                self.standard = mechaine_name.standard
+                self.surfhrd = mechaine_name.surfhrd
+                self.corehrd = mechaine_name.corehrd
+            else:
+                return {
+                    'warning': {
+                        'title': '提醒',
+                        'message': '沒有這個機械性質分類'}
+                }
 
     # 表面處理(surface_code)選擇電鍍帶出電鍍處理(electp_code)
 

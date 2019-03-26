@@ -169,6 +169,14 @@
             </field>
         </record>
 
+        <!-- auto generate number-->
+        <record id="auto_number_weight" model="ir.sequence">
+            <field name="name">Purchase List Code</field>
+            <field name="code">Purchase.sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">PL%(y)s%(month)s%(day)s</field>
+            <field name="padding">3</field>
+        </record>
 
         <!-- action -->
         <record model="ir.actions.act_window" id="purchase_list_action">
