@@ -65,8 +65,9 @@
                                     <field name="len_descript"/>
                                     <field name="proces_code"/>
                                     <field name="surface_code"/>
-                                    <field name="elecpl_code"/>
+                                    <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"/>
                                     <field name="portage"/>
+                                    <field name="elecplswitch" invisible="1"/>
                                     <newline/>
                                 </group>
                                 <group col="6">

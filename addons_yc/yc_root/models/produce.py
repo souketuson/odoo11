@@ -292,6 +292,7 @@ class YcPurchase(models.Model):
     len_descript = fields.Char("長度說明")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
+    elecplswitch = fields.Char("表面處理開關", compute="_switcher")
     elecpl_code = fields.Many2one("yc.setelectroplating", string="電鍍別")
     portage = fields.Selection([('C', '含運費'), ('U', '運費自付')], '運費種類')
     num1 = fields.Integer("數量1")
@@ -435,22 +436,38 @@ class YcPurchase(models.Model):
     def _fetch_norm_code_info(self):
         for rec in self:
             norm_parameter = rec.env["yc.setnorm"].search([('id', '=', rec.norm_code.id)]).parmeter1
-            # clsf = self.env["yc.setproductclassify"].search([('id','=',self.clsf_code)])
+            # 如果有強度
             mechaine_name = rec.env["yc.mechanicalproperty"].search( \
                 [('clsf_code', '=', rec.clsf_code.id), ("strength_level", "=", rec.strength_level.id), \
                  ('stdreviewinit', '<=', norm_parameter), ('stdreviewend', '>=', norm_parameter)])
             if bool(mechaine_name):
                 self.standard = mechaine_name.standard
-                self.surfhrd = mechaine_name.surfhrd
-                self.corehrd = mechaine_name.corehrd
+                self.surfhrd = mechaine_name.innersurfhrd
+                self.corehrd = mechaine_name.innercorehrd
+                self.tensihrd = mechaine_name.innertensihrd
+                self.carburlayer = mechaine_name.innercarburlayer
             else:
+                # self.standard = None
+                # self.surfhrd = None
+                # self.corehrd = None
+                # self.tensihrd = None
+                # self.carburlayer = None
                 return {
                     'warning': {
                         'title': '提醒',
                         'message': '沒有這個機械性質分類'}
                 }
 
-    # 表面處理(surface_code)選擇電鍍帶出電鍍處理(electp_code)
+    # 當表面處理開啟'電鍍'時，啟用電鍍類別
+    @api.onchange("surface_code")
+    def _switcher(self):
+        for rec in self:
+            if rec.surface_code.id == 4:
+                self.elecplswitch = 'ON'
+            else:
+                # 避免非電鍍類別存入資料
+                self.elecplswitch = 'OFF'
+                rec.elecpl_code = None
 
 
 class YcSetproduct(models.Model):
