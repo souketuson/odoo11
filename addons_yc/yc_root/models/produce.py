@@ -54,9 +54,9 @@ class YcWeight(models.Model):
 
     @api.model
     def _get_time(self):
-        # fields weightime
-        # 不知道為什麼 odoo 會把datetime.now()的時間丟到頁面後會 -8小時
-        hour = dt.now().hour + 8
+        # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
+        # 有以上狀況 hour +8 即可解決
+        hour = dt.now().hour
         minute = dt.now().minute
         sec = dt.now().second
         if hour > 24:
@@ -165,14 +165,16 @@ class YcWeight(models.Model):
     def _NetWeight(self):
         self.net = self.total - self.emptybucket - self.curbweight
 
-    # onchange 下的儲存
+    # 覆寫新增資料:create()
+    # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有create方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
     @api.model
     def create(self, vals):
         _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
         vals.update({"net": _net})
         return super(YcWeight, self).create(vals)
 
-    # onchange 下的修改
+    # 覆寫修改資料:write()
+    # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有write方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
     @api.multi
     def write(self, vals):
         # 沒有修改 vals(dict)就沒有值
@@ -183,9 +185,7 @@ class YcWeight(models.Model):
                 pass
             else:
                 vals[key] = self[key]
-
         _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
-
         vals.update({"net": _net})
         return super(YcWeight, self).write(vals)
 
@@ -220,7 +220,7 @@ class YcWeightDetails(models.Model):
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete="cascade")
     no = fields.Integer("序號")
-    max_sequence = fields.Integer(string="最大數", default=lambda self: self._get_sequnce())
+    max_sequence = fields.Integer(string="最大數", compute="_get_sequence")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
@@ -234,7 +234,8 @@ class YcWeightDetails(models.Model):
             result.append((record.id, name))
         return result
 
-    @api.model
+    # 新增刪除時 更新sequence數量
+    @api.onchange()
     def _get_sequnce(self):
         pass
 
@@ -258,7 +259,6 @@ class YcPurchase(models.Model):
     _name = "yc.purchase"
 
     name = fields.Char("工令號碼", default=lambda self: self.env["ir.sequence"].next_by_code("Purchase.sequence"))
-
     day = fields.Date("日期", default=dt.today())
     time = fields.Char("時間", default=lambda self: YcWeight._get_time(self))
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
@@ -371,7 +371,7 @@ class YcPurchase(models.Model):
     #         processing = rec.env["yc.processing"].search([("id", "=", rec.processing_id.id)])
     #         self.processing_phone = processing.phone
     #         rec.processing_phone = self.processing_phone
-
+    #
     # def _fetch_date(self):
     #     if self.day:
     #         self.day = self.day
@@ -394,39 +394,54 @@ class YcPurchase(models.Model):
     # 3.選完車次序號 篩選出該車次之加工廠(找單號)
     @api.onchange("car_no")
     def _filter_processing(self):
+        # 這裡 self.car_no.id 是該車次的過磅單號
         return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
 
     @api.onchange('processing_attache')
     def _get_number_name(self):
-        self.processing_phone = self.processing_attache.processing_id.phone
-        self.processing_contact = self.processing_attache.processing_id.contact
+        for rec in self:
+            rec.processing_phone = self.processing_attache.processing_id.phone
+            rec.processing_contact = self.processing_attache.processing_id.contact
 
-    # onchange 下的儲存
+    # 4. 選完加工廠自動返回該項目客戶
+    @api.onchange("processing_attache")
+    def _customer_id(self):
+        if self.processing_attache:
+            for rec in self:
+                self.customer_id = rec.env["yc.weight.details"].search(
+                    [("id", "=", rec.processing_attache.id)]).customer_id.id
+                return {"domain": {"customer_id": [("name", "=", rec.car_no.id)]}}
+
+    # 覆寫新增資料:create()
+    # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有create方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
     @api.model
     def create(self, vals):
-        # 針對 processing_phone & processing_contact 的新增資料寫法
+        # 針對 processing_phone 、 processing_contact&customer_id 的新增資料寫法
         processing = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).processing_id.id
+        customer = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).customer_id.id
         vals["processing_phone"] = self.env["yc.processing"].search([("id", "=", processing)]).phone
         vals["processing_contact"] = self.env["yc.processing"].search([("id", "=", processing)]).contact
+        vals["customer_id"] = self.env["yc.customer"].search([("id", "=", customer)]).id
         return super(YcPurchase, self).create(vals)
 
-    # onchange 下的修改
+    # 覆寫新增資料:write()
+    # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有write方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
     @api.multi
     def write(self, vals):
         # 針對 processing_phone & processing_contact 的修改資料寫法
-        # 除以上兩者，其餘已被放進vals字典 並返還修改
-
-        # Issue 進編輯畫面 refresh day的資訊觸發onchange 否則資訊會無法啟動過濾機制
+        # Issue: 進編輯畫面 refresh day的資訊觸發onchange 否則資訊會無法啟動過濾機制
         if vals.get('processing_attache'):
             shift_processing = vals['processing_attache']
             processing_id = self.env['yc.weight.details'].search([('id', '=', shift_processing)]).processing_id.id
+            customer = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).customer_id.id
             vals['processing_phone'] = self.env['yc.processing'].search([('id', '=', processing_id)]).phone
             vals['processing_contact'] = self.env['yc.processing'].search([('id', '=', processing_id)]).contact
+            vals["customer_id"] = self.env["yc.customer"].search([("id", "=", customer)]).id
 
         return super(YcPurchase, self).write(vals)
 
     # 品名分類(clsf_code)以及規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
-    # 以norm_code 的 parameter1值 去找落在 產品機械性質主檔的 規格代碼起訖內(cast to float) 之資料
+    # 以norm_code 的 parameter1值 去搜尋落在 產品機械性質主檔的 規格代碼起迄內之資料
     # ! 舊資料庫 一層代碼的S03N0004 規格 裡面參數1資料不乾淨 造成查詢資料出現bug 須提供新的資料
     # ?怪怪的 select * from 產品機械性質主檔 a WHERE a.產品分類代號 = 品名分類代碼.SelectedValue \
     #  and a.強度級數 = 強度級數.SelectedValue \
@@ -446,7 +461,7 @@ class YcPurchase(models.Model):
                 self.corehrd = mechaine_name.innercorehrd
                 self.tensihrd = mechaine_name.innertensihrd
                 self.carburlayer = mechaine_name.innercarburlayer
-            else:
+            elif bool(mechaine_name)==False and bool(rec.clsf_code and rec.strength_level) == True:
                 # self.standard = None
                 # self.surfhrd = None
                 # self.corehrd = None
@@ -468,6 +483,9 @@ class YcPurchase(models.Model):
                 # 避免非電鍍類別存入資料
                 self.elecplswitch = 'OFF'
                 rec.elecpl_code = None
+
+    # 裝袋合計合計處理
+    # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
 
 
 class YcSetproduct(models.Model):

@@ -50,7 +50,7 @@
                             <field name="processing_attache"/>
                             <field name="processing_phone" readonly="1"/>
                             <field name="processing_contact" readonly="1"/>
-                            <field name="customer_id"/>
+                            <field name="customer_id" attrs="{'readonly': [('customer_id', '!=', False)]}"/>
                             <field name="batch"/>
                         </group>
                         <notebook>
@@ -171,7 +171,7 @@
         </record>
 
         <!-- auto generate number-->
-        <record id="auto_number_weight" model="ir.sequence">
+        <record id="auto_number_purchase" model="ir.sequence">
             <field name="name">Purchase List Code</field>
             <field name="code">Purchase.sequence</field>
             <field name="implementation">no_gap</field>
