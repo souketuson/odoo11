@@ -106,6 +106,7 @@
                                     <field name="standard"/>
                                     <field name="wire_furn"/>
                                     <field name="fullorhalf"/>
+                                    <field name="headsign" widget="image"/>
                                     <!--<field name="state"/>-->
                                     <!--<field name="weighstate"/>-->
                                     <!--<field name="checkstate"/>-->

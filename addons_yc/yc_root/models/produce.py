@@ -308,6 +308,9 @@ class YcPurchase(models.Model):
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
     wire_furn = fields.Char("線材爐號")
+
+    headsign = fields.Binary('頭部記號')
+
     surfhrd = fields.Char("表面硬度")
     corehrd = fields.Char("心部硬度")
     piece = fields.Selection([('Y', '是'), ('N', '否')], '試片')
