@@ -56,7 +56,7 @@ class YcWeight(models.Model):
     def _get_time(self):
         # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
         # 有以上狀況 hour +8 即可解決
-        hour = dt.now().hour
+        hour = dt.now().hour +8
         minute = dt.now().minute
         sec = dt.now().second
         if hour > 24:
@@ -268,17 +268,15 @@ class YcPurchase(models.Model):
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
-    # 自動帶入
     processing_phone = fields.Char("加工廠電話")
-    # 自動帶入
     processing_contact = fields.Char("負責人")
+    combo_process = fields.Char("加工廠聯絡資訊")
     pre_order = fields.Char("前工令號碼")
     car_no = fields.Many2one("yc.weight", string="車次序號")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
-    # 自動帶入
     customer_phone = fields.Char("客戶電話")
-    # 自動帶入
     customer_contact = fields.Char("客戶聯絡人")
+    combo_customer = fields.Char("客戶聯絡資訊")
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
@@ -399,9 +397,13 @@ class YcPurchase(models.Model):
 
     @api.onchange('processing_attache')
     def _get_number_name(self):
-        for rec in self:
-            rec.processing_phone = self.processing_attache.processing_id.phone
-            rec.processing_contact = self.processing_attache.processing_id.contact
+        if self.processing_attache:
+            for rec in self:
+                self.combo_process = "電話: " + self.processing_attache.processing_id.phone + '   聯絡人:' + self.processing_attache.processing_id.contact
+                rec.combo_process = self.combo_process
+
+    # self.combo_customer = "電話: " + self.env["yc.customer"].search("id", "=", self.customer_id).phone + '  聯絡人: ' + \
+    #                       self.env["yc.customer"].search("id", "=", self.customer_id).contact
 
     # 4. 選完加工廠自動返回該項目客戶
     @api.onchange("processing_attache")
@@ -410,6 +412,8 @@ class YcPurchase(models.Model):
             for rec in self:
                 self.customer_id = rec.env["yc.weight.details"].search(
                     [("id", "=", rec.processing_attache.id)]).customer_id.id
+                customer =self.env["yc.customer"].search([("id","=",self.customer_id.id)])
+                self.combo_customer = "電話: " + customer.phone + '   聯絡人: ' + customer.contact
                 return {"domain": {"customer_id": [("name", "=", rec.car_no.id)]}}
 
     # 覆寫新增資料:create()
@@ -461,7 +465,7 @@ class YcPurchase(models.Model):
                 self.corehrd = mechaine_name.innercorehrd
                 self.tensihrd = mechaine_name.innertensihrd
                 self.carburlayer = mechaine_name.innercarburlayer
-            elif bool(mechaine_name)==False and bool(rec.clsf_code and rec.strength_level) == True:
+            elif bool(mechaine_name) == False and bool(rec.clsf_code and rec.strength_level) == True:
                 # self.standard = None
                 # self.surfhrd = None
                 # self.corehrd = None
@@ -494,6 +498,29 @@ class YcSetproduct(models.Model):
     name = fields.Char("產品名稱")
     code = fields.Char("產品代碼")
 
+    @api.multi
+    def name_get(self):
+        return [(record.id, "%s %s" % (record.code, record.name)) for record in self]
+
+    # @api.multi
+    # def name_get(self):
+    #     res = []
+    #     for record in self:
+    #         name = record.code + ' ' + record.name
+    #         res.append((record.id, record.code, name))
+    #     return res
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if u'\u4e00' <= name <=u'\u9fff':
+            domain = [('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+
+        banks = self.search(domain + args, limit=limit)
+        return banks.name_get()
 
 class YcSetstrength(models.Model):
     # 強度級數 S03N0002

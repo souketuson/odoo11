@@ -91,7 +91,7 @@
                     <menuitem id="fake9_menu" name="熱處理成品重量明細記錄表" parent="produce_report_menu" sequence="22" action="fake_action"/>
                     <menuitem id="fake10_menu" name="空桶欠缺明細表" parent="produce_report_menu" sequence="23" action="fake_action"/>
 
-                    <menuitem id="fake11_menu" name="產品資料" parent="produce_maintain_menu" sequence="20" action="fake_action"/>
+                    <menuitem id="setproduct_menu" name="產品資料" parent="produce_maintain_menu" sequence="20" action="setproduct_action"/>
                     <menuitem id="fake12_menu" name="倉庫主檔" parent="produce_maintain_menu" sequence="21" action="fake_action"/>
                     <menuitem id="fake13_menu" name="產品分類" parent="produce_maintain_menu" sequence="22" action="fake_action"/>
                     <menuitem id="fake14_menu" name="規格對照" parent="produce_maintain_menu" sequence="23" action="fake_action"/>

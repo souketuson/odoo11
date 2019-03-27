@@ -34,24 +34,29 @@
                 <form string="Purchase form">
                     <sheet>
                         <group string="進貨資訊" col="8">
-                            <field name="name" readonly="1" colspan="4"/>
-                            <field name="pre_order" colspan="4"/>
-                            <field name="day" colspan="4"/>
-                            <field name="time" colspan="4"/>
+                            <field name="day" colspan="4" />
+                            <field name="copy_createdate" attrs="{'readonly': True }" colspan="4"/>
 
-
-                            <!--<field name="copy_createdate" attrs="{'readonly': True }" colspan="2"/>-->
                             <newline/>
-                            <field name="factory_id"/>
-                            <field name="person"/>
+                            <field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="processing_attache" />
+                            <field name="customer_id" attrs="{'readonly': [('customer_id', '!=', False)]}" colspan="4"/>
+                            <newline/>
                             <field name="driver_id" attrs="{'readonly': True }"/>
+                            <field name="combo_process" readonly="1"/>
+                            <field name="combo_customer" readonly="1"/>
+                            <!--<field name="processing_phone" readonly="1"/>-->
+                            <!--<field name="processing_contact" readonly="1" colspan="4" />-->
                             <newline/>
-                            <field name="car_no"/>
-                            <field name="processing_attache"/>
-                            <field name="processing_phone" readonly="1"/>
-                            <field name="processing_contact" readonly="1"/>
-                            <field name="customer_id" attrs="{'readonly': [('customer_id', '!=', False)]}"/>
+                            <field name="name" readonly="1" />
                             <field name="batch"/>
+                            <field name="time" colspan="4"/>
+                            <newline/>
+                            <field name="pre_order" />
+                            <field name="person"/>
+                            <field name="factory_id" colspan="4"/>
+
+
                         </group>
                         <notebook>
                             <page string="基本資料">

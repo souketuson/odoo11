@@ -20,6 +20,7 @@
         'views/produce/weight_cargo.xml',
         'views/produce/purchase_store.xml',
         'views/produce/purchase_report.xml',
+        'views/setproduct.xml',
         'views/driver.xml',
         'views/hr_main.xml',
         'views/fake.xml',

@@ -11,7 +11,8 @@ class YcBusiness(models.Model):
     code = fields.Char("客戶編號")
     name = fields.Char("客戶名稱")
     abbrev = fields.Char("簡稱")
-
+    phone = fields.Char("電話")
+    contact = fields.Char("負責人")
 
 class YcProcessing(models.Model):
     _name = "yc.processing"
