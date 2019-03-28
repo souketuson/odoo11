@@ -3,11 +3,11 @@
     <data>
 
         <!--css-->
-        <!--<template id="assets_backend" inherit_id="web.assets_backend">-->
-        <!--<xpath expr="." position="inside">-->
-        <!--<link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>-->
-        <!--</xpath>-->
-        <!--</template>-->
+        <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+        <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
+        </xpath>
+        </template>
 
         <!-- view of purchase tree -->
         <record model="ir.ui.view" id="purchase_tree">
@@ -80,22 +80,24 @@
                                         <label string="數量　" class="oe_inline"/>
                                         <field name="num1" style="width:100px"/>
                                         <field name="unit1" nolabel="1" class="oe_inline" style="width:20%%"/>
-                                    </div>
-                                    <div>
-                                        <label string="數量　" class="oe_inline"/>
+                                    <!--</div>-->
+                                    <!--<div>-->
+                                        <label string="" class="oe_inline"/>
                                         <field name="num2" style="width:100px"/>
                                         <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
-                                    </div>
-                                    <div>
-                                        <label string="數量　" class="oe_inline"/>
+                                    <!--</div>-->
+                                    <!--<div>-->
+                                        <label string="" class="oe_inline"/>
                                         <field name="num3" style="width:100px"/>
                                         <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
-                                    </div>
-                                    <div>
-                                        <label string="數量　" class="oe_inline"/>
+                                    <!--</div>-->
+                                    <!--<div>-->
+                                        <label string="" class="oe_inline"/>
                                         <field name="num4" style="width:100px"/>
                                         <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
                                     </div>
+                                    <!--<separator/>-->
+                                    <!--<separator/>-->
                                 </group>
                                 <group col="6">
                                     <field name="storeplace">存放位置</field>
@@ -106,7 +108,8 @@
                                     <field name="standard"/>
                                     <field name="wire_furn"/>
                                     <field name="fullorhalf"/>
-                                    <field name="headsign" widget="image"/>
+                                    <!--<field name="headsign" widget="image"/>-->
+                                    <field  name="headsign" widget='image' height="90" width="90"/>
                                     <!--<field name="state"/>-->
                                     <!--<field name="weighstate"/>-->
                                     <!--<field name="checkstate"/>-->

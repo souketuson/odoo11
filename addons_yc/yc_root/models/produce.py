@@ -2,6 +2,7 @@
 
 
 from odoo import models, fields, api
+from odoo.tools import image
 from datetime import datetime as dt
 
 
@@ -19,7 +20,7 @@ class YcWeight(models.Model):
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
     purchase_times = fields.Integer("進貨次數")
     ship_times = fields.Integer("出貨次數")
-    plate_no = fields.Char("車號")
+    plate_no = fields.Char("車號", related="driver_id.plate_no")
     total = fields.Integer("總重 (KG)")
     curbweight = fields.Integer("空車重 (KG)")
     emptybucket = fields.Integer("空桶重 (KG)")
@@ -56,7 +57,7 @@ class YcWeight(models.Model):
     def _get_time(self):
         # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
         # 有以上狀況 hour +8 即可解決
-        hour = dt.now().hour +8
+        hour = dt.now().hour + 8
         minute = dt.now().minute
         sec = dt.now().second
         if hour > 24:
@@ -149,16 +150,16 @@ class YcWeight(models.Model):
                             rec.ship_times = self.ship_times + 1
                             rec.purchase_times = self.purchase_times
 
-    # 選完司機名稱，車牌自動帶入
-    @api.multi
-    @api.onchange("driver_id")
-    def _auto_fetch_plateno(self):
-        for rec in self:
-            if self.driver_id:
-                self.plate_no = self.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).plate_no
-                rec.plate_no = self.plate_no
-            else:
-                pass
+    # 選完司機名稱，車牌自動帶入 > 改用related 取代
+    # @api.multi
+    # @api.onchange("driver_id")
+    # def _auto_fetch_plateno(self):
+    #     for rec in self:
+    #         if self.driver_id:
+    #             self.plate_no = self.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).plate_no
+    #             rec.plate_no = self.plate_no
+    #         else:
+    #             pass
 
     # 淨重自動計算
     @api.onchange("total", "curbweight", "emptybucket")
@@ -415,7 +416,7 @@ class YcPurchase(models.Model):
             for rec in self:
                 self.customer_id = rec.env["yc.weight.details"].search(
                     [("id", "=", rec.processing_attache.id)]).customer_id.id
-                customer =self.env["yc.customer"].search([("id","=",self.customer_id.id)])
+                customer = self.env["yc.customer"].search([("id", "=", self.customer_id.id)])
                 self.combo_customer = "電話: " + customer.phone + '   聯絡人: ' + customer.contact
                 return {"domain": {"customer_id": [("name", "=", rec.car_no.id)]}}
 
@@ -517,13 +518,14 @@ class YcSetproduct(models.Model):
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
         domain = []
-        if u'\u4e00' <= name <=u'\u9fff':
+        if u'\u4e00' <= name <= u'\u9fff':
             domain = [('name', operator, name)]
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
 
         banks = self.search(domain + args, limit=limit)
         return banks.name_get()
+
 
 class YcSetstrength(models.Model):
     # 強度級數 S03N0002
