@@ -17,7 +17,7 @@
 
     'data': [
         'views/produce/purchase.xml',
-        'views/produce/weight_cargo.xml',
+        'views/produce/weight.xml',
         'views/produce/purchase_store.xml',
         'views/produce/purchase_report.xml',
         'views/produce/maintain/setproduct.xml',

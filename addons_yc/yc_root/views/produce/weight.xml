@@ -33,6 +33,7 @@
                             <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"/>
                             <field name="name" readonly="1" colspan="4"/>
                             <!-- -->
+
                             <field name="driver_id"/>
                             <field name="person_id"/>
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>

@@ -521,8 +521,6 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
-    # 以下進舊資料庫拉資料到pgsql
-    # 員工主檔轉資料庫 ERPALL > pgsql
     @api.multi
     def insert_yc_hr(self):
         try:
@@ -755,13 +753,11 @@ class ResConfigSettings(models.TransientModel):
             mp = self.env["yc.mechanicalproperty"].search([])
             sql = "delete from yc_mechanicalproperty"
             self._cr.execute(sql)
-
             for row in rows:
                 # 先去除空白
                 for x in range(len(row)):
                     if row[x] != None and type(row[x]) == str:
                         row[x] = row[x].rstrip(' ')
-
                 product_cls = self.env["yc.setproductclassify"].search([('name', '=', row.產品分類代號)])
                 strength_lv = self.env["yc.setstrength"].search([('name', '=', row.強度級數)])
                 mp.create({
@@ -790,6 +786,36 @@ class ResConfigSettings(models.TransientModel):
                     "innersurfhrd": row.內部表面硬度,
                     "innercorehrd": row.內部心部硬度,
                     "note": row.備註,
+                })
+        except Exception as e:
+            pass
+        return True
+
+    def insert_yc_torsion(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM 扭力規格主檔")
+            rows = cursor.fetchall()
+            torsion = self.env["yc.torsion"].search([])
+            sql = "delete from yc_torsion"
+            self._cr.execute(sql)
+            for row in rows:
+                for x in range(len(row)):
+                    if row[x] != None and type(row[x]) == str:
+                        row[x] = row[x].rstrip(' ')
+                clsf = self.env["yc.setproductclassify"].search([("name", "=", row.品名分類)])
+                strength = self.env["yc.setstrength"].search([("name", "=", row.強度級數)])
+                norm = self.env["yc.setnorm"].search([("name", "=", row.直徑規格)])
+
+                torsion.create({
+                    "name": row.自動編號,
+                    "clsf_code": clsf.id,
+                    "strength_level": strength.id,
+                    "norm_code": norm.id,
+                    "torsion1": row.扭力值1,
+                    "torsion2": row.扭力值2,
                 })
         except Exception as e:
             pass

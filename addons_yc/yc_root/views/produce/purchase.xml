@@ -4,9 +4,9 @@
 
         <!--css-->
         <template id="assets_backend" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-        <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
-        </xpath>
+            <xpath expr="." position="inside">
+                <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
+            </xpath>
         </template>
 
         <!-- view of purchase tree -->
@@ -34,13 +34,12 @@
                 <form string="Purchase form">
                     <sheet>
                         <group string="進貨資訊" col="8">
-                            <field name="day" colspan="4" />
+                            <field name="day" colspan="4"/>
                             <field name="copy_createdate" attrs="{'readonly': True }" colspan="4"/>
-
                             <newline/>
                             <field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="processing_attache" />
-                            <field name="customer_id" attrs="{'readonly': [('customer_id', '!=', False)]}" colspan="4"/>
+                            <field name="processing_attache"/>
+                            <field name="customer_id" colspan="4"/>
                             <newline/>
                             <field name="driver_id" attrs="{'readonly': True }"/>
                             <field name="combo_process" readonly="1"/>
@@ -48,11 +47,11 @@
                             <!--<field name="processing_phone" readonly="1"/>-->
                             <!--<field name="processing_contact" readonly="1" colspan="4" />-->
                             <newline/>
-                            <field name="name" readonly="1" />
+                            <field name="name" readonly="1"/>
                             <field name="batch"/>
                             <field name="time" colspan="4"/>
                             <newline/>
-                            <field name="pre_order" />
+                            <field name="pre_order"/>
                             <field name="person"/>
                             <field name="factory_id" colspan="4"/>
 
@@ -79,19 +78,19 @@
                                     <div>
                                         <label string="數量　" class="oe_inline"/>
                                         <field name="num1" style="width:100px"/>
-                                        <field name="unit1" nolabel="1" class="oe_inline" style="width:20%%"/>
-                                    <!--</div>-->
-                                    <!--<div>-->
+                                        <field name="unit1" nolabel="1" class="oe_inline" style="width:50px"/>
+                                        <!--</div>-->
+                                        <!--<div>-->
                                         <label string="" class="oe_inline"/>
                                         <field name="num2" style="width:100px"/>
                                         <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
-                                    <!--</div>-->
-                                    <!--<div>-->
+                                        <!--</div>-->
+                                        <!--<div>-->
                                         <label string="" class="oe_inline"/>
                                         <field name="num3" style="width:100px"/>
                                         <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
-                                    <!--</div>-->
-                                    <!--<div>-->
+                                        <!--</div>-->
+                                        <!--<div>-->
                                         <label string="" class="oe_inline"/>
                                         <field name="num4" style="width:100px"/>
                                         <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
@@ -109,7 +108,7 @@
                                     <field name="wire_furn"/>
                                     <field name="fullorhalf"/>
                                     <!--<field name="headsign" widget="image"/>-->
-                                    <field  name="headsign" widget='image' height="90" width="90"/>
+                                    <field name="headsign" widget='image' height="90" width="90"/>
                                     <!--<field name="state"/>-->
                                     <!--<field name="weighstate"/>-->
                                     <!--<field name="checkstate"/>-->
@@ -117,7 +116,6 @@
                                     <!--<field name="customer_contact"/>-->
                                     <!--<field name="customer_no"/>-->
                                 </group>
-
                                 <group string="其他" col="8">
                                     <field name="surfhrd"/>
                                     <field name="corehrd"/>
@@ -132,17 +130,30 @@
                                     <field name="order_furn"/>
                                     <field name="wxrhard"/>
                                 </group>
-                                <group col="2">
-                                    <field name="notices1"/>
-                                    <field name="notices2"/>
-                                    <field name="notices3"/>
-                                    <field name="notices4"/>
-                                    <field name="qcnote1"/>
-                                    <field name="qcnote2"/>
-                                    <field name="qcnote3"/>
-                                    <field name="prodnote1"/>
-                                    <field name="prodnote2"/>
-                                    <field name="prodnote3"/>
+                                <group col="8">
+                                    <div>
+                                        <label string="注意事項"/>
+                                        <field name="notices1" style="width:31%%"/>
+                                        <field name="notices2" style="width:31%%"/>
+                                        <field name="notices3" style="width:31%%"/>
+                                        <!--<field name="notices4"/>-->
+                                    </div>
+                                </group>
+                                <group>
+                                    <div>
+                                        <label string="品管備註"/>
+                                        <field name="qcnote1" style="width:31%%"/>
+                                        <field name="qcnote2" style="width:31%%"/>
+                                        <field name="qcnote3" style="width:31%%"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <div>
+                                        <label string="製造備註"/>
+                                        <field name="prodnote1" style="width:31%%"/>
+                                        <field name="prodnote2" style="width:31%%"/>
+                                        <field name="prodnote3" style="width:31%%"/>
+                                    </div>
                                 </group>
                             </page>
 
