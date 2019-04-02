@@ -178,6 +178,18 @@
                             |
                             <button string="扭力規格主檔" type="object" name="insert_yc_torsion"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="進貨單主檔" type="object" name="insert_purchase"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="班別維護檔" type="object" name="insert_set_shift"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="長度代碼維護檔" type="object" name="insert_set_length"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+
+
+
                             <!--|-->
                             <!--<button string="過磅單主檔" type="object" name="insert_weight_main"-->
                                     <!--confirm="是否確認轉入?" class="oe_highlight"/>-->

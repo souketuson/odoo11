@@ -820,3 +820,464 @@ class ResConfigSettings(models.TransientModel):
         except Exception as e:
             pass
         return True
+
+    def insert_purchase(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM 進貨單主檔")
+            rows = cursor.fetchmany(500)
+            purchase = self.env["yc.purchase"].search([])
+            sql = "delete from yc_purchase"
+            self._cr.execute(sql)
+
+            for row in rows:
+                for x in range(len(row)):
+                    if row[x] != None and type(row[x]) == str:
+                        row[x] = row[x].rstrip(' ')
+                        row[x] = row[x].lstrip(' ')
+
+                driver = self.env["yc.driver"].search([("code", "=", row.司機代號)])
+                processing = self.env["yc.processing"].search([("code", "=", row.所屬工廠)])
+                factory = self.env["yc.factory"].search([("code", "=", row.加工廠代號)])
+                # 丟車次序號
+                carno = self.env["yc.weight"].search([("carno", "=", row.車次序號)])
+                customer = self.env["yc.customer"].search([("code", "=", row.客戶代號)])
+                employee = self.env["yc.hr"].search([("code", "=", row.開單人員)])
+                clsf = self.env["yc.setproductclassify"].search([("name", "=", row.品名分類代碼)])
+                strength = self.env["yc.setstrength"].search([("name", "=", row.強度級數)])
+                norm = self.env["yc.setnorm"].search([("name", "=", row.規格代碼)])
+                product = self.env["yc.setproduct"].search([("code", "=", row.產品代碼)])
+                texture = self.env["yc.settexture"].search([("name", "=", row.材質代碼)])
+                length = self.env["yc.setlength"].search([("name", "=", row.長度代碼)])
+                process = self.env["yc.setprocess"].search([("name", "=", row.加工方式代碼)])
+                surface = self.env["yc.setsurface"].search([("name", "=", row.表面處理代碼)])
+                elecplate = self.env["yc.setelectroplating"].search([("name", "=", row.電鍍別代碼)])
+                unit1 = self.env["yc.setunit"].search([("name", "=", row.單位代號1)])
+                unit2 = self.env["yc.setunit"].search([("name", "=", row.單位代號2)])
+                unit3 = self.env["yc.setunit"].search([("name", "=", row.單位代號3)])
+                unit4 = self.env["yc.setunit"].search([("name", "=", row.單位代號4)])
+                process1 = self.env["yc.processing"].search([("code", "=", row.次加工廠代號1)])
+                process2 = self.env["yc.processing"].search([("code", "=", row.次加工廠代號2)])
+                control = self.env["yc.hr"].search([("code", "=", row.操作人員)])
+                qc = self.env["yc.hr"].search([("code", "=", row.品管人員)])
+                shift = self.env["yc.setshift"].search([("name", "=", row.班別)])
+                shift1 = self.env["yc.setshift"].search([("name", "=", row.班別1)])
+                shift2 = self.env["yc.setshift"].search([("name", "=", row.班別2)])
+                shift3 = self.env["yc.setshift"].search([("name", "=", row.班別3)])
+                op1 = self.env["yc.hr"].search([("code", "=", row.操作人員1)])
+                op2 = self.env["yc.hr"].search([("code", "=", row.操作人員2)])
+                op3 = self.env["yc.hr"].search([("code", "=", row.操作人員3)])
+                tm1 = self.env["yc.hr"].search([("code", "=", row.組長1)])
+                tm2 = self.env["yc.hr"].search([("code", "=", row.組長2)])
+                tm3 = self.env["yc.hr"].search([("code", "=", row.組長3)])
+                p_op = self.env["yc.hr"].search([("code", "=", row.產量操作人員)])
+                p_weight = self.env["yc.hr"].search([("code", "=", row.產量過磅人員)])
+                productname = self.env["yc.setproduct"].search([("name", "=", row.產品名稱)])
+                mgreviewer = self.env["yc.hr"].search([("code", "=", row.金相審核人員)])
+                mgchecker = self.env["yc.hr"].search([("code", "=", row.金相檢驗人員)])
+                ck_person = self.env["yc.hr"].search([("code", "=", row.檢驗人員)])
+
+                purchase.create({
+                    "name": row.工令號碼,
+                    "day": row.進貨日期,
+                    "time": row.時間,
+                    "state": row.狀態,
+                    "weighstate": row.過磅狀態,
+                    "checkstate": row.檢驗狀態,
+                    "driver_id": driver.id,
+                    "factory_id": factory.id,
+                    "processing_attache": processing.id,
+                    "pre_order": row.前工令號碼,
+                    # 這個要丟單號還是車次號碼?
+                    "car_no": carno.name,
+                    "customer_id": customer.id,
+                    "batch": row.客戶批號,
+                    # 還沒做客戶單號主檔
+                    "customer_no": row.客戶單號,
+                    "person": employee.id,
+                    "clsf_code": clsf.id,
+                    "strength_level": strength.id,
+                    "norm_code": norm.id,
+                    "product_code": product.id,
+                    "txtur_code": texture.id,
+
+                    "len_code": length.id,
+
+
+
+                    "len_descript": row.長度說明,
+                    "proces_code": process.id,
+                    "surface_code": surface.id,
+                    "elecpl_code": elecplate.id,
+                    "portage": row.運費種類,
+
+                    "num1": row.數量1,
+                    "unit1": unit1.id,
+                    "num2": row.數量2,
+                    "unit2": unit2.id,
+                    "num3": row.數量3,
+                    "unit3": unit3.id,
+                    "num4": row.數量4,
+                    "unit4": unit4.id,
+                    "storeplace": row.存放位置,
+                    "net": row.淨重,
+                    "process1": process1.id,
+                    "process2": process2.id,
+                    "totalpack": row.裝袋合計,
+                    "standard": row.依據標準,
+                    "wire_furn": row.線材爐號,
+                    # 頭部記號要怎麼轉?
+                    "surfhrd": row.表面硬度,
+                    "corehrd": row.心部硬度,
+                    "piece": row.試片,
+                    "tensihrd": row.抗拉強度,
+                    "carburlayer": row.滲碳層,
+                    "torsion": row.扭力,
+                    "retempt": row.回火溫度,
+                    "pre_furn": row.以前爐號,
+                    "order_furn": row.預排爐號,
+                    "norcls": row.規範分類,
+                    "wxr_txtur": row.華司材質,
+                    "wxrhard": row.華司硬度,
+                    "fullorhalf": row.牙分類,
+                    "notices1": row.注意事項1,
+                    "notices2": row.注意事項2,
+                    "notices3": row.注意事項3,
+                    "notices4": row.注意事項4,
+                    "qcnote1": row.品管備註1,
+                    "qcnote2": row.品管備註2,
+                    "qcnote3": row.品管備註3,
+                    "prodnote1": row.製造備註1,
+                    "prodnote2": row.製造備註2,
+                    "prodnote3": row.製造備註3,
+                    "flow": row.流量,
+                    "cp": row.CP值,
+                    "nh31": row.氨值1,
+                    "nh32": row.氨值2,
+                    "nh33": row.氨值3,
+                    "nh34": row.氨值4,
+                    "heat1": row.加熱爐1,
+                    "heat2": row.加熱爐2,
+                    "heat3": row.加熱爐3,
+                    "heat4": row.加熱爐4,
+                    "heat5": row.加熱爐5,
+                    "heat6": row.加熱爐6,
+                    "heat7": row.加熱爐7,
+                    "heat8": row.加熱爐8,
+                    "heattemp": row.加熱爐油溫,
+                    "heatsped": row.加熱爐速度,
+                    "tempturing1": row.回火爐1,
+                    "tempturing2": row.回火爐2,
+                    "tempturing3": row.回火爐3,
+                    "tempturing4": row.回火爐4,
+                    "tempturing5": row.回火爐5,
+                    "tempturing6": row.回火爐6,
+                    "tempturisped": row.回火爐速度,
+                    "furnstat": row.進爐狀態,
+                    "produceday": row.製造日期,
+                    "producetime": row.製造時間,
+                    "control_man": control.id,
+                    "qc": qc.id,
+                    "shift": shift.id,
+                    "ssk": row.斷面積,
+                    "mxload1": row.最大負荷值1,
+                    "mxload2": row.最大負荷值2,
+                    "mxload3": row.最大負荷值3,
+                    "mxload4": row.最大負荷值4,
+                    "mxload5": row.最大負荷值5,
+                    "mxload6": row.最大負荷值6,
+                    "mxload7": row.最大負荷值7,
+                    "mxload8": row.最大負荷值8,
+                    "resist1": row.抗拉強度值1,
+                    "resist2": row.抗拉強度值2,
+                    "resist3": row.抗拉強度值3,
+                    "resist4": row.抗拉強度值4,
+                    "resist5": row.抗拉強度值5,
+                    "resist6": row.抗拉強度值6,
+                    "resist7": row.抗拉強度值7,
+                    "resist8": row.抗拉強度值8,
+                    "yield1": row.降伏點值1,
+                    "yield2": row.降伏點值2,
+                    "yield3": row.降伏點值3,
+                    "yield4": row.降伏點值4,
+                    "yield5": row.降伏點值5,
+                    "yield6": row.降伏點值6,
+                    "yield7": row.降伏點值7,
+                    "yield8": row.降伏點值8,
+                    "ystrength1": row.降伏強度值1,
+                    "ystrength2": row.降伏強度值2,
+                    "ystrength3": row.降伏強度值3,
+                    "ystrength4": row.降伏強度值4,
+                    "ystrength5": row.降伏強度值5,
+                    "ystrength6": row.降伏強度值6,
+                    "ystrength7": row.降伏強度值7,
+                    "ystrength8": row.降伏強度值8,
+                    "elong1": row.伸長率值1,
+                    "elong2": row.伸長率值2,
+                    "elong3": row.伸長率值3,
+                    "elong4": row.伸長率值4,
+                    "elong5": row.伸長率值5,
+                    "elong6": row.伸長率值6,
+                    "elong7": row.伸長率值7,
+                    "elong8": row.伸長率值8,
+                    "decarb1": row.脫碳層值1,
+                    "decarb2": row.脫碳層值2,
+                    "decarb3": row.脫碳層值3,
+                    "decarb4": row.脫碳層值4,
+                    "decarb5": row.脫碳層值5,
+                    "decarb6": row.脫碳層值6,
+                    "decarb7": row.脫碳層值7,
+                    "decarb8": row.脫碳層值8,
+                    "wxrhrd1": row.華司硬度值1,
+                    "wxrhrd2": row.華司硬度值2,
+                    "wxrhrd3": row.華司硬度值3,
+                    "wxrhrd4": row.華司硬度值4,
+                    "wxrhrd5": row.華司硬度值5,
+                    "wxrhrd6": row.華司硬度值6,
+                    "wxrhrd7": row.華司硬度值7,
+                    "wxrhrd8": row.華司硬度值8,
+                    "icritetia": row.國際標準,
+                    "tensile_no": row.拉力機編號,
+                    "sfhn": row.表面硬度規格,
+                    "sfhv": row.表面硬度值,
+                    "sfhv1": row.表面硬度值1,
+                    "sfhv2": row.表面硬度值2,
+                    "sfhv3": row.表面硬度值3,
+                    "sfhv4": row.表面硬度值4,
+                    "sfhv5": row.表面硬度值5,
+                    "sfhv6": row.表面硬度值6,
+                    "sfhv7": row.表面硬度值7,
+                    "sfhv8": row.表面硬度值8,
+                    "chn": row.心部硬度規格,
+                    "chv": row.心部硬度值,
+                    "chv1": row.心部硬度值1,
+                    "chv2": row.心部硬度值2,
+                    "chv3": row.心部硬度值3,
+                    "chv4": row.心部硬度值4,
+                    "chv5": row.心部硬度值5,
+                    "chv6": row.心部硬度值6,
+                    "chv7": row.心部硬度值7,
+                    "chv8": row.心部硬度值8,
+                    "rtens": row.抗拉強度值,
+                    "rtenste": row.抗拉強度值起迄,
+                    "ysv": row.降伏強度值,
+                    "ysvste": row.降伏強度值起迄,
+                    "elohv": row.伸長率值,
+                    "elohvste": row.伸長率值起迄,
+                    "yste": row.降伏點值起迄,
+                    "mxloadste": row.最大負荷值起迄,
+                    "sskste": row.斷面積值起迄,
+                    "torshv": row.扭力強度值,
+                    "torshv1": row.扭力強度值1,
+                    "torshv2": row.扭力強度值2,
+                    "torshv3": row.扭力強度值3,
+                    "torshv4": row.扭力強度值4,
+                    "torshv5": row.扭力強度值5,
+                    "torshv6": row.扭力強度值6,
+                    "torshv7": row.扭力強度值7,
+                    "torshv8": row.扭力強度值8,
+                    "carb1v": row.滲碳層1值,
+                    "carb1v1": row.滲碳層1值1,
+                    "carb1v2": row.滲碳層1值2,
+                    "carb1v3": row.滲碳層1值3,
+                    "carb1v4": row.滲碳層1值4,
+                    "carb1v5": row.滲碳層1值5,
+                    "carb1v6": row.滲碳層1值6,
+                    "carb1v7": row.滲碳層1值7,
+                    "carb1v8": row.滲碳層1值8,
+                    "carb2v1": row.滲碳層2值1,
+                    "carb2v2": row.滲碳層2值2,
+                    "carb2v3": row.滲碳層2值3,
+                    "carb2v4": row.滲碳層2值4,
+                    "carb2v5": row.滲碳層2值5,
+                    "carb2v6": row.滲碳層2值6,
+                    "carb2v7": row.滲碳層2值7,
+                    "carb2v8": row.滲碳層2值8,
+                    "sskv": row.斷面收縮率值,
+                    "sskv1": row.斷面收縮率值1,
+                    "sskv2": row.斷面收縮率值2,
+                    "sskv3": row.斷面收縮率值3,
+                    "sskv4": row.斷面收縮率值4,
+                    "sskv5": row.斷面收縮率值5,
+                    "sskv6": row.斷面收縮率值6,
+                    "sskv7": row.斷面收縮率值7,
+                    "sskv8": row.斷面收縮率值8,
+                    "safeload": row.安全負荷值,
+                    "safeload1": row.安全負荷值1,
+                    "safeload2": row.安全負荷值2,
+                    "safeload3": row.安全負荷值3,
+                    "safeload4": row.安全負荷值4,
+                    "safeload5": row.安全負荷值5,
+                    "safeload6": row.安全負荷值6,
+                    "safeload7": row.安全負荷值7,
+                    "safeload8": row.安全負荷值8,
+                    "HV1": row.HV1,
+                    "HV2": row.HV2,
+                    "HV3": row.HV3,
+                    "HV12": row.HV12,
+                    "HV12OK": row.HV12OK,
+                    "HV13": row.HV13,
+                    "HV13OK": row.HV13OK,
+                    "hs5": row.頭部敲擊5,
+                    "hs10": row.頭部敲擊10,
+
+                    "hs15": row.頭部敲擊15,
+                    "curv5": row.彎曲度5,
+                    "curv15": row.彎曲度15,
+                    "wholeck": row.整體判定,
+                    "faceck": row.外觀判定,
+                    "ck_person": ck_person.id,
+                    "singleton": row.單支重,
+                    "uqbuckets": row.不合格桶數,
+                    "uqtreat": row.不合格特急處理動作,
+                    "produceday1": row.製造日期1,
+                    "shift1": shift1.id,
+                    "op1": op1.id,
+                    "buckets1": row.桶數1,
+                    "teamlead1": tm1.id,
+                    "produceday2": row.製造日期2,
+                    "shift2": shift2.id,
+                    "op2": op2.id,
+                    "buckets2": row.桶數2,
+                    "teamlead2": tm2.id,
+                    "produceday3": row.製造日期3,
+                    "shift3": shift3.id,
+                    "op3": op3.id,
+                    "buckets3": row.桶數3,
+                    "teamlead3": tm3.id,
+                    "weighbuckets": row.磅後桶數,
+                    "bdiff": row.桶數差,
+                    "pweight": row.進貨重量,
+                    "tweight": row.磅後總重,
+                    "wdiff": row.重量差,
+
+                    "currnt_furno": row.現在爐號,
+                    "serial": row.序號,
+                    "giveday": row.應對交期,
+                    "ptime1": row.製造時間1,
+                    "ptime2": row.製造時間2,
+                    "ptime3": row.製造時間3,
+                    "p_op": p_op.id,
+                    "p_weight": p_weight.id,
+                    "pnote": row.產量備註,
+                    "ckresist": row.CK抗拉強度,
+                    "cksurfhrd": row.CK表面硬度,
+                    "ckcorehrd": row.CK心部硬度,
+                    "ckcl": row.CK滲碳層,
+                    "cksfhv": row.CK表面硬度值,
+                    "ckchv": row.CK心部硬度值,
+                    "ckrtens": row.CK抗拉強度值,
+                    "ckyv": row.CK降伏強度值,
+                    "ckelong": row.CK伸長率值,
+                    "cktorsion": row.CK扭力強度值,
+                    "ckcl1v": row.CK滲碳層1值,
+                    "cksskv": row.CK斷面收縮率值,
+                    "cksl": row.CK安全負荷值,
+                    "ckysvste": row.CK降伏點值起迄,
+                    "ckmlste": row.CK最大負荷值起迄,
+                    "cksskste": row.CK斷面積值起迄,
+                    "qcnote": row.品管備註,
+                    "pw1": row.製造重量1,
+                    "pw2": row.製造重量2,
+                    "pw3": row.製造重量3,
+                    "ckecl": row.CK脫碳層,
+                    "ckecl2v": row.CK滲碳層2值,
+                    "ckwhrd": row.CK華司硬度,
+                    "ckhf": row.華司硬度規格,
+                    "ffday": row.完爐日期,
+                    "fftime": row.完爐時間,
+                    "ckclv": row.CK滲碳層值,
+                    "feedbucket": row.入料桶數,
+                    "feedweight": row.入料總重,
+                    "productname": productname.id,
+                    "contrast": row.對照,
+                    "shipbucket": row.出貨桶數,
+                    "shipweight": row.出貨重量,
+                    "sskvste": row.斷面收縮率值起迄,
+                    "slste": row.安全負荷值起迄,
+                    "ckhs": row.CK頭部敲擊,
+                    "ckcurv": row.CK彎曲度,
+                    "ckmxl": row.CK最大負荷,
+                    "mxload": row.最大負荷,
+                    "cktorsion": row.CK扭力強度,
+                    "tlevel": row.扭力強度,
+                    "ckwhrd1v": row.CK華司硬度1值,
+                    "ckwhrd2v": row.CK華司硬度2值,
+                    "whrd2v1": row.華司硬度2值1,
+                    "whrd2v2": row.華司硬度2值2,
+                    "whrd2v3": row.華司硬度2值3,
+                    "whrd2v4": row.華司硬度2值4,
+                    "whrd2v5": row.華司硬度2值5,
+                    "whrd2v6": row.華司硬度2值6,
+                    "whrd2v7": row.華司硬度2值7,
+                    "whrd2v8": row.華司硬度2值8,
+                    "uqtreat": row.不合格品處理,
+
+                    "uqweight": row.不合格重量,
+                    "followup": row.處理方式,
+                    "clnorm": row.滲碳層規格,
+                    "statecopy": row.狀態備份,
+                    "amp1": row.圖倍率1,
+                    "amp2": row.圖倍率2,
+                    "amp3": row.圖倍率3,
+                    "amp4": row.圖倍率4,
+                    "amp5": row.圖倍率5,
+                    "amp6": row.圖倍率6,
+                    "mgreviewday": row.金相審核日期,
+                    "mgcheckday": row.金相檢驗日期,
+                    "mgreviewer": mgreviewer.id,
+                    "mgchecker": mgchecker.id,
+                    "mgrtell": row.金相結果判定說明,
+                    "mgresult": row.金相結果判定,
+                })
+        except Exception as e:
+            pass
+        return True
+
+    def insert_set_shift(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM s_一層代碼檔 WHERE 類別='S01N0006'")
+            rows = cursor.fetchall()
+            setshift = self.env["yc.setshift"].search([])
+            sql = "delete from yc_setshift"
+            self._cr.execute(sql)
+
+            for row in rows:
+                setshift.create({
+                    "name": row.一層名稱,
+                    "code": row.一層代碼,
+                    "other1": row.參數1,
+                    "other2": row.參數2,
+                    "other3": row.參數3,
+                })
+        except Exception as e:
+            pass
+        return True
+
+    def insert_set_length(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor.execute("SELECT * FROM s_一層代碼檔 WHERE 類別='S03N0005'")
+            rows = cursor.fetchall()
+            setshift = self.env["yc.setlength"].search([])
+            sql = "delete from yc_setlength"
+            self._cr.execute(sql)
+
+            for row in rows:
+                setshift.create({
+                    "name": row.一層名稱,
+                    "code": row.一層代碼,
+                    "parameter1": row.參數1,
+                    "parameter2": row.參數2,
+                    "parameter3": row.參數3,
+                })
+        except Exception as e:
+            pass
+        return True

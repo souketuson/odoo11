@@ -1,8 +1,42 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo import models, fields
+from odoo import models, fields,api
 
+
+# S01
+class YcSetshift(models.Model):
+    # 班別
+    _name = "yc.setshift"
+    name = fields.Char("班別名稱")
+    code = fields.Char("班別代碼")
+    other1 = fields.Char("其他1")
+    other2 = fields.Char("其他2")
+    other3 = fields.Char("其他3")
+
+
+# S03
+class YcSetproduct(models.Model):
+    # 產品資料 S03N0001
+    _name = "yc.setproduct"
+    name = fields.Char("產品名稱")
+    code = fields.Char("產品代碼")
+
+    @api.multi
+    def name_get(self):
+        return [(record.id, "%s %s" % (record.code, record.name)) for record in self]
+
+    # 讓many2one下拉可以搜尋"代碼"來找產品
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        if u'\u4e00' <= name <= u'\u9fff':
+            domain = [('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+
+        banks = self.search(domain + args, limit=limit)
+        return banks.name_get()
 
 class YcSetstrength(models.Model):
     # 強度級數 S03N0002
@@ -33,7 +67,9 @@ class YcSetlength(models.Model):
     _name = "yc.setlength"
     name = fields.Char("長度名稱")
     code = fields.Char("長度代碼")
-
+    parameter1 = fields.Char("參數1")
+    parmeter2 = fields.Char("參數2")
+    parmeter3 = fields.Char("參數3")
 
 class YcSetprocess(models.Model):
     #  加工方式 S03N0006

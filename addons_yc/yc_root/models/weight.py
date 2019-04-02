@@ -220,7 +220,7 @@ class YcWeightDetails(models.Model):
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete="cascade")
     no = fields.Integer("序號")
-    max_sequence = fields.Integer(string="最大數", compute="_get_sequence")
+    max_sequence = fields.Integer(string="最大數")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
