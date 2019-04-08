@@ -3,7 +3,6 @@
 
 from odoo import models, fields, api
 from datetime import datetime as dt
-from addons_yc.yc_root.models.weight import YcWeight
 
 
 class YcPurchase(models.Model):
@@ -11,7 +10,7 @@ class YcPurchase(models.Model):
 
     name = fields.Char("工令號碼", default=lambda self: self.env["ir.sequence"].next_by_code("Purchase.sequence"))
     day = fields.Date("日期", default=dt.today())
-    time = fields.Char("時間", default=lambda self: YcWeight._get_time(self))
+    time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
     state = fields.Char("狀態")
     weighstate = fields.Char("過磅狀態")
@@ -28,7 +27,7 @@ class YcPurchase(models.Model):
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     customer_phone = fields.Char("客戶電話")
     customer_contact = fields.Char("客戶聯絡人")
-    combo_customer = fields.Char("客戶聯絡資訊", compute="_compute_customer")
+    combo_customer = fields.Char("客戶聯絡資訊")
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
@@ -379,6 +378,19 @@ class YcPurchase(models.Model):
     mgchecker = fields.Many2one("yc.hr", string="金相檢驗人員")
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
+
+    @api.model
+    def _get_time(self):
+        # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
+        # 有以上狀況 hour +8 即可解決
+        hour = dt.now().hour + 8
+        minute = dt.now().minute
+        sec = dt.now().second
+        if hour > 24:
+            hour -= 24
+
+        time = "%02d:%02d:%02d" % (hour, minute, sec)
+        return time
 
 
     @api.one

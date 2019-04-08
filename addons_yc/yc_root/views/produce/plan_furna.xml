@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="planfurna_tree">
+            <field name="name">planfurna.tree</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <tree string="planfurna Tree">
+                    <field name="customer_id"/>
+                    <field name="order_furn"/>
+                    <field name="day"/>
+                    <field name="name"/>
+                    <field name="product_code"/>
+                    <field name="norm_code"/>
+                    <field name="txtur_code"/>
+                    <field name="surface_code"/>
+                    <field name="retempt"/>
+                    <field name="weighbuckets"/>
+                    <field name="net"/>
+                    <field name="state"/>
+                    <field name="surfhrd"/>
+                    <field name="corehrd"/>
+                    <field name="wire_furn"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="planfurna_form">
+            <field name="name">planfurna.form</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <form string="planfurna form">
+                    <sheet>
+                        <group string="" col="8">
+                            <field name="name"/>
+                            <field name="day"/>
+                            <field name="customer_id"/>
+                            <field name="batch"/>
+                            <field name="product_code"/>
+                            <field name="norm_code"/>
+                            <field name="len_code"/>
+                            <field name="len_descript"/>
+                            <field name="clsf_code"/>
+                            <field name="txtur_code"/>
+                            <field name="surface_code"/>
+                            <field name="strength_level"/>
+                            <field name="fullorhalf"/>
+                            <field name="proces_code"/>
+                        </group>
+                            <group col="6">
+                                    <div>
+                                        <label string="數量　" class="oe_inline"/>
+                                        <field name="num1" style="width:100px"/>
+                                        <field name="unit1" nolabel="1" class="oe_inline" style="width:50px"/>
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num2" style="width:100px"/>
+                                        <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num3" style="width:100px"/>
+                                        <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num4" style="width:100px"/>
+                                        <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
+                                    </div>
+                                    <!--<separator/>-->
+                                    <!--<separator/>-->
+                                </group>
+                        <group string="" col="8">
+                            <field name="net"/>
+                            <field name="surfhrd"/>
+                            <field name="corehrd"/>
+                            <field name="storeplace"/>
+                            <field name="tensihrd"/>
+                            <field name="carburlayer"/>
+                            <field name="order_furn"/>
+                            <field name="wire_furn"/>
+                            <field name="produceday"/>
+                            <field name="shift"/>
+                            <field name="control_man"/>
+                            <field name="qc"/>
+                            <field name="flow"/>
+                            <field name="cp"/>
+                            <field name="nh31"/>
+                            <field name="nh32"/>
+                            <field name="nh33"/>
+                            <field name="nh34"/>
+                            <field name="heat1"/>
+                            <field name="heat2"/>
+                            <field name="heat3"/>
+                            <field name="heat4"/>
+                            <field name="heat5"/>
+                            <field name="heat6"/>
+                            <field name="heat7"/>
+                            <field name="heat8"/>
+                            <field name="heattemp"/>
+                            <field name="heatsped"/>
+                            <field name="tempturing1"/>
+                            <field name="tempturing2"/>
+                            <field name="tempturing3"/>
+                            <field name="tempturing4"/>
+                            <field name="tempturing5"/>
+                            <field name="tempturing6"/>
+                            <field name="tempturisped"/>
+                        </group>
+                         <group col="8">
+                                    <div>
+                                        <label string="注意事項"/>
+                                        <field name="notices1" style="width:31%%"/>
+                                        <field name="notices2" style="width:31%%"/>
+                                        <field name="notices3" style="width:31%%"/>
+                                        <!--<field name="notices4"/>-->
+                                    </div>
+                                </group>
+                                <group>
+                                    <div>
+                                        <label string="品管備註"/>
+                                        <field name="qcnote1" style="width:31%%"/>
+                                        <field name="qcnote2" style="width:31%%"/>
+                                        <field name="qcnote3" style="width:31%%"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <div>
+                                        <label string="製造備註"/>
+                                        <field name="prodnote1" style="width:31%%"/>
+                                        <field name="prodnote2" style="width:31%%"/>
+                                        <field name="prodnote3" style="width:31%%"/>
+                                    </div>
+                                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="planfurna_search_view">
+            <field name="name">planfurna.search</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="planfurna_action">
+            <field name="name">分爐排程作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="planfurna_action_form">
+            <field name="act_window_id" ref="planfurna_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="planfurna_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="planfurna_action_tree">
+            <field name="act_window_id" ref="planfurna_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="planfurna_tree"/>
+        </record>
+    </data>
+</odoo>

@@ -902,17 +902,12 @@ class ResConfigSettings(models.TransientModel):
                     "norm_code": norm.id,
                     "product_code": product.id,
                     "txtur_code": texture.id,
-
                     "len_code": length.id,
-
-
-
                     "len_descript": row.長度說明,
                     "proces_code": process.id,
                     "surface_code": surface.id,
                     "elecpl_code": elecplate.id,
                     "portage": row.運費種類,
-
                     "num1": row.數量1,
                     "unit1": unit1.id,
                     "num2": row.數量2,
@@ -1152,7 +1147,6 @@ class ResConfigSettings(models.TransientModel):
                     "pweight": row.進貨重量,
                     "tweight": row.磅後總重,
                     "wdiff": row.重量差,
-
                     "currnt_furno": row.現在爐號,
                     "serial": row.序號,
                     "giveday": row.應對交期,
@@ -1214,7 +1208,6 @@ class ResConfigSettings(models.TransientModel):
                     "whrd2v7": row.華司硬度2值7,
                     "whrd2v8": row.華司硬度2值8,
                     "uqtreat": row.不合格品處理,
-
                     "uqweight": row.不合格重量,
                     "followup": row.處理方式,
                     "clnorm": row.滲碳層規格,

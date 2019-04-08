@@ -59,15 +59,14 @@
                             <!-- -->
                         </group>
                         <notebook>
-
                             <page string="項目">
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
-                                        <!--<field name="no"/>-->
+                                        <field name="no"/>
+                                        <field name="max_no"/>
                                         <field name="customer_id"/>
                                         <field name="processing_id"/>
                                         <field name="note"/>
-                                        <!--<field name="max_no"/>-->
                                     </tree>
                                 </field>
                             </page>
@@ -85,7 +84,7 @@
         <record id="auto_number_weight" model="ir.sequence">
             <field name="name">Weight List Code</field>
             <field name="code">WeightList.sequence</field>
-            <field name="implementation">no_gap</field>
+            <!--<field name="implementation">no_gap</field>-->
             <field name="prefix">WL%(y)s%(month)s%(day)s</field>
             <field name="padding">3</field>
         </record>
