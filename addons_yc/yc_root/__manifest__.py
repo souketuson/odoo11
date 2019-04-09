@@ -17,6 +17,7 @@
 
     'data': [
         'views/produce/plan_furna.xml',
+        'views/produce/furna_import.xml',
         'views/produce/purchase.xml',
         'views/produce/weight.xml',
         'views/produce/purchase_store.xml',

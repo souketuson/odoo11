@@ -32,23 +32,25 @@
             <field name="arch" type="xml">
                 <form string="planfurna form">
                     <sheet>
-                        <group string="" col="8">
-                            <field name="name"/>
-                            <field name="day"/>
-                            <field name="customer_id"/>
-                            <field name="batch"/>
-                            <field name="product_code"/>
-                            <field name="norm_code"/>
-                            <field name="len_code"/>
-                            <field name="len_descript"/>
-                            <field name="clsf_code"/>
-                            <field name="txtur_code"/>
-                            <field name="surface_code"/>
-                            <field name="strength_level"/>
-                            <field name="fullorhalf"/>
-                            <field name="proces_code"/>
-                        </group>
-                            <group col="6">
+                        <notebook>
+                            <page string="分爐">
+                                <group string="" col="8">
+                                    <field name="name"/>
+                                    <field name="day"/>
+                                    <field name="customer_id"/>
+                                    <field name="batch"/>
+                                    <field name="product_code"/>
+                                    <field name="norm_code"/>
+                                    <field name="len_code"/>
+                                    <field name="len_descript"/>
+                                    <field name="clsf_code"/>
+                                    <field name="txtur_code"/>
+                                    <field name="surface_code"/>
+                                    <field name="strength_level"/>
+                                    <field name="fullorhalf"/>
+                                    <field name="proces_code"/>
+                                </group>
+                                <group col="6">
                                     <div>
                                         <label string="數量　" class="oe_inline"/>
                                         <field name="num1" style="width:100px"/>
@@ -72,44 +74,44 @@
                                     <!--<separator/>-->
                                     <!--<separator/>-->
                                 </group>
-                        <group string="" col="8">
-                            <field name="net"/>
-                            <field name="surfhrd"/>
-                            <field name="corehrd"/>
-                            <field name="storeplace"/>
-                            <field name="tensihrd"/>
-                            <field name="carburlayer"/>
-                            <field name="order_furn"/>
-                            <field name="wire_furn"/>
-                            <field name="produceday"/>
-                            <field name="shift"/>
-                            <field name="control_man"/>
-                            <field name="qc"/>
-                            <field name="flow"/>
-                            <field name="cp"/>
-                            <field name="nh31"/>
-                            <field name="nh32"/>
-                            <field name="nh33"/>
-                            <field name="nh34"/>
-                            <field name="heat1"/>
-                            <field name="heat2"/>
-                            <field name="heat3"/>
-                            <field name="heat4"/>
-                            <field name="heat5"/>
-                            <field name="heat6"/>
-                            <field name="heat7"/>
-                            <field name="heat8"/>
-                            <field name="heattemp"/>
-                            <field name="heatsped"/>
-                            <field name="tempturing1"/>
-                            <field name="tempturing2"/>
-                            <field name="tempturing3"/>
-                            <field name="tempturing4"/>
-                            <field name="tempturing5"/>
-                            <field name="tempturing6"/>
-                            <field name="tempturisped"/>
-                        </group>
-                         <group col="8">
+                                <group string="" col="8">
+                                    <field name="net"/>
+                                    <field name="surfhrd"/>
+                                    <field name="corehrd"/>
+                                    <field name="storeplace"/>
+                                    <field name="tensihrd"/>
+                                    <field name="carburlayer"/>
+                                    <field name="order_furn"/>
+                                    <field name="wire_furn"/>
+                                    <field name="produceday"/>
+                                    <field name="shift"/>
+                                    <field name="control_man"/>
+                                    <field name="qc"/>
+                                    <field name="flow"/>
+                                    <field name="cp"/>
+                                    <field name="nh31"/>
+                                    <field name="nh32"/>
+                                    <field name="nh33"/>
+                                    <field name="nh34"/>
+                                    <field name="heat1"/>
+                                    <field name="heat2"/>
+                                    <field name="heat3"/>
+                                    <field name="heat4"/>
+                                    <field name="heat5"/>
+                                    <field name="heat6"/>
+                                    <field name="heat7"/>
+                                    <field name="heat8"/>
+                                    <field name="heattemp"/>
+                                    <field name="heatsped"/>
+                                    <field name="tempturing1"/>
+                                    <field name="tempturing2"/>
+                                    <field name="tempturing3"/>
+                                    <field name="tempturing4"/>
+                                    <field name="tempturing5"/>
+                                    <field name="tempturing6"/>
+                                    <field name="tempturisped"/>
+                                </group>
+                                <group col="8">
                                     <div>
                                         <label string="注意事項"/>
                                         <field name="notices1" style="width:31%%"/>
@@ -134,6 +136,29 @@
                                         <field name="prodnote3" style="width:31%%"/>
                                     </div>
                                 </group>
+                            </page>
+                            <!--<page string="爐內">-->
+                                <!--<tree string="furna_import Tree" editable="top">-->
+                                    <!--<field name="order_furn"/>-->
+                                    <!--<field name="serial"/>-->
+                                    <!--<field name="customer_id" readonly="1"/>-->
+                                    <!--<field name="name" readonly="1"/>-->
+                                    <!--<field name="day" readonly="1"/>-->
+                                    <!--<field name="product_code" readonly="1"/>-->
+                                    <!--<field name="norm_code" readonly="1"/>-->
+                                    <!--<field name="txtur_code" readonly="1"/>-->
+                                    <!--<field name="surface_code" readonly="1"/>-->
+                                    <!--<field name="retempt"/>-->
+                                    <!--<field name="weighbuckets" readonly="1"/>-->
+                                    <!--<field name="net" readonly="1"/>-->
+                                    <!--<field name="surfhrd" readonly="1"/>-->
+                                    <!--<field name="corehrd" readonly="1"/>-->
+                                    <!--<field name="wire_furn" readonly="1"/>-->
+                                    <!--<field name="giveday"/>-->
+                                    <!--<field name="process1" readonly="1"/>-->
+                                <!--</tree>-->
+                            <!--</page>-->
+                        </notebook>
                     </sheet>
                 </form>
             </field>
