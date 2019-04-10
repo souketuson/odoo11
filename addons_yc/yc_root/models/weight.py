@@ -218,10 +218,9 @@ class YcWeight(models.Model):
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
 
-    name = fields.Many2one("yc.weight", "訂單編號", ondelete="cascade")
-    no = fields.Integer("序號", default= 1)
-    status = fields.Char('狀態', default='to_count')
-    max_no = fields.Integer("最大數", default="_get_row_no")
+    name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
+    no = fields.Integer("序號", default=1)
+    compuute_no = fields.Integer("最大數", compute= "_get_row_no")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
@@ -235,6 +234,14 @@ class YcWeightDetails(models.Model):
             result.append((record.id, name))
         return result
 
-    @api.depends("max_no")
+    @api.depends("compuute_no")
     def _get_row_no(self):
-        self.max_no = len (self.env["yc.weight.details"].search("status","=","to_count"))
+        if self.ids:
+            count =1
+            for rec in self:
+                weight_id = self.env['yc.weight.details'].search([('id','=', rec.id)])
+                weight_id.write({'no': count})
+                count+=1
+
+
+

@@ -62,9 +62,8 @@
                             <page string="項目">
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
-                                        <field name="no"/>
-                                        <field name="status"/>
-                                        <field name="max_no" invisible="1"/>
+                                        <field name="no" invisible="1"/>
+                                        <field name="compuute_no"  invisible="1"/>
                                         <field name="customer_id"/>
                                         <field name="processing_id"/>
                                         <field name="note"/>
