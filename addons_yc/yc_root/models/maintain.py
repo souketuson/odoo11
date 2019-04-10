@@ -104,3 +104,10 @@ class YcSeteunit(models.Model):
     _name = "yc.setunit"
     name = fields.Char("單位名稱")
     code = fields.Char("單位代碼")
+
+class YcSetStatus(models.Model):
+    # 狀態
+    _name = "yc.setstatus"
+    name = fields.Char("狀態")
+    code = fields.Char("狀態代碼")
+

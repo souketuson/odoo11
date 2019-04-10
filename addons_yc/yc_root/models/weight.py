@@ -7,6 +7,7 @@ from datetime import datetime as dt
 
 class YcWeight(models.Model):
     _name = "yc.weight"
+    _order= "day desc"
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
@@ -212,8 +213,9 @@ class YcWeight(models.Model):
         for record in self:
             # 轉檔時 self._context.get('params')['action'] = 107
             # 過磅時 self._context.get('params')['action'] = 82
-            # 進貨時 self._context.get('params')['action'] = None
-            if not self._context.get('params')['action']:
+            # 進貨創建時 self._context.get('params') = None
+            # 進貨瀏覽時 self._context.get('params')['action'] = 81
+            if not self._context.get('params') or self._context.get('params')['action'] == 81:
                 name = record.carno
                 result.append((record.id, name))
             else:
@@ -227,7 +229,7 @@ class YcWeightDetails(models.Model):
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
     no = fields.Integer("序號", default=1)
-    compuute_no = fields.Integer("最大數", compute= "_get_row_no")
+    compute_no = fields.Integer("最大數", compute= "_get_row_no")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
@@ -241,7 +243,7 @@ class YcWeightDetails(models.Model):
             result.append((record.id, name))
         return result
 
-    @api.depends("compuute_no")
+    @api.depends("compute_no")
     def _get_row_no(self):
         if self.ids:
             count =1

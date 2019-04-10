@@ -40,7 +40,7 @@
         </record>
         <!-- action -->
         <record model="ir.actions.act_window" id="setproduct_action">
-            <field name="name">setproduct</field>
+            <field name="name">產品設定</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">yc.setproduct</field>
             <field name="view_type">form</field>

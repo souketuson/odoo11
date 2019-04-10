@@ -18,7 +18,7 @@
                     <field name="retempt"/>
                     <field name="weighbuckets"/>
                     <field name="net"/>
-                    <field name="state"/>
+                    <field name="status"/>
                     <field name="surfhrd"/>
                     <field name="corehrd"/>
                     <field name="wire_furn"/>

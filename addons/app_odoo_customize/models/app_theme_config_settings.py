@@ -878,12 +878,13 @@ class ResConfigSettings(models.TransientModel):
                 mgreviewer = self.env["yc.hr"].search([("code", "=", row.金相審核人員)])
                 mgchecker = self.env["yc.hr"].search([("code", "=", row.金相檢驗人員)])
                 ck_person = self.env["yc.hr"].search([("code", "=", row.檢驗人員)])
+                status = self.env["yc.setstatus"].search([("code", "=", row.狀態)])
 
                 purchase.create({
                     "name": row.工令號碼,
                     "day": row.進貨日期,
                     "time": row.時間,
-                    "state": row.狀態,
+                    "status": status.id ,
                     "weighstate": row.過磅狀態,
                     "checkstate": row.檢驗狀態,
                     "driver_id": driver.id,

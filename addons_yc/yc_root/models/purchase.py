@@ -12,7 +12,7 @@ class YcPurchase(models.Model):
     day = fields.Date("日期", default=dt.today())
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
-    state = fields.Char("狀態")
+    status = fields.Many2one("yc.setstatus", string="狀態")
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")

@@ -19,7 +19,7 @@
                     <field name="day"/>
                     <field name="time"/>
                     <field name="car_no"/>
-                    <field name="state"/>
+                    <field name="status"/>
                     <field name="weighstate"/>
                     <field name="checkstate"/>
                 </tree>
@@ -54,6 +54,7 @@
                             <field name="pre_order"/>
                             <field name="person"/>
                             <field name="factory_id" colspan="4"/>
+                            <field name="status"/>
 
 
                         </group>
@@ -109,7 +110,7 @@
                                     <field name="fullorhalf"/>
                                     <!--<field name="headsign" widget="image"/>-->
                                     <field name="headsign" widget='image' height="90" width="90"/>
-                                    <!--<field name="state"/>-->
+                                    <!--<field name="status"/>-->
                                     <!--<field name="weighstate"/>-->
                                     <!--<field name="checkstate"/>-->
                                     <!--<field name="customer_phone"/>-->
