@@ -54,9 +54,6 @@
                             <field name="pre_order"/>
                             <field name="person"/>
                             <field name="factory_id" colspan="4"/>
-                            <field name="status"/>
-
-
                         </group>
                         <notebook>
                             <page string="基本資料">

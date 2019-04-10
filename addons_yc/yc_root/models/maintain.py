@@ -35,8 +35,8 @@ class YcSetproduct(models.Model):
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
 
-        banks = self.search(domain + args, limit=limit)
-        return banks.name_get()
+        product = self.search(domain + args, limit=limit)
+        return product.name_get()
 
 class YcSetstrength(models.Model):
     # 強度級數 S03N0002

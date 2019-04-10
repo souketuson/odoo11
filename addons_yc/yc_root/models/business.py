@@ -46,6 +46,18 @@ class YcBusiness(models.Model):
     otherpostcode3 = fields.Char("其他郵遞區號3")
     otheraddress3 = fields.Char("其他地址3")
 
+    # 讓many2one下拉可以搜尋"代碼"來找產品
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        if u'\u4e00' <= name <= u'\u9fff':
+            domain = [('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+
+        customer = self.search(domain + args, limit=limit)
+        return customer.name_get()
+
 
 class YcProcessing(models.Model):
     _name = "yc.processing"
