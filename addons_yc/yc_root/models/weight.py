@@ -210,8 +210,15 @@ class YcWeight(models.Model):
     def name_get(self):
         result = []
         for record in self:
-            name = record.carno
-            result.append((record.id, name))
+            # 轉檔時 self._context.get('params')['action'] = 107
+            # 過磅時 self._context.get('params')['action'] = 82
+            # 進貨時 self._context.get('params')['action'] = None
+            if not self._context.get('params')['action']:
+                name = record.carno
+                result.append((record.id, name))
+            else:
+                name = record.name
+                result.append((record.id, name))
         return result
 
 
@@ -242,6 +249,3 @@ class YcWeightDetails(models.Model):
                 weight_id = self.env['yc.weight.details'].search([('id','=', rec.id)])
                 weight_id.write({'no': count})
                 count+=1
-
-
-
