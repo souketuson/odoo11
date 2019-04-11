@@ -99,8 +99,6 @@
                 </search>
             </field>
         </record>
-
-
         <!-- action -->
         <record model="ir.actions.act_window" id="weight_list_action">
             <field name="name">過磅單作業</field>

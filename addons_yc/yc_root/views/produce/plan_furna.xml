@@ -85,7 +85,7 @@
                                     <field name="wire_furn"/>
                                     <field name="produceday"/>
                                     <field name="shift"/>
-                                    <field name="control_man"/>
+                                    <field name="op"/>
                                     <field name="qc"/>
                                     <field name="flow"/>
                                     <field name="cp"/>

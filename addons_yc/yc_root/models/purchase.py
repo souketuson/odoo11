@@ -114,7 +114,7 @@ class YcPurchase(models.Model):
     furnstat = fields.Char("進爐狀態")
     produceday = fields.Date("製造日期")
     producetime = fields.Char("製造時間")
-    control_man = fields.Many2one("yc.hr", string="操作人員")
+    op = fields.Many2one("yc.hr", string="操作人員")
     qc = fields.Many2one("yc.hr", string="品管人員")
     shift = fields.Many2one("yc.setshift", string="班別")
     ssk = fields.Float("斷面積")
@@ -573,6 +573,10 @@ class YcPurchase(models.Model):
             self.tempturing6 = _filter.tempturing6
             self.tempturisped = _filter.tempturisped
 
+    # 製程登錄作業
+    furn_in = fields.Many2one("yc.purchase",string="已進爐")
+    furn_notin = fields.Many2one("yc.purchase", string="未進爐")
+    check_furn_status = fields.Char("check", compute="_check_furn_status")
 
 
 
