@@ -113,7 +113,7 @@ class YcPurchase(models.Model):
     tempturisped = fields.Char("回火爐速度")
     furnstat = fields.Char("進爐狀態")
     produceday = fields.Date("製造日期")
-    producetime = fields.Char("製造時間")
+    ptime = fields.Char("製造時間")
     op = fields.Many2one("yc.hr", string="操作人員")
     qc = fields.Many2one("yc.hr", string="品管人員")
     shift = fields.Many2one("yc.setshift", string="班別")
@@ -184,7 +184,7 @@ class YcPurchase(models.Model):
     tensile_no = fields.Char("拉力機編號")
     sfhn = fields.Char("表面硬度規格")
     sfhv = fields.Char("表面硬度值")
-    sfhv1  = fields.Float("表面硬度值1")
+    sfhv1 = fields.Float("表面硬度值1")
     sfhv2 = fields.Float("表面硬度值2")
     sfhv3 = fields.Float("表面硬度值3")
     sfhv4 = fields.Float("表面硬度值4")
@@ -392,7 +392,6 @@ class YcPurchase(models.Model):
         time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
-
     @api.one
     @api.depends('processing_attache')
     def _compute_process(self):
@@ -411,7 +410,7 @@ class YcPurchase(models.Model):
     # 1.過濾該天幾張過磅單 並在car_no fields 顯示 該天單號之進貨(I)車次序號
     @api.onchange("day")
     def _filter_car_no(self):
-        return {'domain': {"car_no": [("day", "=", self.day),("in_out","=","I")]}}
+        return {'domain': {"car_no": [("day", "=", self.day), ("in_out", "=", "I")]}}
 
     # 2.填完車次序號 自動帶出該次司機
     @api.onchange("car_no")
@@ -573,13 +572,23 @@ class YcPurchase(models.Model):
             self.tempturing6 = _filter.tempturing6
             self.tempturisped = _filter.tempturisped
 
-    # 製程登錄作業
-    furn_in = fields.Many2one("yc.purchase",string="已進爐")
+    # S05N0100 製程登錄作業
+    furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
     check_furn_status = fields.Char("check", compute="_check_furn_status")
 
-
-
+    @api.multi
+    def yc_purchase_search_name(self):
+        # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
+        if self._context.get('params')['action'] == 111:
+            id = self.env['yc.purchase'].search([('name', '=', self.name)]).id
+            return {
+                'res_id': id,
+                'view_mode': 'form',
+                'view_type': 'form',
+                'res_model': 'yc.purchase',
+                'type': 'ir.actions.act_window',
+            }
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"

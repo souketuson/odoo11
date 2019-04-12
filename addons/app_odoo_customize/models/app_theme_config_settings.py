@@ -973,7 +973,7 @@ class ResConfigSettings(models.TransientModel):
                     "tempturisped": row.回火爐速度,
                     "furnstat": row.進爐狀態,
                     "produceday": row.製造日期,
-                    "producetime": row.製造時間,
+                    "ptime": row.製造時間,
                     "control_man": control.id,
                     "qc": qc.id,
                     "shift": shift.id,

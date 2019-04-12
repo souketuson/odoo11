@@ -100,7 +100,7 @@ class YcSetelectroplating(models.Model):
 
 
 class YcSeteunit(models.Model):
-    # 單位 S03N0011
+    # 單位 S03N0010
     _name = "yc.setunit"
     name = fields.Char("單位名稱")
     code = fields.Char("單位代碼")
