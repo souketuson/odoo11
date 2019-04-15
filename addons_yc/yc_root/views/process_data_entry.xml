@@ -24,8 +24,8 @@
                     <sheet>
                         <group col="8">
                             <field name="order_furn" string="爐號"/>
-                            <field name="furn_notin"/>
-                            <field name="furn_in"/>
+                            <field name="furn_notin" domain='[("weighstate", "=", "未過磅")]'/>
+                            <field name="furn_in" domain='[("weighstate", "=", "已過磅")]'/>
                             <field name="name"/>
                         </group>
                         <div>

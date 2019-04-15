@@ -597,11 +597,6 @@ class YcPurchase(models.Model):
                 'target': 'inline',
             }
 
-    @api.onchange("name")
-    def _filter_(self):
-        if self._context.get('params')['action'] == 111:
-            return {'domain': {"furn_in": [("weighstate", "=", "已過磅")], "furn_notin": [("weighstate", "=", "未過磅")]}}
-
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
