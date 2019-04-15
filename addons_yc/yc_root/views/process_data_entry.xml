@@ -20,7 +20,7 @@
             <field name="name">pde.form</field>
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
-                <form string="ProcessDataEntry form" version="v7">
+                <form string="ProcessDataEntry form">
                     <sheet>
                         <group col="8">
                             <field name="order_furn" string="爐號"/>
@@ -29,8 +29,7 @@
                             <field name="name"/>
                         </group>
                         <div>
-                            <button string="資料更新" type="object" name="yc_purchase_search_name"
-                                    confirm="確認?"/>
+                            <button string="資料查詢" type="object" class="oe_highlight" name="yc_purchase_search_name"/>
                         </div>
                         <group col="8">
                             <field name="day"/>
@@ -213,7 +212,7 @@
             <field name="res_model">yc.purchase</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="res_id"  eval="False"/>
+            <field name="target">inline</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="process_data_entry_action_form">

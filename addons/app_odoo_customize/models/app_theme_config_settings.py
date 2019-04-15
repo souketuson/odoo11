@@ -974,7 +974,7 @@ class ResConfigSettings(models.TransientModel):
                     "furnstat": row.進爐狀態,
                     "produceday": row.製造日期,
                     "ptime": row.製造時間,
-                    "control_man": control.id,
+                    "op": control.id,
                     "qc": qc.id,
                     "shift": shift.id,
                     "ssk": row.斷面積,

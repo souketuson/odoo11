@@ -578,17 +578,30 @@ class YcPurchase(models.Model):
     check_furn_status = fields.Char("check", compute="_check_furn_status")
 
     @api.multi
-    def yc_purchase_search_name(self):
+    # @api.onchange("name")
+    def yc_purchase_search_name(self,):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
+            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.name)],order='id desc',limit=1).id
+            sql = "delete from yc_purchase where id=%d" % to_delete_id
+            if len(self.env["yc.purchase"].search([('name', '=', self.name)])) > 1:
+                self._cr.execute(sql)
             id = self.env['yc.purchase'].search([('name', '=', self.name)]).id
             return {
-                'res_id': id,
-                'view_mode': 'form',
-                'view_type': 'form',
                 'res_model': 'yc.purchase',
                 'type': 'ir.actions.act_window',
+                'res_id': id,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': self.env.ref('yc_root.process_data_entry_form').id,
+                'target': 'inline',
             }
+
+    @api.onchange("name")
+    def _filter_(self):
+        if self._context.get('params')['action'] == 111:
+            return {'domain': {"furn_in": [("weighstate", "=", "已過磅")], "furn_notin": [("weighstate", "=", "未過磅")]}}
+
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
