@@ -301,7 +301,7 @@ class YcPurchase(models.Model):
     tweight = fields.Integer("磅後總重")
     wdiff = fields.Integer("重量差")
     currnt_furno = fields.Char("現在爐號")
-    serial = fields.Char("序號")
+    serial = fields.Float("序號")
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
     ptime2 = fields.Char("製造時間2")
@@ -573,21 +573,23 @@ class YcPurchase(models.Model):
             self.tempturisped = _filter.tempturisped
 
     # S05N0100 製程登錄作業
+    # 以下為查詢欄位
+
+    searchname = fields.Char("工令輸入")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
-    check_furn_status = fields.Char("check", compute="_check_furn_status")
 
-    @api.multi
-    # @api.onchange("name")
-    def yc_purchase_search_name(self,):
+    @api.onchange("searchname")
+    def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
-            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.name)],order='id desc',limit=1).id
+            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
-            if len(self.env["yc.purchase"].search([('name', '=', self.name)])) > 1:
+            if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
                 self._cr.execute(sql)
-            id = self.env['yc.purchase'].search([('name', '=', self.name)]).id
+            id = self.env['yc.purchase'].search([('name', '=', self.searchname)]).id
             return {
+                'name': self.searchname,
                 'res_model': 'yc.purchase',
                 'type': 'ir.actions.act_window',
                 'res_id': id,
@@ -595,7 +597,70 @@ class YcPurchase(models.Model):
                 'view_mode': 'form',
                 'view_id': self.env.ref('yc_root.process_data_entry_form').id,
                 'target': 'inline',
+
+                # 下面是另一種方法去取得record data
+                # 但是onchange 也無法觸發下面這段，要用js寫了
+
+                # 'name': 'Go to website',
+                # 'res_model': 'ir.actions.act_url',
+                # 'type': 'ir.actions.act_url',
+                # 'target': 'inline',
+                # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
             }
+        elif self._context.get('params')['action'] == 112:
+            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            sql = "delete from yc_purchase where id=%d" % to_delete_id
+            if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
+                self._cr.execute(sql)
+            id = self.env['yc.purchase'].search([('name', '=', self.searchname)]).id
+            return {
+                'name': self.searchname,
+                'res_model': 'yc.purchase',
+                'type': 'ir.actions.act_window',
+                'res_id': id,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
+                'target': 'inline',
+            }
+
+    # S05N0200 製程登錄作業
+
+    weighted_order = fields.Many2one("yc.purchase", string="已過磅")
+    notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
+    produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
+    count = fields.Integer("數桶數",default=1)
+
+
+class YcProduceDetails(models.Model):
+    _name = "yc.produce.details"
+
+    name = fields.Many2one("yc.purchase", "工令號碼", ondelete='cascade')
+    serail = fields.Integer("序號")
+    bucket_no = fields.Integer("桶號")
+    emptybucket = fields.Integer("空桶重")
+    unit = fields.Many2one("yc.setunit", string="單位")
+    rawweight = fields.Integer("生料重")
+    rawnetweight = fields.Integer("生料淨重")
+    feed_man = fields.Many2one("yc.hr", string="入料人員")
+    tweight = fields.Integer("磅後重")
+    recevieemptybucket = fields.Integer("收料空桶重")
+    recevietunit = fields.Many2one("yc.setunit", string="收料單位")
+    tnetweight = fields.Integer("磅後淨重")
+    recevie_man = fields.Many2one("yc.hr", string="收料人員")
+    weightdiff = fields.Integer("重量差")
+    status = fields.Char("狀態")
+    note = fields.Text("備註")
+
+
+    @api.multi
+    @api.onchange("bucket_no")
+    def _get_row_number(self):
+        p = self.env['yc.purchase']
+        self.bucket_no = p.search([('name','=', self.name.name)]).count or 1
+        sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no+1), self.name.name)
+        p._cr.execute(sql)
+
 
 
 class YcPurchaseStore(models.Model):

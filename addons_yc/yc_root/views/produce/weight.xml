@@ -64,6 +64,7 @@
                                     <tree string="Customer Details" editable="bottom">
                                         <field name="no" invisible="1"/>
                                         <field name="compute_no"  invisible="1"/>
+                                        <!--<field name="name"/>-->
                                         <field name="customer_id"/>
                                         <field name="processing_id"/>
                                         <field name="note"/>

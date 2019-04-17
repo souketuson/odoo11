@@ -24,9 +24,11 @@
                     <sheet>
                         <group col="8">
                             <field name="order_furn" string="爐號"/>
-                            <field name="furn_notin" domain='[("weighstate", "=", "未過磅")]'/>
-                            <field name="furn_in" domain='[("weighstate", "=", "已過磅")]'/>
-                            <field name="name"/>
+                            <field name="furn_notin" domain='[("status", "=", "2")]'/>
+                            <!---->
+                            <field name="furn_in" domain='[("status", "=", "3")]'/>
+                            <!---->
+                            <field name="searchname"/>
                         </group>
                         <div>
                             <button string="資料查詢" type="object" class="oe_highlight" name="yc_purchase_search_name"/>
@@ -50,7 +52,7 @@
                         </group>
                         <group col="6">
                             <div>
-                                <label string="數量　" class="oe_inline"/>
+                                <label string="數量"/>
                                 <field name="num1" style="width:100px"/>
                                 <field name="unit1" nolabel="1" class="oe_inline" style="width:50px"/>
                                 <!--</div>-->
@@ -84,36 +86,41 @@
                                 <group col="12">
                                     <field name="produceday"/>
                                     <field name="ptime" nolabel="1"/>
-
                                     <field name="shift"/>
                                     <field name="op"/>
                                     <field name="buckets1"/>
                                     <field name="pw1" nolabel="1"/>
                                     <field name="teamlead1"/>
-
+                                </group>
                                     <!-- -->
+                                <group col="6">
+                                    <field name="produceday1"/>
+                                    <field name="produceday2"/>
+                                    <field name="produceday3"/>
 
-                                    <!--<field name="produceday1"/>-->
-                                    <!--<field name="produceday2"/>-->
-                                    <!--<field name="produceday3"/>-->
+                                    <field name="ptime1"/>
+                                    <field name="ptime2"/>
+                                    <field name="ptime3"/>
 
-                                    <!--<field name="ptime1"/>-->
-                                    <!--<field name="ptime2"/>-->
-                                    <!--<field name="ptime3"/>-->
+                                    <field name="shift1"/>
+                                    <field name="shift2"/>
+                                    <field name="shift3"/>
 
-                                    <!--<field name="shift1"/>-->
-                                    <!--<field name="shift2"/>-->
-                                    <!--<field name="shift3"/>-->
+                                    <field name="op1"/>
+                                    <field name="op2"/>
+                                    <field name="op3"/>
 
-                                    <!--<field name="op1"/>-->
-                                    <!--<field name="op2"/>-->
-                                    <!--<field name="op3"/>-->
+                                    <field name="buckets1"/>
+                                    <field name="buckets2"/>
+                                    <field name="buckets3"/>
 
-                                    <!--<field name="buckets2"/>-->
-                                    <!--<field name="buckets3"/>-->
+                                    <field name="pw1"/>
+                                    <field name="pw2"/>
+                                    <field name="pw3"/>
 
-                                    <!--<field name="pw2"/>-->
-                                    <!--<field name="pw3"/>-->
+                                    <field name="teamlead1"/>
+                                    <field name="teamlead2"/>
+                                    <field name="teamlead3"/>
 
                                     <!--<field name="teamlead2"/>-->
                                     <!--<field name="teamlead3"/>-->
@@ -169,15 +176,24 @@
                                 </group>
                             </page>
                             <page string="入爐前整桶貨重">
-                                <group>
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                </group>
+                                 <field name="produce_details_ids">
+                                    <tree string="Produce Details" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="bucket_no"/>
+                                        <field name="rawweight"/>
+                                        <field name="emptybucket"/>
+                                        <field name="unit"/>
+                                        <field name="rawnetweight"/>
+                                        <field name="feed_man"/>
+                                        <field name="tweight"/>
+                                        <field name="recevieemptybucket"/>
+                                        <field name="recevietunit"/>
+                                        <field name="tnetweight"/>
+                                        <field name="recevie_man"/>
+                                        <field name="weightdiff"/>
+                                        <field name="note"/>
+                                    </tree>
+                                 </field>
                             </page>
                             <page string="熱處理工程紀錄表">
                                 <group>

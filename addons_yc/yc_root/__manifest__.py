@@ -16,6 +16,7 @@
     'depends': ['base'],
 
     'data': [
+        'views/quantity_data_entry.xml',
         'views/process_data_entry.xml',
         'views/produce/plan_furna.xml',
         'views/produce/furna_import.xml',

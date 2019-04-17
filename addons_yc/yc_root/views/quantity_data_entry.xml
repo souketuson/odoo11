@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <!--<record model="ir.ui.view" id="process_data_entry_tree">-->
+        <!--<field name="name">pde.tree</field>-->
+        <!--<field name="model">yc.purchase</field>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<tree string="ProcessDataEntry Tree">-->
+        <!--<field name="order_furn"/>-->
+        <!--<field name="furn_notin"/>-->
+        <!--<field name="furn_in"/>-->
+        <!--<field name="name"/>-->
+        <!--&lt;!&ndash;<field name=""/>&ndash;&gt;-->
+        <!--</tree>-->
+        <!--</field>-->
+        <!--</record>-->
+        <!-- form view -->
+        <record model="ir.ui.view" id="quantity_data_entry_form">
+            <field name="name">qde.form</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <form string="QuantityDataEntry form">
+                    <sheet>
+                        <group col="8">
+                            <field name="order_furn" string="爐號"/>
+                            <field name="notweighted_order" domain='[("weighstate", "=", "未過磅")]'/>
+                            <!---->
+                            <field name="weighted_order" domain='[("weighstate", "=", "已過磅")]'/>
+                            <!---->
+                            <field name="searchname"/>
+                        </group>
+                        <div>
+                            <button string="資料查詢" type="object" class="oe_highlight" name="yc_purchase_search_name"/>
+                        </div>
+                        <group col="8">
+                            <field name="day"/>
+                            <field name="customer_id"/>
+                            <field name="wire_furn"/>
+                            <newline/>
+                            <field name="batch"/>
+                            <field name="product_code"/>
+                            <newline/>
+                            <field name="norm_code"/>
+                            <field name="fullorhalf"/>
+                            <newline/>
+                            <field name="txtur_code"/>
+                            <field name="surface_code"/>
+                            <field name="strength_level"/>
+                            <newline/>
+                            <field name="proces_code"/>
+                        </group>
+                        <group col="8">
+                            <field name="surfhrd"/>
+                            <field name="corehrd"/>
+                            <field name="name"/>
+                            <field name="tensihrd"/>
+                            <field name="carburlayer"/>
+                        </group>
+                        <group col="6">
+                            <div>
+                                <label string="數量"/>
+                                <field name="num1" style="width:100px"/>
+                                <field name="unit1" nolabel="1" class="oe_inline" style="width:50px"/>
+                                <!--</div>-->
+                                <!--<div>-->
+                                <label string="" class="oe_inline"/>
+                                <field name="num2" style="width:100px"/>
+                                <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
+                                <!--</div>-->
+                                <!--<div>-->
+                                <label string="" class="oe_inline"/>
+                                <field name="num3" style="width:100px"/>
+                                <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
+                                <!--</div>-->
+                                <!--<div>-->
+                                <label string="" class="oe_inline"/>
+                                <field name="num4" style="width:100px"/>
+                                <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
+                            </div>
+                        </group>
+                        <group col="8">
+                            <field name="totalpack"/>
+                            <field name="pweight"/>
+                            <field name="pre_furn"/>
+                            <field name="currnt_furno"/>
+                            <field name="feedbucket"/>
+                            <field name="feedweight"/>
+                            <field name="weighbuckets"/>
+                            <field name="weighbuckets"/>
+                            <field name="bdiff"/>
+                            <field name="wdiff"/>
+                            <field name="op1"/>
+                            <field name="op2"/>
+                            <field name="op3"/>
+                        </group>
+                        <group col="8">
+                            <div>
+                                <label string="注意事項"/>
+                                <field name="notices1" style="width:31%%"/>
+                                <field name="notices2" style="width:31%%"/>
+                                <field name="notices3" style="width:31%%"/>
+                                <!--<field name="notices4"/>-->
+                            </div>
+                        </group>
+                        <group>
+                            <div>
+                                <label string="品管備註"/>
+                                <field name="qcnote1" style="width:31%%"/>
+                                <field name="qcnote2" style="width:31%%"/>
+                                <field name="qcnote3" style="width:31%%"/>
+                            </div>
+                        </group>
+                        <group>
+                            <div>
+                                <label string="製造備註"/>
+                                <field name="prodnote1" style="width:31%%"/>
+                                <field name="prodnote2" style="width:31%%"/>
+                                <field name="prodnote3" style="width:31%%"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="produce_details_ids">
+                                <tree string="Produce Details" editable="bottom">
+                                    <!--<field name="name"/>-->
+                                    <field name="bucket_no"/>
+                                    <field name="rawweight"/>
+                                    <field name="emptybucket"/>
+                                    <field name="unit"/>
+                                    <field name="rawnetweight"/>
+                                    <field name="feed_man"/>
+                                    <field name="tweight"/>
+                                    <field name="recevieemptybucket"/>
+                                    <field name="recevietunit"/>
+                                    <field name="tnetweight"/>
+                                    <field name="recevie_man"/>
+                                    <field name="weightdiff"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="pde_search_view">
+            <field name="name">qde.search</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="quantity_data_entry_action">
+            <field name="name">產量登錄作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="quantity_data_entry_action_form">
+            <field name="act_window_id" ref="quantity_data_entry_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="quantity_data_entry_form"/>
+        </record>
+    </data>
+</odoo>

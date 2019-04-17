@@ -118,8 +118,8 @@
         <menuitem id="fake55_menu" name="品管備註主檔" parent="quality_maintain_menu" sequence="26" action="fake_action"/>
         <menuitem id="fake56_menu" name="扭力規格建檔" parent="quality_maintain_menu" sequence="27" action="fake_action"/>
         <!--manufacture-->
-        <menuitem id="process_data_entry__menu" name="製造過程登錄作業" parent="manufacture_menu" sequence="20" action="process_data_entry_action"/>
-        <menuitem id="fake58_menu" name="產量數據登錄作業" parent="manufacture_menu" sequence="21" action="fake_action"/>
+        <menuitem id="process_data_entry_menu" name="製造過程登錄作業" parent="manufacture_menu" sequence="20" action="process_data_entry_action"/>
+        <menuitem id="quantity_data_entry_menu" name="產量數據登錄作業" parent="manufacture_menu" sequence="21" action="quantity_data_entry_action"/>
         <menuitem id="fake83_menu" name="製程管理基本對照檔" parent="manufacture_maintain_menu" sequence="22" action="fake_action"/>
 
 
