@@ -3,16 +3,58 @@
 
 from odoo import models, fields,api
 
-
 # S01
+class YcSetFactory(models.Model):
+    # 廠別 S01N0001
+    _name = "yc.setfactory"
+    name = fields.Char("廠別名稱")
+    code = fields.Char("廠別代碼")
+    params1 = fields.Char("參數1")
+
+
+class YcSetDepartment(models.Model):
+    # 部門 S01N0002
+    _name = 'yc.department'
+    name = fields.Char(string='部門名稱')
+    code = fields.Char(string='部門代碼')
+
+
+class YcSetJobTitle(models.Model):
+    # 職稱 S01N0004
+    _name = "yc.setjobtitle"
+    name = fields.Char("職稱")
+    code = fields.Char("職稱代碼")
+
+class YcSetSalaryItem(models.Model):
+    # 薪資項目 S01N0005
+    _name = "yc.setsalaryitem"
+    name = fields.Char("薪資項目名稱")
+    code = fields.Char("薪資項目代碼")
+
+
 class YcSetshift(models.Model):
-    # 班別
+    # 班別 S01N0006
     _name = "yc.setshift"
     name = fields.Char("班別名稱")
     code = fields.Char("班別代碼")
     other1 = fields.Char("其他1")
     other2 = fields.Char("其他2")
     other3 = fields.Char("其他3")
+
+
+class YcSetleave(models.Model):
+    # 假別 S01N0007
+    _name = "yc.setleave"
+    name = fields.Char("假別名稱")
+    code = fields.Char("假別代碼")
+
+
+class YcSetBonus(models.Model):
+    # 獎金 S01N0008
+    _name = "yc.setbonus"
+
+    name = fields.Char("獎金項目")
+    code = fields.Char("獎金代碼")
 
 
 # S03
@@ -71,6 +113,7 @@ class YcSetlength(models.Model):
     parmeter2 = fields.Char("參數2")
     parmeter3 = fields.Char("參數3")
 
+
 class YcSetprocess(models.Model):
     #  加工方式 S03N0006
     _name = "yc.setprocess"
@@ -110,4 +153,14 @@ class YcSetStatus(models.Model):
     _name = "yc.setstatus"
     name = fields.Char("狀態")
     code = fields.Char("狀態代碼")
+
+
+class YcFactory(models.Model):
+    _name = "yc.factory"
+    name = fields.Char("廠別名稱")
+    code = fields.Char("廠別代碼")
+
+
+
+
 

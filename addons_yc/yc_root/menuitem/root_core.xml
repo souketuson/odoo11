@@ -46,14 +46,15 @@
         <menuitem id="fake25_menu" name="獎金作業" parent="hr_menu" sequence="24" action="fake_action"/>
         <menuitem id="fake26_menu" name="曠職作業" parent="hr_menu" sequence="25" action="fake_action"/>
         <menuitem id="fake27_menu" name="薪資預支作業" parent="hr_menu" sequence="26" action="fake_action"/>
-        <menuitem id="fake28_menu" name="廠別" parent="hr_maintain_menu" sequence="27" action="fake_action"/>
-        <menuitem id="fake29_menu" name="部門" parent="hr_maintain_menu" sequence="28" action="fake_action"/>
+        <menuitem id="factory_menu" name="廠別" parent="hr_maintain_menu" sequence="27" action="factory_action"/>
+        <menuitem id="department_menu" name="部門" parent="hr_maintain_menu" sequence="28" action="department_action"/>
         <menuitem id="fake30_menu" name="雇用性質" parent="hr_maintain_menu" sequence="29" action="fake_action"/>
-        <menuitem id="fake31_menu" name="職稱" parent="hr_maintain_menu" sequence="30" action="fake_action"/>
-        <menuitem id="fake32_menu" name="薪資項目" parent="hr_maintain_menu" sequence="31" action="fake_action"/>
-        <menuitem id="fake33_menu" name="班制" parent="hr_maintain_menu" sequence="32" action="fake_action"/>
-        <menuitem id="fake34_menu" name="假別" parent="hr_maintain_menu" sequence="33" action="fake_action"/>
-        <menuitem id="fake35_menu" name="獎金項目" parent="hr_maintain_menu" sequence="34" action="fake_action"/>
+        <menuitem id="jobtitle_menu" name="職稱" parent="hr_maintain_menu" sequence="30" action="setjobtitle_action"/>
+
+        <menuitem id="setsalaryitem_menu" name="薪資項目" parent="hr_maintain_menu" sequence="31" action="setsalaryitem_action"/>
+        <menuitem id="setshift_menu" name="班制" parent="hr_maintain_menu" sequence="32" action="setshift_action"/>
+        <menuitem id="setleave_menu" name="假別" parent="hr_maintain_menu" sequence="33" action="setleave_action"/>
+        <menuitem id="setbonus_menu" name="獎金項目" parent="hr_maintain_menu" sequence="34" action="setbonus_action"/>
 
         <!--business-->
         <menuitem id="fake36_menu" name="客戶主檔" parent="business_menu" sequence="22" action="fake_action"/>

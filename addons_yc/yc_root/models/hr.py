@@ -92,7 +92,7 @@ class YcHR(models.Model):
 class YcDriver(models.Model):
     _name = "yc.driver"
 
-    name = fields.Char("姓名", required=True)
+    name = fields.Char("姓名")
     code = fields.Char("司機代號")
     category = fields.Char("分類")
     user_code = fields.Char("員工代號")
@@ -116,53 +116,3 @@ class YcDriver(models.Model):
         self.add_date = self.create_date
         self.edit_date = self.write_date
 
-
-class YcDepartment(models.Model):
-    _name = 'yc.department'
-    name = fields.Char(string='部門名稱', required=True)
-    code = fields.Char(string='部門代碼')
-
-
-class YcFactory(models.Model):
-    _name = "yc.factory"
-
-    name = fields.Char("廠別名稱")
-    code = fields.Char("廠別代碼")
-
-
-class YcJobTitle(models.Model):
-    _name = "yc.jobtitle"
-
-    name = "職稱"
-    code = "職稱代碼"
-
-
-class YcSalaryItem(models.Model):
-    _name = "yc.salaryitem"
-
-    name = "薪資項目名稱"
-    code = "薪資項目代碼"
-
-
-class YcShift(models.Model):
-    _name = "yc.shift"
-
-    name = fields.Char("班制選項")
-    code = fields.Char("代碼")
-
-    on_duty = fields.Char("上班時間")
-    off_duty = fields.Char("下班時間")
-
-
-class YcLeave(models.Model):
-    _name = "yc.leave"
-
-    name = fields.Char("假別選項")
-    code = fields.Char("假別代碼")
-
-
-class YcBonus(models.Model):
-    _name = "yc.bonus"
-
-    name = fields.Char("獎金項目")
-    code = fields.Char("獎金代碼")

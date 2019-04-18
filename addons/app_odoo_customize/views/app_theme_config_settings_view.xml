@@ -187,6 +187,10 @@
                             |
                             <button string="長度代碼維護檔" type="object" name="insert_set_length"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="S01維護檔" type="object" name="insert_yc_sets01"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
+
 
 
 

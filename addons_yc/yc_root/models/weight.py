@@ -243,7 +243,7 @@ class YcWeightDetails(models.Model):
             result.append((record.id, name))
         return result
 
-    @api.depends("compute_no")
+    @api.depends("no")
     def _get_row_no(self):
         if self.ids:
             count =1

@@ -2,6 +2,7 @@
 
 import logging
 import pyodbc
+import collections
 
 from odoo import api, fields, models, _
 
@@ -522,10 +523,63 @@ class ResConfigSettings(models.TransientModel):
         return True
 
     @api.multi
+    def insert_yc_sets01(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor_dict = collections.OrderedDict()
+            cursor_dict['S01N0001'] = ["rows_factory", "yc.factory"]
+            cursor_dict['S01N0002'] = ["rows_department", "yc.department"]
+            cursor_dict['S01N0004'] = ["jobtitle", "yc.setjobtitle"]
+            cursor_dict['S01N0005'] = ["salaryitem", "yc.setsalaryitem"]
+            cursor_dict['S01N0006'] = ["shift", "yc.setshift"]
+            cursor_dict['S01N0007'] = ["leave", "yc.setleave"]
+            cursor_dict['S01N0008'] = ["bonus", "yc.setbonus"]
+
+            for key, item in cursor_dict.items():
+                t_sql = "SELECT * FROM s_一層代碼檔 WHERE 類別='%s'" % key
+                cursor.execute(t_sql)
+                rows = cursor.fetchall()
+
+                var = item[0]
+                search = self.env["%s" % item[1]].search([])
+                # str covert to variable
+                exec("%s = %s" % (var, 0))
+                # assign dbview to variable
+                var = search
+                sql = "delete from %s" % item[1].replace('.', '_')
+
+                self._cr.execute(sql)
+                for row in rows:
+                    if key == "S01N0001":
+                        var.create({
+                            "name": row.一層名稱,
+                            "code": row.一層代碼,
+                            "params1": row.參數1,
+                        })
+                    elif key == "S01N0002" or "S01N0004" or "S01N0005" or "S01N0007" or "S01N0008":
+                        var.create({
+                            "name": row.一層名稱,
+                            "code": row.一層代碼,
+                        })
+                    elif key == "S01N0006":
+                        var.create({
+                            "name": row.一層名稱,
+                            "code": row.一層代碼,
+                            "other1": row.參數1,
+                            "other2": row.參數2,
+                        })
+
+        except Exception as e:
+            pass
+        return True
+
+    @api.multi
     def insert_yc_hr(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 員工主檔")
             rows = cursor.fetchall()
@@ -564,7 +618,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_yc_driver(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 司機主檔")
             rows = cursor.fetchall()
@@ -598,7 +652,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_weight_main(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單主檔")
             rows = cursor.fetchmany(500)
@@ -638,7 +692,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_weight_details(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             weight = self.env["yc.weight"].search([]).name_get()
             _string = ''
@@ -689,7 +743,7 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def insert_processing(self):
         cnxn = pyodbc.connect(
-            'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
         cursor = cnxn.cursor()
         cursor.execute("SELECT * FROM 加工廠主檔")
         rows = cursor.fetchall()
@@ -706,7 +760,7 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def insert_customer(self):
         cnxn = pyodbc.connect(
-            'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
         cursor = cnxn.cursor()
         cursor.execute("SELECT * FROM 客戶主檔")
         rows = cursor.fetchall()
@@ -729,7 +783,7 @@ class ResConfigSettings(models.TransientModel):
     #         :param kwarg: 新增欄位
     #         '''
     #         cnxn = pyodbc.connect(
-    #             'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+    #             'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
     #         cursor = cnxn.cursor()
     #         cursor.execute("SELECT * FROM %s") % origin_db
     #         rows = cursor.fetchall()
@@ -746,7 +800,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_yc_mechanicalproperty(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 產品機械性質主檔")
             rows = cursor.fetchall()
@@ -794,7 +848,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_yc_torsion(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 扭力規格主檔")
             rows = cursor.fetchall()
@@ -824,7 +878,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_purchase(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 進貨單主檔")
             rows = cursor.fetchmany(500)
@@ -884,7 +938,7 @@ class ResConfigSettings(models.TransientModel):
                     "name": row.工令號碼,
                     "day": row.進貨日期,
                     "time": row.時間,
-                    "status": status.id ,
+                    "status": status.id,
                     "weighstate": row.過磅狀態,
                     "checkstate": row.檢驗狀態,
                     "driver_id": driver.id,
@@ -1233,7 +1287,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_set_shift(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM s_一層代碼檔 WHERE 類別='S01N0006'")
             rows = cursor.fetchall()
@@ -1256,7 +1310,7 @@ class ResConfigSettings(models.TransientModel):
     def insert_set_length(self):
         try:
             cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=220.133.113.223,1433; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM s_一層代碼檔 WHERE 類別='S03N0005'")
             rows = cursor.fetchall()

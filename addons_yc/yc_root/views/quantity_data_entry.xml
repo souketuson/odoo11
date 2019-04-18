@@ -56,6 +56,8 @@
                             <field name="name"/>
                             <field name="tensihrd"/>
                             <field name="carburlayer"/>
+                            <field name="produceday"/>
+                            <field name="ptime" nolabel="1"/>
                         </group>
                         <group col="6">
                             <div>
@@ -124,18 +126,12 @@
                                 <tree string="Produce Details" editable="bottom">
                                     <!--<field name="name"/>-->
                                     <field name="bucket_no"/>
-                                    <field name="rawweight"/>
-                                    <field name="emptybucket"/>
-                                    <field name="unit"/>
-                                    <field name="rawnetweight"/>
-                                    <field name="feed_man"/>
                                     <field name="tweight"/>
                                     <field name="recevieemptybucket"/>
                                     <field name="recevietunit"/>
                                     <field name="tnetweight"/>
                                     <field name="recevie_man"/>
                                     <field name="weightdiff"/>
-                                    <field name="note"/>
                                 </tree>
                             </field>
                         </group>
@@ -160,7 +156,7 @@
             <field name="res_model">yc.purchase</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">inline</field>
+            <!--<field name="target">inline</field>-->
         </record>
         <record model="ir.actions.act_window.view" id="quantity_data_entry_action_form">
             <field name="act_window_id" ref="quantity_data_entry_action"/>

@@ -596,7 +596,7 @@ class YcPurchase(models.Model):
                 'view_type': 'form',
                 'view_mode': 'form',
                 'view_id': self.env.ref('yc_root.process_data_entry_form').id,
-                'target': 'inline',
+                # 'target': 'inline',
 
                 # 下面是另一種方法去取得record data
                 # 但是onchange 也無法觸發下面這段，要用js寫了
@@ -621,7 +621,7 @@ class YcPurchase(models.Model):
                 'view_type': 'form',
                 'view_mode': 'form',
                 'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
-                'target': 'inline',
+                # 'target': 'inline',
             }
 
     # S05N0200 製程登錄作業
@@ -629,7 +629,7 @@ class YcPurchase(models.Model):
     weighted_order = fields.Many2one("yc.purchase", string="已過磅")
     notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
-    count = fields.Integer("數桶數",default=1)
+    count = fields.Integer("數桶數", default=1)
 
 
 class YcProduceDetails(models.Model):
@@ -657,10 +657,9 @@ class YcProduceDetails(models.Model):
     @api.onchange("bucket_no")
     def _get_row_number(self):
         p = self.env['yc.purchase']
-        self.bucket_no = p.search([('name','=', self.name.name)]).count or 1
-        sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no+1), self.name.name)
+        self.bucket_no = p.search([('name', '=', self.name.name)]).count or 1
+        sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
         p._cr.execute(sql)
-
 
 
 class YcPurchaseStore(models.Model):

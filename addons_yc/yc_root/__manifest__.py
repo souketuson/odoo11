@@ -5,7 +5,7 @@
     """,
 
     'description': """
-        YC_ROOT v.6
+        YC_ROOT v.09
     """,
 
     'author': "ArJhe",
@@ -25,6 +25,13 @@
         'views/produce/purchase_store.xml',
         'views/produce/purchase_report.xml',
         'views/produce/maintain/setproduct.xml',
+        'views/maintain/factory.xml',
+        'views/maintain/department.xml',
+        'views/maintain/setjobtitle.xml',
+        'views/maintain/setsalaryitem.xml',
+        'views/maintain/setshift.xml',
+        'views/maintain/setleave.xml',
+        'views/maintain/setbonus.xml',
         'views/driver.xml',
         'views/hr_main.xml',
         'views/fake.xml',
