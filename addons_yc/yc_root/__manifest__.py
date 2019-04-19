@@ -5,7 +5,7 @@
     """,
 
     'description': """
-        YC_ROOT v.09
+        YC_ROOT v.10
     """,
 
     'author': "ArJhe",
@@ -34,6 +34,7 @@
         'views/maintain/setbonus.xml',
         'views/driver.xml',
         'views/hr_main.xml',
+        'views/quality.xml',
         'views/fake.xml',
 
         'menuitem/root_core.xml',

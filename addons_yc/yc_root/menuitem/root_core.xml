@@ -110,7 +110,7 @@
         <menuitem id="fake21_menu" name="各爐產能設定" parent="produce_maintain_menu" sequence="30" action="fake_action"/>
         <menuitem id="fake22_menu" name="進貨備註" parent="produce_maintain_menu" sequence="31" action="fake_action"/>
         <!--quality-->
-        <menuitem id="fake49_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="fake_action"/>
+        <menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_action"/>
         <menuitem id="fake50_menu" name="不合格品處理作業" parent="quality_menu" sequence="21" action="fake_action"/>
         <menuitem id="fake51_menu" name="產品機械性質主檔" parent="quality_menu" sequence="22" action="fake_action"/>
         <menuitem id="fake52_menu" name="製造備註主檔" parent="quality_maintain_menu" sequence="23" action="fake_action"/>

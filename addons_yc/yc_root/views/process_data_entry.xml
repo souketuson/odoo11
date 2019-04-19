@@ -24,7 +24,8 @@
                     <sheet>
                         <group col="8">
                             <field name="order_furn" string="爐號"/>
-                            <field name="furn_notin" domain='[("status", "=", "2")]'/>
+                            <field name="furn_notin"
+                                   domain='[("status", "=", "2"),("serial","!=", "99.9"),("serial",">","1")]'/>
                             <!---->
                             <field name="furn_in" domain='[("status", "=", "3")]'/>
                             <!---->
@@ -92,7 +93,7 @@
                                     <field name="pw1" nolabel="1"/>
                                     <field name="teamlead1"/>
                                 </group>
-                                    <!-- -->
+                                <!-- -->
                                 <group col="6">
                                     <field name="produceday1"/>
                                     <field name="produceday2"/>
@@ -176,7 +177,13 @@
                                 </group>
                             </page>
                             <page string="入爐前整桶貨重">
-                                 <field name="produce_details_ids">
+                                <group>
+                                    <div>
+                                        <button string="資料儲存" type="object" class="oe_highlight"
+                                                name="save_process_data"/>
+                                    </div>
+                                </group>
+                                <field name="produce_details_ids">
                                     <tree string="Produce Details" editable="bottom">
                                         <field name="name"/>
                                         <field name="bucket_no"/>
@@ -193,7 +200,7 @@
                                         <field name="weightdiff"/>
                                         <field name="note"/>
                                     </tree>
-                                 </field>
+                                </field>
                             </page>
                             <page string="熱處理工程紀錄表">
                                 <group>

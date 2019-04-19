@@ -570,7 +570,6 @@ class ResConfigSettings(models.TransientModel):
                             "other1": row.參數1,
                             "other2": row.參數2,
                         })
-
         except Exception as e:
             pass
         return True
@@ -881,7 +880,7 @@ class ResConfigSettings(models.TransientModel):
                 'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 進貨單主檔")
-            rows = cursor.fetchmany(500)
+            rows = cursor.fetchmany(1500)
             purchase = self.env["yc.purchase"].search([])
             sql = "delete from yc_purchase"
             self._cr.execute(sql)
@@ -1284,28 +1283,28 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
-    def insert_set_shift(self):
-        try:
-            cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
-            cursor = cnxn.cursor()
-            cursor.execute("SELECT * FROM s_一層代碼檔 WHERE 類別='S01N0006'")
-            rows = cursor.fetchall()
-            setshift = self.env["yc.setshift"].search([])
-            sql = "delete from yc_setshift"
-            self._cr.execute(sql)
-
-            for row in rows:
-                setshift.create({
-                    "name": row.一層名稱,
-                    "code": row.一層代碼,
-                    "other1": row.參數1,
-                    "other2": row.參數2,
-                    "other3": row.參數3,
-                })
-        except Exception as e:
-            pass
-        return True
+    # def insert_set_shift(self):
+    #     try:
+    #         cnxn = pyodbc.connect(
+    #             'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+    #         cursor = cnxn.cursor()
+    #         cursor.execute("SELECT * FROM s_一層代碼檔 WHERE 類別='S01N0006'")
+    #         rows = cursor.fetchall()
+    #         setshift = self.env["yc.setshift"].search([])
+    #         sql = "delete from yc_setshift"
+    #         self._cr.execute(sql)
+    #
+    #         for row in rows:
+    #             setshift.create({
+    #                 "name": row.一層名稱,
+    #                 "code": row.一層代碼,
+    #                 "other1": row.參數1,
+    #                 "other2": row.參數2,
+    #                 "other3": row.參數3,
+    #             })
+    #     except Exception as e:
+    #         pass
+    #     return True
 
     def insert_set_length(self):
         try:

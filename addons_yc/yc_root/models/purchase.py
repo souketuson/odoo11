@@ -8,8 +8,14 @@ from datetime import datetime as dt
 class YcPurchase(models.Model):
     _name = "yc.purchase"
 
-    name = fields.Char("工令號碼", default=lambda self: self.env["ir.sequence"].next_by_code("Purchase.sequence"))
-    day = fields.Date("日期", default=dt.today())
+    name = fields.Char("工令號碼", default=lambda self: self._default_name())
+    def _default_name(self):
+        if self._context.get('params')['action'] == 81:
+            return self.env["ir.sequence"].next_by_code("Purchase.sequence")
+    day = fields.Date("日期", default=lambda self: self._default_date())
+    def _default_date(self):
+        if self._context.get('params')['action'] == 81:
+            return dt.today()
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
     status = fields.Many2one("yc.setstatus", string="狀態")
@@ -579,6 +585,7 @@ class YcPurchase(models.Model):
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
+
     @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
@@ -596,7 +603,7 @@ class YcPurchase(models.Model):
                 'view_type': 'form',
                 'view_mode': 'form',
                 'view_id': self.env.ref('yc_root.process_data_entry_form').id,
-                # 'target': 'inline',
+                'target': 'inline',
 
                 # 下面是另一種方法去取得record data
                 # 但是onchange 也無法觸發下面這段，要用js寫了
@@ -621,8 +628,12 @@ class YcPurchase(models.Model):
                 'view_type': 'form',
                 'view_mode': 'form',
                 'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
-                # 'target': 'inline',
+                'target': 'inline',
             }
+
+    def save_process_data(self):
+        return True
+
 
     # S05N0200 製程登錄作業
 
@@ -630,6 +641,20 @@ class YcPurchase(models.Model):
     notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
     count = fields.Integer("數桶數", default=1)
+
+    @api.onchange("order_furn")
+    def _chech_order(self):
+        if self._context.get('params')['action'] == 111:
+            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn)], "furn_notin": [("order_furn", "=", self.order_furn)]}}
+        elif self._context.get('params')['action'] == 112:
+            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn)],"notweighted_order": [("order_furn", "=", self.order_furn)]}}
+
+
+    # S04N0200 品質數據主檔
+
+    checked = fields.Many2one("yc.purchase", string="已檢驗")
+    notchecked = fields.Many2one("yc.purchase", string="未檢驗")
+
 
 
 class YcProduceDetails(models.Model):

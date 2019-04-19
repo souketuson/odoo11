@@ -24,9 +24,9 @@
                     <sheet>
                         <group col="8">
                             <field name="order_furn" string="爐號"/>
-                            <field name="notweighted_order" domain='[("weighstate", "=", "未過磅")]'/>
+                            <field name="notweighted_order" domain='[("status","=",3),("weighstate", "=", False)]'/>
                             <!---->
-                            <field name="weighted_order" domain='[("weighstate", "=", "已過磅")]'/>
+                            <field name="weighted_order" domain='[("status","=","3"),("weighstate", "!=", False)]'/>
                             <!---->
                             <field name="searchname"/>
                         </group>
@@ -122,6 +122,12 @@
                             </div>
                         </group>
                         <group>
+                            <group>
+                                    <div>
+                                        <button string="資料儲存" type="object" class="oe_highlight"
+                                                name="save_process_data"/>
+                                    </div>
+                                </group>
                             <field name="produce_details_ids">
                                 <tree string="Produce Details" editable="bottom">
                                     <!--<field name="name"/>-->

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="quality_form">
+            <field name="name">qde.form</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <form string="QuantityDataEntry form">
+                    <sheet>
+                        <group col="8">
+                            <field name="order_furn" string="爐號"/>
+                            <field name="notchecked" domain='[("status", "=", "3"),("checkstate","=",False)]'/>
+                            <!---->
+                            <field name="checked" domain='[("status", "=", "3"),("checkstate","!=",False)]'/>
+                            <!---->
+                            <field name="searchname"/>
+                        </group>
+                        <div>
+                            <button string="資料查詢" type="object" class="oe_highlight" name="yc_purchase_search_name"/>
+                        </div>
+                        <group col="8">
+                            <field name="day"/>
+                            <field name="customer_id"/>
+                            <field name="wire_furn"/>
+                            <newline/>
+                            <field name="batch"/>
+                            <field name="product_code"/>
+                            <newline/>
+                            <field name="norm_code"/>
+                            <field name="fullorhalf"/>
+                            <newline/>
+                            <field name="txtur_code"/>
+                            <field name="surface_code"/>
+                            <field name="strength_level"/>
+                            <newline/>
+                            <field name="proces_code"/>
+                        </group>
+                        <group col="8">
+                            <field name="surfhrd"/>
+                            <field name="corehrd"/>
+                            <field name="name"/>
+                            <field name="tensihrd"/>
+                            <field name="carburlayer"/>
+                            <field name="produceday"/>
+                            <field name="ptime" nolabel="1"/>
+                        </group>
+                        <group col="6">
+                            <div>
+                                <label string="數量"/>
+                                <field name="num1" style="width:100px"/>
+                                <field name="unit1" nolabel="1" class="oe_inline" style="width:50px"/>
+                                <!--</div>-->
+                                <!--<div>-->
+                                <label string="" class="oe_inline"/>
+                                <field name="num2" style="width:100px"/>
+                                <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
+                                <!--</div>-->
+                                <!--<div>-->
+                                <label string="" class="oe_inline"/>
+                                <field name="num3" style="width:100px"/>
+                                <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
+                                <!--</div>-->
+                                <!--<div>-->
+                                <label string="" class="oe_inline"/>
+                                <field name="num4" style="width:100px"/>
+                                <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="pde_search_view">
+            <field name="name">qde.search</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="quality_action">
+            <field name="name">品質數據主檔</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="quality_action_form">
+            <field name="act_window_id" ref="quality_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="quality_form"/>
+        </record>
+    </data>
+</odoo>
