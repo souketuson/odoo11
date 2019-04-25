@@ -229,7 +229,7 @@ class YcWeightDetails(models.Model):
 
     name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
     no = fields.Integer("序號", default=1)
-    compute_no = fields.Integer("最大數", compute= "_get_row_no")
+    compute_no = fields.Integer("最大數")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
@@ -242,7 +242,7 @@ class YcWeightDetails(models.Model):
             name = processing.name
             result.append((record.id, name))
         return result
-
+    # , compute= "_get_row_no"
     @api.depends("no")
     def _get_row_no(self):
         if self.ids:
@@ -250,4 +250,4 @@ class YcWeightDetails(models.Model):
             for rec in self:
                 weight_id = self.env['yc.weight.details'].search([('id','=', rec.id)])
                 weight_id.write({'no': count})
-                count+=1
+                count += 1

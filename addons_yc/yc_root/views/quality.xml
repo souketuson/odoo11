@@ -25,10 +25,10 @@
                             <newline/>
                             <field name="batch"/>
                             <field name="product_code"/>
-                            <newline/>
+                            <field name="pre_furn"/>
                             <field name="norm_code"/>
                             <field name="fullorhalf"/>
-                            <newline/>
+                            <field name="currnt_furno"/>
                             <field name="txtur_code"/>
                             <field name="surface_code"/>
                             <field name="strength_level"/>
@@ -41,6 +41,7 @@
                             <field name="name"/>
                             <field name="tensihrd"/>
                             <field name="carburlayer"/>
+                            <field name="mxload"/>
                             <field name="produceday"/>
                             <field name="ptime" nolabel="1"/>
                         </group>
@@ -66,6 +67,197 @@
                                 <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
                             </div>
                         </group>
+                        <notebook>
+                            <page string="數據登錄">
+                                <group col="12">
+                                    <field name="standard"/>
+                                    <field name="tensile_no" widget="radio"/>
+                                    <!-- -->
+                                    <field name="cksfhv" widget="checkbox" nolabel="1"/>
+                                    <field name="surfhrd"/>
+                                    <field name="sfhn"/>
+                                    <field name="sfhv1"/>
+                                    <field name="sfhv2"/>
+                                    <field name="sfhv3"/>
+                                    <field name="sfhv4"/>
+                                    <field name="sfhv5"/>
+                                    <field name="sfhv6"/>
+                                    <field name="sfhv7"/>
+                                    <field name="sfhv8"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="ckchv" widget="checkbox" nolabel="1"/>
+                                    <field name="corehrd"/>
+                                    <field name="chn"/>
+                                    <field name="chv1"/>
+                                    <field name="chv2"/>
+                                    <field name="chv3"/>
+                                    <field name="chv4"/>
+                                    <field name="chv5"/>
+                                    <field name="chv6"/>
+                                    <field name="chv7"/>
+                                    <field name="chv8"/>
+                                    <newline/>
+                                    <!-- -->
+                                    <field name="ckrtens" widget="checkbox" nolabel="1"/>
+                                    <field name="tensihrd"/>
+                                    <field name="rtenste"/>
+                                    <!-- -->
+                                    <field name="ckyv" widget="checkbox" nolabel="1"/>
+                                    <field name="ysv"/>
+                                    <field name="ysvste"/>
+                                    <field name="ckysvste" widget="checkbox" nolabel="1"/>
+                                    <field name="yste"/>
+                                    <field name="cksskste" widget="checkbox" nolabel="1"/>
+                                    <field name="sskste"/>
+                                    <!-- -->
+                                    <field name="ckelong" widget="checkbox" nolabel="1"/>
+                                    <field name="elohv"/>
+                                    <field name="elohvste"/>
+
+                                    <field name="ckmlste" widget="checkbox" nolabel="1"/>
+                                    <field name="mxloadste"/>
+                                    <field name="ckwhrd" widget="checkbox" nolabel="1"/>
+                                    <field name="wxrhard"/>
+                                    <field name="ckhf"/>
+                                    <!-- -->
+                                    <field name="cktorsion" widget="checkbox" nolabel="1"/>
+                                    <field name="torshv"/>
+                                    <field name="torshv1"/>
+                                    <field name="torshv2"/>
+                                    <field name="torshv3"/>
+                                    <field name="torshv4"/>
+                                    <field name="torshv5"/>
+                                    <field name="torshv6"/>
+                                    <field name="torshv7"/>
+                                    <field name="torshv8"/>
+                                    <!-- -->
+                                    <field name="ckclv" widget="checkbox" nolabel="1"/>
+                                    <field name="carb1v"/>
+                                    <field name="ckcl1v" widget="checkbox" nolabel="1"/>
+                                    <field name="carb1v1"/>
+                                    <field name="carb1v2"/>
+                                    <field name="carb1v3"/>
+                                    <field name="carb1v4"/>
+                                    <field name="carb1v5"/>
+                                    <field name="carb1v6"/>
+                                    <field name="carb1v7"/>
+                                    <field name="carb1v8"/>
+                                    <!-- -->
+                                    <field name="clnorm"/>
+                                    <field name="ckecl2v" widget="checkbox" nolabel="1"/>
+                                    <field name="carb2v1"/>
+                                    <field name="carb2v2"/>
+                                    <field name="carb2v3"/>
+                                    <field name="carb2v4"/>
+                                    <field name="carb2v5"/>
+                                    <field name="carb2v6"/>
+                                    <field name="carb2v7"/>
+                                    <field name="carb2v8"/>
+                                    <!-- -->
+                                    <field name="cksskv" widget="checkbox" nolabel="1"/>
+                                    <field name="sskv"/>
+                                    <field name="sskvste"/>
+                                    <field name="sskv1"/>
+                                    <field name="sskv2"/>
+                                    <field name="sskv3"/>
+                                    <field name="sskv4"/>
+                                    <field name="sskv5"/>
+                                    <field name="sskv6"/>
+                                    <field name="sskv7"/>
+                                    <field name="sskv8"/>
+                                    <!-- -->
+                                    <field name="cksl" widget="checkbox" nolabel="1"/>
+                                    <field name="safeload"/>
+                                    <field name="slste"/>
+                                    <field name="safeload1"/>
+                                    <field name="safeload2"/>
+                                    <field name="safeload3"/>
+                                    <field name="safeload4"/>
+                                    <field name="safeload5"/>
+                                    <field name="safeload6"/>
+                                    <field name="safeload7"/>
+                                    <field name="safeload8"/>
+                                </group>
+                            </page>
+                            <page string="判定登錄">
+                                <group>
+                                    <field name="ckecl" widget="checkbox" nolabel="1"/>
+                                    <field name="HV1"/>
+                                    <field name="HV2"/>
+                                    <field name="HV3"/>
+                                    <field name="HV12"/>
+                                    <field name="HV12OK"/>
+                                    <field name="HV13"/>
+                                    <field name="HV13OK"/>
+                                    <field name="wholeck"/>
+                                    <field name="faceck"/>
+                                    <field name="ck_person"/>
+                                    <field name="singleton"/>
+                                    <field name="uqbuckets"/>
+                                    <field name="uqemtreat"/>
+                                    <field name="ckhs" widget="checkbox" nolabel="1"/>
+                                    <field name="hs5" widget="checkbox"/>
+                                    <field name="hs10" widget="checkbox"/>
+                                    <field name="curv15" widget="checkbox"/>
+                                    <field name="" widget="checkbox"/>
+                                    <field name="" widget="checkbox"/>
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                </group>
+                            </page>
+                            <page string="製造條件">
+                                <group>
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                </group>
+                            </page>
+                            <page string="拉力資料">
+                                <group>
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                </group>
+                            </page>
+                            <page string="金相報告書">
+                                <group>
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                    <!--<field name=""/>-->
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

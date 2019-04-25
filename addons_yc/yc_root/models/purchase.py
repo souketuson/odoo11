@@ -9,13 +9,17 @@ class YcPurchase(models.Model):
     _name = "yc.purchase"
 
     name = fields.Char("工令號碼", default=lambda self: self._default_name())
+
     def _default_name(self):
         if self._context.get('params')['action'] == 81:
             return self.env["ir.sequence"].next_by_code("Purchase.sequence")
+
     day = fields.Date("日期", default=lambda self: self._default_date())
+
     def _default_date(self):
         if self._context.get('params')['action'] == 81:
             return dt.today()
+
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
     status = fields.Many2one("yc.setstatus", string="狀態")
@@ -71,7 +75,6 @@ class YcPurchase(models.Model):
     surfhrd = fields.Char("表面硬度")
     corehrd = fields.Char("心部硬度")
     piece = fields.Selection([('Y', '是'), ('N', '否')], '試片')
-    tensihrd = fields.Char("抗拉強度")
     carburlayer = fields.Char("滲碳層")
     torsion = fields.Char("扭力")
     retempt = fields.Char("回火溫度")
@@ -132,14 +135,6 @@ class YcPurchase(models.Model):
     mxload6 = fields.Float("最大負荷6")
     mxload7 = fields.Float("最大負荷7")
     mxload8 = fields.Float("最大負荷8")
-    resist1 = fields.Float("抗拉強度值1")
-    resist2 = fields.Float("抗拉強度值2")
-    resist3 = fields.Float("抗拉強度值3")
-    resist4 = fields.Float("抗拉強度值4")
-    resist5 = fields.Float("抗拉強度值5")
-    resist6 = fields.Float("抗拉強度值6")
-    resist7 = fields.Float("抗拉強度值7")
-    resist8 = fields.Float("抗拉強度值8")
 
     yield1 = fields.Float("降伏點值1")
     yield2 = fields.Float("降伏點值2")
@@ -149,15 +144,6 @@ class YcPurchase(models.Model):
     yield6 = fields.Float("降伏點值6")
     yield7 = fields.Float("降伏點值7")
     yield8 = fields.Float("降伏點值8")
-
-    ystrength1 = fields.Float("降伏強度值1")
-    ystrength2 = fields.Float("降伏強度值2")
-    ystrength3 = fields.Float("降伏強度值3")
-    ystrength4 = fields.Float("降伏強度值4")
-    ystrength5 = fields.Float("降伏強度值5")
-    ystrength6 = fields.Float("降伏強度值6")
-    ystrength7 = fields.Float("降伏強度值7")
-    ystrength8 = fields.Float("降伏強度值8")
 
     elong1 = fields.Float("伸長率值1")
     elong2 = fields.Float("伸長率值2")
@@ -187,7 +173,7 @@ class YcPurchase(models.Model):
     wxrhrd8 = fields.Float("華司硬度值8")
 
     icritetia = fields.Char("國際標準")
-    tensile_no = fields.Char("拉力機編號")
+    tensile_no = fields.Selection([('50T', '50T'), ('100T', '100T')], '拉力機編號')
     sfhn = fields.Char("表面硬度規格")
     sfhv = fields.Char("表面硬度值")
     sfhv1 = fields.Float("表面硬度值1")
@@ -210,10 +196,49 @@ class YcPurchase(models.Model):
     chv7 = fields.Float("心部硬度值7")
     chv8 = fields.Float("心部硬度值8")
 
+    tensihrd = fields.Char("抗拉強度")
     rtens = fields.Char("抗拉強度值")
-    rtenste = fields.Char("抗拉強度值起迄")
+    # tensihrd 和 rtens 這兩者不知道有哪邊不一樣?
+    rtenste = fields.Char("抗拉強度值起迄", compute="_get_rtenste")
+    resist1 = fields.Float("抗拉強度值1")
+    resist2 = fields.Float("抗拉強度值2")
+    resist3 = fields.Float("抗拉強度值3")
+    resist4 = fields.Float("抗拉強度值4")
+    resist5 = fields.Float("抗拉強度值5")
+    resist6 = fields.Float("抗拉強度值6")
+    resist7 = fields.Float("抗拉強度值7")
+    resist8 = fields.Float("抗拉強度值8")
+
+    def _get_rtenste(self):
+        for rec in self:
+            rt_arr = [rec.resist1, rec.resist2, rec.resist3, rec.resist4, rec.resist5, rec.resist6, rec.resist7,
+                       rec.resist8]
+            rt_arr.sort
+            rec.rtenste = str(rt_arr[0]) + '~' + str(rt_arr[len(rt_arr) - 1])
+
+    @api.onchange('name')
+    def _get_tensihrd_data(self):
+
+        pass
+
     ysv = fields.Float("降伏強度值")
-    ysvste = fields.Char("降伏強度值起迄")
+    ysvste = fields.Char("降伏強度值起迄", compute="_get_ysvste")
+    ystrength1 = fields.Float("降伏強度值1")
+    ystrength2 = fields.Float("降伏強度值2")
+    ystrength3 = fields.Float("降伏強度值3")
+    ystrength4 = fields.Float("降伏強度值4")
+    ystrength5 = fields.Float("降伏強度值5")
+    ystrength6 = fields.Float("降伏強度值6")
+    ystrength7 = fields.Float("降伏強度值7")
+    ystrength8 = fields.Float("降伏強度值8")
+
+    def _get_ysvste(self):
+        for rec in self:
+            ysv_arr = [rec.ystrength1, rec.ystrength2, rec.ystrength3, rec.ystrength4, rec.ystrength5, rec.ystrength6,
+                        rec.ystrength7, rec.ystrength8]
+            ysv_arr.sort()
+            rec.ysvste = str(ysv_arr[0]) + '~' + str(ysv_arr[len(ysv_arr)-1])
+
     elohv = fields.Float("伸長率值")
     elohvste = fields.Char("伸長率值起迄")
     yste = fields.Char("降伏點值起迄")
@@ -280,8 +305,8 @@ class YcPurchase(models.Model):
     hs15 = fields.Boolean("頭部敲擊15")
     curv5 = fields.Boolean("彎曲度5")
     curv15 = fields.Boolean("彎曲度15")
-    wholeck = fields.Char("整體判定")
-    faceck = fields.Char("外觀判定")
+    wholeck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
+    faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
     ck_person = fields.Many2one("yc.hr", string="檢驗人員")
     singleton = fields.Float("單支重")
     uqbuckets = fields.Integer("不合格桶數")
@@ -319,6 +344,7 @@ class YcPurchase(models.Model):
     cksurfhrd = fields.Boolean("CK表面硬度")
     ckcorehrd = fields.Boolean("CK心部硬度")
     ckcl = fields.Boolean("CK滲碳層")
+
     cksfhv = fields.Boolean("CK表面硬度值")
     ckchv = fields.Boolean("CK心部硬度值")
     ckrtens = fields.Boolean("CK抗拉強度值")
@@ -341,7 +367,9 @@ class YcPurchase(models.Model):
     ckhf = fields.Boolean("華司硬度規格")
     ffday = fields.Date("完爐日期")
     fftime = fields.Char("完爐時間")
-    ckclv = fields.Boolean("CK斷面積值起迄")
+
+    ckclv = fields.Boolean("CK滲碳層")
+
     feedbucket = fields.Integer("入料桶數")
     feedweight = fields.Integer("入料總重")
     productname = fields.Many2one("yc.setproduct", string="產品名稱")
@@ -370,6 +398,7 @@ class YcPurchase(models.Model):
     uqtreat = fields.Char("不合格品處理")
     uqweight = fields.Integer("不合格重量")
     followup = fields.Char("處理方式")
+    # should be one2many
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")
     amp1 = fields.Float("圖倍率1")
@@ -585,11 +614,11 @@ class YcPurchase(models.Model):
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
-
     @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
+            # S05N0100
             to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
             if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
@@ -615,6 +644,7 @@ class YcPurchase(models.Model):
                 # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
             }
         elif self._context.get('params')['action'] == 112:
+            # S05N0200
             to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
             if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
@@ -630,32 +660,72 @@ class YcPurchase(models.Model):
                 'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
                 'target': 'inline',
             }
+        elif self._context.get('params')['action'] == 124 :
+            # S04N0200
+            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            sql = "delete from yc_purchase where id=%d" % to_delete_id
+            if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
+                self._cr.execute(sql)
+            id = self.env['yc.purchase'].search([('name', '=', self.searchname)]).id
+            return {
+                'name': self.searchname,
+                'res_model': 'yc.purchase',
+                'type': 'ir.actions.act_window',
+                'res_id': id,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': self.env.ref('yc_root.quality_form').id,
+                'target': 'inline',
+            }
 
+    # 各查詢表單後更新資料
     def save_process_data(self):
         return True
 
-
     # S05N0200 製程登錄作業
-
     weighted_order = fields.Many2one("yc.purchase", string="已過磅")
     notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
     count = fields.Integer("數桶數", default=1)
 
+    # 過濾桶號工令
     @api.onchange("order_furn")
     def _chech_order(self):
         if self._context.get('params')['action'] == 111:
-            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn)], "furn_notin": [("order_furn", "=", self.order_furn)]}}
+            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn)],
+                               "furn_notin": [("order_furn", "=", self.order_furn)]}}
         elif self._context.get('params')['action'] == 112:
-            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn)],"notweighted_order": [("order_furn", "=", self.order_furn)]}}
-
+            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn)],
+                               "notweighted_order": [("order_furn", "=", self.order_furn)]}}
 
     # S04N0200 品質數據主檔
-
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
 
+    # 查詢
+    # SELECT t1.表面硬度 as 表面硬度值,t1.表面規格 as 表面硬度規格,t1.心部硬度 as 心部硬度值,t1.心部規格 as 心部硬度規格"
+    #       ,t1.抗拉強度 as 抗拉強度值,t1.降伏點強度 as 降伏強度值,t1.伸長率 as 伸長率值,t1.滲碳層 as 滲碳層1值 "
+    #       ,t1.斷面收縮 as 斷面收縮率值,t1.安全負荷 as 安全負荷值"
+    #       ,m.扭力 as 扭力強度值,m.依據標準 as 國際標準 "
+    #       FROM 進貨單主檔 m "
+    #       LEFT JOIN 產品機械性質主檔 AS t1 ON m.依據標準 = t1.依據標準"
+    #       WHERE m.工令號碼 = '" & strKey1 & "'
 
+    # 帶出工令後 找出數據登錄資料
+    @api.onchange("searchname")
+    def _quality_main_data(self):
+        if self._context.get('params')['action'] == 124:
+            t1 = self.env["yc.mechanicalproperty"].search([("standard","=", self.standard)])
+            self.sfhv = t1.surfhrd
+            self.sfhn = t1.surfaceform
+            self.chv = t1.corehrd
+            self.chn = t1.coreform
+            self.rtens = t1.tensihrd
+            self.ysv = t1.ystrength
+            self.elohv = t1.elongation
+            self.carb1v = t1.carburlayer
+            self.sskvste = t1.sectionshrink
+            self.safeload = t1.safeload
 
 class YcProduceDetails(models.Model):
     _name = "yc.produce.details"
@@ -676,7 +746,6 @@ class YcProduceDetails(models.Model):
     weightdiff = fields.Integer("重量差")
     status = fields.Char("狀態")
     note = fields.Text("備註")
-
 
     @api.multi
     @api.onchange("bucket_no")
