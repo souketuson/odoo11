@@ -54,7 +54,6 @@ class YcBusiness(models.Model):
             domain = [('name', operator, name)]
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
-
         customer = self.search(domain + args, limit=limit)
         return customer.name_get()
 

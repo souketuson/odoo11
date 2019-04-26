@@ -7,7 +7,7 @@ from datetime import datetime as dt
 
 class YcWeight(models.Model):
     _name = "yc.weight"
-    _order= "day desc"
+    _order = "day desc"
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
@@ -30,7 +30,7 @@ class YcWeight(models.Model):
     carbur = fields.Integer("滲碳重量")
     other = fields.Integer("其他重量 (KG)")
     other1 = fields.Integer("其他重量1")
-    count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
+    # count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
 
@@ -200,10 +200,10 @@ class YcWeight(models.Model):
             pass
 
     # 貨重計算(調值、滲碳、其他、其他1)
-    @api.onchange("refine", "carbur", "other", "other1")
-    def _check_weight(self):
-        total = self.refine + self.carbur + self.other + self.other1
-        self.count = total
+    # @api.onchange("refine", "carbur", "other", "other1")
+    # def _check_weight(self):
+    #     total = self.refine + self.carbur + self.other + self.other1
+    #     self.count = total
 
     # many2one這個資料庫時 會用這裡的name 而不是(name)單號
     # 和 _rec_name = "carno" 一樣效果
@@ -226,13 +226,13 @@ class YcWeight(models.Model):
 
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
-
     name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
-    no = fields.Integer("序號", default=1)
-    compute_no = fields.Integer("最大數")
+    no = fields.Integer("序號",store=True)
+    compute_no = fields.Integer("最大數", compute= "_get_row_no")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
+    customer_code = fields.Char("客戶代碼", readonly="1")
 
     @api.multi
     def name_get(self):
@@ -242,12 +242,19 @@ class YcWeightDetails(models.Model):
             name = processing.name
             result.append((record.id, name))
         return result
-    # , compute= "_get_row_no"
-    @api.depends("no")
+
+    @api.multi
+    @api.onchange("customer_id")
+    def _search_customer(self):
+        if self.customer_id:
+            self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
+
+    @api.depends("compute_no")
     def _get_row_no(self):
+        k=[]
         if self.ids:
-            count =1
+            count = 1
             for rec in self:
-                weight_id = self.env['yc.weight.details'].search([('id','=', rec.id)])
+                weight_id = self.env['yc.weight.details'].search([('id', '=', rec.id)])
                 weight_id.write({'no': count})
                 count += 1
