@@ -18,7 +18,7 @@ class YcWeight(models.Model):
     carno = fields.Char("車次序號")
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
     factory_id = fields.Many2one("yc.factory", string="所屬工廠")
-    purchase_times = fields.Integer("進貨次數")
+    purchase_times = fields.Integer("進貨次數", compute="_count_times", store=True)
     ship_times = fields.Integer("出貨次數")
     plate_no = fields.Char("車號", related="driver_id.plate_no")
     total = fields.Integer("總重 (KG)")
@@ -125,30 +125,58 @@ class YcWeight(models.Model):
             raise Warning("進出貨分類空值")
 
     # 進出貨次數自動計算
+
+    #
+    # , compute = "_count", store = True
     @api.multi
     @api.onchange('in_out', 'driver_id')
     def _count(self):
         for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")
-            pn = self.plate_no
+            driver = self.driver_id.id
             check_in = self.env["yc.weight"].search(
-                [('in_out', '=', 'I'), ('day', '=', check_day), ('plate_no', '=', pn)])
+                [('in_out', '=', 'I'), ('day', '=', check_day), ('driver_id', '=', driver)])
             check_out = self.env["yc.weight"].search(
-                [('in_out', '=', 'O'), ('day', '=', check_day), ('plate_no', '=', pn)])
+                [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
 
             # 判斷新建還是修改 看單號有沒有在資料庫
             if rec.in_out:  # 進出貨有值
-                if pn and rec.day:  # 車牌&日期 有值
+                if driver and rec.day:
                     self.ship_times = len(check_out)
                     self.purchase_times = len(check_in)
+                    # 新增(db無單號)
                     if not self.env["yc.weight"].search([("name", "=", self.name)]):
                         if rec.in_out == 'I':
                             rec.ship_times = self.ship_times
                             rec.purchase_times = self.purchase_times + 1
                         elif rec.in_out == 'O':
-                            # onchange decorator 要存到db 需要rec.field = self.field 這種寫法
+                            # onchange decorator 要存到db 需要rec.field = self.field 這種寫法 ps.只有新增有用
                             rec.ship_times = self.ship_times + 1
                             rec.purchase_times = self.purchase_times
+                    else: # 無法儲存 要另寫compute 更新資料
+                        if rec.in_out == 'I':
+                            rec.ship_times = self.ship_times
+                            rec.purchase_times = self.purchase_times +1
+                        elif rec.in_out == 'O':
+                            rec.ship_times = self.ship_times
+                            rec.purchase_times = self.purchase_times +1
+
+    # 如果新增完需要修改 仍然要檢查次數可以重啟這個code
+    # @api.depends('driver_id')
+    # def _count_times(self):
+    #     for rec in self:
+    #         check_day = dt.strptime(rec.day, "%Y-%m-%d")
+    #         driver = self.driver_id.id
+    #         check_in = self.env["yc.weight"].search(
+    #             [('in_out', '=', 'I'), ('day', '=', check_day), ('driver_id', '=', driver)])
+    #         check_out = self.env["yc.weight"].search(
+    #             [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
+    #
+    #         # 判斷新建還是修改 看單號有沒有在資料庫
+    #         if rec.in_out:  # 進出貨有值
+    #             if driver and rec.day:
+    #                 self.ship_times = len(check_out)
+    #                 self.purchase_times = len(check_in)
 
     # 選完司機名稱，車牌自動帶入 > 改用related 取代
     # @api.multi
@@ -187,7 +215,6 @@ class YcWeight(models.Model):
             else:
                 vals[key] = self[key]
         _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
-        vals.update({"net": _net})
         return super(YcWeight, self).write(vals)
 
     # 檢查淨重是否等於貨重
@@ -232,8 +259,7 @@ class YcWeightDetails(models.Model):
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     processing_id = fields.Many2one("yc.processing", "加工廠名稱")
     note = fields.Char("備註")
-    customer_code = fields.Char("客戶代碼", readonly="1")
-
+    customer_code = fields.Char("客戶代碼")
     @api.multi
     def name_get(self):
         result = []
@@ -242,16 +268,18 @@ class YcWeightDetails(models.Model):
             name = processing.name
             result.append((record.id, name))
         return result
-
+    @api.multi
+    @api.onchange("customer_code")
+    def _select_customer(self):
+        if self.customer_code:
+            self.customer_id = self.env["yc.customer"].search([("code","=",self.customer_code)])
     @api.multi
     @api.onchange("customer_id")
     def _search_customer(self):
         if self.customer_id:
             self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
-
     @api.depends("compute_no")
     def _get_row_no(self):
-        k=[]
         if self.ids:
             count = 1
             for rec in self:

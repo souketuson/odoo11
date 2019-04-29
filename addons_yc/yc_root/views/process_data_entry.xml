@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- tree view -->
-        <!--<record model="ir.ui.view" id="process_data_entry_tree">-->
-        <!--<field name="name">pde.tree</field>-->
-        <!--<field name="model">yc.purchase</field>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<tree string="ProcessDataEntry Tree">-->
-        <!--<field name="order_furn"/>-->
-        <!--<field name="furn_notin"/>-->
-        <!--<field name="furn_in"/>-->
-        <!--<field name="name"/>-->
-        <!--&lt;!&ndash;<field name=""/>&ndash;&gt;-->
-        <!--</tree>-->
-        <!--</field>-->
-        <!--</record>-->
         <!-- form view -->
         <record model="ir.ui.view" id="process_data_entry_form">
             <field name="name">pde.form</field>
@@ -204,13 +190,6 @@
                             </page>
                             <page string="熱處理工程紀錄表">
                                 <group>
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
                                 </group>
                             </page>
                         </notebook>
@@ -244,12 +223,5 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="process_data_entry_form"/>
         </record>
-
-        <!--<record model="ir.actions.act_window.view" id="process_data_entry_action_tree">-->
-        <!--<field name="act_window_id" ref="process_data_entry_action"/>-->
-        <!--<field name="sequence" eval="10"/>-->
-        <!--<field name="view_mode">tree</field>-->
-        <!--<field name="view_id" ref="process_data_entry_tree"/>-->
-        <!--</record>-->
     </data>
 </odoo>

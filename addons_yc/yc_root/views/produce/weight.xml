@@ -34,7 +34,7 @@
                             <field name="name" readonly="1" colspan="4"/>
                             <!-- -->
 
-                            <field name="driver_id"/>
+                            <field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="person_id"/>
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="ship_times" attrs="{'readonly': [('id', '!=', False)]}"/>
@@ -71,7 +71,6 @@
                                     </tree>
                                 </field>
                             </page>
-
                         </notebook>
 
                     </sheet>

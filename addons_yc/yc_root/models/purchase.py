@@ -14,7 +14,7 @@ class YcPurchase(models.Model):
         if self._context.get('params')['action'] == 81:
             return self.env["ir.sequence"].next_by_code("Purchase.sequence")
 
-    day = fields.Date("日期", default=lambda self: self._default_date())
+    day = fields.Date("進貨日期", default=lambda self: self._default_date())
 
     def _default_date(self):
         if self._context.get('params')['action'] == 81:
@@ -44,6 +44,7 @@ class YcPurchase(models.Model):
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
+    product_id = fields.Char("品名代碼")
     product_code = fields.Many2one("yc.setproduct", string="品名")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
     len_code = fields.Many2one("yc.setlength", string="長度")
@@ -218,7 +219,6 @@ class YcPurchase(models.Model):
 
     @api.onchange('name')
     def _get_tensihrd_data(self):
-
         pass
 
     ysv = fields.Float("降伏強度值")
@@ -350,7 +350,7 @@ class YcPurchase(models.Model):
     ckrtens = fields.Boolean("CK抗拉強度值")
     ckyv = fields.Boolean("CK降伏強度值")
     ckelong = fields.Boolean("CK伸長率值")
-    cktorsion = fields.Boolean("CK扭力強度值")
+    cktv = fields.Boolean("CK扭力強度值")
     ckcl1v = fields.Boolean("CK滲碳層1值")
     cksskv = fields.Boolean("CK斷面收縮率值")
     cksl = fields.Boolean("CK安全負荷值")

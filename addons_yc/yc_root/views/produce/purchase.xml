@@ -33,27 +33,57 @@
             <field name="arch" type="xml">
                 <form string="Purchase form">
                     <sheet>
-                        <group string="進貨資訊" col="8">
-                            <field name="day" colspan="4"/>
-                            <field name="copy_createdate" attrs="{'readonly': True }" colspan="4"/>
-                            <newline/>
+                        <group string="進貨資訊" col="10">
+                            <field name="day" />
+                            <field name="copy_createdate" attrs="{'readonly': True }"/>
+                            <field name="time" nolabel="1"/>
+                            <field name="factory_id"/>
+                            <field name="pre_order" colspan="3"/>
+                            <!--<newline/>-->
+                            <!-- -->
                             <field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="processing_attache"/>
-                            <field name="customer_id" colspan="4"/>
+                            <separator/>
+                            <field name="customer_id"/>
                             <newline/>
+                            <!-- -->
                             <field name="driver_id" attrs="{'readonly': True }"/>
                             <field name="combo_process" readonly="1"/>
+                            <separator/>
                             <field name="combo_customer" readonly="1"/>
                             <!--<field name="processing_phone" readonly="1"/>-->
                             <!--<field name="processing_contact" readonly="1" colspan="4" />-->
                             <newline/>
+                            <!-- -->
                             <field name="name" readonly="1"/>
                             <field name="batch"/>
-                            <field name="time" colspan="4"/>
-                            <newline/>
-                            <field name="pre_order"/>
+                            <separator/>
+                            <field name="customer_no"/>
                             <field name="person"/>
-                            <field name="factory_id" colspan="4"/>
+
+
+                            <!-- last version backup -->
+                            <!--<field name="day" colspan="4"/>-->
+                            <!--<field name="copy_createdate" attrs="{'readonly': True }" colspan="4"/>-->
+                            <!--<newline/>-->
+                            <!--<field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"/>-->
+                            <!--<field name="processing_attache"/>-->
+                            <!--<field name="customer_id" colspan="4"/>-->
+                            <!--<newline/>-->
+                            <!--<field name="driver_id" attrs="{'readonly': True }"/>-->
+                            <!--<field name="combo_process" readonly="1"/>-->
+                            <!--<field name="combo_customer" readonly="1"/>-->
+                            <!--&lt;!&ndash;<field name="processing_phone" readonly="1"/>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<field name="processing_contact" readonly="1" colspan="4" />&ndash;&gt;-->
+                            <!--<newline/>-->
+                            <!--<field name="name" readonly="1"/>-->
+                            <!--<field name="batch"/>-->
+                            <!--<field name="time" colspan="4"/>-->
+                            <!--<newline/>-->
+                            <!--<field name="pre_order"/>-->
+                            <!--<field name="person"/>-->
+                            <!--<field name="factory_id" colspan="4"/>-->
+
                         </group>
                         <notebook>
                             <page string="基本資料">

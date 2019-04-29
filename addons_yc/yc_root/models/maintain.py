@@ -124,8 +124,14 @@ class YcSetprocess(models.Model):
 class YcSettexture(models.Model):
     # 材質 S03N0007
     _name = "yc.settexture"
+    _order = "name asc"
     name = fields.Char("材質名稱")
     code = fields.Char("材質代碼")
+
+    # @api.model
+    # def name_search(self, name='', args=None, operator='ilike', limit=100):
+    #     args = (id desc)
+    #     return self.search(args, limit=limit).name_get()
 
 
 class YcSetsurface(models.Model):
