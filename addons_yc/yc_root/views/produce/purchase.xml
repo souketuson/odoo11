@@ -6,6 +6,7 @@
         <template id="assets_backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
+                <script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>
             </xpath>
         </template>
 
@@ -34,7 +35,7 @@
                 <form string="Purchase form">
                     <sheet>
                         <group string="進貨資訊" col="10">
-                            <field name="day" />
+                            <field name="day"/>
                             <field name="copy_createdate" attrs="{'readonly': True }"/>
                             <field name="time" nolabel="1"/>
                             <field name="factory_id"/>
@@ -87,62 +88,81 @@
                         </group>
                         <notebook>
                             <page string="基本資料">
-                                <group string="規格明細" col="6">
-                                    <field name="clsf_code"/>
-                                    <field name="product_code"/>
-                                    <field name="strength_level"/>
-                                    <field name="txtur_code"/>
-                                    <field name="norm_code"/>
-                                    <field name="len_code"/>
-                                    <field name="len_descript"/>
-                                    <field name="proces_code"/>
-                                    <field name="surface_code"/>
-                                    <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"/>
-                                    <field name="portage"/>
-                                    <field name="elecplswitch" invisible="1"/>
-                                    <newline/>
-                                </group>
-                                <group col="6">
+                                <group string="規格明細" col="8">
                                     <div>
-                                        <label string="數量　" class="oe_inline"/>
-                                        <field name="num1" style="width:100px"/>
-                                        <field name="unit1" nolabel="1" class="oe_inline" style="width:50px"/>
-                                        <!--</div>-->
-                                        <!--<div>-->
+                                        <label string="品名分類" style="font-weight:bold"/>
+                                        <field name="clsf_code" style="width:15%%"/>　　　|　
+                                        <label string="品名" style="font-weight:bold"/>
+                                        <field name="product_code" style="width:15%%"/>　　　|　
+                                        <label string="強度級數" style="font-weight:bold"/>
+                                        <field name="strength_level" style="width:15%%"/>　　　　|　
+                                        <label string="材質" style="font-weight:bold"/>
+                                        <field name="txtur_code" style="width:15%%"/>
+                                        <br/>
+                                        <label string="規格　　" style="font-weight:bold"/>
+                                        <field name="norm_code" style="width:15%%"/>　　　|　
+                                        <label string="長度" style="font-weight:bold"/>
+                                        <field name="len_code" style="width:15%%"/>
+                                        <span style="display:inline-block; width: 10px;"></span>
+                                        <field name="len_descript" nolabel="1" placeholder="長度說明" style="width:17%%"/>
+                                        　　　　　　　　　　|　
+                                        <label string="全牙或半牙" style="font-weight:bold"/>
+                                        <field name="fullorhalf" style="width:15%%"/>
+                                        <br/>
+
+                                        <label string="加工方式" style="font-weight:bold"/>
+                                        <field name="proces_code" style="width:15%%"/>　　　|　
+                                        <label string="表面處理" style="font-weight:bold"/>
+                                        <field name="surface_code" style="width:13%%"/>　　　|　
+                                        <label string="電鍍別" style="font-weight:bold"/>
+                                        <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"
+                                               style="width:15%%"/>　
+                                        <!--<field name="portage"/>-->
+                                        <field name="elecplswitch" invisible="1"/>
+                                    </div>
+                                </group>
+                                <group col="20">
+                                    <div>
+                                        <label string="數量　" style="font-weight:bold" class="oe_inline"/>
+                                        <field name="num1" style="width:100px"/>　
+                                        <field name="unit1" nolabel="1" style="width:4%%"/>
+                                        <span style="display:inline-block; width: 10px;"></span>
                                         <label string="" class="oe_inline"/>
                                         <field name="num2" style="width:100px"/>
-                                        <field name="unit2" nolabel="1" class="oe_inline" style="width:50px"/>
-                                        <!--</div>-->
-                                        <!--<div>-->
+                                        <field name="unit2" nolabel="1" style="width:4%%"/>
+                                        <span style="display:inline-block; width: 10px;"></span>
                                         <label string="" class="oe_inline"/>
                                         <field name="num3" style="width:100px"/>
-                                        <field name="unit3" nolabel="1" class="oe_inline" style="width:50px"/>
-                                        <!--</div>-->
-                                        <!--<div>-->
+                                        <field name="unit3" nolabel="1" style="width:4%%"/>
+                                        <span style="display:inline-block; width: 10px;"></span>
                                         <label string="" class="oe_inline"/>
                                         <field name="num4" style="width:100px"/>
-                                        <field name="unit4" nolabel="1" class="oe_inline" style="width:50px"/>
+                                        <field name="unit4" nolabel="1" style="width:4%%"/>　　
+                                        　　　　
+                                        　　　　　　　　　　|
+
+                                        <label string="  存放地點" style="font-weight:bold"/>
+                                        <field name="storeplace" style="width:100px"/>
                                     </div>
-                                    <!--<separator/>-->
-                                    <!--<separator/>-->
                                 </group>
-                                <group col="6">
-                                    <field name="storeplace">存放位置</field>
-                                    <field name="net"/>
-                                    <field name="process1"/>
-                                    <field name="totalpack"/>
-                                    <field name="process2"/>
-                                    <field name="standard"/>
-                                    <field name="wire_furn"/>
-                                    <field name="fullorhalf"/>
-                                    <!--<field name="headsign" widget="image"/>-->
-                                    <field name="headsign" widget='image' height="90" width="90"/>
-                                    <!--<field name="status"/>-->
-                                    <!--<field name="weighstate"/>-->
-                                    <!--<field name="checkstate"/>-->
-                                    <!--<field name="customer_phone"/>-->
-                                    <!--<field name="customer_contact"/>-->
-                                    <!--<field name="customer_no"/>-->
+                                <group col="8">
+                                    <div>
+                                        <label string="淨重" style="font-weight:bold"/>
+                                        <field name="net" style="width:15%%"/>　　|　
+                                        <label string="次加工廠" style="font-weight:bold"/>
+                                        <field name="process1" style="width:15%%"/>　　|　
+                                        <label string="裝袋合計" style="font-weight:bold"/>
+                                        <field name="totalpack" style="width:15%%"/>　　|　
+                                        <label string="二次加工" style="font-weight:bold"/>
+                                        <field name="process2" style="width:15%%"/>
+                                        <br/>
+                                        <label string="依據標準" style="font-weight:bold"/>
+                                        <field name="standard" style="width:15%%"/>　　|　
+                                        <label string="線材爐號" style="font-weight:bold"/>
+                                        <field name="wire_furn" style="width:15%%"/>　　|　
+                                        <label string="頭部記號" style="font-weight:bold"/>
+                                        <field name="headsign" widget='image' height="90" width="90" style="width:15%%;position:relative;top:60px"/>
+                                    </div>
                                 </group>
                                 <group string="其他" col="8">
                                     <field name="surfhrd"/>
@@ -186,21 +206,26 @@
                             </page>
 
                             <page string="作業條件">
-                                <group col="6">
+                                <group col="12">
                                     <field name="flow"/>
                                     <field name="cp"/>
                                     <field name="nh31"/>
-                                    <field name="nh32"/>
-                                    <field name="nh33"/>
-                                    <field name="nh34"/>
+                                    <field name="nh32" string="支"/>
+                                    <field name="nh33" string="地"/>
+                                    <field name="nh34" string="支"/>
+                                </group>
+                                <group col="10">
                                     <field name="heat1"/>
-                                    <field name="heat2"/>
-                                    <field name="heat3"/>
-                                    <field name="heat4"/>
-                                    <field name="heat5"/>
-                                    <field name="heat6"/>
-                                    <field name="heat7"/>
-                                    <field name="heat8"/>
+                                    <field name="heat2" nolabel="1"/>
+                                    <field name="heat3" nolabel="1"/>
+                                    <field name="heat4" nolabel="1"/>
+                                    <field name="heat5" nolabel="1"/>
+                                    <field name="heat6" nolabel="1"/>
+                                    <field name="heat7" nolabel="1"/>
+                                    <field name="heat8" nolabel="1"/>
+                                    <separator/>
+                                </group>
+                                <group col="12">
                                     <field name="heattemp"/>
                                     <field name="heatsped"/>
                                     <field name="tempturing1"/>
@@ -249,7 +274,5 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="purchase_tree"/>
         </record>
-
-
     </data>
 </odoo>

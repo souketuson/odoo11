@@ -200,29 +200,68 @@
                                     <field name="hs5" widget="checkbox"/>
                                     <field name="hs10" widget="checkbox"/>
                                     <field name="curv15" widget="checkbox"/>
-                                    <field name="" widget="checkbox"/>
-                                    <field name="" widget="checkbox"/>
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
+                                    <field name="curv30" widget="checkbox"/>
+                                    <field name="qcnote"/>
                                 </group>
                             </page>
-                            <page string="製造條件">
+                            <page string="製造條件" col="10">
                                 <group>
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
+                                    <group>
+                                    <field name="produceday1"/>
+                                    <field name="ptime1"/>
+                                    <field name="shift1"/>
+                                    <field name="op1"/>
+                                    <field name="buckets1"/>
+                                    <field name="teamlead1"/>
+
+                                    <field name="produceday2"/>
+                                    <field name="ptime2"/>
+                                    <field name="shift2"/>
+                                    <field name="op2"/>
+                                    <field name="buckets2"/>
+                                    <field name="teamlead2"/>
+
+                                    <field name="produceday3"/>
+                                    <field name="ptime3"/>
+                                    <field name="shift3"/>
+                                    <field name="op3"/>
+                                    <field name="buckets3"/>
+                                    <field name="teamlead3"/>
+                                    <field name="ffday"/>
+                                    <field name="fftime"/>
+
+                                    <field name="flow"/>
+                                    <field name="cp"/>
+                                    <field name="nh31"/>
+                                    <field name="nh32"/>
+                                    <field name="nh33"/>
+                                    <field name="nh34"/>
+                                    <field name="heat1"/>
+                                    <field name="heat2"/>
+                                    <field name="heat3"/>
+                                    <field name="heat4"/>
+                                    <field name="heat5"/>
+                                    <field name="heat6"/>
+                                    <field name="heat7"/>
+                                    <field name="heat8"/>
+                                    <field name="heattemp"/>
+                                    <field name="heatsped"/>
+                                    <field name="tempturing1"/>
+                                    <field name="tempturing2"/>
+                                    <field name="tempturing3"/>
+                                    <field name="tempturing4"/>
+                                    <field name="tempturing5"/>
+                                    <field name="tempturing6"/>
+                                    <field name="tempturisped"/>
+                                    </group>
+                                    <group>
+                                    <div>
+                                        <label string="品管備註"/>
+                                        <field name="qcnote1" style="width:31%%"/>
+                                        <field name="qcnote2" style="width:31%%"/>
+                                        <field name="qcnote3" style="width:31%%"/>
+                                    </div>
+                                </group>
                                 </group>
                             </page>
                             <page string="拉力資料">

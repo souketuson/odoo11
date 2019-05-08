@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="setlength_tree">
+            <field name="name">setlength.tree</field>
+            <field name="model">yc.setlength</field>
+            <field name="arch" type="xml">
+                <tree string="setlength Tree">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="parameter1"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="setlength_form">
+            <field name="name">setlength.form</field>
+            <field name="model">yc.setlength</field>
+            <field name="arch" type="xml">
+                <form string="setlength form">
+                    <sheet>
+                        <group string="">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="parameter1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="setlength_search_view">
+            <field name="name">setlength.search</field>
+            <field name="model">yc.setlength</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="setlength_action">
+            <field name="name">產品設定</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.setlength</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="setlength_action_form">
+            <field name="act_window_id" ref="setlength_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="setlength_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="setlength_action_tree">
+            <field name="act_window_id" ref="setlength_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="setlength_tree"/>
+        </record>
+    </data>
+</odoo>

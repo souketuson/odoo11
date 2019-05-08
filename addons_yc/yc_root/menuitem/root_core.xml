@@ -98,10 +98,10 @@
 
         <menuitem id="setproduct_menu" name="產品資料" parent="produce_maintain_menu" sequence="20"
                   action="setproduct_action"/>
-        <menuitem id="fake12_menu" name="倉庫主檔" parent="produce_maintain_menu" sequence="21" action="fake_action"/>
+        <menuitem id="setstrength_menu" name="強度級數" parent="produce_maintain_menu" sequence="21" action="setstrength_action"/>
         <menuitem id="fake13_menu" name="產品分類" parent="produce_maintain_menu" sequence="22" action="fake_action"/>
-        <menuitem id="fake14_menu" name="規格對照" parent="produce_maintain_menu" sequence="23" action="fake_action"/>
-        <menuitem id="fake15_menu" name="長度對照" parent="produce_maintain_menu" sequence="24" action="fake_action"/>
+        <menuitem id="setnorm_menu" name="規格對照" parent="produce_maintain_menu" sequence="23" action="setnorm_action"/>
+        <menuitem id="setlength_menu" name="長度對照" parent="produce_maintain_menu" sequence="24" action="setlength_action"/>
         <menuitem id="fake16_menu" name="加工方式" parent="produce_maintain_menu" sequence="25" action="fake_action"/>
         <menuitem id="fake17_menu" name="材質" parent="produce_maintain_menu" sequence="26" action="fake_action"/>
         <menuitem id="fake18_menu" name="表面處理" parent="produce_maintain_menu" sequence="27" action="fake_action"/>

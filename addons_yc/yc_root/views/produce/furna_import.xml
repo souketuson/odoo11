@@ -48,6 +48,10 @@
                     <field name="name"/>
                     <field name="order_furn"/>
 
+                    <field name="status"/>
+                    <field name="retempt"/>
+                    <field name="wire_furn"/>
+                    <field name="customer_id"/>
                 </search>
             </field>
         </record>

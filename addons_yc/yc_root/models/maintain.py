@@ -99,9 +99,9 @@ class YcSetnorm(models.Model):
     _name = "yc.setnorm"
     name = fields.Char("規格名稱")
     code = fields.Char("規格代碼")
-    parmeter1 = fields.Char("參數1")
-    parmeter2 = fields.Char("參數2")
-    parmeter3 = fields.Char("參數3")
+    parameter1 = fields.Char("參數1")
+    parameter2 = fields.Char("參數2")
+    parameter3 = fields.Char("參數3")
 
 
 class YcSetlength(models.Model):
@@ -109,8 +109,8 @@ class YcSetlength(models.Model):
     _name = "yc.setlength"
     name = fields.Char("長度名稱")
     code = fields.Char("長度代碼")
-    parameter1 = fields.Char("參數1")
-    parmeter2 = fields.Char("參數2")
+    parameter1 = fields.Float("參數1")
+    parmeter2 = fields.Float("參數2")
     parmeter3 = fields.Char("參數3")
 
 

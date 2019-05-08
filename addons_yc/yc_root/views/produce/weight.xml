@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
+        <template id="assets_backend" name="static_resources_demo assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
+                <script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>
+            </xpath>
+        </template>
         <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>
@@ -19,7 +24,6 @@
                 </tree>
             </field>
         </record>
-
         <!-- form view -->
         <record model="ir.ui.view" id="weight_fom">
             <field name="name">weight.form</field>
@@ -28,12 +32,16 @@
                 <form string="Weight form">
                     <sheet>
                         <group string="過磅單" col="10">
+
+                            <field name="day"/>
+                            <field name="weightime"/>
+                            <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"/>
+                            <field name="name" readonly="1" colspan="4"/>
                             <field name="day"/>
                             <field name="weightime"/>
                             <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"/>
                             <field name="name" readonly="1" colspan="4"/>
                             <!-- -->
-
                             <field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="person_id"/>
                             <field name="purchase_times" attrs="{'readonly': [('id', '!=', False)]}"/>
@@ -62,7 +70,7 @@
                             <page string="項目">
                                 <field name="customer_detail_ids">
                                     <tree string="Customer Details" editable="bottom">
-                                        <field name="no" invisible="0"/>
+                                        <field name="no" invisible="1"/>
                                         <field name="customer_code"/>
                                         <field name="customer_id"/>
                                         <field name="processing_id"/>
@@ -72,7 +80,6 @@
                                 </field>
                             </page>
                         </notebook>
-
                     </sheet>
                 </form>
             </field>
@@ -88,7 +95,6 @@
             <field name="prefix">WL%(y)s%(month)s%(day)s</field>
             <field name="padding">3</field>
         </record>
-
         <!-- search -->
         <record model="ir.ui.view" id="course_search_view">
             <field name="name">weight.search</field>
@@ -96,6 +102,8 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
+                    <field name="driver_id"/>
+                    <field name="day"/>
                 </search>
             </field>
         </record>
@@ -123,7 +131,5 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="weight_tree"/>
         </record>
-
-
     </data>
 </odoo>

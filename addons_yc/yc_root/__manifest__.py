@@ -25,6 +25,9 @@
         'views/produce/purchase_store.xml',
         'views/produce/purchase_report.xml',
         'views/produce/maintain/setproduct.xml',
+        'views/produce/maintain/setstrength.xml',
+        'views/produce/maintain/setnorm.xml',
+        'views/produce/maintain/setlength.xml',
         'views/maintain/factory.xml',
         'views/maintain/department.xml',
         'views/maintain/setjobtitle.xml',
@@ -40,7 +43,8 @@
         'menuitem/root_core.xml',
 
     ],
-    'css': ['static/src/css/cssfile.css'],
+    'css': ['static/src/css/cssfile.css',
+            ],
 
     # only loaded in demonstration mode
     'demo': [

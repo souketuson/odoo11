@@ -78,7 +78,7 @@ class YcPurchase(models.Model):
     piece = fields.Selection([('Y', '是'), ('N', '否')], '試片')
     carburlayer = fields.Char("滲碳層")
     torsion = fields.Char("扭力")
-    retempt = fields.Char("回火溫度")
+    retempt = fields.Integer("回火溫度")
     pre_furn = fields.Char("以前爐號")
     order_furn = fields.Char("預排爐號")
     norcls = fields.Char("規範分類")
@@ -305,6 +305,7 @@ class YcPurchase(models.Model):
     hs15 = fields.Boolean("頭部敲擊15")
     curv5 = fields.Boolean("彎曲度5")
     curv15 = fields.Boolean("彎曲度15")
+    curv30 = fields.Boolean("彎曲度30")
     wholeck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
     faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
     ck_person = fields.Many2one("yc.hr", string="檢驗人員")
@@ -744,7 +745,7 @@ class YcProduceDetails(models.Model):
     tnetweight = fields.Integer("磅後淨重")
     recevie_man = fields.Many2one("yc.hr", string="收料人員")
     weightdiff = fields.Integer("重量差")
-    status = fields.Char("狀態")
+    # status = fields.Char("狀態")
     note = fields.Text("備註")
 
     @api.multi

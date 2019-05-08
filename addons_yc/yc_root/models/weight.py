@@ -125,8 +125,6 @@ class YcWeight(models.Model):
             raise Warning("進出貨分類空值")
 
     # 進出貨次數自動計算
-
-    #
     # , compute = "_count", store = True
     @api.multi
     @api.onchange('in_out', 'driver_id')
@@ -144,7 +142,7 @@ class YcWeight(models.Model):
                 if driver and rec.day:
                     self.ship_times = len(check_out)
                     self.purchase_times = len(check_in)
-                    # 新增(db無單號)
+                    # 新增模式(db無單號)
                     if not self.env["yc.weight"].search([("name", "=", self.name)]):
                         if rec.in_out == 'I':
                             rec.ship_times = self.ship_times
@@ -153,7 +151,7 @@ class YcWeight(models.Model):
                             # onchange decorator 要存到db 需要rec.field = self.field 這種寫法 ps.只有新增有用
                             rec.ship_times = self.ship_times + 1
                             rec.purchase_times = self.purchase_times
-                    else: # 無法儲存 要另寫compute 更新資料
+                    else: # 修改模式 無法儲存 要另寫compute 更新資料
                         if rec.in_out == 'I':
                             rec.ship_times = self.ship_times
                             rec.purchase_times = self.purchase_times +1
@@ -256,8 +254,8 @@ class YcWeightDetails(models.Model):
     name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
     no = fields.Integer("序號",store=True)
     compute_no = fields.Integer("最大數", compute= "_get_row_no")
-    customer_id = fields.Many2one("yc.customer", "客戶名稱")
-    processing_id = fields.Many2one("yc.processing", "加工廠名稱")
+    customer_id = fields.Many2one("yc.customer", "客戶名稱", required=True)
+    processing_id = fields.Many2one("yc.processing", "加工廠名稱", required=True)
     note = fields.Char("備註")
     customer_code = fields.Char("客戶代碼")
     @api.multi
