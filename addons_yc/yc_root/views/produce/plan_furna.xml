@@ -6,8 +6,9 @@
             <field name="name">planfurna.tree</field>
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
-                <tree string="planfurna Tree">
+                <tree string="planfurna Tree" decoration-danger="ckimportdate == 'over'">
                     <field name="customer_id"/>
+                    <field name="ckimportdate" invisible="1"/>
                     <field name="order_furn"/>
                     <field name="day"/>
                     <field name="name"/>
@@ -183,7 +184,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">yc.purchase</field>
             <field name="view_type">form</field>
-            <field name="limit">100</field>
+            <!--<field name="limit">100</field>-->
             <field name="view_mode">tree,form</field>
         </record>
 

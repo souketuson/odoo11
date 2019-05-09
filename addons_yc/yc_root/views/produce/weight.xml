@@ -32,11 +32,6 @@
                 <form string="Weight form">
                     <sheet>
                         <group string="過磅單" col="10">
-
-                            <field name="day"/>
-                            <field name="weightime"/>
-                            <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"/>
-                            <field name="name" readonly="1" colspan="4"/>
                             <field name="day"/>
                             <field name="weightime"/>
                             <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"/>

@@ -112,7 +112,7 @@
         <!--quality-->
         <menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_action"/>
         <menuitem id="fake50_menu" name="不合格品處理作業" parent="quality_menu" sequence="21" action="fake_action"/>
-        <menuitem id="fake51_menu" name="產品機械性質主檔" parent="quality_menu" sequence="22" action="fake_action"/>
+        <menuitem id="mechanicalproperty_menu" name="產品機械性質主檔" parent="quality_menu" sequence="22" action="mechanicalproperty_action"/>
         <menuitem id="fake52_menu" name="製造備註主檔" parent="quality_maintain_menu" sequence="23" action="fake_action"/>
         <menuitem id="fake53_menu" name="強度等級主檔" parent="quality_maintain_menu" sequence="24" action="fake_action"/>
         <menuitem id="fake54_menu" name="硬度規格主檔" parent="quality_maintain_menu" sequence="25" action="fake_action"/>

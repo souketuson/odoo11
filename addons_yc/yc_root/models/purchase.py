@@ -175,7 +175,7 @@ class YcPurchase(models.Model):
 
     icritetia = fields.Char("國際標準")
     tensile_no = fields.Selection([('50T', '50T'), ('100T', '100T')], '拉力機編號')
-    sfhn = fields.Char("表面硬度規格")
+    sfhn = fields.Many2one("yc.mechanicalproperty", string="表面硬度規格")
     sfhv = fields.Char("表面硬度值")
     sfhv1 = fields.Float("表面硬度值1")
     sfhv2 = fields.Float("表面硬度值2")
@@ -186,7 +186,7 @@ class YcPurchase(models.Model):
     sfhv7 = fields.Float("表面硬度值7")
     sfhv8 = fields.Float("表面硬度值8")
 
-    chn = fields.Char("心部硬度規格")
+    chn = fields.Many2one("yc.mechanicalproperty", string="心部硬度規格")
     chv = fields.Char("心部硬度值")
     chv1 = fields.Float("心部硬度值1")
     chv2 = fields.Float("心部硬度值2")
@@ -608,9 +608,23 @@ class YcPurchase(models.Model):
             self.tempturing6 = _filter.tempturing6
             self.tempturisped = _filter.tempturisped
 
+
+    ckimportdate = fields.Char("進貨距今",compute="_ten_days_check")
+    # 分爐排程進貨日期距現在日期超過十天返色
+    @api.depends("day","ckimportdate")
+    def _ten_days_check(self):
+        if self._context.get('params')['action'] == 109:
+            for rec in self:
+                if rec.day:
+                    rec_day = dt.strptime(rec.day.replace("-",""), "%Y%m%d").date()
+                    elapse = (dt.today().date() - rec_day).days
+                    if elapse > 10:
+                        rec.ckimportdate = 'over'
+
+
+
     # S05N0100 製程登錄作業
     # 以下為查詢欄位
-
     searchname = fields.Char("工令輸入")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")

@@ -276,6 +276,11 @@ class YcWeightDetails(models.Model):
     def _search_customer(self):
         if self.customer_id:
             self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
+    @api.model
+    def create(self, vals):
+        number = len(self.env["yc.weight.details"].search([("name","=",self.name)]))
+        vals.update({"no": number })
+        return super(YcWeightDetails, self).create(vals)
     @api.depends("compute_no")
     def _get_row_no(self):
         if self.ids:

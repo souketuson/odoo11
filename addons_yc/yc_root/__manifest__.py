@@ -35,6 +35,7 @@
         'views/maintain/setshift.xml',
         'views/maintain/setleave.xml',
         'views/maintain/setbonus.xml',
+        'views/mechanicalproperty.xml',
         'views/driver.xml',
         'views/hr_main.xml',
         'views/quality.xml',
