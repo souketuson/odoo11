@@ -168,5 +168,32 @@ class YcFactory(models.Model):
 
 
 
+class YcSetproducenote(models.Model):
+    # 品質管理-製造備註 S04N0001
+    _name = "yc.setproducenote"
+    name = fields.Char("備註名稱")
+    code = fields.Char("備註代碼")
+    parameter1 = fields.Char("參數1")
+    parameter2 = fields.Char("參數2")
+    parameter3 = fields.Char("參數3")
+
+class YcSethardness(models.Model):
+    # 品質管理-硬度 S04N0003
+    _name ="yc.sethardness"
+    name = fields.Char("硬度名稱")
+    code = fields.Char("硬度代碼")
+    parameter1 = fields.Char("參數1")
+    parameter2 = fields.Char("參數2")
+    parameter3 = fields.Char("參數3")
+
+
+class YcSethardness(models.Model):
+    # 品質管理-品管備註 S04N0004
+    _name ="yc.setqcnote"
+    name = fields.Char("備註名稱")
+    code = fields.Char("備註代碼")
+    parameter1 = fields.Char("參數1")
+    parameter2 = fields.Char("參數2")
+    parameter3 = fields.Char("參數3")
 
 

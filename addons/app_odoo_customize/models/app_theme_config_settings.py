@@ -575,6 +575,45 @@ class ResConfigSettings(models.TransientModel):
         return True
 
     @api.multi
+    def insert_yc_sets04(self):
+        try:
+            cnxn = pyodbc.connect(
+                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+            cursor = cnxn.cursor()
+            cursor_dict = collections.OrderedDict()
+            cursor_dict['S04N0001'] = ["rows_producenote", "yc.setproducenote"]
+            # cursor_dict['S04N0002'] = ["rows_department", "yc.department"] already have setstrength table
+            cursor_dict['S04N0003'] = ["rows_hardness", "yc.sethardness"]
+            cursor_dict['S04N0004'] = ["rows_qcnote", "yc.setqcnote"]
+
+            for key, item in cursor_dict.items():
+                t_sql = "SELECT * FROM s_一層代碼檔 WHERE 類別='%s'" % key
+                cursor.execute(t_sql)
+                rows = cursor.fetchall()
+
+                var = item[0]
+                search = self.env["%s" % item[1]].search([])
+                # str covert to variable
+                exec("%s = %s" % (var, 0))
+                # assign dbview to variable
+                var = search
+                sql = "delete from %s" % item[1].replace('.', '_')
+
+                self._cr.execute(sql)
+                for row in rows:
+                    var.create({
+                        "name": row.一層名稱,
+                        "code": row.一層代碼,
+                        "parameter1": row.參數1,
+                        "parameter2": row.參數2,
+                        "parameter3": row.參數3,
+                    })
+        except Exception as e:
+            pass
+        return True
+
+
+    @api.multi
     def insert_yc_hr(self):
         try:
             cnxn = pyodbc.connect(

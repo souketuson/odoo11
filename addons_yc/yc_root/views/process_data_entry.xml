@@ -16,6 +16,7 @@
                             <field name="furn_in" domain='[("status", "=", "3")]'/>
                             <!---->
                             <field name="searchname"/>
+                            <field name="saveorread"/>
                         </group>
                         <div>
                             <button string="資料查詢" type="object" class="oe_highlight" name="yc_purchase_search_name"/>

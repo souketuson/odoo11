@@ -22,7 +22,7 @@ class YcPurchase(models.Model):
 
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
-    status = fields.Many2one("yc.setstatus", string="狀態")
+    status = fields.Many2one("yc.setstatus", string="狀態", default= 2)
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
@@ -175,7 +175,7 @@ class YcPurchase(models.Model):
 
     icritetia = fields.Char("國際標準")
     tensile_no = fields.Selection([('50T', '50T'), ('100T', '100T')], '拉力機編號')
-    sfhn = fields.Many2one("yc.mechanicalproperty", string="表面硬度規格")
+    sfhn = fields.Many2one("yc.sethardness", string="表面硬度規格")
     sfhv = fields.Char("表面硬度值")
     sfhv1 = fields.Float("表面硬度值1")
     sfhv2 = fields.Float("表面硬度值2")
@@ -186,7 +186,7 @@ class YcPurchase(models.Model):
     sfhv7 = fields.Float("表面硬度值7")
     sfhv8 = fields.Float("表面硬度值8")
 
-    chn = fields.Many2one("yc.mechanicalproperty", string="心部硬度規格")
+    chn = fields.Many2one("yc.sethardness", string="心部硬度規格")
     chv = fields.Char("心部硬度值")
     chv1 = fields.Float("心部硬度值1")
     chv2 = fields.Float("心部硬度值2")
@@ -200,7 +200,8 @@ class YcPurchase(models.Model):
     tensihrd = fields.Char("抗拉強度")
     rtens = fields.Char("抗拉強度值")
     # tensihrd 和 rtens 這兩者不知道有哪邊不一樣?
-    rtenste = fields.Char("抗拉強度值起迄", compute="_get_rtenste")
+    rtenste = fields.Char("抗拉強度值起迄", default= lambda self: self._get_rtenste())
+
     resist1 = fields.Float("抗拉強度值1")
     resist2 = fields.Float("抗拉強度值2")
     resist3 = fields.Float("抗拉強度值3")
@@ -210,19 +211,21 @@ class YcPurchase(models.Model):
     resist7 = fields.Float("抗拉強度值7")
     resist8 = fields.Float("抗拉強度值8")
 
+    # @api.depends("rtenste")
     def _get_rtenste(self):
         for rec in self:
             rt_arr = [rec.resist1, rec.resist2, rec.resist3, rec.resist4, rec.resist5, rec.resist6, rec.resist7,
                        rec.resist8]
-            rt_arr.sort
-            rec.rtenste = str(rt_arr[0]) + '~' + str(rt_arr[len(rt_arr) - 1])
+            if len(rt_arr) >= 2:
+                rt_arr.sort
+                rec.rtenste = str(rt_arr[0]) + '~' + str(rt_arr[len(rt_arr) - 1])
 
     @api.onchange('name')
     def _get_tensihrd_data(self):
         pass
 
     ysv = fields.Float("降伏強度值")
-    ysvste = fields.Char("降伏強度值起迄", compute="_get_ysvste")
+    ysvste = fields.Char("降伏強度值起迄", default= lambda self: self._get_ysvste())
     ystrength1 = fields.Float("降伏強度值1")
     ystrength2 = fields.Float("降伏強度值2")
     ystrength3 = fields.Float("降伏強度值3")
@@ -236,8 +239,9 @@ class YcPurchase(models.Model):
         for rec in self:
             ysv_arr = [rec.ystrength1, rec.ystrength2, rec.ystrength3, rec.ystrength4, rec.ystrength5, rec.ystrength6,
                         rec.ystrength7, rec.ystrength8]
-            ysv_arr.sort()
-            rec.ysvste = str(ysv_arr[0]) + '~' + str(ysv_arr[len(ysv_arr)-1])
+            if len(ysv_arr) >= 2:
+                ysv_arr.sort()
+                rec.ysvste = str(ysv_arr[0]) + '~' + str(ysv_arr[len(ysv_arr)-1])
 
     elohv = fields.Float("伸長率值")
     elohvste = fields.Char("伸長率值起迄")
@@ -345,7 +349,6 @@ class YcPurchase(models.Model):
     cksurfhrd = fields.Boolean("CK表面硬度")
     ckcorehrd = fields.Boolean("CK心部硬度")
     ckcl = fields.Boolean("CK滲碳層")
-
     cksfhv = fields.Boolean("CK表面硬度值")
     ckchv = fields.Boolean("CK心部硬度值")
     ckrtens = fields.Boolean("CK抗拉強度值")
@@ -365,16 +368,13 @@ class YcPurchase(models.Model):
     ckecl = fields.Boolean("CK脫碳層")
     ckecl2v = fields.Boolean("CK滲碳層2值")
     ckwhrd = fields.Boolean("CK華司硬度")
-    ckhf = fields.Boolean("華司硬度規格")
+    ckhf = fields.Many2one("yc.sethardness", string="華司硬度規格")
     ffday = fields.Date("完爐日期")
     fftime = fields.Char("完爐時間")
-
     ckclv = fields.Boolean("CK滲碳層")
-
     feedbucket = fields.Integer("入料桶數")
     feedweight = fields.Integer("入料總重")
     productname = fields.Many2one("yc.setproduct", string="產品名稱")
-
     contrast = fields.Float("對照")
     shipbucket = fields.Integer("出貨桶數")
     shipweight = fields.Integer("出貨重量")
@@ -523,7 +523,7 @@ class YcPurchase(models.Model):
     def _fetch_norm_code_info(self):
         if self.norm_code and self.clsf_code:
             for rec in self:
-                norm_parameter = rec.env["yc.setnorm"].search([('id', '=', rec.norm_code.id)]).parmeter1
+                norm_parameter = rec.env["yc.setnorm"].search([('id', '=', rec.norm_code.id)]).parameter1
                 # 如果有強度
                 mechaine_name = rec.env["yc.mechanicalproperty"].search( \
                     [('clsf_code', '=', rec.clsf_code.id), ("strength_level", "=", rec.strength_level.id), \
@@ -608,8 +608,15 @@ class YcPurchase(models.Model):
             self.tempturing6 = _filter.tempturing6
             self.tempturisped = _filter.tempturisped
 
+    saveorread = fields.Char("儲存管制作業")
+    # create 管制
+    @api.model
+    def create(self, vals):
+        if vals["saveorread"] == "read":
+            return
+        return super(YcPurchase,self).create(vals)
 
-    ckimportdate = fields.Char("進貨距今",compute="_ten_days_check")
+    ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
     # 分爐排程進貨日期距現在日期超過十天返色
     @api.depends("day","ckimportdate")
     def _ten_days_check(self):
@@ -621,6 +628,13 @@ class YcPurchase(models.Model):
                     if elapse > 10:
                         rec.ckimportdate = 'over'
 
+    def on_create_write(self):
+        warning = {
+                    'title': ('Warning!'),
+                    'message': ('You must first select a partner!'),
+                }
+        return {'warning': warning}
+
 
 
     # S05N0100 製程登錄作業
@@ -629,10 +643,11 @@ class YcPurchase(models.Model):
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
-    @api.onchange("searchname")
+    # @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
+            self.saveorread = "read"
             # S05N0100
             to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
@@ -695,6 +710,7 @@ class YcPurchase(models.Model):
 
     # 各查詢表單後更新資料
     def save_process_data(self):
+        self.saveorread = "save"
         return True
 
     # S05N0200 製程登錄作業

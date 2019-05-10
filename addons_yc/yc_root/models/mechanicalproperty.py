@@ -32,28 +32,6 @@ class YcMechanicalproperty(models.Model):
     innercorehrd = fields.Char("內部心部硬度")
     note = fields.Char("備註")
 
-    @api.multi
-    def name_get(self):
-        result = []
-        for rec in self:
-
-            if rec._context.get("display_name") == 'surface':
-                name = "[%i] %s" % (rec.id, rec.surfaceform)
-                result.append((rec.id, name))
-            elif rec._context.get("display_name") == 'core':
-                name = "[%i] %s" % (rec.id, rec.coreform)
-                result.append((rec.id, name))
-        return result
-
-
-    # @api.model
-    # def name_search(self, name , args=None, operator='ilike', limit=100):
-    #     args = args or []
-    #     domain = [('name', operator, name)]
-    #     property = self.search(domain + args, limit=limit)
-    #     return property.name_get()
-
-
 class YcTorsion(models.Model):
     _name = "yc.torsion"
 

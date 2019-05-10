@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
         <!--css-->
         <template id="assets_backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
@@ -9,7 +8,6 @@
                 <script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>
             </xpath>
         </template>
-
         <!-- view of purchase tree -->
         <record model="ir.ui.view" id="purchase_tree">
             <field name="name">purchase.tree</field>
@@ -26,7 +24,6 @@
                 </tree>
             </field>
         </record>
-
         <!-- view of purchase form-->
         <record model="ir.ui.view" id="purchase_form">
             <field name="name">purchase.form</field>
@@ -40,7 +37,6 @@
                             <field name="time" nolabel="1"/>
                             <field name="factory_id"/>
                             <field name="pre_order" colspan="3"/>
-                            <!--<newline/>-->
                             <!-- -->
                             <field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="processing_attache"/>
@@ -52,8 +48,6 @@
                             <field name="combo_process" readonly="1"/>
                             <separator/>
                             <field name="combo_customer" readonly="1"/>
-                            <!--<field name="processing_phone" readonly="1"/>-->
-                            <!--<field name="processing_contact" readonly="1" colspan="4" />-->
                             <newline/>
                             <!-- -->
                             <field name="name" readonly="1"/>
@@ -61,30 +55,6 @@
                             <separator/>
                             <field name="customer_no"/>
                             <field name="person"/>
-
-
-                            <!-- last version backup -->
-                            <!--<field name="day" colspan="4"/>-->
-                            <!--<field name="copy_createdate" attrs="{'readonly': True }" colspan="4"/>-->
-                            <!--<newline/>-->
-                            <!--<field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"/>-->
-                            <!--<field name="processing_attache"/>-->
-                            <!--<field name="customer_id" colspan="4"/>-->
-                            <!--<newline/>-->
-                            <!--<field name="driver_id" attrs="{'readonly': True }"/>-->
-                            <!--<field name="combo_process" readonly="1"/>-->
-                            <!--<field name="combo_customer" readonly="1"/>-->
-                            <!--&lt;!&ndash;<field name="processing_phone" readonly="1"/>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<field name="processing_contact" readonly="1" colspan="4" />&ndash;&gt;-->
-                            <!--<newline/>-->
-                            <!--<field name="name" readonly="1"/>-->
-                            <!--<field name="batch"/>-->
-                            <!--<field name="time" colspan="4"/>-->
-                            <!--<newline/>-->
-                            <!--<field name="pre_order"/>-->
-                            <!--<field name="person"/>-->
-                            <!--<field name="factory_id" colspan="4"/>-->
-
                         </group>
                         <notebook>
                             <page string="基本資料">
@@ -109,7 +79,6 @@
                                         <label string="全牙或半牙" style="font-weight:bold"/>
                                         <field name="fullorhalf" style="width:15%%"/>
                                         <br/>
-
                                         <label string="加工方式" style="font-weight:bold"/>
                                         <field name="proces_code" style="width:15%%"/>　　　|　
                                         <label string="表面處理" style="font-weight:bold"/>
@@ -117,7 +86,6 @@
                                         <label string="電鍍別" style="font-weight:bold"/>
                                         <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"
                                                style="width:15%%"/>　
-                                        <!--<field name="portage"/>-->
                                         <field name="elecplswitch" invisible="1"/>
                                     </div>
                                 </group>
@@ -242,7 +210,6 @@
                 </form>
             </field>
         </record>
-
         <!-- auto generate number-->
         <record id="auto_number_purchase" model="ir.sequence">
             <field name="name">Purchase List Code</field>
@@ -251,7 +218,6 @@
             <field name="prefix">PL%(y)s%(month)s%(day)s</field>
             <field name="padding">3</field>
         </record>
-
         <!-- action -->
         <record model="ir.actions.act_window" id="purchase_list_action">
             <field name="name">進貨單作業</field>
@@ -260,14 +226,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
         <record model="ir.actions.act_window.view" id="purchase_list_action_form">
             <field name="act_window_id" ref="purchase_list_action"/>
             <field name="sequence" eval="20"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="purchase_form"/>
         </record>
-
         <record model="ir.actions.act_window.view" id="purchase_list_action_tree">
             <field name="act_window_id" ref="purchase_list_action"/>
             <field name="sequence" eval="10"/>

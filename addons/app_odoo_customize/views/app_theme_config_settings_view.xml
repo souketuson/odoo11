@@ -190,6 +190,9 @@
                             |
                             <button string="S01維護檔" type="object" name="insert_yc_sets01"
                                     confirm="是否確認轉入?" class="oe_highlight"/>
+                            |
+                            <button string="S04維護檔" type="object" name="insert_yc_sets04"
+                                    confirm="是否確認轉入?" class="oe_highlight"/>
 
 
                             <!--|-->

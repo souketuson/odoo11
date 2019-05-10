@@ -151,13 +151,13 @@ class YcWeight(models.Model):
                             # onchange decorator 要存到db 需要rec.field = self.field 這種寫法 ps.只有新增有用
                             rec.ship_times = self.ship_times + 1
                             rec.purchase_times = self.purchase_times
-                    else: # 修改模式 無法儲存 要另寫compute 更新資料
+                    else:  # 修改模式 無法儲存 要另寫compute 更新資料
                         if rec.in_out == 'I':
                             rec.ship_times = self.ship_times
-                            rec.purchase_times = self.purchase_times +1
+                            rec.purchase_times = self.purchase_times + 1
                         elif rec.in_out == 'O':
                             rec.ship_times = self.ship_times
-                            rec.purchase_times = self.purchase_times +1
+                            rec.purchase_times = self.purchase_times + 1
 
     # 如果新增完需要修改 仍然要檢查次數可以重啟這個code
     # @api.depends('driver_id')
@@ -252,12 +252,13 @@ class YcWeight(models.Model):
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
     name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
-    no = fields.Integer("序號",store=True)
-    compute_no = fields.Integer("最大數", compute= "_get_row_no")
+    no = fields.Integer("序號", store=True)
+    # compute_no = fields.Integer("最大數", compute= "_get_row_no")
     customer_id = fields.Many2one("yc.customer", "客戶名稱", required=True)
     processing_id = fields.Many2one("yc.processing", "加工廠名稱", required=True)
     note = fields.Char("備註")
     customer_code = fields.Char("客戶代碼")
+
     @api.multi
     def name_get(self):
         result = []
@@ -266,26 +267,26 @@ class YcWeightDetails(models.Model):
             name = processing.name
             result.append((record.id, name))
         return result
+
     @api.multi
     @api.onchange("customer_code")
     def _select_customer(self):
         if self.customer_code:
-            self.customer_id = self.env["yc.customer"].search([("code","=",self.customer_code)])
+            self.customer_id = self.env["yc.customer"].search([("code", "=", self.customer_code)])
+
     @api.multi
     @api.onchange("customer_id")
     def _search_customer(self):
         if self.customer_id:
             self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
+
     @api.model
     def create(self, vals):
-        number = len(self.env["yc.weight.details"].search([("name","=",self.name)]))
-        vals.update({"no": number })
-        return super(YcWeightDetails, self).create(vals)
-    @api.depends("compute_no")
-    def _get_row_no(self):
-        if self.ids:
-            count = 1
-            for rec in self:
-                weight_id = self.env['yc.weight.details'].search([('id', '=', rec.id)])
-                weight_id.write({'no': count})
-                count += 1
+        main_key = self.env["yc.weight"].search([], order="id desc", limit=1).id
+        item_key = vals["name"]
+        # main equal to item only in create mode
+        # 應該不用修正
+        if item_key and main_key == item_key:
+            number = len(self.env["yc.weight.details"].search([("name", "=", item_key)]))
+            vals.update({"no": number + 1})
+            return super(YcWeightDetails, self).create(vals)
