@@ -280,6 +280,7 @@ class YcWeightDetails(models.Model):
         if self.customer_id:
             self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
 
+    # 轉檔要關掉?
     @api.model
     def create(self, vals):
         main_key = self.env["yc.weight"].search([], order="id desc", limit=1).id

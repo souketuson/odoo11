@@ -64,7 +64,7 @@ class YcPurchase(models.Model):
     num4 = fields.Integer("數量4")
     unit4 = fields.Many2one("yc.setunit", string="單位代號4")
     storeplace = fields.Char("存放位置")
-    net = fields.Char("淨重")
+    net = fields.Integer("淨重")
     process1 = fields.Many2one("yc.processing", "次加工廠")
     process2 = fields.Many2one("yc.processing", "二次加工")
     totalpack = fields.Char("裝袋合計")
@@ -175,6 +175,7 @@ class YcPurchase(models.Model):
 
     icritetia = fields.Char("國際標準")
     tensile_no = fields.Selection([('50T', '50T'), ('100T', '100T')], '拉力機編號')
+    # 轉檔要修成id
     sfhn = fields.Many2one("yc.sethardness", string="表面硬度規格")
     sfhv = fields.Char("表面硬度值")
     sfhv1 = fields.Float("表面硬度值1")
@@ -185,7 +186,7 @@ class YcPurchase(models.Model):
     sfhv6 = fields.Float("表面硬度值6")
     sfhv7 = fields.Float("表面硬度值7")
     sfhv8 = fields.Float("表面硬度值8")
-
+    # 轉檔要修成id
     chn = fields.Many2one("yc.sethardness", string="心部硬度規格")
     chv = fields.Char("心部硬度值")
     chv1 = fields.Float("心部硬度值1")
@@ -424,19 +425,16 @@ class YcPurchase(models.Model):
         sec = dt.now().second
         if hour > 24:
             hour -= 24
-
         time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
-    @api.one
+
     @api.depends('processing_attache')
     def _compute_process(self):
         if self.processing_attache:
             for rec in self:
-                self.combo_process = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
-                self.combo_customer = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
+                self.combo_process = "電話:  %s    聯絡人:%s" % (self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
+                self.combo_customer = "電話:  %s    聯絡人:%s" % (self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
                 self.customer_id = self.processing_attache.customer_id.id
 
     @api.model
@@ -609,15 +607,15 @@ class YcPurchase(models.Model):
             self.tempturisped = _filter.tempturisped
 
     saveorread = fields.Char("儲存管制作業")
-    # create 管制
-    @api.model
-    def create(self, vals):
-        if vals["saveorread"] == "read":
-            return
-        return super(YcPurchase,self).create(vals)
+    # # create 管制
+    # @api.model
+    # def create(self, vals):
+    #     if vals["saveorread"] == "read":
+    #         return
+    #     return super(YcPurchase,self).create(vals)
 
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
-    # 分爐排程進貨日期距現在日期超過十天返色
+    # 分爐排程進貨日期距現在日期超過十天返色提醒
     @api.depends("day","ckimportdate")
     def _ten_days_check(self):
         if self._context.get('params')['action'] == 109:

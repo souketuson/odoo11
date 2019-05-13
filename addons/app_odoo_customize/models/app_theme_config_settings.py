@@ -612,7 +612,6 @@ class ResConfigSettings(models.TransientModel):
             pass
         return True
 
-
     @api.multi
     def insert_yc_hr(self):
         try:
@@ -918,12 +917,22 @@ class ResConfigSettings(models.TransientModel):
             cnxn = pyodbc.connect(
                 'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
-            cursor.execute("SELECT * FROM 進貨單主檔")
-            rows = cursor.fetchmany(1500)
+
+            # 要拉出在過磅單有出現的單子
+            # SQL strict form: SELECT * FROM 資料表 WHERE 欄位 IN('xxxxxxxxx','oooooo')
+            weight = self.env["yc.weight"].search([])
+            _string = ''
+            for x in range(len(weight)):
+                if x != len(weight) - 1:
+                    _string += "'" + weight[x].carno + "',"
+                else:
+                    _string += "'" + weight[x].carno + "'"
+            db_sql = "SELECT * FROM 進貨單主檔 WHERE 車次序號 IN(%s)" % _string
+            cursor.execute(db_sql)
+            rows = cursor.fetchmany(500)
             purchase = self.env["yc.purchase"].search([])
             sql = "delete from yc_purchase"
             self._cr.execute(sql)
-
             for row in rows:
                 for x in range(len(row)):
                     if row[x] != None and type(row[x]) == str:
@@ -931,8 +940,9 @@ class ResConfigSettings(models.TransientModel):
                         row[x] = row[x].lstrip(' ')
 
                 driver = self.env["yc.driver"].search([("code", "=", row.司機代號)])
+                # processing = self.env["yc.processing"].search([("code", "=", row.加工廠代號)])
                 processing = self.env["yc.processing"].search([("code", "=", row.所屬工廠)])
-                factory = self.env["yc.factory"].search([("code", "=", row.加工廠代號)])
+                factory = self.env["yc.factory"].search([("name", "=", row.所屬工廠)])
                 # 丟車次序號
                 carno = self.env["yc.weight"].search([("carno", "=", row.車次序號)])
                 customer = self.env["yc.customer"].search([("code", "=", row.客戶代號)])
@@ -971,6 +981,9 @@ class ResConfigSettings(models.TransientModel):
                 mgchecker = self.env["yc.hr"].search([("code", "=", row.金相檢驗人員)])
                 ck_person = self.env["yc.hr"].search([("code", "=", row.檢驗人員)])
                 status = self.env["yc.setstatus"].search([("code", "=", row.狀態)])
+                sfhn = self.env["yc.sethardness"].search([("name", "=", row.表面硬度規格)])
+                chn = self.env["yc.sethardness"].search([("name", "=", row.心部硬度規格)])
+                ckhf = self.env["yc.sethardness"].search([("name", "=", row.華司硬度規格)])
 
                 purchase.create({
                     "name": row.工令號碼,
@@ -984,7 +997,7 @@ class ResConfigSettings(models.TransientModel):
                     "processing_attache": processing.id,
                     "pre_order": row.前工令號碼,
                     # 這個要丟單號還是車次號碼?
-                    "car_no": carno.name,
+                    "car_no": carno.id,
                     "customer_id": customer.id,
                     "batch": row.客戶批號,
                     # 還沒做客戶單號主檔
@@ -1128,7 +1141,7 @@ class ResConfigSettings(models.TransientModel):
                     "wxrhrd8": row.華司硬度值8,
                     "icritetia": row.國際標準,
                     "tensile_no": row.拉力機編號,
-                    "sfhn": row.表面硬度規格,
+                    "sfhn": sfhn.id,
                     "sfhv": row.表面硬度值,
                     "sfhv1": row.表面硬度值1,
                     "sfhv2": row.表面硬度值2,
@@ -1138,7 +1151,7 @@ class ResConfigSettings(models.TransientModel):
                     "sfhv6": row.表面硬度值6,
                     "sfhv7": row.表面硬度值7,
                     "sfhv8": row.表面硬度值8,
-                    "chn": row.心部硬度規格,
+                    "chn": chn.id,
                     "chv": row.心部硬度值,
                     "chv1": row.心部硬度值1,
                     "chv2": row.心部硬度值2,
@@ -1219,7 +1232,7 @@ class ResConfigSettings(models.TransientModel):
                     "ck_person": ck_person.id,
                     "singleton": row.單支重,
                     "uqbuckets": row.不合格桶數,
-                    "uqtreat": row.不合格特急處理動作,
+                    "uqemtreat": row.不合格特急處理動作,
                     "produceday1": row.製造日期1,
                     "shift1": shift1.id,
                     "op1": op1.id,
@@ -1258,7 +1271,7 @@ class ResConfigSettings(models.TransientModel):
                     "ckrtens": row.CK抗拉強度值,
                     "ckyv": row.CK降伏強度值,
                     "ckelong": row.CK伸長率值,
-                    "cktorsion": row.CK扭力強度值,
+                    "cktv": row.CK扭力強度值,
                     "ckcl1v": row.CK滲碳層1值,
                     "cksskv": row.CK斷面收縮率值,
                     "cksl": row.CK安全負荷值,
@@ -1272,7 +1285,7 @@ class ResConfigSettings(models.TransientModel):
                     "ckecl": row.CK脫碳層,
                     "ckecl2v": row.CK滲碳層2值,
                     "ckwhrd": row.CK華司硬度,
-                    "ckhf": row.華司硬度規格,
+                    "ckhf": ckhf.id,
                     "ffday": row.完爐日期,
                     "fftime": row.完爐時間,
                     "ckclv": row.CK滲碳層值,
