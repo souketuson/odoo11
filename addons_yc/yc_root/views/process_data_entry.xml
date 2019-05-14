@@ -215,7 +215,7 @@
             <field name="res_model">yc.purchase</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">inline</field>
+            <field name="target">current</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="process_data_entry_action_form">

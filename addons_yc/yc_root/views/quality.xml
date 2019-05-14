@@ -223,82 +223,132 @@
                                 <group>
                                     <div>
                                         <field name="ckecl" widget="checkbox" nolabel="1"/>
+                                        <label string="HV1　" style="font-weight:bold"/>
                                         <field name="HV1" style="width:100px"/>
-                                        <field name="HV2" style="width:100px"/>
-                                        <div class="img">
-                                        <img style="width:180px;height:150px" src="https://cdn-images-1.medium.com/max/1600/1*ifSob78knBe5rME04WHftg.png"></img>
+
+                                        <div class="img_update">
+                                            <img style="width:180px;height:150px"
+                                                 src="/"></img>
+                                            <span style="display:inline-block; width: 500px;"></span>
+                                            <label string="HV2" style="font-weight:bold;right: 100px;top:0px"/>
+                                            <field name="HV2" style="width:100px;right: 0px;top:0px"/>
                                         </div>
 
-
+                                        <label string="HV3" style="font-weight:bold"/>
                                         <field name="HV3" style="width:100px"/>
+                                        <label string="HV12" style="font-weight:bold"/>
                                         <field name="HV12" style="width:100px"/>
+
                                         <field name="HV12OK" style="width:100px"/>
+                                        <label string="HV13" style="font-weight:bold"/>
                                         <field name="HV13" style="width:100px"/>
                                         <field name="HV13OK" style="width:100px"/>
-                                        <field name="wholeck" style="width:100px"/>
-                                        <field name="faceck" style="width:100px"/>
+                                        <field name="wholeck" widget="radio" style="width:100px"/>
+                                        <field name="faceck" widget="radio" style="width:100px"/>
                                         <field name="ck_person" style="width:100px"/>
                                         <field name="singleton" style="width:100px"/>
                                         <field name="uqbuckets" style="width:100px"/>
                                         <field name="uqemtreat" style="width:100px"/>
+                                        <br/>
                                         <field name="ckhs" widget="checkbox" nolabel="1"/>
+                                        <label string="頭部敲擊：" style="font-weight:bold"/>
                                         <field name="hs5" widget="checkbox"/>
+                                        <label string="5°OK" style="font-weight:bold"/>
                                         <field name="hs10" widget="checkbox"/>
+                                        <label string="10°OK" style="font-weight:bold"/>
+                                        <field name="hs15" widget="checkbox"/>
+                                        <label string="15°OK" style="font-weight:bold"/>
+                                        <field name="hs7" widget="checkbox"/>
+                                        <label string="7°OK" style="font-weight:bold"/>
+                                        <field name="hs30" widget="checkbox"/>
+                                        <label string="30°OK" style="font-weight:bold"/>
+                                        <br/>
+                                        <field name="ckcurv" widget="checkbox"/>
+                                        <label string="彎曲度：" style="font-weight:bold"/>
+                                        <field name="curv5" widget="checkbox"/>
+                                        <label string="彎曲度5" style="font-weight:bold"/>
+
                                         <field name="curv15" widget="checkbox"/>
+                                        <label string="彎曲度15" style="font-weight:bold"/>
                                         <field name="curv30" widget="checkbox"/>
-                                        <field name="qcnote" style="width:100px"/>
+                                        <label string="彎曲度30" style="font-weight:bold"/>
+
+
+                                        <field name="curv30" widget="checkbox"/>
+                                        <label string="10°OK" style="font-weight:bold"/>
+                                        <br/>
+                                        <field name="qcnote" style="width:500px"/>
                                     </div>
                                 </group>
                             </page>
                             <page string="製造條件" col="10">
                                 <group>
                                     <group>
-                                        <field name="produceday1"/>
-                                        <field name="ptime1"/>
-                                        <field name="shift1"/>
-                                        <field name="op1"/>
-                                        <field name="buckets1"/>
-                                        <field name="teamlead1"/>
-
-                                        <field name="produceday2"/>
-                                        <field name="ptime2"/>
-                                        <field name="shift2"/>
-                                        <field name="op2"/>
-                                        <field name="buckets2"/>
-                                        <field name="teamlead2"/>
-
-                                        <field name="produceday3"/>
-                                        <field name="ptime3"/>
-                                        <field name="shift3"/>
-                                        <field name="op3"/>
-                                        <field name="buckets3"/>
-                                        <field name="teamlead3"/>
-                                        <field name="ffday"/>
-                                        <field name="fftime"/>
-
-                                        <field name="flow"/>
-                                        <field name="cp"/>
-                                        <field name="nh31"/>
-                                        <field name="nh32"/>
-                                        <field name="nh33"/>
-                                        <field name="nh34"/>
-                                        <field name="heat1"/>
-                                        <field name="heat2"/>
-                                        <field name="heat3"/>
-                                        <field name="heat4"/>
-                                        <field name="heat5"/>
-                                        <field name="heat6"/>
-                                        <field name="heat7"/>
-                                        <field name="heat8"/>
-                                        <field name="heattemp"/>
-                                        <field name="heatsped"/>
-                                        <field name="tempturing1"/>
-                                        <field name="tempturing2"/>
-                                        <field name="tempturing3"/>
-                                        <field name="tempturing4"/>
-                                        <field name="tempturing5"/>
-                                        <field name="tempturing6"/>
-                                        <field name="tempturisped"/>
+                                        <div>
+                                            <label string="製造日期" style="font-weight:bold"/>
+                                            <field name="produceday1" style="width:100px"/>
+                                            <field name="ptime1" style="width:100px"/>
+                                            <label string="班別" style="font-weight:bold"/>
+                                            <field name="shift1" style="width:100px"/>
+                                            <label string="操作人員" style="font-weight:bold"/>
+                                            <field name="op1" style="width:100px"/>
+                                            <label string="桶數" style="font-weight:bold"/>
+                                            <field name="buckets1" style="width:100px"/>
+                                            <label string="組長" style="font-weight:bold"/>
+                                            <field name="teamlead1" style="width:100px"/>
+                                            <br/>
+                                            <label string="製造日期" style="font-weight:bold"/>
+                                            <field name="produceday2" style="width:100px"/>
+                                            <field name="ptime2" style="width:100px"/>
+                                            <label string="班別" style="font-weight:bold"/>
+                                            <field name="shift2" style="width:100px"/>
+                                            <label string="操作人員" style="font-weight:bold"/>
+                                            <field name="op2" style="width:100px"/>
+                                            <label string="桶數" style="font-weight:bold"/>
+                                            <field name="buckets2" style="width:100px"/>
+                                            <label string="組長" style="font-weight:bold"/>
+                                            <field name="teamlead2" style="width:100px"/>
+                                            <br/>
+                                            <label string="製造日期" style="font-weight:bold"/>
+                                            <field name="produceday3" style="width:100px"/>
+                                            <field name="ptime3" style="width:100px"/>
+                                            <label string="班別" style="font-weight:bold"/>
+                                            <field name="shift3" style="width:100px"/>
+                                            <label string="操作人員" style="font-weight:bold"/>
+                                            <field name="op3" style="width:100px"/>
+                                            <label string="桶數" style="font-weight:bold"/>
+                                            <field name="buckets3" style="width:100px"/>
+                                            <label string="組長" style="font-weight:bold"/>
+                                            <field name="teamlead3" style="width:100px"/>
+                                            <br/>
+                                            <label string="完爐日期" style="font-weight:bold"/>
+                                            <field name="ffday" style="width:100px"/>
+                                            <field name="fftime" style="width:100px"/>
+                                            <br/>
+                                            <field name="flow"/>
+                                            <field name="cp"/>
+                                            <field name="nh31"/>
+                                            <field name="nh32"/>
+                                            <field name="nh33"/>
+                                            <field name="nh34"/>
+                                            <field name="heat1"/>
+                                            <field name="heat2"/>
+                                            <field name="heat3"/>
+                                            <field name="heat4"/>
+                                            <field name="heat5"/>
+                                            <field name="heat6"/>
+                                            <field name="heat7"/>
+                                            <field name="heat8"/>
+                                            <field name="heattemp"/>
+                                            <field name="heatsped"/>
+                                            <field name="tempturing1"/>
+                                            <field name="tempturing2"/>
+                                            <field name="tempturing3"/>
+                                            <field name="tempturing4"/>
+                                            <field name="tempturing5"/>
+                                            <field name="tempturing6"/>
+                                            <field name="tempturisped"/>
+                                        </div>
                                     </group>
                                     <group>
                                         <div>

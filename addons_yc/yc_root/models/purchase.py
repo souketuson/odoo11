@@ -22,7 +22,7 @@ class YcPurchase(models.Model):
 
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
-    status = fields.Many2one("yc.setstatus", string="狀態", default= 2)
+    status = fields.Many2one("yc.setstatus", string="狀態", default=2)
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
@@ -201,7 +201,7 @@ class YcPurchase(models.Model):
     tensihrd = fields.Char("抗拉強度")
     rtens = fields.Char("抗拉強度值")
     # tensihrd 和 rtens 這兩者不知道有哪邊不一樣?
-    rtenste = fields.Char("抗拉強度值起迄", default= lambda self: self._get_rtenste())
+    rtenste = fields.Char("抗拉強度值起迄", default=lambda self: self._get_rtenste())
 
     resist1 = fields.Float("抗拉強度值1")
     resist2 = fields.Float("抗拉強度值2")
@@ -216,7 +216,7 @@ class YcPurchase(models.Model):
     def _get_rtenste(self):
         for rec in self:
             rt_arr = [rec.resist1, rec.resist2, rec.resist3, rec.resist4, rec.resist5, rec.resist6, rec.resist7,
-                       rec.resist8]
+                      rec.resist8]
             if len(rt_arr) >= 2:
                 rt_arr.sort
                 rec.rtenste = str(rt_arr[0]) + '~' + str(rt_arr[len(rt_arr) - 1])
@@ -226,7 +226,7 @@ class YcPurchase(models.Model):
         pass
 
     ysv = fields.Float("降伏強度值")
-    ysvste = fields.Char("降伏強度值起迄", default= lambda self: self._get_ysvste())
+    ysvste = fields.Char("降伏強度值起迄", default=lambda self: self._get_ysvste())
     ystrength1 = fields.Float("降伏強度值1")
     ystrength2 = fields.Float("降伏強度值2")
     ystrength3 = fields.Float("降伏強度值3")
@@ -239,10 +239,10 @@ class YcPurchase(models.Model):
     def _get_ysvste(self):
         for rec in self:
             ysv_arr = [rec.ystrength1, rec.ystrength2, rec.ystrength3, rec.ystrength4, rec.ystrength5, rec.ystrength6,
-                        rec.ystrength7, rec.ystrength8]
+                       rec.ystrength7, rec.ystrength8]
             if len(ysv_arr) >= 2:
                 ysv_arr.sort()
-                rec.ysvste = str(ysv_arr[0]) + '~' + str(ysv_arr[len(ysv_arr)-1])
+                rec.ysvste = str(ysv_arr[0]) + '~' + str(ysv_arr[len(ysv_arr) - 1])
 
     elohv = fields.Float("伸長率值")
     elohvste = fields.Char("伸長率值起迄")
@@ -308,6 +308,9 @@ class YcPurchase(models.Model):
     hs5 = fields.Boolean("頭部敲擊5")
     hs10 = fields.Boolean("頭部敲擊10")
     hs15 = fields.Boolean("頭部敲擊15")
+    hs7 = fields.Boolean("頭部敲擊7")
+    hs30 = fields.Boolean("頭部敲擊30")
+
     curv5 = fields.Boolean("彎曲度5")
     curv15 = fields.Boolean("彎曲度15")
     curv30 = fields.Boolean("彎曲度30")
@@ -362,7 +365,7 @@ class YcPurchase(models.Model):
     ckysvste = fields.Boolean("CK降伏點值起迄")
     ckmlste = fields.Boolean("CK最大負荷值起迄")
     cksskste = fields.Boolean("CK斷面積值起迄")
-    qcnote = fields.Char("品管備註")
+    qcnote = fields.Many2one("yc.setqcnote", string="品管備註")
     pw1 = fields.Integer("製造重量1")
     pw2 = fields.Integer("製造重量2")
     pw3 = fields.Integer("製造重量3")
@@ -428,13 +431,14 @@ class YcPurchase(models.Model):
         time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
-
     @api.depends('processing_attache')
     def _compute_process(self):
         if self.processing_attache:
             for rec in self:
-                self.combo_process = "電話:  %s    聯絡人:%s" % (self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
-                self.combo_customer = "電話:  %s    聯絡人:%s" % (self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
+                self.combo_process = "電話:  %s    聯絡人:%s" % (
+                    self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
+                self.combo_customer = "電話:  %s    聯絡人:%s" % (
+                    self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
                 self.customer_id = self.processing_attache.customer_id.id
 
     @api.model
@@ -607,70 +611,83 @@ class YcPurchase(models.Model):
             self.tempturisped = _filter.tempturisped
 
     saveorread = fields.Char("儲存管制作業")
-    # # create 管制
-    # @api.model
-    # def create(self, vals):
-    #     if vals["saveorread"] == "read":
-    #         return
-    #     return super(YcPurchase,self).create(vals)
+
+    # create 管制
+    @api.model
+    def create(self, vals):
+        if vals["saveorread"] == "read":
+            return super(YcPurchase, self).write(vals)
+        return super(YcPurchase, self).create(vals)
+
+    @api.model
+    def write(self, vals):
+        k =[]
+        return super(YcPurchase, self).write(vals)
+
 
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
+
     # 分爐排程進貨日期距現在日期超過十天返色提醒
-    @api.depends("day","ckimportdate")
+    @api.depends("day", "ckimportdate")
     def _ten_days_check(self):
         if self._context.get('params')['action'] == 109:
             for rec in self:
                 if rec.day:
-                    rec_day = dt.strptime(rec.day.replace("-",""), "%Y%m%d").date()
+                    rec_day = dt.strptime(rec.day.replace("-", ""), "%Y%m%d").date()
                     elapse = (dt.today().date() - rec_day).days
                     if elapse > 10:
                         rec.ckimportdate = 'over'
 
     def on_create_write(self):
         warning = {
-                    'title': ('Warning!'),
-                    'message': ('You must first select a partner!'),
-                }
+            'title': ('Warning!'),
+            'message': ('You must first select a partner!'),
+        }
         return {'warning': warning}
-
-
 
     # S05N0100 製程登錄作業
     # 以下為查詢欄位
-    searchname = fields.Char("工令輸入")
+    searchname = fields.Char("工令查詢")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
-    # @api.onchange("searchname")
+    @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
+            # S05N0100 製程登錄作業
+
+            # to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            # sql = "delete from yc_purchase where id=%d" % to_delete_id
+            # if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
+            #     self._cr.execute(sql)
+
+            purchase = self.env['yc.purchase'].search([('name', '=', self.searchname)])
             self.saveorread = "read"
-            # S05N0100
-            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
-            sql = "delete from yc_purchase where id=%d" % to_delete_id
-            if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
-                self._cr.execute(sql)
-            id = self.env['yc.purchase'].search([('name', '=', self.searchname)]).id
-            return {
-                'name': self.searchname,
-                'res_model': 'yc.purchase',
-                'type': 'ir.actions.act_window',
-                'res_id': id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': self.env.ref('yc_root.process_data_entry_form').id,
-                'target': 'inline',
+            # self.id = purchase.id
+            self.name = purchase.name
+            self.day = purchase.day
+            self.wire_furn = purchase.wire_furn
 
-                # 下面是另一種方法去取得record data
-                # 但是onchange 也無法觸發下面這段，要用js寫了
+            # return {
+            #     'name': self.searchname,
+            #     'res_model': 'yc.purchase',
+            #     'type': 'ir.actions.act_window',
+            #     'res_id': id,
+            #     'view_type': 'form',
+            #     'view_mode': 'form',
+            #     'view_id': self.env.ref('yc_root.process_data_entry_form').id,
+            #     'target': 'inline',
 
-                # 'name': 'Go to website',
-                # 'res_model': 'ir.actions.act_url',
-                # 'type': 'ir.actions.act_url',
-                # 'target': 'inline',
-                # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
-            }
+            # 下面是另一種方法去取得record data
+            # 但是onchange 也無法觸發下面這段，要用js寫了
+
+            # 'name': 'Go to website',
+            # 'res_model': 'ir.actions.act_url',
+            # 'type': 'ir.actions.act_url',
+            # 'target': 'inline',
+            # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
+            # }
         elif self._context.get('params')['action'] == 112:
             # S05N0200
             to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
@@ -688,7 +705,7 @@ class YcPurchase(models.Model):
                 'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
                 'target': 'inline',
             }
-        elif self._context.get('params')['action'] == 124 :
+        elif self._context.get('params')['action'] == 124:
             # S04N0200
             to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
@@ -744,7 +761,7 @@ class YcPurchase(models.Model):
     @api.onchange("searchname")
     def _quality_main_data(self):
         if self._context.get('params')['action'] == 124:
-            t1 = self.env["yc.mechanicalproperty"].search([("standard","=", self.standard)])
+            t1 = self.env["yc.mechanicalproperty"].search([("standard", "=", self.standard)])
             self.sfhv = t1.surfhrd
             self.sfhn = t1.surfaceform
             self.chv = t1.corehrd
@@ -755,6 +772,7 @@ class YcPurchase(models.Model):
             self.carb1v = t1.carburlayer
             self.sskvste = t1.sectionshrink
             self.safeload = t1.safeload
+
 
 class YcProduceDetails(models.Model):
     _name = "yc.produce.details"
