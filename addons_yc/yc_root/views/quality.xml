@@ -222,33 +222,70 @@
                             <page string="判定登錄">
                                 <group>
                                     <div>
+                                        <label string="脫碳層：" style="font-weight:bold"/>
                                         <field name="ckecl" widget="checkbox" nolabel="1"/>
-                                        <label string="HV1　" style="font-weight:bold"/>
-                                        <field name="HV1" style="width:100px"/>
-
+                                        <span style="display:inline-block; width: 80px;"></span>
+                                        <label string="HV2" style="font-weight:bold"/>
+                                        <field name="HV2" style="width:100px"/>
+                                        <!-- -->
+                                        <label string="HV1"
+                                               style="font-weight:bold;position:relative;top:85px;left:-300px;"/>
+                                        <field name="HV1"
+                                               style="width:100px;position:relative;top:85px;left:-300px;"/>
+                                        <!-- -->
                                         <div class="img_update">
-                                            <img style="width:180px;height:150px"
-                                                 src="/"></img>
-                                            <span style="display:inline-block; width: 500px;"></span>
-                                            <label string="HV2" style="font-weight:bold;right: 100px;top:0px"/>
-                                            <field name="HV2" style="width:100px;right: 0px;top:0px"/>
+                                            <div>
+                                                <img style="width:180px;height:150px"
+                                                     src="https://www.transparenttextures.com/patterns/asfalt-light.png"></img>
+                                            </div>
+                                            <!-- -->
+                                            <label string="HV3"
+                                                   style="font-weight:bold;position:relative;top:-40px;left:50px;"/>
+                                            <field name="HV3"
+                                                   style="width:100px;position:relative;top:-40px;left:50px;"/>
+                                            <!-- -->
                                         </div>
+                                        <!--<span style="display:inline-block; width: 500px;"></span>-->
+                                        <div>
+                                        </div>
+                                        <label string="HV1-HV2="
+                                               style="font-weight:bold;position:relative;top:-145px;left:350px;"/>
+                                        <field name="HV12"
+                                               style="width:100px;position:relative;top:-145px;left:350px;"/>
+                                        <field name="HV12OK"
+                                               style="width:100px;position:relative;top:-145px;left:350px;"/>
 
-                                        <label string="HV3" style="font-weight:bold"/>
-                                        <field name="HV3" style="width:100px"/>
-                                        <label string="HV12" style="font-weight:bold"/>
-                                        <field name="HV12" style="width:100px"/>
+                                        <label string="HV1-HV3="
+                                               style="font-weight:bold;position:relative;top:-115px;left:83px;"/>
+                                        <field name="HV13" style="width:100px;position:relative;top:-115px;left:83px;"/>
+                                        <field name="HV13OK"
+                                               style="width:100px;position:relative;top:-115px;left:83px;"/>
 
-                                        <field name="HV12OK" style="width:100px"/>
-                                        <label string="HV13" style="font-weight:bold"/>
-                                        <field name="HV13" style="width:100px"/>
-                                        <field name="HV13OK" style="width:100px"/>
-                                        <field name="wholeck" widget="radio" style="width:100px"/>
-                                        <field name="faceck" widget="radio" style="width:100px"/>
-                                        <field name="ck_person" style="width:100px"/>
-                                        <field name="singleton" style="width:100px"/>
-                                        <field name="uqbuckets" style="width:100px"/>
-                                        <field name="uqemtreat" style="width:100px"/>
+                                        <label string="整體判定"
+                                               style="font-weight:bold;position:relative;top:-225px;left:90px;"/>
+                                        <field name="wholeck" widget="radio"
+                                               style="width:100px;position:relative;top:-225px;left:90px;"/>
+                                        <label string="外觀判定"
+                                               style="font-weight:bold;position:relative;top:-225px;left:90px;"/>
+                                        <field name="faceck" widget="radio"
+                                               style="width:100px;position:relative;top:-225px;left:90px;"/>
+
+                                        <label string="檢驗人員"
+                                               style="font-weight:bold;position:relative;top:-125px;left:-200px;"/>
+                                        <field name="ck_person"
+                                               style="width:100px;position:relative;top:-125px;left:-200px;"/>
+                                        <label string="單支重"
+                                               style="font-weight:bold;position:relative;top:-96px;left:-345px;"/>
+                                        <field name="singleton"
+                                               style="width:100px;position:relative;top:-96px;left:-345px;"/>
+                                        <label string="不合格桶數"
+                                               style="font-weight:bold;position:relative;top:-65px;left:-515px;"/>
+                                        <field name="uqbuckets"
+                                               style="width:100px;position:relative;top:-65px;left:-515px;"/>
+                                        <label string="不合格特急處理動作"
+                                               style="font-weight:bold;position:relative;top:-35px;left:-738px;"/>
+                                        <field name="uqemtreat"
+                                               style="width:100px;position:relative;top:-35px;left:-738px;"/>
                                         <br/>
                                         <field name="ckhs" widget="checkbox" nolabel="1"/>
                                         <label string="頭部敲擊：" style="font-weight:bold"/>
@@ -267,16 +304,12 @@
                                         <label string="彎曲度：" style="font-weight:bold"/>
                                         <field name="curv5" widget="checkbox"/>
                                         <label string="彎曲度5" style="font-weight:bold"/>
-
                                         <field name="curv15" widget="checkbox"/>
                                         <label string="彎曲度15" style="font-weight:bold"/>
                                         <field name="curv30" widget="checkbox"/>
                                         <label string="彎曲度30" style="font-weight:bold"/>
-
-
-                                        <field name="curv30" widget="checkbox"/>
-                                        <label string="10°OK" style="font-weight:bold"/>
                                         <br/>
+                                        <label string="品管備註" style="font-weight:bold"/>
                                         <field name="qcnote" style="width:500px"/>
                                     </div>
                                 </group>

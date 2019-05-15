@@ -315,7 +315,7 @@ class YcPurchase(models.Model):
     curv15 = fields.Boolean("彎曲度15")
     curv30 = fields.Boolean("彎曲度30")
     wholeck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
-    faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
+    faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格')], '外觀判定')
     ck_person = fields.Many2one("yc.hr", string="檢驗人員")
     singleton = fields.Float("單支重")
     uqbuckets = fields.Integer("不合格桶數")
