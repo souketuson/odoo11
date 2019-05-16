@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': "yc_root",
 
@@ -24,6 +25,8 @@
         'views/produce/weight.xml',
         'views/produce/purchase_store.xml',
         'views/produce/purchase_report.xml',
+        'wizard/purchase_report.xml',
+
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',

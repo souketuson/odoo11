@@ -3,7 +3,7 @@
 
 from odoo import models, fields, api
 from datetime import datetime as dt
-
+import collections
 
 class YcPurchase(models.Model):
     _name = "yc.purchase"
@@ -612,17 +612,16 @@ class YcPurchase(models.Model):
 
     saveorread = fields.Char("儲存管制作業")
 
-    # create 管制
-    @api.model
-    def create(self, vals):
-        if vals["saveorread"] == "read":
-            return super(YcPurchase, self).write(vals)
-        return super(YcPurchase, self).create(vals)
-
-    @api.model
-    def write(self, vals):
-        k =[]
-        return super(YcPurchase, self).write(vals)
+    # # create 管制
+    # @api.model
+    # def create(self, vals):
+    #     if vals["saveorread"] == "read":
+    #         return super(YcPurchase, self).write(vals)
+    #     return super(YcPurchase, self).create(vals)
+    #
+    # @api.model
+    # def write(self, vals):
+    #     return super(YcPurchase, self).write(vals)
 
 
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
@@ -638,12 +637,37 @@ class YcPurchase(models.Model):
                     if elapse > 10:
                         rec.ckimportdate = 'over'
 
-    def on_create_write(self):
-        warning = {
-            'title': ('Warning!'),
-            'message': ('You must first select a partner!'),
-        }
-        return {'warning': warning}
+    # 在爐內進貨 序號改完要馬上更新資料庫資料
+    def update_serial(self):
+        vals={"serial":self.serial}
+        purchase = self.env["yc.purchase"].search([("id","=",self.id)])
+        purchase.write(vals)
+    # 重排序號
+    def reorganize(self):
+        purchase = self.env["yc.purchase"]
+        rows = purchase.search([("order_furn","=", self.order_furn)])
+        purchase_list = []
+        for row in rows:
+            purchase_list.append([row.id,row.serial])
+            # purchase_dict[row.id] = row.serial
+
+        purchase_list = sorted(purchase_list,  key=lambda s: s[1])
+
+        for x in range(len(rows)):
+            purchase_list[x][1] = x+1
+
+        for row in purchase_list:
+            purchase.search([("id","=", row[0])]).write({'serial': row[1]})
+
+
+
+
+    # def on_create_write(self):
+    #     warning = {
+    #         'title': ('Warning!'),
+    #         'message': ('You must first select a partner!'),
+    #     }
+    #     return {'warning': warning}
 
     # S05N0100 製程登錄作業
     # 以下為查詢欄位
@@ -651,23 +675,24 @@ class YcPurchase(models.Model):
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
+
     @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
             # S05N0100 製程登錄作業
-
+            pass
             # to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
             # sql = "delete from yc_purchase where id=%d" % to_delete_id
             # if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
             #     self._cr.execute(sql)
 
-            purchase = self.env['yc.purchase'].search([('name', '=', self.searchname)])
-            self.saveorread = "read"
-            # self.id = purchase.id
-            self.name = purchase.name
-            self.day = purchase.day
-            self.wire_furn = purchase.wire_furn
+            # purchase = self.env['yc.purchase'].search([('name', '=', self.searchname)])
+            # self.saveorread = "read"
+            # # self.id = purchase.id
+            # self.name = purchase.name
+            # self.day = purchase.day
+            # self.wire_furn = purchase.wire_furn
 
             # return {
             #     'name': self.searchname,

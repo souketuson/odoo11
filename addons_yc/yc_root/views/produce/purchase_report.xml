@@ -11,7 +11,6 @@
                 </tree>
             </field>
         </record>
-
         <!-- form view -->
         <record model="ir.ui.view" id="purchasereport_form">
             <field name="name">purchasereport.form</field>
@@ -26,7 +25,6 @@
                 </form>
             </field>
         </record>
-
         <!-- search -->
         <record model="ir.ui.view" id="purchasereport_search_view">
             <field name="name">purchasereport.search</field>
@@ -37,7 +35,6 @@
                 </search>
             </field>
         </record>
-
 
         <!-- action -->
         <record model="ir.actions.act_window" id="purchasereport_action">

@@ -4,7 +4,7 @@
         <template id="assets_backend" name="static_resources_demo assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
-                <script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>
+                <!--<script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>-->
             </xpath>
         </template>
         <!-- tree view -->
