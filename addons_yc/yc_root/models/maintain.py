@@ -160,11 +160,18 @@ class YcSetStatus(models.Model):
     name = fields.Char("狀態")
     code = fields.Char("狀態代碼")
 
+class YcSetfurnace(models.Model):
+    # 爐號
+    _name = "yc.setfurnace"
+    name = fields.Char("爐號")
+    code = fields.Char("代碼")
 
 class YcFactory(models.Model):
     _name = "yc.factory"
     name = fields.Char("廠別名稱")
     code = fields.Char("廠別代碼")
+
+
 
 
 

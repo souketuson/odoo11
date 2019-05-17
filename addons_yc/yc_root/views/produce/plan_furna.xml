@@ -6,7 +6,7 @@
             <field name="name">planfurna.tree</field>
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
-                <tree string="planfurna Tree" decoration-danger="ckimportdate == 'over'">
+                <tree string="planfurna Tree" decoration-danger="ckimportdate == 'over'" editable="top">
                     <field name="customer_id"/>
                     <field name="ckimportdate" invisible="1"/>
                     <field name="order_furn"/>

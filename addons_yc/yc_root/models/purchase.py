@@ -5,6 +5,7 @@ from odoo import models, fields, api
 from datetime import datetime as dt
 import collections
 
+
 class YcPurchase(models.Model):
     _name = "yc.purchase"
 
@@ -82,7 +83,8 @@ class YcPurchase(models.Model):
     torsion = fields.Char("扭力")
     retempt = fields.Integer("回火溫度")
     pre_furn = fields.Char("以前爐號")
-    order_furn = fields.Char("預排爐號")
+    # 0517設成Many2one 轉檔要抓id 不能直接匯入
+    order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
     norcls = fields.Char("規範分類")
     wxr_txtur = fields.Char("華司材質")
     wxrhard = fields.Char("華司硬度")
@@ -623,18 +625,18 @@ class YcPurchase(models.Model):
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
-            weight_cn = weight_item.search([('id','=', cn)]).carno
+            weight_cn = weight_item.search([('id', '=', cn)]).carno
             purchase = self.env["yc.purchase"]
-            search = purchase.search([("name","like", weight_cn )])
+            search = purchase.search([("name", "like", weight_cn)])
             number = len(search) + 1
             name = str(weight_cn) + str('%d') % number
             vals.update({"name": name})
         return super(YcPurchase, self).create(vals)
+
     #
     # @api.model
     # def write(self, vals):
     #     return super(YcPurchase, self).write(vals)
-
 
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
 
@@ -651,25 +653,29 @@ class YcPurchase(models.Model):
 
     # 在爐內進貨 序號改完要馬上更新資料庫資料
     def update_serial(self):
-        vals={"serial":self.serial}
-        purchase = self.env["yc.purchase"].search([("id","=",self.id)])
+        vals = {"serial": self.serial}
+        purchase = self.env["yc.purchase"].search([("id", "=", self.id)])
         purchase.write(vals)
-    # 重排序號
+
+    # 重排序號(except 99.9 然後轉成未進爐)
     def reorganize(self):
         purchase = self.env["yc.purchase"]
-        rows = purchase.search([("order_furn","=", self.order_furn)])
+        rows = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "!=", 99.9)])
         purchase_list = []
         for row in rows:
-            purchase_list.append([row.id,row.serial])
+            purchase_list.append([row.id, row.serial])
         # 重新排序
-        purchase_list = sorted(purchase_list,  key=lambda s: s[1])
+        purchase_list = sorted(purchase_list, key=lambda s: s[1])
         # 重新賦值
         for x in range(len(rows)):
-            purchase_list[x][1] = x+1
+            purchase_list[x][1] = x + 1
         # update data
         for row in purchase_list:
-            purchase.search([("id","=", row[0])]).write({'serial': row[1]})
-
+            purchase.search([("id", "=", row[0])]).write({'serial': row[1], 'status': 4})
+        # 99.9 狀態轉未進爐
+        notin_list = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "=", 99.9)])
+        for row in notin_list:
+            notin_list.search([("id", "=", row.id)]).write({'status': 4})
 
     # S05N0100 製程登錄作業
     # 以下為查詢欄位
@@ -677,44 +683,46 @@ class YcPurchase(models.Model):
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
-
     @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
             # S05N0100 製程登錄作業
-            pass
-            # to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
-            # sql = "delete from yc_purchase where id=%d" % to_delete_id
-            # if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
-            #     self._cr.execute(sql)
-
+            purchase = self.env["yc.purchase"]
+            to_delete_id = purchase.search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
+            sql = "delete from yc_purchase where id=%d or name is NULL" % to_delete_id
+            repeated_name_record = self.env["yc.purchase"].search([('name', '=', self.searchname)])
+            empty_name_record = self.env["yc.purchase"].search([('name', '=', None)])
+            if len(repeated_name_record) > 1 or len(empty_name_record) >= 1:
+                self._cr.execute(sql)
+            id = self.env['yc.purchase'].search(
+                [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
             # purchase = self.env['yc.purchase'].search([('name', '=', self.searchname)])
             # self.saveorread = "read"
             # # self.id = purchase.id
             # self.name = purchase.name
             # self.day = purchase.day
             # self.wire_furn = purchase.wire_furn
-
-            # return {
-            #     'name': self.searchname,
-            #     'res_model': 'yc.purchase',
-            #     'type': 'ir.actions.act_window',
-            #     'res_id': id,
-            #     'view_type': 'form',
-            #     'view_mode': 'form',
-            #     'view_id': self.env.ref('yc_root.process_data_entry_form').id,
-            #     'target': 'inline',
+            return {
+                'name': self.searchname,
+                'res_model': 'yc.purchase',
+                'type': 'ir.actions.act_window',
+                'res_id': id,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': self.env.ref('yc_root.process_data_entry_form').id,
+                'target': 'inline', }
 
             # 下面是另一種方法去取得record data
             # 但是onchange 也無法觸發下面這段，要用js寫了
-
             # 'name': 'Go to website',
             # 'res_model': 'ir.actions.act_url',
             # 'type': 'ir.actions.act_url',
             # 'target': 'inline',
             # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
             # }
+
         elif self._context.get('params')['action'] == 112:
             # S05N0200
             to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
@@ -765,11 +773,26 @@ class YcPurchase(models.Model):
     @api.onchange("order_furn")
     def _chech_order(self):
         if self._context.get('params')['action'] == 111:
-            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn)],
-                               "furn_notin": [("order_furn", "=", self.order_furn)]}}
+            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
+                               "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}
         elif self._context.get('params')['action'] == 112:
-            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn)],
-                               "notweighted_order": [("order_furn", "=", self.order_furn)]}}
+            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn.id)],
+                               "notweighted_order": [("order_furn", "=", self.order_furn.id)]}}
+
+    # 清除製造條件
+    def clear_produce_data(self):
+        to_clear_field = ['produceday1', 'ptime1', 'shift1', 'op1', 'buckets1', 'pw1', 'teamlead1',
+                          'produceday2', 'ptime2', 'shift2', 'op2', 'buckets2', 'pw2', 'teamlead2',
+                          'produceday3', 'ptime3', 'shift3', 'op3', 'buckets3', 'pw3', 'teamlead3',
+                          'ffday', 'fftime', 'flow', 'cp', 'nh31', 'nh32', 'nh33', 'nh34', 'heat1',
+                          'heat2', 'heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8', 'heattemp',
+                          'heatsped', 'pre_furn', 'tempturing1', 'tempturing2', 'tempturing3', 'tempturing4',
+                          'tempturing5', 'tempturing6', 'tempturisped', 'currnt_furno', 'notices1', 'notices2',
+                          'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2', 'prodnote3']
+        db = self.env['yc.purchase']
+        to_clear_id = db.search([('name', '=', self.name)]).id
+        for field in to_clear_field:
+            db.search([('id','=',to_clear_id)]).write({field: None})
 
     # S04N0200 品質數據主檔
     checked = fields.Many2one("yc.purchase", string="已檢驗")
@@ -824,10 +847,19 @@ class YcProduceDetails(models.Model):
     @api.multi
     @api.onchange("bucket_no")
     def _get_row_number(self):
+        # condition1 新增: details檔 無關連record count不用檢查
+        # condition2 修改: details檔 有關連record 可以重置count
+
         p = self.env['yc.purchase']
-        self.bucket_no = p.search([('name', '=', self.name.name)]).count or 1
+        self.bucket_no = p.search([('name', '=', self.name.name)]).count
         sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
         p._cr.execute(sql)
+
+    @api.onchange("rawweight", "emptybucket", "tweight")
+    def _get_rawnetweight(self):
+        self.rawnetweight = self.rawweight - self.emptybucket
+        self.tnetweight = self.tweight - self.emptybucket
+        self.weightdiff = self.rawweight - self.tweight
 
 
 class YcPurchaseStore(models.Model):
