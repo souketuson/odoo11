@@ -212,12 +212,12 @@
                                         <field name="notices2" style="width:31%%"/>
                                         <field name="notices3" style="width:31%%"/>
                                         <!--<field name="notices4"/>-->
-
+                                        <br/>
                                         <label string="品管備註" style="font-weight:bold"/>
                                         <field name="qcnote1" style="width:31%%"/>
                                         <field name="qcnote2" style="width:31%%"/>
                                         <field name="qcnote3" style="width:31%%"/>
-
+                                        <br/>
                                         <label string="製造備註" style="font-weight:bold"/>
                                         <field name="prodnote1" style="width:31%%"/>
                                         <field name="prodnote2" style="width:31%%"/>

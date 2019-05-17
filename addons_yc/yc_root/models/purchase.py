@@ -633,10 +633,13 @@ class YcPurchase(models.Model):
             vals.update({"name": name})
         return super(YcPurchase, self).create(vals)
 
-    #
-    # @api.model
-    # def write(self, vals):
-    #     return super(YcPurchase, self).write(vals)
+    @api.multi
+    def write(self, vals):
+        # 製程登錄作業 S03N0200
+        if self._context.get('params')['action'] == 111:
+            if vals.get('ptime1') != '':
+                vals.update({'status': 6})
+        return super(YcPurchase, self).write(vals)
 
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
 
