@@ -8,11 +8,13 @@ import collections
 class YcPurchase(models.Model):
     _name = "yc.purchase"
 
-    name = fields.Char("工令號碼", default=lambda self: self._default_name())
+    name = fields.Char("工令號碼")
 
     def _default_name(self):
         if self._context.get('params')['action'] == 81:
-            return self.env["ir.sequence"].next_by_code("Purchase.sequence")
+            # 車次序號 + 01~99
+            pass
+            # return self.env["ir.sequence"].next_by_code("Purchase.sequence")
 
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
 
@@ -341,7 +343,7 @@ class YcPurchase(models.Model):
     tweight = fields.Integer("磅後總重")
     wdiff = fields.Integer("重量差")
     currnt_furno = fields.Char("現在爐號")
-    serial = fields.Float("序號")
+    serial = fields.Float("序號", default=99.9)
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
     ptime2 = fields.Char("製造時間2")
@@ -431,16 +433,6 @@ class YcPurchase(models.Model):
         time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
-    @api.depends('processing_attache')
-    def _compute_process(self):
-        if self.processing_attache:
-            for rec in self:
-                self.combo_process = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
-                self.combo_customer = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
-                self.customer_id = self.processing_attache.customer_id.id
-
     @api.model
     def _fetch_create_date(self):
         self.copy_createdate = self.create_date[:10]
@@ -461,6 +453,17 @@ class YcPurchase(models.Model):
     def _filter_processing(self):
         # 這裡 self.car_no.id 是該車次的過磅單號
         return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
+
+    # 4. 選完車次序號，選擇過磅項目(哪間加工廠)
+    @api.depends('processing_attache')
+    def _compute_process(self):
+        if self.processing_attache:
+            for rec in self:
+                self.combo_process = "電話:  %s    聯絡人:%s" % (
+                    self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
+                self.combo_customer = "電話:  %s    聯絡人:%s" % (
+                    self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
+                self.customer_id = self.processing_attache.customer_id.id
 
     # @api.onchange('processing_attache')
     # def _get_number_name(self):
@@ -613,11 +616,20 @@ class YcPurchase(models.Model):
     saveorread = fields.Char("儲存管制作業")
 
     # # create 管制
-    # @api.model
-    # def create(self, vals):
-    #     if vals["saveorread"] == "read":
-    #         return super(YcPurchase, self).write(vals)
-    #     return super(YcPurchase, self).create(vals)
+    @api.model
+    def create(self, vals):
+        # 進貨作業 S03N0120
+        if self._context.get('params')['action'] == 81:
+            # 儲存時給工令號
+            cn = vals["car_no"]
+            weight_item = self.env['yc.weight']
+            weight_cn = weight_item.search([('id','=', cn)]).carno
+            purchase = self.env["yc.purchase"]
+            search = purchase.search([("name","like", weight_cn )])
+            number = len(search) + 1
+            name = str(weight_cn) + str('%d') % number
+            vals.update({"name": name})
+        return super(YcPurchase, self).create(vals)
     #
     # @api.model
     # def write(self, vals):
@@ -649,25 +661,15 @@ class YcPurchase(models.Model):
         purchase_list = []
         for row in rows:
             purchase_list.append([row.id,row.serial])
-            # purchase_dict[row.id] = row.serial
-
+        # 重新排序
         purchase_list = sorted(purchase_list,  key=lambda s: s[1])
-
+        # 重新賦值
         for x in range(len(rows)):
             purchase_list[x][1] = x+1
-
+        # update data
         for row in purchase_list:
             purchase.search([("id","=", row[0])]).write({'serial': row[1]})
 
-
-
-
-    # def on_create_write(self):
-    #     warning = {
-    #         'title': ('Warning!'),
-    #         'message': ('You must first select a partner!'),
-    #     }
-    #     return {'warning': warning}
 
     # S05N0100 製程登錄作業
     # 以下為查詢欄位

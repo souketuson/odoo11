@@ -692,7 +692,7 @@ class ResConfigSettings(models.TransientModel):
                 'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單主檔")
-            rows = cursor.fetchmany(500)
+            rows = cursor.fetchmany(1500)
             weight = self.env["yc.weight"].search([])
             sql = "delete from yc_weight"
             self._cr.execute(sql)
@@ -929,7 +929,7 @@ class ResConfigSettings(models.TransientModel):
                     _string += "'" + weight[x].carno + "'"
             db_sql = "SELECT * FROM 進貨單主檔 WHERE 車次序號 IN(%s)" % _string
             cursor.execute(db_sql)
-            rows = cursor.fetchmany(500)
+            rows = cursor.fetchall()
             purchase = self.env["yc.purchase"].search([])
             sql = "delete from yc_purchase"
             self._cr.execute(sql)

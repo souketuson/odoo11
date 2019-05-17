@@ -111,9 +111,9 @@ class YcWeight(models.Model):
                 check_day = dt.strptime(rec.day, "%Y-%m-%d")
                 check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
                 if check:
-                    S5 = '%02d' % (len(check) + 1)
+                    S5 = '%d' % (len(check) + 1)
                 else:
-                    S5 = "01"
+                    S5 = "1"
 
                 if S1 and S2 and S3 and S4 and S5:
                     self.carno = str(S1 + S2 + S3 + S4 + S5)
