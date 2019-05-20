@@ -422,6 +422,7 @@ class YcPurchase(models.Model):
     mgchecker = fields.Many2one("yc.hr", string="金相檢驗人員")
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
+    produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
 
     @api.model
     def _get_time(self):
@@ -727,12 +728,17 @@ class YcPurchase(models.Model):
             # }
 
         elif self._context.get('params')['action'] == 112:
-            # S05N0200
-            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
-            sql = "delete from yc_purchase where id=%d" % to_delete_id
-            if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
+            # S05N0200 產量登錄作業
+            purchase = self.env["yc.purchase"]
+            to_delete_id = purchase.search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
+            sql = "delete from yc_purchase where id=%d or name is NULL" % to_delete_id
+            repeated_name_record = self.env["yc.purchase"].search([('name', '=', self.searchname)])
+            empty_name_record = self.env["yc.purchase"].search([('name', '=', None)])
+            if len(repeated_name_record) > 1 or len(empty_name_record) >= 1:
                 self._cr.execute(sql)
-            id = self.env['yc.purchase'].search([('name', '=', self.searchname)]).id
+            id = self.env['yc.purchase'].search(
+                [('name', '=', self.searchname or self.weighted_order.name or self.notweighted_order.name)]).id
             return {
                 'name': self.searchname,
                 'res_model': 'yc.purchase',
@@ -762,14 +768,12 @@ class YcPurchase(models.Model):
             }
 
     # 各查詢表單後更新資料
-    def save_process_data(self):
-        self.saveorread = "save"
+    def save_entry_data(self):
         return True
 
     # S05N0200 製程登錄作業
     weighted_order = fields.Many2one("yc.purchase", string="已過磅")
     notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
-    produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
     count = fields.Integer("數桶數", default=1)
 
     # 過濾桶號工令

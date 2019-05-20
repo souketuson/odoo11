@@ -229,7 +229,7 @@
                                 <group>
                                     <div>
                                         <button string="資料儲存" type="object" class="oe_highlight"
-                                                name="save_process_data"/>
+                                                name="save_entry_data"/>
                                     </div>
                                 </group>
                                 <field name="produce_details_ids">
