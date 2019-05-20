@@ -7,6 +7,26 @@
                 <!--<script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>-->
             </xpath>
         </template>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="weight_list_action">
+            <field name="name">過磅單作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.weight</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="weight_list_action_form">
+            <field name="act_window_id" ref="weight_list_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="weight_fom"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="weight_list_action_tree">
+            <field name="act_window_id" ref="weight_list_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="weight_tree"/>
+        </record>
         <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>
@@ -100,30 +120,6 @@
                     <field name="day"/>
                 </search>
             </field>
-        </record>
-        <!-- action -->
-        <record model="ir.actions.act_window" id="weight_list_action">
-            <field name="name">過磅單作業</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">yc.weight</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-
-        <record model="ir.actions.act_window.view" id="weight_list_action_form">
-            <field name="act_window_id" ref="weight_list_action"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="weight_fom"/>
-        </record>
-
-
-        <record model="ir.actions.act_window.view" id="weight_list_action_tree">
-            <field name="act_window_id" ref="weight_list_action"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="weight_tree"/>
         </record>
     </data>
 </odoo>

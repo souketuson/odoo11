@@ -7,7 +7,7 @@ from datetime import datetime as dt
 
 class YcWeight(models.Model):
     _name = "yc.weight"
-    _order = "day desc"
+    _order = "id desc"
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))

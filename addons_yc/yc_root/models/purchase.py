@@ -433,7 +433,7 @@ class YcPurchase(models.Model):
         sec = dt.now().second
         if hour > 24:
             hour -= 24
-        time = "%02d:%02d:%02d" % (hour, minute, sec)
+        time = "%02d:%02d" % (hour, minute)
         return time
 
     @api.model
@@ -616,7 +616,7 @@ class YcPurchase(models.Model):
             self.tempturing6 = _filter.tempturing6
             self.tempturisped = _filter.tempturisped
 
-    saveorread = fields.Char("儲存管制作業")
+    # saveorread = fields.Char("儲存管制作業")
 
     # # create 管制
     @api.model
@@ -642,7 +642,7 @@ class YcPurchase(models.Model):
                 vals.update({'status': 6})
         return super(YcPurchase, self).write(vals)
 
-    ckimportdate = fields.Char("進貨距今", compute="_ten_days_check")
+    ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
 
     # 分爐排程進貨日期距現在日期超過十天返色提醒
     @api.depends("day", "ckimportdate")
@@ -683,7 +683,7 @@ class YcPurchase(models.Model):
 
     # S05N0100 製程登錄作業
     # 以下為查詢欄位
-    searchname = fields.Char("工令查詢")
+    searchname = fields.Char("工令查詢", store=False, help="搜尋工令欄位")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
