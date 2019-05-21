@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <act_window id="action_purchase_wizard"
-                name="Purchase wizard"
-                src_model="yc.purchase"
-                res_model="purchase.wizard"
-                view_mode="form"
-                target="new"
-                multi="True"/>
-
     <record model="ir.ui.view" id="purchase_wizard">
         <field name="name">Purchase Report</field>
         <field name="model">purchase.wizard</field>
@@ -15,7 +7,52 @@
         <field name="arch" type="xml">
             <form string="Purchase Report">
                 <group>
-                    <fields name="purchase_ids" widget="many2many_list"/>
+                    <div>
+                        <label string="　　品名" style="font-weight:bold"/>
+                        <field name="product_code" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="　　規格" style="font-weight:bold"/>
+                        <field name="norm_code" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="　　長度" style="font-weight:bold"/>
+                        <field name="len_code" style="width:100px"/>
+                        <br/>
+                        <label string="強度級數" style="font-weight:bold"/>
+                        <field name="strength_level" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="品名分類" style="font-weight:bold"/>
+                        <field name="clsf_code" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="加工方式" style="font-weight:bold"/>
+                        <field name="proces_code" style="width:100px"/>
+                        <br/>
+                        <label string="　　材質" style="font-weight:bold"/>
+                        <field name="txtur_code" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="線材爐號" style="font-weight:bold"/>
+                        <field name="wire_furn" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="產品名稱" style="font-weight:bold"/>
+                        <field name="productname" style="width:100px"/>
+                        <br/>
+                        <button type="object" name="_search_purchase" string="搜尋" style="margin-left: 470px;margin-top: 8px;"/>
+                        <br/>
+                        <br/>
+                        <field name="purchase_ids" widget="many2many">
+                            <tree string="Purchase Details">
+                                <field name="name"/>
+                                <field name="customer_id"/>
+                                <field name="norm_code"/>
+                                <field name="surfhrd"/>
+                                <field name="corehrd"/>
+                                <field name="tensihrd"/>
+                                <field name="carburlayer"/>
+                                <field name="torsion"/>
+                                <field name="retempt"/>
+                                <field name="order_furn"/>
+                            </tree>
+                        </field>
+                    </div>
                 </group>
                 <footer>
                     <button name="" string="comfirm" type="object" class="oe_highlight"/>
@@ -24,15 +61,11 @@
             </form>
         </field>
     </record>
-
-
-    <!--<record id="action_purchase_report" model="ir.actions.act_window">-->
-    <!--<field name="name">Purchase Report</field>-->
-    <!--<field name="res_model">purchase.report</field>-->
-    <!--<field name="type">ir.actions.act_window</field>-->
-    <!--<field name="view_type">form</field>-->
-    <!--<field name="view_mode">form</field>-->
-    <!--<field name="view_id" ref="purchase_report_wizard"/>-->
-    <!--<field name="target">new</field>-->
-    <!--</record>-->
+    <record id="action_purchase_wizard" model="ir.actions.act_window">
+        <field name="name">設定搜尋條件</field>
+        <field name="res_model">purchase.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 </odoo>

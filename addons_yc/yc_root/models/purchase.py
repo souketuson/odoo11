@@ -10,19 +10,7 @@ class YcPurchase(models.Model):
     _name = "yc.purchase"
 
     name = fields.Char("工令號碼")
-
-    def _default_name(self):
-        if self._context.get('params')['action'] == 81:
-            # 車次序號 + 01~99
-            pass
-            # return self.env["ir.sequence"].next_by_code("Purchase.sequence")
-
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
-
-    def _default_date(self):
-        if self._context.get('params')['action'] == 81:
-            return dt.today()
-
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
     status = fields.Many2one("yc.setstatus", string="狀態", default=2)
@@ -423,6 +411,10 @@ class YcPurchase(models.Model):
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
+
+    def _default_date(self):
+        if self._context.get('params')['action'] == 81:
+            return dt.today()
 
     @api.model
     def _get_time(self):
