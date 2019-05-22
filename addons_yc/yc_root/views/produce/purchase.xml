@@ -161,7 +161,7 @@
                                                     <field name="wire_furn" style="width:100px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
                                                     <button string="搜尋舊檔" type="action" class="oe_highlight"
-                                                            name="%(action_purchase_wizard)d"/>
+                                                            name="%(action_purchase_wizard)d" context="{'wizard':True}"/>
                                                     <span style="display:inline-block; width: 180px;"/>　
                                                     <label string="頭部記號" style="font-weight:bold"/>
                                                     <field name="headsign" widget='image' height="90" width="90"

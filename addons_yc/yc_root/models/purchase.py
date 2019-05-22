@@ -411,6 +411,15 @@ class YcPurchase(models.Model):
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
+    wizard_check = fields.Boolean("帶出",default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
+
+    # 進貨單wizard 只能帶出一筆資料，超過一筆提醒
+    @api.constrains("wizard_check")
+    def _check_bringout(self):
+        wizard_checked = self.env["yc.purchase"].search([('wizard_check','=',True)])
+        if len(wizard_checked)>1:
+            raise Warning("只能選一筆資料帶出")
+
 
     def _default_date(self):
         if self._context.get('params')['action'] == 81:
@@ -613,8 +622,8 @@ class YcPurchase(models.Model):
     # # create 管制
     @api.model
     def create(self, vals):
-        # 進貨作業 S03N0120
-        if self._context.get('params')['action'] == 81:
+        # 進貨作業 S03N0120 且非wizard
+        if self._context.get('params')['action'] == 81 and self._context.get('wizard') != True:
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
@@ -791,7 +800,7 @@ class YcPurchase(models.Model):
         db = self.env['yc.purchase']
         to_clear_id = db.search([('name', '=', self.name)]).id
         for field in to_clear_field:
-            db.search([('id','=',to_clear_id)]).write({field: None})
+            db.search([('id', '=', to_clear_id)]).write({field: None})
 
     # S04N0200 品質數據主檔
     checked = fields.Many2one("yc.purchase", string="已檢驗")

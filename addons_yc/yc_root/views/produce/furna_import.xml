@@ -8,7 +8,7 @@
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
                 <tree string="furna_import Tree" editable="top"  on_write="on_create_write">
-                    <button type="action" name="%(furna_import_review_form)d" string="檢視" class="oe_highlight"/>
+                    <button type="action" name="%(yc_root.furna_import_review_form)d" string="檢視" class="oe_highlight"/>
                     <field name="order_furn"/>
                     <field name="serial"/>
                     <button type="object" name="update_serial" string="更新" class="oe_highlight"/>
