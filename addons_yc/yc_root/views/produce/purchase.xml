@@ -177,7 +177,7 @@
                                                     <field name="corehrd" style="width:90px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
                                                     <label string="　　試片" style="font-weight:bold"/>
-                                                    <field name="piece" style="width:60px"/>
+                                                    <field name="piece" style="width:60px" widget="radio" options="{'horizontal': True}"/>
                                                     <br/>
                                                     <label string="抗拉強度" style="font-weight:bold"/>
                                                     <field name="tensihrd" style="width:90px"/>
@@ -275,6 +275,12 @@
                                             <span style="display:inline-block; width: 10px;"></span>
                                             <label string="速度" style="font-weight:bold"/>
                                             <field name="tempturisped" style="width: 80px"/>
+                                        </page>
+                                        <page string="136行套表">
+                                        </page>
+                                        <page string="選擇列印">
+                                        </page>
+                                        <page string="136行套表(岡山)">
                                         </page>
                                     </notebook>
                                 </group>

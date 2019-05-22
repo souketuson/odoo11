@@ -411,15 +411,14 @@ class YcPurchase(models.Model):
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
-    wizard_check = fields.Boolean("帶出",default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
+    wizard_check = fields.Boolean("是否帶出", default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
 
     # 進貨單wizard 只能帶出一筆資料，超過一筆提醒
     @api.constrains("wizard_check")
     def _check_bringout(self):
-        wizard_checked = self.env["yc.purchase"].search([('wizard_check','=',True)])
-        if len(wizard_checked)>1:
+        wizard_checked = self.env["yc.purchase"].search([('wizard_check', '=', True)])
+        if len(wizard_checked) > 1:
             raise Warning("只能選一筆資料帶出")
-
 
     def _default_date(self):
         if self._context.get('params')['action'] == 81:
@@ -684,22 +683,25 @@ class YcPurchase(models.Model):
 
     # S05N0100 製程登錄作業
     # 以下為查詢欄位
-    searchname = fields.Char("工令查詢", store=False, help="搜尋工令欄位")
+    searchname = fields.Char("工令查詢", help="搜尋工令欄位")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
 
-    @api.onchange("searchname")
+    # @api.onchange("searchname")
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
             # S05N0100 製程登錄作業
             purchase = self.env["yc.purchase"]
-            to_delete_id = purchase.search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            repeated_name_record = purchase.search([('name', '=', self.searchname)])
+            empty_name_record = purchase.search([('name', '=', None)])
             # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
-            sql = "delete from yc_purchase where id=%d or name is NULL" % to_delete_id
-            repeated_name_record = self.env["yc.purchase"].search([('name', '=', self.searchname)])
-            empty_name_record = self.env["yc.purchase"].search([('name', '=', None)])
-            if len(repeated_name_record) > 1 or len(empty_name_record) >= 1:
+            if len(repeated_name_record) > 1:
+                to_delete_id = purchase.search([('name', '=', self.searchname)], order='id desc', limit=1).id
+                sql = "delete from yc_purchase where id=%d" % to_delete_id
+                self._cr.execute(sql)
+            if len(empty_name_record) >= 1:
+                sql = "delete from yc_purchase where name is NULL"
                 self._cr.execute(sql)
             id = self.env['yc.purchase'].search(
                 [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
@@ -731,12 +733,15 @@ class YcPurchase(models.Model):
         elif self._context.get('params')['action'] == 112:
             # S05N0200 產量登錄作業
             purchase = self.env["yc.purchase"]
-            to_delete_id = purchase.search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            repeated_name_record = purchase.search([('name', '=', self.searchname)])
+            empty_name_record = purchase.search([('name', '=', None)])
             # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
-            sql = "delete from yc_purchase where id=%d or name is NULL" % to_delete_id
-            repeated_name_record = self.env["yc.purchase"].search([('name', '=', self.searchname)])
-            empty_name_record = self.env["yc.purchase"].search([('name', '=', None)])
-            if len(repeated_name_record) > 1 or len(empty_name_record) >= 1:
+            if len(repeated_name_record) > 1:
+                to_delete_id = purchase.search([('name', '=', self.searchname)], order='id desc', limit=1).id
+                sql = "delete from yc_purchase where id=%d" % to_delete_id
+                self._cr.execute(sql)
+            if len(empty_name_record) >= 1:
+                sql = "delete from yc_purchase where name is NULL"
                 self._cr.execute(sql)
             id = self.env['yc.purchase'].search(
                 [('name', '=', self.searchname or self.weighted_order.name or self.notweighted_order.name)]).id
