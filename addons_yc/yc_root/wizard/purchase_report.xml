@@ -36,6 +36,7 @@
                         <label string="產品名稱" style="font-weight:bold"/>
                         <field name="productname" style="width:100px"/>
                         <br/>
+                        <!-- 用button object 呼叫method 會跳掉 -->
                         <!--<button type="object" name="search_purchase" string="搜尋" style="margin-left: 470px;margin-top: 8px;"/>-->
                         <!--<br/>-->
                         <br/>

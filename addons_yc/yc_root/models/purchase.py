@@ -22,7 +22,6 @@ class YcPurchase(models.Model):
     processing_phone = fields.Char("加工廠電話")
     processing_contact = fields.Char("負責人")
     combo_process = fields.Char("加工廠聯絡資訊", compute='_compute_process')
-
     pre_order = fields.Char("前工令號碼")
     car_no = fields.Many2one("yc.weight", string="車次序號")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
@@ -37,6 +36,8 @@ class YcPurchase(models.Model):
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     product_id = fields.Char("品名代碼")
     product_code = fields.Many2one("yc.setproduct", string="品名")
+    # 和上面重複
+    # productname = fields.Many2one("yc.setproduct", string="產品名稱")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
     len_code = fields.Many2one("yc.setlength", string="長度")
     # 待確定
@@ -61,9 +62,7 @@ class YcPurchase(models.Model):
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
     wire_furn = fields.Char("線材爐號")
-
     headsign = fields.Binary('頭部記號')
-
     surfhrd = fields.Char("表面硬度")
     corehrd = fields.Char("心部硬度")
     piece = fields.Selection([('Y', '是'), ('N', '否')], '試片')
@@ -332,7 +331,7 @@ class YcPurchase(models.Model):
     pweight = fields.Integer("進貨重量")
     tweight = fields.Integer("磅後總重")
     wdiff = fields.Integer("重量差")
-    currnt_furno = fields.Char("現在爐號")
+    currnt_furno = fields.Many2one("yc.setfurnace", string="預排爐號")
     serial = fields.Float("序號", default=99.9)
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
@@ -370,7 +369,7 @@ class YcPurchase(models.Model):
     ckclv = fields.Boolean("CK滲碳層")
     feedbucket = fields.Integer("入料桶數")
     feedweight = fields.Integer("入料總重")
-    productname = fields.Many2one("yc.setproduct", string="產品名稱")
+
     contrast = fields.Float("對照")
     shipbucket = fields.Integer("出貨桶數")
     shipweight = fields.Integer("出貨重量")
@@ -463,9 +462,9 @@ class YcPurchase(models.Model):
         if self.processing_attache:
             for rec in self:
                 self.combo_process = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.processing_id.phone, self.processing_attache.processing_id.contact)
+                    self.processing_attache.processing_id.phone1, self.processing_attache.processing_id.contact)
                 self.combo_customer = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.customer_id.phone, self.processing_attache.customer_id.contact)
+                    self.processing_attache.customer_id.phone1, self.processing_attache.customer_id.contact)
                 self.customer_id = self.processing_attache.customer_id.id
 
     # @api.onchange('processing_attache')

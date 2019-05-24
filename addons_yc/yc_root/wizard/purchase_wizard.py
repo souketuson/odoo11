@@ -19,7 +19,6 @@ class PurchaseWizard(models.TransientModel):
     # 過濾查詢條件
     @api.onchange('product_code','clsf_code','productname','norm_code','proces_code','len_code','txtur_code'
                   ,'strength_level','wire_furn')
-    @api.multi
     def search_purchase(self):
         domain = ()
         if self.product_code.id:

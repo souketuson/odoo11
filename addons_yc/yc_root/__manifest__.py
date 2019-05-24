@@ -8,15 +8,23 @@
     'description': """
         YC_ROOT v.10
     """,
-
     'author': "ArJhe",
     'website': "",
     'category': 'Uncategorized',
     'version': '0.1',
-
     'depends': ['base'],
-
     'data': [
+        'views/business/maintain/setprocessingareatype.xml',
+        'views/business/maintain/setprocessingplanttype.xml',
+        'views/business/maintain/setcurrency.xml',
+        'views/business/maintain/setpayment.xml',
+        'views/business/maintain/setsuppliertype.xml',
+        'views/business/maintain/setcustomertype.xml',
+        'views/business/supplier.xml',
+        'views/business/customer.xml',
+        'views/business/process1.xml',
+        'views/business/process2.xml',
+        'views/shipment.xml',
         'views/quantity_data_entry.xml',
         'views/process_data_entry.xml',
         'views/produce/plan_furna.xml',
@@ -26,7 +34,6 @@
         'views/produce/purchase_store.xml',
         'views/produce/purchase_report.xml',
         'wizard/purchase_report.xml',
-
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',
@@ -46,9 +53,7 @@
         'views/hr_main.xml',
         'views/quality.xml',
         'views/fake.xml',
-
         'menuitem/root_core.xml',
-
     ],
     'css': ['static/src/css/cssfile.css',
             ],

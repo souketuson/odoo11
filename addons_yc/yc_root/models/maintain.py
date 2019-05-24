@@ -11,13 +11,11 @@ class YcSetFactory(models.Model):
     code = fields.Char("廠別代碼")
     params1 = fields.Char("參數1")
 
-
 class YcSetDepartment(models.Model):
     # 部門 S01N0002
     _name = 'yc.department'
     name = fields.Char(string='部門名稱')
     code = fields.Char(string='部門代碼')
-
 
 class YcSetJobTitle(models.Model):
     # 職稱 S01N0004
@@ -31,7 +29,6 @@ class YcSetSalaryItem(models.Model):
     name = fields.Char("薪資項目名稱")
     code = fields.Char("薪資項目代碼")
 
-
 class YcSetshift(models.Model):
     # 班別 S01N0006
     _name = "yc.setshift"
@@ -41,13 +38,11 @@ class YcSetshift(models.Model):
     other2 = fields.Char("其他2")
     other3 = fields.Char("其他3")
 
-
 class YcSetleave(models.Model):
     # 假別 S01N0007
     _name = "yc.setleave"
     name = fields.Char("假別名稱")
     code = fields.Char("假別代碼")
-
 
 class YcSetBonus(models.Model):
     # 獎金 S01N0008
@@ -56,6 +51,42 @@ class YcSetBonus(models.Model):
     name = fields.Char("獎金項目")
     code = fields.Char("獎金代碼")
 
+# S02
+class YcSetcustomertype(models.Model):
+    # 客戶種類 S02N0001
+    _name = "yc.setcustomertype"
+    name = fields.Char("名稱")
+    code = fields.Char("代碼")
+
+class YcSetsuppliertype(models.Model):
+    # 廠商種類 S02N0002
+    _name = "yc.setsuppliertype"
+    name = fields.Char("名稱")
+    code = fields.Char("代碼")
+
+class YcSetpayment(models.Model):
+    # 付款方式 S02N0003
+    _name = "yc.setpayment"
+    name = fields.Char("名稱")
+    code = fields.Char("代碼")
+
+class YcSetcurrency(models.Model):
+    # 貨幣設定 S02N0004
+    _name = "yc.setcurrency"
+    name = fields.Char("名稱")
+    code = fields.Char("代碼")
+
+class YcSetprocessingplanttype(models.Model):
+    # 加工廠種類設定 S02N0005
+    _name = "yc.setprocessingplanttype"
+    name = fields.Char("名稱")
+    code = fields.Char("代碼")
+
+class YcSetprocessingareatype(models.Model):
+    # 加工廠區域設定 S02N0005
+    _name = "yc.setprocessingareatype"
+    name = fields.Char("名稱")
+    code = fields.Char("代碼")
 
 # S03
 class YcSetproduct(models.Model):
