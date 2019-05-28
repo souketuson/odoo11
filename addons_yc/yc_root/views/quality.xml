@@ -2,12 +2,12 @@
 <odoo>
     <data>
         <!--css-->
-        <template id="assets_backend" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
-                 <!--<script type="text/javascript" src="/yc_root/static/src/js/javascriptfile.js"></script>-->
-            </xpath>
-        </template>
+        <!--<template id="assets_backend" inherit_id="web.assets_backend">-->
+            <!--<xpath expr="." position="inside">-->
+                <!--<link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>-->
+                 <!--&lt;!&ndash;<script type="text/javascript" src="/yc_root/static/src/js/javascriptfile.js"></script>&ndash;&gt;-->
+            <!--</xpath>-->
+        <!--</template>-->
         <record model="ir.ui.view" id="quality_form">
             <field name="name">qde.form</field>
             <field name="model">yc.purchase</field>

@@ -34,7 +34,6 @@ class YcWeight(models.Model):
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
 
-
     # 要改成自動編號 & 上鎖
     # @api.multi
     # @api.onchange("name")
@@ -128,7 +127,7 @@ class YcWeight(models.Model):
     # 進出貨次數自動計算
     # , compute = "_count", store = True
     @api.multi
-    @api.onchange('in_out', 'driver_id')
+    @api.onchange('day', 'in_out', 'driver_id')
     def _count(self):
         for rec in self:
             check_day = dt.strptime(rec.day, "%Y-%m-%d")

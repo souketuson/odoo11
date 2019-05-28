@@ -185,6 +185,7 @@
             <field name="res_model">yc.purchase</field>
             <field name="view_type">form</field>
             <!--<field name="limit">100</field>-->
+            <field name="domain">[('status','!=',11)]</field>
             <field name="view_mode">tree,form</field>
         </record>
 

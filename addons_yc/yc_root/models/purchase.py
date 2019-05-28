@@ -457,7 +457,7 @@ class YcPurchase(models.Model):
         return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
 
     # 4. 選完車次序號，選擇過磅項目(哪間加工廠)
-    @api.depends('processing_attache')
+    @api.onchange('processing_attache')
     def _compute_process(self):
         if self.processing_attache:
             for rec in self:
@@ -644,7 +644,6 @@ class YcPurchase(models.Model):
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
 
     # 分爐排程進貨日期距現在日期超過十天返色提醒
-    @api.depends("day", "ckimportdate")
     def _ten_days_check(self):
         if self._context.get('params')['action'] == 109:
             for rec in self:

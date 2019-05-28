@@ -2,10 +2,10 @@
 <odoo>
     <data>
         <!--css-->
-        <template id="assets_backend" inherit_id="web.assets_backend">
+        <template id="assets_backend_purchase" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
-                <script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>
+                <!--<script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>-->
             </xpath>
         </template>
         <!-- view of purchase tree  -->

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <template id="assets_backend" name="static_resources_demo assets" inherit_id="web.assets_backend">
+        <template id="assets_backend_weight" name="static_resources_demo assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>
-                <!--<script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>-->
+                <!--<link href="/yc_root/static/src/css/cssfile.css" rel="stylesheet"/>-->
+                <script type="text/javascript" src="/yc_root/static/src/js/my_js.js"></script>
             </xpath>
         </template>
+
         <!-- action -->
         <record model="ir.actions.act_window" id="weight_list_action">
             <field name="name">過磅單作業</field>

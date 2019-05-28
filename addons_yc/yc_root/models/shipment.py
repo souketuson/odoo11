@@ -38,6 +38,11 @@ class YcShipment(models.Model):
     # 還是　多張出貨單號對 多張工令
     ship_details_ids = fields.Many2many("yc.shipment.details", string="出貨明細檔")
 
+    infurn = fields.Boolean("包含已進爐", default=False)
+    verified = fields.Boolean("包含已檢驗", default=False)
+    weighted = fields.Boolean("包含已過磅", default=False)
+    noshiped = fields.Boolean("不含已出貨", default=False)
+
     @api.onchange("searchorder")
     def search_order(self):
         if self.searchorder:
@@ -70,22 +75,22 @@ class YcShipment(models.Model):
     #             '貨單序號.Text = ERP_AutoNo_貨單序號(DNS, strPage, "出貨單主檔", "貨單序號")
     # name = 登入廠 + 民國年尾2位數 + 月份(0x) + 四位數流水號
 
-    # @api.model
-    # def create(self, vals):
-    #     day = self.day
-    #     firm = self.factory_id.code
-    #     fire_code = 0
-    #     if firm=="D":
-    #         fire_code = 2
-    #     year = int(day.strftime("%Y")) - 1911
-    #     month = int(day.strftime("%m"))
-    #     ship = self.env["yc.shipment"]
-    #     prefix = str(fire_code) + str(year) + "%02d" % month
-    #     bunch = ship.search([("name","ilike", prefix)])
-    #     serial = len(bunch) + 1
-    #     name = prefix + '%04d' % serial
-    #     vals.update({'name': name})
-    #     return super(YcShipment,self).create(vals)
+    @api.model
+    def create(self, vals):
+        day = vals['day']
+        firm = vals['factory_id']
+        fire_code = 0
+        if firm==12:
+            fire_code = 2
+        year = int(day[0:4]) - 1911
+        month = int(day[5:7])
+        ship = self.env["yc.shipment"]
+        prefix = str(fire_code) + str(year) + "%02d" % month
+        bunch = ship.search([("name","ilike", prefix)])
+        serial = len(bunch) + 1
+        name = prefix + '%04d' % serial
+        vals.update({'name': name})
+        return super(YcShipment,self).create(vals)
 
     # 轉待出貨或刪除按鈕
     def toship_or_delete(self):
@@ -113,7 +118,7 @@ class YcShipmentDetails(models.Model):
     sort = fields.Integer("排序")
     batch = fields.Char("客戶批號")
 
-    ship_check = fields.Boolean("待", default=False, help="是否出貨")
+    toship_check = fields.Boolean("待", default=False, help="轉待出貨")
     product_code = fields.Many2one("yc.setproduct", string="品名")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
@@ -123,3 +128,5 @@ class YcShipmentDetails(models.Model):
     day = fields.Date("進貨日期")
     wire_furn = fields.Char("線材爐號")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
+
+    ship_check = fields.Boolean("選", default=False, help="轉出貨")
