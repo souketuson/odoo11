@@ -55,6 +55,7 @@
                         <div style="overflow-x:auto;width:1000px;">
                             <group string="過磅單">
                                 <div>
+                                    <!--<button string="Test Javascript Onclick Method" custom="click" />-->
                                     <label string="過磅日期" style="font-weight:bold"/>
                                     <field name="day" style="width:120px"/>
                                     <span style="display:inline-block; width:5px;"/>
@@ -62,7 +63,7 @@
                                     <field name="weightime" style="width:70px"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="進出貨" style="font-weight:bold"/>
-                                    <field name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"
+                                    <field class="in_out" name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"
                                            style="width:100px" options="{'horizontal': True}"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="過磅單號" style="font-weight:bold"/>

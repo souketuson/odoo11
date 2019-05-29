@@ -32,41 +32,30 @@ class YcShipment(models.Model):
     searchcustomer2 = fields.Many2one("yc.customer", "二次廠商")
     searchnote = fields.Text("備註")
 
-
-
-    # 到底是一張出貨單號對 多張工令
-    # 還是　多張出貨單號對 多張工令
-    ship_details_ids = fields.Many2many("yc.shipment.details", string="出貨明細檔")
+    ship_details_ids = fields.One2many("yc.shipment.details", 'name', string="出貨明細檔")
 
     infurn = fields.Boolean("包含已進爐", default=False)
     verified = fields.Boolean("包含已檢驗", default=False)
     weighted = fields.Boolean("包含已過磅", default=False)
     noshiped = fields.Boolean("不含已出貨", default=False)
 
-    @api.onchange("searchorder")
-    def search_order(self):
-        if self.searchorder:
-            purchase = self.env["yc.purchase"]
-            order = purchase.search([("name", "=", self.searchorder)])
-            # ship = self.env["yc.shipment"]
-            # empty_name_record = ship.search([('name', '=', None)])
-            # if len(empty_name_record)>=1:
-            #     sql = "delete from yc_shipment where name is NULL"
-            #     self._cr.execute(sql)
-
-            # furnace爐號所用的欄位 是yc.purchase的order_furn 還是 current_furn?
-            order_dict = {'order': order.name, 'furnace': order.order_furn.id, "product_code": order.product_code.id,
-                          'norm_code': order.norm_code.id,
-                          'txtur_code': order.txtur_code.id,
-                          'buckets': order.weighbuckets,'unit':order.unit1.id,'tweight':order.tweight,
-                          'elecpl_code': order.elecpl_code.id,
-                          'process1': order.process1.id, 'batch': order.batch, 'fullorhalf': order.fullorhalf,
-                          'process2': order.process2.id, 'day': order.day, 'wire_furn': order.wire_furn,
-                          'proces_code': order.proces_code.id,
-                          }
-            # 列表待出貨工令
-            for rec in self:
-                rec.ship_details_ids = [(0, 0, order_dict)]
+    # @api.onchange("searchorder")
+    # def search_order(self):
+    #     if self.searchorder:
+    #         purchase = self.env["yc.purchase"]
+    #         order = purchase.search([("name", "=", self.searchorder)])
+    #         # furnace爐號所用的欄位 是yc.purchase的order_furn 還是 current_furn?
+    #         order_dict = {'order': order.name, 'furnace': order.order_furn.id, "product_code": order.product_code.id,
+    #                       'norm_code': order.norm_code.id, 'txtur_code': order.txtur_code.id,
+    #                       'buckets': order.weighbuckets,
+    #                       'unit': order.unit1.id, 'tweight': order.tweight, 'elecpl_code': order.elecpl_code.id,
+    #                       'process1': order.process1.id, 'batch': order.batch, 'fullorhalf': order.fullorhalf,
+    #                       'process2': order.process2.id, 'day': order.day, 'wire_furn': order.wire_furn,
+    #                       'proces_code': order.proces_code.id,
+    #                       }
+    #         # 列表待出貨工令
+    #         for rec in self:
+    #             rec.ship_details_ids = [(0, 0, order_dict)]
 
     # '依日期變換 貨單序號
     #     Private Sub 出貨日期_ValueChanged(sender As System.Object, e As System.EventArgs) Handles 出貨日期.ValueChanged
@@ -75,22 +64,29 @@ class YcShipment(models.Model):
     #             '貨單序號.Text = ERP_AutoNo_貨單序號(DNS, strPage, "出貨單主檔", "貨單序號")
     # name = 登入廠 + 民國年尾2位數 + 月份(0x) + 四位數流水號
 
+    # 已出貨 or 待出貨
     @api.model
     def create(self, vals):
-        day = vals['day']
-        firm = vals['factory_id']
-        fire_code = 0
-        if firm==12:
-            fire_code = 2
-        year = int(day[0:4]) - 1911
-        month = int(day[5:7])
-        ship = self.env["yc.shipment"]
-        prefix = str(fire_code) + str(year) + "%02d" % month
-        bunch = ship.search([("name","ilike", prefix)])
-        serial = len(bunch) + 1
-        name = prefix + '%04d' % serial
-        vals.update({'name': name})
-        return super(YcShipment,self).create(vals)
+        # if vals['name']:
+        #     day = vals['day']
+        #     firm = vals['factory_id']
+        #     fire_code = 0
+        #     if firm==12:
+        #         fire_code = 2
+        #     year = int(day[0:4]) - 1911
+        #     month = int(day[5:7])
+        #     ship = self.env["yc.shipment"]
+        #     prefix = str(fire_code) + str(year) + "%02d" % month
+        #     bunch = ship.search([("name","ilike", prefix)])
+        #     serial = len(bunch) + 1
+        #     name = prefix + '%04d' % serial
+        #     vals.update({'name': name})
+        return super(YcShipment, self).create(vals)
+
+    # @api.model
+    # def default_get(self, fields):
+    #     rec = super(YcShipment, self).default_get(fields)
+    #     return rec
 
     # 轉待出貨或刪除按鈕
     def toship_or_delete(self):
@@ -102,7 +98,7 @@ class YcShipment(models.Model):
 
 class YcShipmentDetails(models.Model):
     _name = "yc.shipment.details"
-    name = fields.Char("貨單序號")
+    name = fields.Many2one("yc.shipment", "貨單序號", ondelete='cascade')
 
     order = fields.Char("工令號碼")
     serial = fields.Char("序號")

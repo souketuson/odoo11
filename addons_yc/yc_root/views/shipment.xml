@@ -39,51 +39,46 @@
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="所屬工廠" style="font-weight:bold"/>
                                     <field name="factory_id" style="width: 120px"/>
+
+
                                     <br/>
                                     <!--<button type="object" name="search_order" string="追加"/>-->
                                     <div>
                                         <div style="float: left;">
                                             <div style="height: 10px;"/>
-                                            <button type="object" name="" string="轉待出貨或刪除" style="height: 45px;"/>
+                                            <button type="action" name="%(action_shipment_wizard)d" string="待出貨紀錄" style="height: 45px;"/>
                                             <span style="display:inline-block; width:90px;"/>
                                         </div>
-                                        <div style="height: 10px;"/>
-                                        <div style="border:1px black solid;background:#FFECC9;float: left;height: 65px;padding-left: 10px;padding-right: 20px;padding-top: 20px;">
-                                            <label string="工令" style="font-weight:bold"/>
-                                            <field name="searchorder" style="width: 120px"/>
-                                        </div>
+                                        <!--<button string="待出貨紀錄" type="action" class="oe_highlight"-->
+                                            <!--name="%(action_shipment_wizard)d" context="{'wizard':True}"/>-->
+                                        <!--<div style="height: 10px;"/>-->
+                                        <!--<div style="border:1px black solid;background:#FFECC9;float: left;height: 65px;padding-left: 10px;padding-right: 20px;padding-top: 20px;">-->
+                                        <!--<label string="工令" style="font-weight:bold"/>-->
+                                        <!--<field name="searchorder" style="width: 120px"/>-->
+                                        <!--</div>-->
                                     </div>
-                                    <!-- 除了工令searchorder 其他欄位看不出顯示的意義 -->
-                                    <!--<field name="searchfurn"/>-->
-                                    <!--<field name="searchbuk"/>-->
-                                    <!--<field name="searchunit"/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-
+                                    <field name="ship_details_ids">
+                                        <tree string="Shipment Details" editable="top">
+                                            <!--<field name="toship_check" widget="chechbox"/>-->
+                                            <field name="order"/>
+                                            <field name="furnace"/>
+                                            <field name="product_code"/>
+                                            <field name="norm_code"/>
+                                            <field name="txtur_code"/>
+                                            <field name="buckets"/>
+                                            <field name="unit"/>
+                                            <field name="tweight"/>
+                                            <field name="elecpl_code"/>
+                                            <field name="process1"/>
+                                            <field name="batch"/>
+                                            <field name="fullorhalf"/>
+                                            <field name="process2"/>
+                                            <field name="day"/>
+                                            <field name="wire_furn"/>
+                                            <field name="proces_code"/>
+                                        </tree>
+                                    </field>
                                 </div>
-                                <field name="ship_details_ids" widget="many2many">
-                                    <tree string="Shipment Details" editable="top">
-                                        <field name="toship_check" widget="chechbox"/>
-                                        <field name="order"/>
-                                        <field name="furnace"/>
-                                        <field name="product_code"/>
-                                        <field name="norm_code"/>
-                                        <field name="txtur_code"/>
-                                        <field name="buckets"/>
-                                        <field name="unit"/>
-                                        <field name="tweight"/>
-                                        <field name="elecpl_code"/>
-                                        <field name="process1"/>
-                                        <field name="batch"/>
-                                        <field name="fullorhalf"/>
-                                        <field name="process2"/>
-                                        <field name="day"/>
-                                        <field name="wire_furn"/>
-                                        <field name="proces_code"/>
-                                    </tree>
-                                </field>
                             </page>
                             <page string="待出貨紀錄">
                                 <div>
@@ -97,12 +92,6 @@
                                     <field name="weighted" widget="checkbox"/>
                                     <label string="不含已出貨" style="font-weight:bold"/>
                                     <field name="noshiped" widget="checkbox"/>
-                                    <field name="ship_details_ids" widget="many2many">
-                                        <tree string="Shipment Details" editable="top">
-                                            <field name="ship_check" widget="chechbox"/>
-
-                                        </tree>
-                                    </field>
                                 </div>
                             </page>
                             <page string="其他費用">

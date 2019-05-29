@@ -187,7 +187,6 @@
                                                     <span style="display:inline-block; width: 20px;"/>　
                                                     <label string="以前爐號" style="font-weight:bold"/>
                                                     <field name="pre_furn" style="width:60px"/>
-
                                                     <br/>
                                                     <label string="　　扭力" style="font-weight:bold"/>
                                                     <field name="torsion" style="width:90px"/>

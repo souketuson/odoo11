@@ -14,6 +14,7 @@
     'version': '0.1',
     'depends': ['base'],
     'data': [
+        'wizard/shipment_wizard.xml',
         'views/business/maintain/setprocessingareatype.xml',
         'views/business/maintain/setprocessingplanttype.xml',
         'views/business/maintain/setcurrency.xml',

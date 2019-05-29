@@ -770,6 +770,17 @@ class YcPurchase(models.Model):
                 'view_id': self.env.ref('yc_root.quality_form').id,
                 'target': 'inline',
             }
+    # 檢驗狀態
+    @api.onchange("wholeck","faceck")
+    def _set_checkstate(self):
+        for rec in self:
+            if rec.wholeck == '待處理':
+                self.checkstate = '待處理'
+            elif rec.wholeck == '不合格' or rec.faceck == '不合格':
+                self.checkstate = '檢驗不合格'
+            elif rec.wholeck == '合格' and rec.faceck == '合格':
+                self.checkstate = '檢驗合格'
+
 
     # 各查詢表單後更新資料
     def save_entry_data(self):
@@ -834,8 +845,8 @@ class YcPurchase(models.Model):
             self.sskvste = t1.sectionshrink
             self.safeload = t1.safeload
 
-
 class YcProduceDetails(models.Model):
+    # 製造單項目檔
     _name = "yc.produce.details"
 
     name = fields.Many2one("yc.purchase", "工令號碼", ondelete='cascade')
@@ -872,14 +883,23 @@ class YcProduceDetails(models.Model):
         self.tnetweight = self.tweight - self.emptybucket
         self.weightdiff = self.rawweight - self.tweight
 
+    # 製造項目檔有存入一筆就跳過磅狀態為已過磅
+    @api.model
+    def create(self, vals):
+        if self._context.get('params')['action'] == 111 and vals['name']:
+            id = vals['name']
+            purchase = self.env['yc.purchase'].search([('id','=',id)])
+            if purchase.weighstate == False:
+                # sql = "update yc_purchase set weighstate='已過磅' where id=%d" % id
+                # self._cr.execute(sql)
+                purchase.weighstate = '已過磅'
+        return super(YcProduceDetails, self).create(vals)
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
-
     name = fields.Char("進貨庫存單號")
 
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasereport"
-
     name = fields.Char("客戶進貨統計表")

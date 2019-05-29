@@ -47,12 +47,15 @@ class PurchaseWizard(models.TransientModel):
                 rec.purchase_ids = [(4, record.id) for record in records]
 
     # 把表面硬度,心部硬度,試片,抗拉強度,滲碳層,以前爐號,扭力,回火溫度,預排爐號 帶入到現在的進貨單
+    @api.multi
     def comfirm(self):
         wizard_checked = self.purchase_ids.search([('wizard_check','=',True)])
         if len(wizard_checked)>1:
             for to_uncheck in wizard_checked:
                 to_uncheck.wizard_check = False
         if len(wizard_checked) ==1:
+            # 解掉checked
+            wizard_checked.wizard_check = False
             # 目前進貨單current record : self._context.get('active_ids')
             for source_list in self.env['yc.purchase'].browse(self._context.get('active_ids')):
                 source_list.surfhrd = wizard_checked.surfhrd
@@ -63,5 +66,3 @@ class PurchaseWizard(models.TransientModel):
                 source_list.torsion = wizard_checked.torsion
                 source_list.retempt = wizard_checked.retempt
                 source_list.order_furn = wizard_checked.order_furn
-                # 用完解掉checked
-                wizard_checked.wizard_check = False

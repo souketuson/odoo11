@@ -169,7 +169,7 @@
                                             name="save_entry_data"/>
                                     <field name="produce_details_ids">
                                         <tree string="Produce Details" editable="bottom">
-                                            <!--<field name="name"/>-->
+                                            <field name="name"/>
                                             <field name="bucket_no"/>
                                             <field name="rawweight"/>
                                             <field name="emptybucket"/>
