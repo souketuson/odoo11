@@ -2,8 +2,8 @@
 from odoo import models, fields, api
 
 
-class PurchaseWizard(models.TransientModel):
-    _name = 'purchase.wizard'
+class YcPurchaseWizard(models.TransientModel):
+    _name = 'yc.purchase.wizard'
 
     product_code = fields.Many2one("yc.setproduct", string="品名")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")

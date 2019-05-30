@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report id="action_purchase_report"
+            string="進貨單列印"
+            model="yc.purchase"
+            report_type="qweb-pdf"
+            name="yc_root.report_purchase_template"/>
+    <!--name 属性中需要添加模块前缀，我们必须使用完整的引用名称<module_name>.<identifier_name>-->
+    <!--paperformat="paperformat_euro_landscape" -->
+
+    <template id="report_purchase_template">
+        <t t-call="web.html_container">
+            <!-- t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
+            external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
+            然后相关内容在Business Documents > Document Template版块：-->
+            <t t-call="web.internal_layout">
+                <div class="container">
+                    <div class="page">
+                        <!-- Report header content -->
+                        <div class="">
+                            <div style="text-align: center;">客戶供應製品接收檢驗紀錄表</div>
+                            <table border='1' style='width:1000px;text-align: center;'>
+                                <tr>
+                                    <td style="width:125px">工令號碼</td>
+                                    <td style="width:100px">品名</td>
+                                    <td rowspan='2' style="width:50px">頭部記號</td>
+                                    <td style="width:100px">表面處理</td>
+                                    <td style="width:100px">客戶批號</td>
+                                    <td style="width:100px">加工方式</td>
+                                    <td style="width:100px">表面硬度</td>
+                                    <td style="width:100px">進貨日期</td>
+                                    <td style="width:50px">淨重</td>
+                                    <td style="width:75px">桶數明細</td>
+                                    <td style="width:100px">數量PSI</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:125px">加工廠-客戶</td>
+                                    <td style="width:100px">規格</td>
+                                    <td style="width:100px">材質</td>
+                                    <td style="width:100px">線材爐號</td>
+                                    <td style="width:100px">滲碳層</td>
+                                    <td style="width:100px">心部硬度</td>
+                                    <td colspan="4">備註</td>
+                                </tr>
+                            </table>
+                            <t t-foreach="docs" t-as="o">
+                                <!-- Report row content -->
+
+                                <table border='1' style='width:1000px;text-align: center;' rules="rows">
+                                    <tr>
+                                        <td style="width:125px">
+                                            <span t-field="o.name"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.product_code"/>
+                                        </td>
+                                        <td rowspan='2' style="width:50px"></td>
+                                        <td style="width:100px">
+                                            <span t-field="o.surface_code"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.batch"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.proces_code"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.surfhrd"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.day" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                        <td style="width:50px"><span t-field="o.net"/></td>
+                                        <td colspan="2" style="width:75px"><span t-field="o.weighbuckets"/><span t-field="o.unit1"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:125px"><span t-field="o.process1"/>-<span t-field="o.customer_id"/></td>
+                                        <td style="width:100px"><span t-field="o.norm_code"/></td>
+                                        <td style="width:100px"><span t-field="o.txtur_code"/></td>
+                                        <td style="width:100px"><span t-field="o.wire_furn"/></td>
+                                        <td style="width:100px"><span t-field="o.carburlayer"/></td>
+                                        <td style="width:100px"><span t-field="o.corehrd"/></td>
+                                        <td colspan="4"><span t-field="o.notices1"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:125px">檢驗項目</td>
+                                        <td style="width:100px">外觀:☐良</td>
+                                        <td style="width:50px">☐不良</td>
+                                        <td colspan="8">規格尺寸核對:☐符合　☐不符合 材質核對:☐符合　☐不符合</td>
+                                    </tr>
+                                </table>
+                            </t>
+                        </div>
+
+                        <!-- Report footer content -->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

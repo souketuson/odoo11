@@ -5,7 +5,7 @@ from datetime import datetime as dt
 class YcShipment(models.Model):
     _name = "yc.shipment"
     name = fields.Char("貨單序號")
-    day = fields.Date("出貨日期")
+    day = fields.Date("出貨日期", default=dt.today())
     acyear = fields.Char("所屬帳款年")
     acmonth = fields.Char("所屬帳款月")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
@@ -64,29 +64,44 @@ class YcShipment(models.Model):
     #             '貨單序號.Text = ERP_AutoNo_貨單序號(DNS, strPage, "出貨單主檔", "貨單序號")
     # name = 登入廠 + 民國年尾2位數 + 月份(0x) + 四位數流水號
 
-    # 已出貨 or 待出貨
     @api.model
     def create(self, vals):
-        # if vals['name']:
-        #     day = vals['day']
-        #     firm = vals['factory_id']
-        #     fire_code = 0
-        #     if firm==12:
-        #         fire_code = 2
-        #     year = int(day[0:4]) - 1911
-        #     month = int(day[5:7])
-        #     ship = self.env["yc.shipment"]
-        #     prefix = str(fire_code) + str(year) + "%02d" % month
-        #     bunch = ship.search([("name","ilike", prefix)])
-        #     serial = len(bunch) + 1
-        #     name = prefix + '%04d' % serial
-        #     vals.update({'name': name})
+        # 新增狀態時會先按wizard button
+        day = vals['day']
+        firm = vals['factory_id']
+        fire_code = 0
+        if firm==12:
+            fire_code = 2
+        year = int(day[0:4]) - 1911
+        month = int(day[5:7])
+        ship = self.env["yc.shipment"]
+        prefix = str(fire_code) + str(year) + "%02d" % month
+        bunch = ship.search([("name","ilike", prefix)])
+        serial = len(bunch) + 1
+        name = prefix + '%04d' % serial
+        vals.update({'name': name})
         return super(YcShipment, self).create(vals)
 
-    # @api.model
-    # def default_get(self, fields):
-    #     rec = super(YcShipment, self).default_get(fields)
-    #     return rec
+    @api.multi
+    def write(self, vals):
+        # 將取出的工令狀態改成已出貨或已進爐
+        # 因為按下待出貨紀錄的wizard button已經跑過一次create() 所以這次要覆寫write()
+        # 先看一筆狀況如何
+        order = self.env['yc.purchase']
+        shipped = self.env['yc.setstatus'].search([('name', '=', '已出貨')])
+        for list in vals['ship_details_ids']:
+            # list 可能是又一層可迭代容器 list[0] = 0 表示項目檔有資料新增
+            if hasattr(list, '__iter__') and list[0]==0:
+                for k in list:
+                    if hasattr(k, '__iter__') and hasattr(k, 'get'):
+                        name = k.get('order')
+                        record = order.search([('name','=',name)])
+                        # 轉已出貨 & m2o 對應 id
+                        record.status = shipped.id
+            # 如果刪掉項目檔的東西 狀態轉回已進爐
+            # elif hasattr(list, '__iter__') and list[0]==2:
+        return super(YcShipment, self).write(vals)
+
 
     # 轉待出貨或刪除按鈕
     def toship_or_delete(self):
@@ -126,3 +141,16 @@ class YcShipmentDetails(models.Model):
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
 
     ship_check = fields.Boolean("選", default=False, help="轉出貨")
+
+    @api.multi
+    def unlink(self):
+        # 如果刪掉項目檔工令 該工令要轉回已進爐狀態
+        # 可能多筆
+        if self:
+            purchase = self.env['yc.purchase']
+            infurn = self.env['yc.setstatus'].search([('name', '=', '己進爐')])
+            for rec in self:
+                order = rec.order
+                record = purchase.search([('name','=',order)])
+                record.status = infurn.id
+        return super(YcShipmentDetails, self).unlink()

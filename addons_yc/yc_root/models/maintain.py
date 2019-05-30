@@ -205,7 +205,7 @@ class YcFactory(models.Model):
 
 
 
-
+# S04
 class YcSetproducenote(models.Model):
     # 品質管理-製造備註 S04N0001
     _name = "yc.setproducenote"
@@ -233,5 +233,3 @@ class YcSethardness(models.Model):
     parameter1 = fields.Char("參數1")
     parameter2 = fields.Char("參數2")
     parameter3 = fields.Char("參數3")
-
-

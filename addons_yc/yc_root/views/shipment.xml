@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <!-- css -->
+        <template id="assets_backend_shipment" name="static_assets_shipment" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link href="/yc_root/static/src/css/shipment.css" rel="stylesheet"/>
+            </xpath>
+        </template>
         <!-- tree view -->
         <record model="ir.ui.view" id="shipment_tree">
             <field name="name">shipment.tree</field>
@@ -23,7 +29,7 @@
                                 <div>
                                     <div style="height: 5px;"/>
                                     <label string="貨單序號" style="font-weight:bold"/>
-                                    <field name="name" style="width: 120px"/>
+                                    <field name="name" readonly="1" style="width: 120px"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="出貨日期" style="font-weight:bold"/>
                                     <field name="day" style="width: 120px"/>
@@ -39,45 +45,46 @@
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="所屬工廠" style="font-weight:bold"/>
                                     <field name="factory_id" style="width: 120px"/>
-
-
                                     <br/>
                                     <!--<button type="object" name="search_order" string="追加"/>-->
                                     <div>
-                                        <div style="float: left;">
+                                        <div style="display:block;">
                                             <div style="height: 10px;"/>
-                                            <button type="action" name="%(action_shipment_wizard)d" string="待出貨紀錄" style="height: 45px;"/>
+                                            <button type="action" name="%(action_shipment_wizard)d" string="待出貨紀錄"
+                                                    style="height: 45px;"/>
                                             <span style="display:inline-block; width:90px;"/>
                                         </div>
                                         <!--<button string="待出貨紀錄" type="action" class="oe_highlight"-->
-                                            <!--name="%(action_shipment_wizard)d" context="{'wizard':True}"/>-->
+                                        <!--name="%(action_shipment_wizard)d" context="{'wizard':True}"/>-->
                                         <!--<div style="height: 10px;"/>-->
                                         <!--<div style="border:1px black solid;background:#FFECC9;float: left;height: 65px;padding-left: 10px;padding-right: 20px;padding-top: 20px;">-->
                                         <!--<label string="工令" style="font-weight:bold"/>-->
                                         <!--<field name="searchorder" style="width: 120px"/>-->
                                         <!--</div>-->
                                     </div>
-                                    <field name="ship_details_ids">
-                                        <tree string="Shipment Details" editable="top">
-                                            <!--<field name="toship_check" widget="chechbox"/>-->
-                                            <field name="order"/>
-                                            <field name="furnace"/>
-                                            <field name="product_code"/>
-                                            <field name="norm_code"/>
-                                            <field name="txtur_code"/>
-                                            <field name="buckets"/>
-                                            <field name="unit"/>
-                                            <field name="tweight"/>
-                                            <field name="elecpl_code"/>
-                                            <field name="process1"/>
-                                            <field name="batch"/>
-                                            <field name="fullorhalf"/>
-                                            <field name="process2"/>
-                                            <field name="day"/>
-                                            <field name="wire_furn"/>
-                                            <field name="proces_code"/>
-                                        </tree>
-                                    </field>
+                                    <div style="overflow-x:auto;width:750px;display:block">
+                                        <field name="ship_details_ids">
+                                            <tree string="Shipment Details" editable="top">
+                                                <!--<field name="toship_check" widget="chechbox"/>-->
+                                                <field name="order" string="工令"/>
+                                                <field name="furnace"/>
+                                                <field name="product_code"/>
+                                                <field name="norm_code"/>
+                                                <field name="txtur_code"/>
+                                                <field name="buckets"/>
+                                                <field name="unit"/>
+                                                <field name="tweight"/>
+                                                <field name="elecpl_code"/>
+                                                <field name="process1"/>
+                                                <field name="batch"/>
+                                                <field name="fullorhalf" string="牙分類"/>
+                                                <field name="process2" string="次加工廠"/>
+                                                <field name="day" string="進貨日"/>
+                                                <field name="wire_furn" string="線材爐"/>
+                                                <field name="proces_code" string="加工"/>
+                                            </tree>
+                                        </field>
+                                    </div>
                                 </div>
                             </page>
                             <page string="待出貨紀錄">

@@ -415,9 +415,11 @@ class YcPurchase(models.Model):
     # 進貨單wizard 只能帶出一筆資料，超過一筆提醒
     @api.constrains("wizard_check")
     def _check_bringout(self):
-        wizard_checked = self.env["yc.purchase"].search([('wizard_check', '=', True)])
-        if len(wizard_checked) > 1:
-            raise Warning("只能選一筆資料帶出")
+        # 出貨作業會拉多筆資料進出貨項目檔，跳過這段提醒
+        if self._context.get('params')['action'] != 158:
+            wizard_checked = self.env["yc.purchase"].search([('wizard_check', '=', True)])
+            if len(wizard_checked) > 1:
+                raise Warning("只能選一筆資料帶出")
 
     def _default_date(self):
         if self._context.get('params')['action'] == 81:

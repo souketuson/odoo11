@@ -13,7 +13,14 @@
     'category': 'Uncategorized',
     'version': '0.1',
     'depends': ['base'],
+    'css': [
+        'static/src/css/shipment.css',
+        'static/src/css/cssfile.css',
+
+    ],
     'data': [
+        'report/purchase_report.xml',
+        'wizard/purchase_wizard.xml',
         'wizard/shipment_wizard.xml',
         'views/business/maintain/setprocessingareatype.xml',
         'views/business/maintain/setprocessingplanttype.xml',
@@ -32,9 +39,6 @@
         'views/produce/furna_import.xml',
         'views/produce/purchase.xml',
         'views/produce/weight.xml',
-        'views/produce/purchase_store.xml',
-        'views/produce/purchase_report.xml',
-        'wizard/purchase_report.xml',
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',
@@ -56,8 +60,6 @@
         'views/fake.xml',
         'menuitem/root_core.xml',
     ],
-    'css': ['static/src/css/cssfile.css',
-            ],
 
     # only loaded in demonstration mode
     'demo': [

@@ -34,7 +34,16 @@ class YcShipmentWizard(models.TransientModel):
     def comfirm(self):
         wizard_checked = self.purchase_ids.search([('wizard_check', '=', True)])
         # 目前進貨單current record : self._context.get('active_ids')
-        source_list = self.env['yc.shipment'].browse(self._context.get('active_ids'))
-        for wizard in wizard_checked:
-            source_list.ship_details_ids = [(0, 0, {'order': wizard.name})]
-            wizard_checked.wizard_check = False
+        record = self.env['yc.shipment'].browse(self._context.get('active_ids'))
+        for ref in wizard_checked:
+            # 從進貨單拉資料進來
+            record.ship_details_ids = [
+                (0, 0, {'order': ref.name, 'furnace': ref.order_furn, 'product_code': ref.product_code,
+                        'norm_code': ref.norm_code, 'txtur_code': ref.txtur_code, 'buckets': ref.weighbuckets,
+                        'unit': ref.unit1, 'tweight': ref.tweight, 'elecpl_code': ref.elecpl_code,
+                        'process1': ref.process1, 'batch': ref.batch, 'fullorhalf': ref.fullorhalf,
+                        'process2': ref.process2, 'day': ref.day, 'wire_furn': ref.wire_furn,
+                        'proces_code': ref.proces_code,}
+                 )]
+            # 解掉被標註checked的工令
+            ref.wizard_check = False
