@@ -4,7 +4,7 @@
         <!-- css -->
         <template id="assets_backend_shipment" name="static_assets_shipment" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link href="/yc_root/static/src/css/shipment.css" rel="stylesheet"/>
+                <!--<link href="/yc_root/static/src/css/shipment.css" rel="stylesheet"/>-->
             </xpath>
         </template>
         <!-- tree view -->
@@ -64,7 +64,7 @@
                                     </div>
                                     <div style="overflow-x:auto;width:750px;display:block">
                                         <field name="ship_details_ids">
-                                            <tree string="Shipment Details" editable="top">
+                                            <tree create="false" string="Shipment Details" editable="top">
                                                 <!--<field name="toship_check" widget="chechbox"/>-->
                                                 <field name="order" string="工令"/>
                                                 <field name="furnace"/>
@@ -87,20 +87,20 @@
                                     </div>
                                 </div>
                             </page>
-                            <page string="待出貨紀錄">
-                                <div>
-                                    <button type="object" name="" string="轉出貨單"/>
-                                    <span style="display:inline-block; width:90px;"/>
-                                    <label string="包含已進爐" style="font-weight:bold"/>
-                                    <field name="infurn" widget="checkbox"/>
-                                    <label string="包含已檢驗" style="font-weight:bold"/>
-                                    <field name="verified" widget="checkbox"/>
-                                    <label string="包含已過磅" style="font-weight:bold"/>
-                                    <field name="weighted" widget="checkbox"/>
-                                    <label string="不含已出貨" style="font-weight:bold"/>
-                                    <field name="noshiped" widget="checkbox"/>
-                                </div>
-                            </page>
+                            <!--<page string="待出貨紀錄">-->
+                                <!--<div>-->
+                                    <!--<button type="object" name="" string="轉出貨單"/>-->
+                                    <!--<span style="display:inline-block; width:90px;"/>-->
+                                    <!--<label string="包含已進爐" style="font-weight:bold"/>-->
+                                    <!--<field name="infurn" widget="checkbox"/>-->
+                                    <!--<label string="包含已檢驗" style="font-weight:bold"/>-->
+                                    <!--<field name="verified" widget="checkbox"/>-->
+                                    <!--<label string="包含已過磅" style="font-weight:bold"/>-->
+                                    <!--<field name="weighted" widget="checkbox"/>-->
+                                    <!--<label string="不含已出貨" style="font-weight:bold"/>-->
+                                    <!--<field name="noshiped" widget="checkbox"/>-->
+                                <!--</div>-->
+                            <!--</page>-->
                             <page string="其他費用">
                             </page>
                             <page string="預備單">

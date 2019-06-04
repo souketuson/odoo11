@@ -8,6 +8,7 @@ import collections
 
 class YcPurchase(models.Model):
     _name = "yc.purchase"
+    _order = 'day desc'
 
     name = fields.Char("工令號碼")
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
@@ -31,17 +32,23 @@ class YcPurchase(models.Model):
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
+    ck4 = fields.Boolean("品名分類check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
+    ck7 = fields.Boolean("強度級數check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
+    ck2 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
-    product_id = fields.Char("品名代碼")
+    ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     product_code = fields.Many2one("yc.setproduct", string="品名")
     # 和上面重複
     # productname = fields.Many2one("yc.setproduct", string="產品名稱")
+    ck6 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
+    ck3 = fields.Boolean("品名check", default=False, help="在搜尋舊檔wizard自動代入篩選")
     len_code = fields.Many2one("yc.setlength", string="長度")
     # 待確定
     len_descript = fields.Char("長度說明")
+    ck5 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     elecplswitch = fields.Char("表面處理開關", compute="_switcher")
@@ -61,6 +68,7 @@ class YcPurchase(models.Model):
     process2 = fields.Many2one("yc.processing", "二次加工")
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
+    ck8 = fields.Boolean("線材爐號check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     wire_furn = fields.Char("線材爐號")
     headsign = fields.Binary('頭部記號')
     surfhrd = fields.Char("表面硬度")

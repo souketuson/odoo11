@@ -116,3 +116,8 @@ class YcDriver(models.Model):
         self.add_date = self.create_date
         self.edit_date = self.write_date
 
+
+class User(models.Model):
+    _inherit = 'res.users'
+
+    factory_id = fields.Many2one("yc.factory", string="廠別")

@@ -54,7 +54,10 @@
                                         <td style="width:100px">
                                             <span t-field="o.product_code"/>
                                         </td>
-                                        <td rowspan='2' style="width:50px"></td>
+                                        <td rowspan='2' style="width:50px">
+                                            <!--<span t-field="headsign"-->
+                                                  <!--t-options="{'widget': 'image'}"/>-->
+                                        </td>
                                         <td style="width:100px">
                                             <span t-field="o.surface_code"/>
                                         </td>
@@ -70,17 +73,36 @@
                                         <td style="width:100px">
                                             <span t-field="o.day" t-options="{'widget': 'date'}"/>
                                         </td>
-                                        <td style="width:50px"><span t-field="o.net"/></td>
-                                        <td colspan="2" style="width:75px"><span t-field="o.weighbuckets"/><span t-field="o.unit1"/></td>
+                                        <td style="width:50px">
+                                            <span t-field="o.net"/>
+                                        </td>
+                                        <td colspan="2" style="width:75px">
+                                            <span t-field="o.weighbuckets"/>
+                                            <span t-field="o.unit1"/>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td style="width:125px"><span t-field="o.process1"/>-<span t-field="o.customer_id"/></td>
-                                        <td style="width:100px"><span t-field="o.norm_code"/></td>
-                                        <td style="width:100px"><span t-field="o.txtur_code"/></td>
-                                        <td style="width:100px"><span t-field="o.wire_furn"/></td>
-                                        <td style="width:100px"><span t-field="o.carburlayer"/></td>
-                                        <td style="width:100px"><span t-field="o.corehrd"/></td>
-                                        <td colspan="4"><span t-field="o.notices1"/></td>
+                                        <td style="width:125px"><span t-field="o.process1"/>-
+                                            <span t-field="o.customer_id"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.norm_code"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.txtur_code"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.wire_furn"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.carburlayer"/>
+                                        </td>
+                                        <td style="width:100px">
+                                            <span t-field="o.corehrd"/>
+                                        </td>
+                                        <td colspan="4">
+                                            <span t-field="o.notices1"/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td style="width:125px">檢驗項目</td>

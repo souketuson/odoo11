@@ -167,21 +167,21 @@
                                     <span style="display:inline-block; width: 20px;"/>
                                     <button string="資料儲存" type="object" class="oe_highlight"
                                             name="save_entry_data"/>
-                                    <field name="produce_details_ids">
-                                        <tree string="Produce Details" editable="bottom">
+                                    <field name="produce_details_ids" eval="[(0,0,{'name':'','bucket_no':'1'})]">
+                                        <tree create="false" string="Produce Details" editable="bottom">
                                             <field name="name"/>
                                             <field name="bucket_no"/>
-                                            <field name="rawweight"/>
-                                            <field name="emptybucket"/>
-                                            <field name="unit"/>
-                                            <field name="rawnetweight"/>
-                                            <field name="feed_man"/>
-                                            <field name="tweight"/>
-                                            <field name="recevieemptybucket"/>
-                                            <field name="recevietunit"/>
-                                            <field name="tnetweight"/>
-                                            <field name="recevie_man"/>
-                                            <field name="weightdiff"/>
+                                            <!--<field name="rawweight"/>-->
+                                            <!--<field name="emptybucket"/>-->
+                                            <!--<field name="unit"/>-->
+                                            <!--<field name="rawnetweight"/>-->
+                                            <!--<field name="feed_man"/>-->
+                                            <!--<field name="tweight"/>-->
+                                            <!--<field name="recevieemptybucket"/>-->
+                                            <!--<field name="recevietunit"/>-->
+                                            <!--<field name="tnetweight"/>-->
+                                            <!--<field name="recevie_man"/>-->
+                                            <!--<field name="weightdiff"/>-->
                                         </tree>
                                     </field>
                                 </div>

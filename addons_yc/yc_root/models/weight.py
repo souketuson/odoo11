@@ -110,9 +110,9 @@ class YcWeight(models.Model):
                 check_day = dt.strptime(rec.day, "%Y-%m-%d")
                 check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
                 if check:
-                    S5 = '%d' % (len(check) + 1)
+                    S5 = '%02d' % (len(check) + 1)
                 else:
-                    S5 = "1"
+                    S5 = "01"
 
                 if S1 and S2 and S3 and S4 and S5:
                     self.carno = str(S1 + S2 + S3 + S4 + S5)
@@ -137,7 +137,7 @@ class YcWeight(models.Model):
             check_out = self.env["yc.weight"].search(
                 [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
 
-            # 判斷新建還是修改 看單號有沒有在資料庫
+
             if rec.in_out:  # 進出貨有值
                 if driver and rec.day:
                     self.ship_times = len(check_out)
@@ -158,23 +158,6 @@ class YcWeight(models.Model):
                         elif rec.in_out == 'O':
                             rec.ship_times = self.ship_times
                             rec.purchase_times = self.purchase_times + 1
-
-    # 如果新增完需要修改 仍然要檢查次數可以重啟這個code
-    # @api.depends('driver_id')
-    # def _count_times(self):
-    #     for rec in self:
-    #         check_day = dt.strptime(rec.day, "%Y-%m-%d")
-    #         driver = self.driver_id.id
-    #         check_in = self.env["yc.weight"].search(
-    #             [('in_out', '=', 'I'), ('day', '=', check_day), ('driver_id', '=', driver)])
-    #         check_out = self.env["yc.weight"].search(
-    #             [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
-    #
-    #         # 判斷新建還是修改 看單號有沒有在資料庫
-    #         if rec.in_out:  # 進出貨有值
-    #             if driver and rec.day:
-    #                 self.ship_times = len(check_out)
-    #                 self.purchase_times = len(check_in)
 
     # 選完司機名稱，車牌自動帶入 > 改用related 取代
     # @api.multi
@@ -291,3 +274,10 @@ class YcWeightDetails(models.Model):
             number = len(self.env["yc.weight.details"].search([("name", "=", item_key)]))
             vals.update({"no": number + 1})
             return super(YcWeightDetails, self).create(vals)
+
+    # @api.model
+    # def fields_view_get(self, view_id=None, view_type='tree', toolbar=False, submenu=False):
+    #     context = self._context or {}
+    #     context.update({'factory_id': self.env.user.factory_id.id,})
+    #     res = super(YcWeight, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
+    #     return res

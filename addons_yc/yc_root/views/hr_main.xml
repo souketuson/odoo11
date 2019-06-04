@@ -1,117 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-        <!--employee_tree-->
-        <record model="ir.ui.view" id="hr_tree">
-            <field name="name">hr.tree</field>
-            <field name="model">yc.hr</field>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="users_tree">
+            <field name="name">users.tree</field>
+            <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <tree string="Hr Tree">
-                    <field name="name"/>
-                    <field name="code"/>
+                <tree string="users Tree">
+                    <field name="login"/>
                     <field name="factory_id"/>
-                    <field name="employee_type"/>
-                    <field name="dep_id"/>
-                    <field name="idcard"/>
-                    <field name="birthday"/>
                 </tree>
             </field>
         </record>
-
-        <!--employee_tree-->
-        <record model="ir.ui.view" id="hr_form">
-            <field name="name">hr.form</field>
-            <field name="model">yc.hr</field>
+        <!-- form view -->
+        <record model="ir.ui.view" id="users_form">
+            <field name="name">users.form</field>
+            <field name="model">res.users</field>
+            <!--<field name="priority">1</field>-->
             <field name="arch" type="xml">
-                <form string="Hr form">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="code"/>
-                            <field name="factory_id"/>
-                            <field name="employee_type"/>
-                            <field name="dep_id"/>
-                            <field name="idcard"/>
-                            <field name="birthday"/>
-                            <field name="gender"/>
-
-                        </group>
-                        <notebook>
-                            <page string="基本資料">
-                                <group col="4" colspan="4" name="personal_detail">
-                                    <field name="log_state"/>
-                                    <field name="job_title1"/>
-                                    <field name="job_title2"/>
-                                    <field name="job_title3"/>
-                                    <field name="birthplace"/>
-                                    <field name="marrige"/>
-                                    <field name="children"/>
-                                    <field name="phone"/>
-                                    <field name="mobile"/>
-                                    <field name="email"/>
-                                    <field name="address1"/>
-                                    <field name="address2"/>
-                                    <field name="nok"/>
-                                    <field name="relationship"/>
-                                    <field name="emergphone"/>
-                                    <field name="emergmobile"/>
-                                    <field name="duty_date"/>
-                                    <field name="leave_date"/>
-                                    <field name="seniority"/>
-                                    <field name="note"/>
-                                </group>
-                            </page>
-                            <page string="薪資主檔">
-                                <group col="4" colspan="4" name="salary_detail">
-                                    <field name="pay">基本薪資</field>
-                                    <field name="raise_no">扶養人數</field>
-                                    <field name="txcredit_date"/>
-                                    <field name="txcredit"/>
-                                    <field name="labor_insured_date"/>
-                                    <field name="labor_insured_income"/>
-                                    <field name="labor_insured_charge"/>
-                                    <field name="health_insured_date"/>
-                                    <field name="health_insured_income"/>
-                                    <field name="health_insured_charge"/>
-                                    <field name="ac_post"/>
-                                    <field name="post_no"/>
-                                    <field name="post_ac"/>
-                                    <field name="ac_name"/>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
+                <form string="Book">
+                    <group>
+                        <field name="login"/>
+                        <field name="factory_id"/>
+                    </group>
                 </form>
             </field>
         </record>
-
-
-        <record model="ir.ui.view" id="salary_form_view">
-            <field name="name">salary.form</field>
-            <field name="model">yc.salary</field>
+        <!-- search -->
+        <record model="ir.ui.view" id="users_search_view">
+            <field name="name">users.search</field>
+            <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <form string="Salary Form">
-                    <sheet>
-                        <group>
-                            <field name="pay"/>
-                            <field name="raise_no"/>
-                        </group>
-                    </sheet>
-                </form>
+                <search>
+                    <field name="name"/>
+                </search>
             </field>
         </record>
-
-
-        <record model="ir.actions.act_window" id="hr_main_list_action">
+        <!-- action -->
+        <record model="ir.actions.act_window" id="users_action">
             <field name="name">員工主檔</field>
-            <field name="res_model">yc.hr</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="users">
+                </p>
+            </field>
         </record>
-
-        <!--<menuitem id="main_hr_menu" name="人事薪資主檔"/>-->
-        <!--<menuitem id="hr_menu" name="人事薪資主檔" parent="main_hr_menu"/>-->
-        <!--<menuitem id="hr_main" name="員工主檔" parent="hr_menu" action="hr_main_list_action"/>-->
+        <record model="ir.actions.act_window.view" id="users_action_form">
+            <field name="act_window_id" ref="users_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="users_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="users_action_tree">
+            <field name="act_window_id" ref="users_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="users_tree"/>
+        </record>
     </data>
 </odoo>

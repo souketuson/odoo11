@@ -76,7 +76,7 @@ class YcShipment(models.Model):
         month = int(day[5:7])
         ship = self.env["yc.shipment"]
         prefix = str(fire_code) + str(year) + "%02d" % month
-        bunch = ship.search([("name","ilike", prefix)])
+        bunch = ship.search([("name","=", prefix)])
         serial = len(bunch) + 1
         name = prefix + '%04d' % serial
         vals.update({'name': name})

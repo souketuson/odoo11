@@ -14,13 +14,13 @@
     'version': '0.1',
     'depends': ['base'],
     'css': [
-        'static/src/css/shipment.css',
-        'static/src/css/cssfile.css',
+        'static/src/css/generalcss.css',
 
     ],
     'data': [
         'report/purchase_report.xml',
         'wizard/purchase_wizard.xml',
+        'wizard/purchase_preorder.xml',
         'wizard/shipment_wizard.xml',
         'views/business/maintain/setprocessingareatype.xml',
         'views/business/maintain/setprocessingplanttype.xml',

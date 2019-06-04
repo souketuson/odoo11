@@ -32,17 +32,17 @@
                         <span style="display:inline-block; width: 40px;"/>
                         <label string="線材爐號" style="font-weight:bold"/>
                         <field name="wire_furn" style="width:100px"/>
-                        <span style="display:inline-block; width: 40px;"/>
-                        <label string="產品名稱" style="font-weight:bold"/>
-                        <field name="productname" style="width:100px"/>
+                        <!--<span style="display:inline-block; width: 40px;"/>-->
+                        <!--<label string="產品名稱" style="font-weight:bold"/>-->
+                        <!--<field name="productname" style="width:100px"/>-->
                         <br/>
                         <!-- 用button object 呼叫method 會跳掉 -->
                         <!--<button type="object" name="search_purchase" string="搜尋" style="margin-left: 470px;margin-top: 8px;"/>-->
                         <!--<br/>-->
                         <br/>
                         <field name="purchase_ids" widget="many2many">
-                            <tree string="Purchase Details" editable="top">
-                                <field name="wizard_check" widget="checkbox"/>
+                            <tree create="false" string="Purchase Details" editable="top">
+                                <field name="wizard_check" string=' ' widget="checkbox"/>
                                 <field name="name" string="工令" readonly="1"/>
                                 <field name="customer_id" string="客戶" readonly="1"/>
                                 <field name="norm_code" readonly="1"/>
