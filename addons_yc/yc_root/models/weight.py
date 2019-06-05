@@ -231,6 +231,22 @@ class YcWeight(models.Model):
                 result.append((record.id, name))
         return result
 
+    @api.model
+    def vist_action(self):
+        ctx = self.env.context.copy()
+
+        ctx.update({'factory_id': self.env.user.factory_id.id,'search_default_filter_my_visits': 1})
+        return {
+            'name': 'Whateever',
+            'view_type': 'tree',
+            'view_mode': 'tree,form',
+            'res_model': 'yc.weight',
+            'type': 'ir.actions.act_window',
+            'view_id': self.env.ref('yc_root.weight_list_action_tree').id,
+            'context': dict(ctx),
+            # 'search_view_id': self.env.ref('yc_root.weight_search_view').id
+        }
+
 
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"

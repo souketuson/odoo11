@@ -16,6 +16,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
+            <field name="context">{'search_default_filter_my_visits': 1}</field>
         </record>
         <record model="ir.actions.act_window.view" id="weight_list_action_form">
             <field name="act_window_id" ref="weight_list_action"/>
@@ -29,6 +30,15 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="weight_tree"/>
         </record>
+
+        <!-- getcontext -->
+        <record id="weight_filter_act" model="ir.actions.server">
+            <field name="name">Whatever</field>
+            <field name="model_id" ref="model_yc_weight"/>
+            <field name="state">code</field>
+            <field name="code">action = model.vist_action()</field>
+        </record>
+
         <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>
@@ -156,7 +166,7 @@
             <field name="padding">3</field>
         </record>
         <!-- search -->
-        <record model="ir.ui.view" id="course_search_view">
+        <record model="ir.ui.view" id="weight_search_view">
             <field name="name">weight.search</field>
             <field name="model">yc.weight</field>
             <field name="arch" type="xml">
