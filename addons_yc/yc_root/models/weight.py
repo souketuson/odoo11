@@ -235,7 +235,7 @@ class YcWeight(models.Model):
     def vist_action(self):
         ctx = self.env.context.copy()
 
-        ctx.update({'factory_id': self.env.user.factory_id.id,'search_default_filter_my_visits': 1})
+        ctx.update({'factory_id': self.env.user.factory_id.id})
         return {
             'name': 'Whateever',
             'view_type': 'tree',
@@ -244,7 +244,6 @@ class YcWeight(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': self.env.ref('yc_root.weight_list_action_tree').id,
             'context': dict(ctx),
-            # 'search_view_id': self.env.ref('yc_root.weight_search_view').id
         }
 
 
