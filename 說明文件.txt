@@ -14,6 +14,6 @@ odoo directory structure:
 odoo11 ┬─ \.git        -- git control file
        ├─ \addons      -- standard or 3rd party app
        ├─ \addons_yc   -- project
-       ├─ \odoo -11.0  -- odoo origin setting don't edit
+       ├─ \odoo -11.0  -- odoo source code
        ├─ .gitignore   -- git ignore file or directory
        └─ description -- configuration
