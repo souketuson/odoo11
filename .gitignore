@@ -4,7 +4,4 @@
 /odoo-11.0
 .idea
 .vscode
-/env
-/yc_hr
-/yc_business
-/yc_produce
+*.zip
