@@ -615,10 +615,6 @@ class YcPurchase(models.Model):
                 # 按下wizard button時 就會儲存 所以要排除自己
                 # onchange 目前會莫名跳出
                 #         if onchange in ("1", "true"):
-                #             for method in self._onchange_methods.get(field_name, ()):
-                #                 method_res = method(self)
-                #                 process(method_res)
-                #             return
             if len(domain)>1:
                 domain += ('id', '!=', self.id)
                 _filter = purchase.search([(d) for d in domain], limit=1, order="day desc")
