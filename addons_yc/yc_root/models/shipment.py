@@ -9,7 +9,7 @@ class YcShipment(models.Model):
     acyear = fields.Char("所屬帳款年")
     acmonth = fields.Char("所屬帳款月")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
-    pc = fields.Many2one("yc.hr", string="生管人員")
+    pc = fields.Many2one("res.users", string="生管人員", default=lambda self: self.env.user)
     voucher = fields.Char("傳票編號")
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     phone = fields.Char("電話")
@@ -21,7 +21,7 @@ class YcShipment(models.Model):
     tbuckets = fields.Integer("總桶數")
     tweights = fields.Float("總重量")
     tmoney = fields.Float("總金額")
-    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+    factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
 
     searchorder = fields.Char("工令")
     searchfurn = fields.Char("爐號")

@@ -15,7 +15,7 @@
             <field name="res_model">yc.weight</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[("factory_id","=",context.get('factory_id'))]</field>
+            <field name="domain">[("factory_id","in",[context.get('factory_id')])]</field>
             <field name="context">{}</field>
         </record>
         <record model="ir.actions.act_window.view" id="weight_list_action_form">
@@ -33,10 +33,10 @@
 
         <!-- getcontext -->
         <record id="weight_filter_act" model="ir.actions.server">
-            <field name="name">Whatever</field>
+            <field name="name">使用者廠別動態過濾</field>
             <field name="model_id" ref="yc_root.weight_list_action_tree"/>
             <field name="state">code</field>
-            <field name="code">action = model.vist_action()</field>
+            <field name="code">action = model.factory_filter()</field>
         </record>
 
         <!-- tree view -->
@@ -103,7 +103,7 @@
                                            style="width:70px"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="所屬工廠" style="font-weight:bold"/>
-                                    <field name="factory_id" style="width:70px"/>
+                                    <field name="factory_id" style="width:70px" readonly="1"/>
                                     <br/>
                                     <label string="地磅序號" style="font-weight:bold"/>
                                     <field name="weighbridge" style="width:100px"/>
@@ -140,7 +140,7 @@
                                         <field name="customer_detail_ids">
                                             <tree string="Customer Details" editable="bottom">
                                                 <field name="no" invisible="1"/>
-                                                <field name="customer_code" style="width:100px;"/>
+                                                <field name="customer_code" style="width:100px"/>
                                                 <field name="customer_id"/>
                                                 <field name="processing_id"/>
                                                 <field name="note"/>

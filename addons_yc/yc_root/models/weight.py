@@ -17,7 +17,7 @@ class YcWeight(models.Model):
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號")
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
-    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+    factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
     purchase_times = fields.Integer("進貨次數", compute="_count_times", store=True)
     ship_times = fields.Integer("出貨次數")
     plate_no = fields.Char("車號", related="driver_id.plate_no")
@@ -137,7 +137,6 @@ class YcWeight(models.Model):
             check_out = self.env["yc.weight"].search(
                 [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
 
-
             if rec.in_out:  # 進出貨有值
                 if driver and rec.day:
                     self.ship_times = len(check_out)
@@ -232,12 +231,16 @@ class YcWeight(models.Model):
         return result
 
     @api.model
-    def vist_action(self):
+    def factory_filter(self):
         ctx = self.env.context.copy()
+        if self._uid == 1:
+            factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
+        else:
+            factory_code = self.env.user.factory_id.id
 
-        ctx.update({'factory_id': self.env.user.factory_id.id})
+        ctx.update({'factory_id': [factory_code]})
         return {
-            'name': 'Whateever',
+            'name': '使用者廠別動態過濾',
             'view_type': 'tree',
             'view_mode': 'tree,form',
             'res_model': 'yc.weight',

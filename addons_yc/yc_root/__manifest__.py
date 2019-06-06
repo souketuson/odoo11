@@ -6,7 +6,7 @@
     """,
 
     'description': """
-        YC_ROOT v.10
+        YC_ROOT v.13
     """,
     'author': "ArJhe",
     'website': "",

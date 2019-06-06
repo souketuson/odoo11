@@ -38,13 +38,13 @@
                                     <field name="customer_id" style="width: 120px"/>
                                     <br/>
                                     <label string="生管人員" style="font-weight:bold"/>
-                                    <field name="pc" style="width: 120px"/>
+                                    <field name="pc" style="width: 120px" readonly="1"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="司機名稱" style="font-weight:bold"/>
                                     <field name="driver_id" style="width: 120px"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="所屬工廠" style="font-weight:bold"/>
-                                    <field name="factory_id" style="width: 120px"/>
+                                    <field name="factory_id" style="width: 120px" readonly="1"/>
                                     <br/>
                                     <!--<button type="object" name="search_order" string="追加"/>-->
                                     <div>

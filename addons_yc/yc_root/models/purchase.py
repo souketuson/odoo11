@@ -18,7 +18,7 @@ class YcPurchase(models.Model):
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
-    factory_id = fields.Many2one("yc.factory", string="所屬工廠")
+    factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     processing_phone = fields.Char("加工廠電話")
     processing_contact = fields.Char("負責人")
@@ -536,38 +536,38 @@ class YcPurchase(models.Model):
     # WHERE a.品名分類= 品名分類代碼.SelectedValue
     # and a.強度級數= 強度級數.SelectedValue
     # and a.直徑規格= 規格代碼.SelectedValue
-    @api.onchange("norm_code", "clsf_code")
-    def _fetch_norm_code_info(self):
-        if self.norm_code and self.clsf_code:
-            for rec in self:
-                norm_parameter = rec.env["yc.setnorm"].search([('id', '=', rec.norm_code.id)]).parameter1
-                # 如果有強度
-                mechaine_name = rec.env["yc.mechanicalproperty"].search( \
-                    [('clsf_code', '=', rec.clsf_code.id), ("strength_level", "=", rec.strength_level.id), \
-                     ('stdreviewinit', '<=', norm_parameter), ('stdreviewend', '>=', norm_parameter)])
-                torsion_name = rec.env["yc.torsion"].search(
-                    [('clsf_code', '=', rec.clsf_code.id), ("strength_level", "=", rec.strength_level.id),
-                     ("norm_code", "=", rec.norm_code.id)])
-                if bool(mechaine_name):
-                    self.standard = mechaine_name.standard
-                    self.surfhrd = mechaine_name.innersurfhrd
-                    self.corehrd = mechaine_name.innercorehrd
-                    self.tensihrd = mechaine_name.innertensihrd
-                    self.carburlayer = mechaine_name.innercarburlayer
-                    self.torsion = torsion_name.torsion1
-                elif bool(mechaine_name) == False and bool(rec.clsf_code and rec.strength_level) == True:
-                    # self.standard = None
-                    # self.surfhrd = None
-                    # self.corehrd = None
-                    # self.tensihrd = None
-                    # self.carburlayer = None
 
-                    # 只有異動完規格(norm_code)才會跳檢查
-                    return {
-                        'warning': {
-                            'title': '提醒',
-                            'message': '沒有這個機械性質分類'}
-                    }
+    @api.onchange("clsf_code", "strength_level", "norm_code")
+    def _fetch_norm_code_info(self):
+        if self.norm_code and self.clsf_code and self._context.get('params')['action'] == 81:
+
+            norm = self.env["yc.setnorm"]
+            # 規格找出參數值
+            norm_para = norm.search([('id', '=', self.norm_code.id)]).parameter1
+            machine_property = self.env["yc.mechanicalproperty"]
+            torsion = self.env['yc.torsion']
+            if self.strength_level:
+                strenth_search = ('strength_level', '=', self.strength_level.id)
+                mp = machine_property.search([('clsf_code', '=', self.clsf_code.id),
+                                              ('stdreviewinit', '<=', float(norm_para)),
+                                              ('stdreviewend', '>=', float(norm_para)),
+                                              (strenth_search)], limit=1, order="id desc")
+                tor = torsion.search([('clsf_code', '=', self.clsf_code.id),
+                                      strenth_search,
+                                      ("norm_code", "=", self.norm_code.id)], limit=1, order="id desc")
+            else:
+                mp = machine_property.search([('clsf_code', '=', self.clsf_code.id),
+                                              ('stdreviewinit', '<=', float(norm_para)),
+                                              ('stdreviewend', '>=', float(norm_para))], limit=1, order="id desc")
+                tor = torsion.search([('clsf_code', '=', self.clsf_code.id),
+                                      ("norm_code", "=", self.norm_code.id)], limit=1, order="id desc")
+            if bool(mp):
+                self.standard = mp.standard
+                self.surfhrd = mp.innersurfhrd
+                self.corehrd = mp.innercorehrd
+                self.tensihrd = mp.innertensihrd
+                self.carburlayer = mp.innercarburlayer
+                self.torsion = tor.torsion1
 
     # 當表面處理開啟'電鍍'時，啟用電鍍類別
     @api.onchange("surface_code")
@@ -594,40 +594,59 @@ class YcPurchase(models.Model):
     # 新增搜尋的form
     @api.onchange("clsf_code", "product_code", "strength_level", "txtur_code", "norm_code", "proces_code", "wire_furn")
     def _search_process_condition(self):
-        if self.clsf_code and self.product_code and self.strength_level and self.txtur_code and self.norm_code and self.proces_code and self.wire_furn:
-            _filter = self.env["yc.purchase"].search(
-                [("clsf_code", "=", self.clsf_code.id), ("product_code", "=", self.product_code.id), \
-                 ("strength_level", "=", self.strength_level.id), ("txtur_code", "=", self.txtur_code.id), \
-                 ("norm_code", "=", self.norm_code.id), ("proces_code", "=", self.proces_code.id), \
-                 ("wire_furn", "=", self.wire_furn)], limit=1, order='id DESC')
+        if self.clsf_code or self.product_code or self.strength_level or \
+                self.txtur_code or self.norm_code or self.proces_code or self.wire_furn:
+            domain = ()
+            purchase = self.env["yc.purchase"]
+            if self.wire_furn:
+                domain += ('wire_furn', '=', self.wire_furn),
+            if self.clsf_code:
+                domain += ("clsf_code", "=", self.clsf_code.id),
+            if self.product_code:
+                domain += ("product_code", "=", self.product_code.id),
+            if self.strength_level:
+                domain += ("strength_level", "=", self.strength_level.id),
+            if self.txtur_code:
+                domain += ("txtur_code", "=", self.txtur_code.id),
+            if self.norm_code:
+                domain += ("norm_code", "=", self.norm_code.id),
+            if self.proces_code:
+                domain += ("proces_code", "=", self.proces_code.id),
+                # 按下wizard button時 就會儲存 所以要排除自己
+                # onchange 目前會莫名跳出
+                #         if onchange in ("1", "true"):
+                #             for method in self._onchange_methods.get(field_name, ()):
+                #                 method_res = method(self)
+                #                 process(method_res)
+                #             return
+            if len(domain)>1:
+                domain += ('id', '!=', self.id)
+                _filter = purchase.search([(d) for d in domain], limit=1, order="day desc")
+                self.flow = _filter.flow
+                self.cp = _filter.cp
+                self.nh31 = _filter.nh31
+                self.nh32 = _filter.nh32
+                self.nh33 = _filter.nh33
+                self.nh34 = _filter.nh34
+                self.heat1 = _filter.heat1
+                self.heat2 = _filter.heat2
+                self.heat3 = _filter.heat3
+                self.heat4 = _filter.heat4
+                self.heat5 = _filter.heat5
+                self.heat6 = _filter.heat6
+                self.heat7 = _filter.heat7
+                self.heat8 = _filter.heat8
+                self.heattemp = _filter.heattemp
+                self.heatsped = _filter.heatsped
+                self.tempturing1 = _filter.tempturing1
+                self.tempturing2 = _filter.tempturing2
+                self.tempturing3 = _filter.tempturing3
+                self.tempturing4 = _filter.tempturing4
+                self.tempturing5 = _filter.tempturing5
+                self.tempturing6 = _filter.tempturing6
+                self.tempturisped = _filter.tempturisped
 
-            self.flow = _filter.flow
-            self.cp = _filter.cp
-            self.nh31 = _filter.nh31
-            self.nh32 = _filter.nh32
-            self.nh33 = _filter.nh33
-            self.nh34 = _filter.nh34
-            self.heat1 = _filter.heat1
-            self.heat2 = _filter.heat2
-            self.heat3 = _filter.heat3
-            self.heat4 = _filter.heat4
-            self.heat5 = _filter.heat5
-            self.heat6 = _filter.heat6
-            self.heat7 = _filter.heat7
-            self.heat8 = _filter.heat8
-            self.heattemp = _filter.heattemp
-            self.heatsped = _filter.heatsped
-            self.tempturing1 = _filter.tempturing1
-            self.tempturing2 = _filter.tempturing2
-            self.tempturing3 = _filter.tempturing3
-            self.tempturing4 = _filter.tempturing4
-            self.tempturing5 = _filter.tempturing5
-            self.tempturing6 = _filter.tempturing6
-            self.tempturisped = _filter.tempturisped
-
-    # saveorread = fields.Char("儲存管制作業")
-
-    # # create 管制
+    # create 管制
     @api.model
     def create(self, vals):
         # 進貨作業 S03N0120 且非wizard
@@ -780,8 +799,9 @@ class YcPurchase(models.Model):
                 'view_id': self.env.ref('yc_root.quality_form').id,
                 'target': 'inline',
             }
+
     # 檢驗狀態
-    @api.onchange("wholeck","faceck")
+    @api.onchange("wholeck", "faceck")
     def _set_checkstate(self):
         for rec in self:
             if rec.wholeck == '待處理':
@@ -790,7 +810,6 @@ class YcPurchase(models.Model):
                 self.checkstate = '檢驗不合格'
             elif rec.wholeck == '合格' and rec.faceck == '合格':
                 self.checkstate = '檢驗合格'
-
 
     # 各查詢表單後更新資料
     def save_entry_data(self):
@@ -855,6 +874,7 @@ class YcPurchase(models.Model):
             self.sskvste = t1.sectionshrink
             self.safeload = t1.safeload
 
+
 class YcProduceDetails(models.Model):
     # 製造單項目檔
     _name = "yc.produce.details"
@@ -898,12 +918,13 @@ class YcProduceDetails(models.Model):
     def create(self, vals):
         if self._context.get('params')['action'] == 111 and vals['name']:
             id = vals['name']
-            purchase = self.env['yc.purchase'].search([('id','=',id)])
+            purchase = self.env['yc.purchase'].search([('id', '=', id)])
             if purchase.weighstate == False:
                 # sql = "update yc_purchase set weighstate='已過磅' where id=%d" % id
                 # self._cr.execute(sql)
                 purchase.weighstate = '已過磅'
         return super(YcProduceDetails, self).create(vals)
+
 
 class YcPurchaseStore(models.Model):
     _name = "yc.purchasestore"
