@@ -14,3 +14,8 @@
 .o_list_view, .o_data_cell,.o_list_record_selector,.o_column_sortable{
     border: 1px solid black;
 }
+/*  可以邊更儲存完頁面資訊*/
+.test{
+    border:1px black solid;
+    padding-left: 4px;
+}

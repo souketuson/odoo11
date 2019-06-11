@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="return_tree">
+            <field name="name">return.tree</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <tree string="return Tree">
+                    <field name="name"/>
+                    <field name="order"/>
+                    <field name="day"/>
+                    <field name="customer_id"/>
+                    <field name="neworder"/>
+                    <field name="note"/>
+                    <field name="factiory_id"/>
+                    <field name="ardebitday"/>
+                    <field name="money"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="return_form">
+            <field name="name">return.form</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <form string="Book">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="return_search_view">
+            <field name="name">return.search</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="return_action">
+            <field name="name">開發中頁面</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.return</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="return_action_form">
+            <field name="act_window_id" ref="return_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="return_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="return_action_tree">
+            <field name="act_window_id" ref="return_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="return_tree"/>
+        </record>
+    </data>
+</odoo>

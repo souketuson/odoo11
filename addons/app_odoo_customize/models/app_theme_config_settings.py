@@ -692,7 +692,7 @@ class ResConfigSettings(models.TransientModel):
                 'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單主檔")
-            rows = cursor.fetchmany(1500)
+            rows = cursor.fetchmany(46312)
             weight = self.env["yc.weight"].search([])
             sql = "delete from yc_weight"
             self._cr.execute(sql)
@@ -706,7 +706,7 @@ class ResConfigSettings(models.TransientModel):
                 driver_id = self.env["yc.driver"].search([("code", '=', row.司機代號)])
                 person_id = self.env["yc.hr"].search([("code", '=', row.過磅人員)])
                 factory_id = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
-                if row.司機代號:
+                if row.司機代號 and driver_id and person_id:
                     weight.create({
                         "name": row.過磅單號, "in_out": row.分類,
                         "driver_id": driver_id.id, "day": row.日期,

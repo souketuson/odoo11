@@ -100,17 +100,17 @@ class YcYcPurchasePreorder(models.TransientModel):
     def search_purchase(self):
         transmit_code = self.env['yc.setstatus'].search([('name', '=', '轉廠')]).id
         # 要先建好出貨退回檔
-        # IT_list = [(name) for name in self.env['出貨退回主檔'].search([]).name ]
+
         # 要先建好轉廠主檔& 項目檔
         # OT_list = [(name) for name in self.env['轉廠單項目檔'].search([]).name ]
         domain = ()
-        # if self.condition == 'IT':
-        #     # 在出貨退回主檔裡的單號
-        #     domain = ('name', 'in', IT_list),
+        if self.condition == 'IT':
+            IT_list = [(name) for name in self.env['yc.return'].search([]).name ]
+            domain = ('name', 'in', IT_list)
         # elif self.condition == 'OT':
-        #     domain += ('name', 'in', OT_list),
-        if self.condition == 'TR':
-            domain += ('status', '=', transmit_code),
+        #     domain += ('name', 'in', OT_list)
+        # elif self.condition == 'TR':
+        #     domain += ('status', '=', transmit_code)
 
         if len(domain) > 0:
             purchase = self.env['yc.purchase']

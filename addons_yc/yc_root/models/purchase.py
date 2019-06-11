@@ -51,7 +51,7 @@ class YcPurchase(models.Model):
     ck5 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
-    elecplswitch = fields.Char("表面處理開關", compute="_switcher")
+    elecplswitch = fields.Char("表面處理開關", compute="_switcher", help="當表面處理選定'電鍍'時，turn on，否則off")
     elecpl_code = fields.Many2one("yc.setelectroplating", string="電鍍別")
     portage = fields.Selection([('C', '含運費'), ('U', '運費自付')], '運費種類')
     num1 = fields.Integer("數量1")
@@ -433,6 +433,8 @@ class YcPurchase(models.Model):
         if self._context.get('params')['action'] == 81:
             return dt.today()
 
+    ### views 共用 ###
+    # 1.修正時間
     @api.model
     def _get_time(self):
         # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
@@ -442,275 +444,19 @@ class YcPurchase(models.Model):
         sec = dt.now().second
         if hour > 24:
             hour -= 24
-        time = "%02d:%02d" % (hour, minute)
+        time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
-    @api.model
+    # 2.製表日期
     def _fetch_create_date(self):
         self.copy_createdate = self.create_date[:10]
 
-    # 1.過濾該天幾張過磅單 並在car_no fields 顯示 該天單號之進貨(I)車次序號
-    @api.onchange("day")
-    def _filter_car_no(self):
-        return {'domain': {"car_no": [("day", "=", self.day), ("in_out", "=", "I")]}}
-
-    # 2.填完車次序號 自動帶出該次司機
-    @api.onchange("car_no")
-    def _driver_id(self):
-        for rec in self:
-            rec.driver_id = self.car_no.driver_id.id
-
-    # 3.選完車次序號 篩選出該車次之加工廠(找單號)
-    @api.onchange("car_no")
-    def _filter_processing(self):
-        # 這裡 self.car_no.id 是該車次的過磅單號
-        return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
-
-    # 4. 選完車次序號，選擇過磅項目(哪間加工廠)
-    @api.onchange('processing_attache')
-    def _compute_process(self):
-        if self.processing_attache:
-            for rec in self:
-                self.combo_process = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.processing_id.phone1, self.processing_attache.processing_id.contact)
-                self.combo_customer = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.customer_id.phone1, self.processing_attache.customer_id.contact)
-                self.customer_id = self.processing_attache.customer_id.id
-
-    # @api.onchange('processing_attache')
-    # def _get_number_name(self):
-    #     if self.processing_attache:
-    #         for rec in self:
-    #             self.combo_process = "電話: " + self.processing_attache.processing_id.phone + '   聯絡人:' + self.processing_attache.processing_id.contact
-    #             rec.combo_process = self.combo_process
-
-    # 4. 選完加工廠自動返回該項目客戶
-    # @api.onchange("processing_attache")
-    # def _customer_id(self):
-    #     if self.processing_attache:
-    #         for rec in self:
-    #             self.customer_id = rec.env["yc.weight.details"].search(
-    #                 [("id", "=", rec.processing_attache.id)]).customer_id.id
-    #             customer = self.env["yc.customer"].search([("id", "=", self.customer_id.id)])
-    #             self.combo_customer = "電話: " + customer.phone + '   聯絡人: ' + customer.contact
-    #             return {"domain": {"customer_id": [("name", "=", rec.car_no.id)]}}
-
-    # 覆寫新增資料:create()
-    # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有create方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
-    # @api.model
-    # def create(self, vals):
-    # 針對 processing_phone 、 processing_contact&customer_id 的新增資料寫法
-    # processing = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).processing_id.id
-    # vals["processing_phone"] = self.env["yc.processing"].search([("id", "=", processing)]).phone
-    # vals["processing_contact"] = self.env["yc.processing"].search([("id", "=", processing)]).contact
-
-    # customer = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).customer_id.id
-    # vals["customer_id"] = self.env["yc.customer"].search([("id", "=", customer)]).id
-    # return super(YcPurchase, self).create(vals)
-
-    # 覆寫新增資料:write()
-    # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有write方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
-    # @api.multi
-    # def write(self, vals):
-    #     # 針對 processing_phone & processing_contact 的修改資料寫法
-    #     # Issue: 進編輯畫面 refresh day的資訊觸發onchange 否則資訊會無法啟動過濾機制
-    #     if vals.get('processing_attache'):
-    #         shift_processing = vals['processing_attache']
-    #         processing_id = self.env['yc.weight.details'].search([('id', '=', shift_processing)]).processing_id.id
-    #         customer = self.env["yc.weight.details"].search([("id", "=", vals['processing_attache'])]).customer_id.id
-    #         vals['processing_phone'] = self.env['yc.processing'].search([('id', '=', processing_id)]).phone
-    #         vals['processing_contact'] = self.env['yc.processing'].search([('id', '=', processing_id)]).contact
-    #         vals["customer_id"] = self.env["yc.customer"].search([("id", "=", customer)]).id
-
-    # return super(YcPurchase, self).write(vals)
-
-    # 品名分類(clsf_code)以及規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
-    # 以norm_code 的 parameter1值 去搜尋落在 產品機械性質主檔的 規格代碼起迄內之資料
-    # ! 舊資料庫 一層代碼的S03N0004 規格 裡面參數1資料不乾淨 造成查詢資料出現bug 須提供新的資料
-    # ?怪怪的 select * from 產品機械性質主檔 a WHERE a.產品分類代號 = 品名分類代碼.SelectedValue \
-    #  and a.強度級數 = 強度級數.SelectedValue \
-    #  and CAST(a.規格對照起 AS float) <=" + 直徑規格數字.ToString \
-    #  and CAST(a.規格對照迄 AS float) >=" + 直徑規格數字.ToString \
-
-    # select * from 扭力規格主檔 a
-    # WHERE a.品名分類= 品名分類代碼.SelectedValue
-    # and a.強度級數= 強度級數.SelectedValue
-    # and a.直徑規格= 規格代碼.SelectedValue
-
-    @api.onchange("clsf_code", "strength_level", "norm_code")
-    def _fetch_norm_code_info(self):
-        if self.norm_code and self.clsf_code and self._context.get('params')['action'] == 81:
-
-            norm = self.env["yc.setnorm"]
-            # 規格找出參數值
-            norm_para = norm.search([('id', '=', self.norm_code.id)]).parameter1
-            machine_property = self.env["yc.mechanicalproperty"]
-            torsion = self.env['yc.torsion']
-            if self.strength_level:
-                strenth_search = ('strength_level', '=', self.strength_level.id)
-                mp = machine_property.search([('clsf_code', '=', self.clsf_code.id),
-                                              ('stdreviewinit', '<=', float(norm_para)),
-                                              ('stdreviewend', '>=', float(norm_para)),
-                                              (strenth_search)], limit=1, order="id desc")
-                tor = torsion.search([('clsf_code', '=', self.clsf_code.id),
-                                      strenth_search,
-                                      ("norm_code", "=", self.norm_code.id)], limit=1, order="id desc")
-            else:
-                mp = machine_property.search([('clsf_code', '=', self.clsf_code.id),
-                                              ('stdreviewinit', '<=', float(norm_para)),
-                                              ('stdreviewend', '>=', float(norm_para))], limit=1, order="id desc")
-                tor = torsion.search([('clsf_code', '=', self.clsf_code.id),
-                                      ("norm_code", "=", self.norm_code.id)], limit=1, order="id desc")
-            if bool(mp):
-                self.standard = mp.standard
-                self.surfhrd = mp.innersurfhrd
-                self.corehrd = mp.innercorehrd
-                self.tensihrd = mp.innertensihrd
-                self.carburlayer = mp.innercarburlayer
-                self.torsion = tor.torsion1
-
-    # 當表面處理開啟'電鍍'時，啟用電鍍類別
-    @api.onchange("surface_code")
-    def _switcher(self):
-        for rec in self:
-            if rec.surface_code.id == 4:
-                self.elecplswitch = 'ON'
-                self.elecpl_code = 538
-            elif rec.surface_code.id == 2:
-                self.elecpl_code = 385
-            elif rec.surface_code.id == 1:
-                self.elecpl_code = 590
-            else:
-                # 避免非電鍍類別存入資料
-                self.elecplswitch = 'OFF'
-                rec.elecpl_code = None
-
-    # 裝袋合計合計處理
+    # 3.裝袋合計合計處理
     @api.onchange("num1", "num2", "num3", "num4")
     def _count_bag(self):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
 
-    # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
-    # 新增搜尋的form
-    @api.onchange("clsf_code", "product_code", "strength_level", "txtur_code", "norm_code", "proces_code", "wire_furn")
-    def _search_process_condition(self):
-        if self.clsf_code or self.product_code or self.strength_level or \
-                self.txtur_code or self.norm_code or self.proces_code or self.wire_furn:
-            domain = ()
-            purchase = self.env["yc.purchase"]
-            if self.wire_furn:
-                domain += ('wire_furn', '=', self.wire_furn),
-            if self.clsf_code:
-                domain += ("clsf_code", "=", self.clsf_code.id),
-            if self.product_code:
-                domain += ("product_code", "=", self.product_code.id),
-            if self.strength_level:
-                domain += ("strength_level", "=", self.strength_level.id),
-            if self.txtur_code:
-                domain += ("txtur_code", "=", self.txtur_code.id),
-            if self.norm_code:
-                domain += ("norm_code", "=", self.norm_code.id),
-            if self.proces_code:
-                domain += ("proces_code", "=", self.proces_code.id),
-                # 按下wizard button時 就會儲存 所以要排除自己
-                # onchange 目前會莫名跳出
-                #         if onchange in ("1", "true"):
-            if len(domain)>1:
-                domain += ('id', '!=', self.id)
-                _filter = purchase.search([(d) for d in domain], limit=1, order="day desc")
-                self.flow = _filter.flow
-                self.cp = _filter.cp
-                self.nh31 = _filter.nh31
-                self.nh32 = _filter.nh32
-                self.nh33 = _filter.nh33
-                self.nh34 = _filter.nh34
-                self.heat1 = _filter.heat1
-                self.heat2 = _filter.heat2
-                self.heat3 = _filter.heat3
-                self.heat4 = _filter.heat4
-                self.heat5 = _filter.heat5
-                self.heat6 = _filter.heat6
-                self.heat7 = _filter.heat7
-                self.heat8 = _filter.heat8
-                self.heattemp = _filter.heattemp
-                self.heatsped = _filter.heatsped
-                self.tempturing1 = _filter.tempturing1
-                self.tempturing2 = _filter.tempturing2
-                self.tempturing3 = _filter.tempturing3
-                self.tempturing4 = _filter.tempturing4
-                self.tempturing5 = _filter.tempturing5
-                self.tempturing6 = _filter.tempturing6
-                self.tempturisped = _filter.tempturisped
-
-    # create 管制
-    @api.model
-    def create(self, vals):
-        # 進貨作業 S03N0120 且非wizard
-        if self._context.get('params')['action'] == 81 and self._context.get('wizard') != True:
-            # 儲存時給工令號
-            cn = vals["car_no"]
-            weight_item = self.env['yc.weight']
-            weight_cn = weight_item.search([('id', '=', cn)]).carno
-            purchase = self.env["yc.purchase"]
-            search = purchase.search([("name", "like", weight_cn)])
-            number = len(search) + 1
-            name = str(weight_cn) + str('%d') % number
-            vals.update({"name": name})
-        return super(YcPurchase, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        # 製程登錄作業 S03N0200
-        if self._context.get('params')['action'] == 111:
-            if vals.get('ptime1') != '':
-                vals.update({'status': 6})
-        return super(YcPurchase, self).write(vals)
-
-    ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
-
-    # 分爐排程進貨日期距現在日期超過十天返色提醒
-    def _ten_days_check(self):
-        if self._context.get('params')['action'] == 109:
-            for rec in self:
-                if rec.day:
-                    rec_day = dt.strptime(rec.day.replace("-", ""), "%Y%m%d").date()
-                    elapse = (dt.today().date() - rec_day).days
-                    if elapse > 10:
-                        rec.ckimportdate = 'over'
-
-    # 在爐內進貨 序號改完要馬上更新資料庫資料
-    def update_serial(self):
-        vals = {"serial": self.serial}
-        purchase = self.env["yc.purchase"].search([("id", "=", self.id)])
-        purchase.write(vals)
-
-    # 重排序號(except 99.9 然後轉成未進爐)
-    def reorganize(self):
-        purchase = self.env["yc.purchase"]
-        rows = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "!=", 99.9)])
-        purchase_list = []
-        for row in rows:
-            purchase_list.append([row.id, row.serial])
-        # 重新排序
-        purchase_list = sorted(purchase_list, key=lambda s: s[1])
-        # 重新賦值
-        for x in range(len(rows)):
-            purchase_list[x][1] = x + 1
-        # update data
-        for row in purchase_list:
-            purchase.search([("id", "=", row[0])]).write({'serial': row[1], 'status': 4})
-        # 99.9 狀態轉未進爐
-        notin_list = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "=", 99.9)])
-        for row in notin_list:
-            notin_list.search([("id", "=", row.id)]).write({'status': 4})
-
-    # S05N0100 製程登錄作業
-    # 以下為查詢欄位
-    searchname = fields.Char("工令查詢", help="搜尋工令欄位")
-    furn_in = fields.Many2one("yc.purchase", string="已進爐")
-    furn_notin = fields.Many2one("yc.purchase", string="未進爐")
-
-    # @api.onchange("searchname")
+    # 4. 工令查詢
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
@@ -752,7 +498,6 @@ class YcPurchase(models.Model):
             # 'target': 'inline',
             # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
             # }
-
         elif self._context.get('params')['action'] == 112:
             # S05N0200 產量登錄作業
             purchase = self.env["yc.purchase"]
@@ -780,7 +525,8 @@ class YcPurchase(models.Model):
             }
         elif self._context.get('params')['action'] == 124:
             # S04N0200
-            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc', limit=1).id
+            to_delete_id = self.env["yc.purchase"].search([('name', '=', self.searchname)], order='id desc',
+                                                          limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
             if len(self.env["yc.purchase"].search([('name', '=', self.searchname)])) > 1:
                 self._cr.execute(sql)
@@ -795,6 +541,222 @@ class YcPurchase(models.Model):
                 'view_id': self.env.ref('yc_root.quality_form').id,
                 'target': 'inline',
             }
+
+    ### purchase.xml用 ###
+    # 1-1.新增進貨單時過濾過磅單資訊
+    @api.onchange("day")
+    def _filter_car_no(self):
+        return {'domain': {"car_no": [("day", "=", self.day), ("in_out", "=", "I")]}}
+
+    # 1-2.填完車次序號 自動帶出該次司機
+    @api.onchange("car_no")
+    def _driver_id(self):
+        for rec in self:
+            rec.driver_id = self.car_no.driver_id.id
+
+    # 1-3.選完車次序號 篩選出該車次之加工廠(找單號)
+    @api.onchange("car_no")
+    def _filter_processing(self):
+        # 這裡 self.car_no.id 是該車次的過磅單號
+        return {'domain': {"processing_attache": [("name", "=", self.car_no.id)]}}
+
+    # 1-4. 選完車次序號，選擇過磅項目(哪間加工廠)
+    @api.onchange('processing_attache')
+    def _compute_process(self):
+        if self.processing_attache:
+            for rec in self:
+                self.combo_process = "電話:  %s    聯絡人:%s" % (
+                    self.processing_attache.processing_id.phone1, self.processing_attache.processing_id.contact)
+                self.combo_customer = "電話:  %s    聯絡人:%s" % (
+                    self.processing_attache.customer_id.phone1, self.processing_attache.customer_id.contact)
+                self.customer_id = self.processing_attache.customer_id.id
+
+    # 2.當表面處理開啟'電鍍'時，啟用電鍍類別
+    @api.onchange("surface_code")
+    def _switcher(self):
+        for rec in self:
+            if rec.surface_code.id == 4:
+                self.elecplswitch = 'ON'
+                self.elecpl_code = 538
+            elif rec.surface_code.id == 2:
+                self.elecpl_code = 385
+            elif rec.surface_code.id == 1:
+                self.elecpl_code = 590
+            else:
+                # 避免非電鍍類別存入資料
+                self.elecplswitch = 'OFF'
+                rec.elecpl_code = None
+
+    # 3.自動搜尋舊資料並資料帶出
+    # 品名分類(clsf_code)以及規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
+    # 以norm_code 的 parameter1值 去搜尋落在 產品機械性質主檔的 規格代碼起迄內之資料
+    # ! 舊資料庫 一層代碼的S03N0004 規格 裡面參數1資料不乾淨 造成查詢資料出現bug 須提供新的資料
+    # select * from 產品機械性質主檔 a WHERE a.產品分類代號 = 品名分類代碼.SelectedValue \
+    #  and a.強度級數 = 強度級數.SelectedValue \
+    #  and CAST(a.規格對照起 AS float) <=" + 直徑規格數字.ToString \
+    #  and CAST(a.規格對照迄 AS float) >=" + 直徑規格數字.ToString \
+
+    # select * from 扭力規格主檔 a
+    # WHERE a.品名分類= 品名分類代碼.SelectedValue
+    # and a.強度級數= 強度級數.SelectedValue
+    # and a.直徑規格= 規格代碼.SelectedValue
+    @api.onchange("clsf_code", "strength_level", "norm_code")
+    def _fetch_norm_code_info(self):
+        if self.norm_code and self.clsf_code and self._context.get('params')['action'] == 81:
+
+            norm = self.env["yc.setnorm"]
+            # 規格找出參數值
+            norm_para = norm.search([('id', '=', self.norm_code.id)]).parameter1
+            machine_property = self.env["yc.mechanicalproperty"]
+            torsion = self.env['yc.torsion']
+            if self.strength_level:
+                strenth_search = ('strength_level', '=', self.strength_level.id)
+                mp = machine_property.search([('clsf_code', '=', self.clsf_code.id),
+                                              ('stdreviewinit', '<=', float(norm_para)),
+                                              ('stdreviewend', '>=', float(norm_para)),
+                                              (strenth_search)], limit=1, order="id desc")
+                tor = torsion.search([('clsf_code', '=', self.clsf_code.id),
+                                      strenth_search,
+                                      ("norm_code", "=", self.norm_code.id)], limit=1, order="id desc")
+            else:
+                mp = machine_property.search([('clsf_code', '=', self.clsf_code.id),
+                                              ('stdreviewinit', '<=', float(norm_para)),
+                                              ('stdreviewend', '>=', float(norm_para))], limit=1, order="id desc")
+                tor = torsion.search([('clsf_code', '=', self.clsf_code.id),
+                                      ("norm_code", "=", self.norm_code.id)], limit=1, order="id desc")
+            if bool(mp):
+                self.standard = mp.standard
+                self.surfhrd = mp.innersurfhrd
+                self.corehrd = mp.innercorehrd
+                self.tensihrd = mp.innertensihrd
+                self.carburlayer = mp.innercarburlayer
+                self.torsion = tor.torsion1
+
+    # 4.搜尋舊檔WIZARD
+    # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
+    @api.onchange("clsf_code", "product_code", "strength_level", "txtur_code", "norm_code", "proces_code", "wire_furn")
+    def _search_process_condition(self):
+        if self.clsf_code or self.product_code or self.strength_level or \
+                self.txtur_code or self.norm_code or self.proces_code or self.wire_furn and self._context.get('params')[
+            'action'] == 81:
+            domain = ()
+            purchase = self.env["yc.purchase"]
+            if self.wire_furn:
+                domain += ('wire_furn', '=', self.wire_furn),
+            if self.clsf_code:
+                domain += ("clsf_code", "=", self.clsf_code.id),
+            if self.product_code:
+                domain += ("product_code", "=", self.product_code.id),
+            if self.strength_level:
+                domain += ("strength_level", "=", self.strength_level.id),
+            if self.txtur_code:
+                domain += ("txtur_code", "=", self.txtur_code.id),
+            if self.norm_code:
+                domain += ("norm_code", "=", self.norm_code.id),
+            if self.proces_code:
+                domain += ("proces_code", "=", self.proces_code.id),
+            if len(domain) > 1:
+                # 防止搜尋到自己
+                if isinstance(self.id, int):
+                    domain += ('id', '!=', self.id)
+                _filter = purchase.search([(d) for d in domain], limit=1, order="day desc,time desc")
+                self.flow = _filter.flow
+                self.cp = _filter.cp
+                self.nh31 = _filter.nh31
+                self.nh32 = _filter.nh32
+                self.nh33 = _filter.nh33
+                self.nh34 = _filter.nh34
+                self.heat1 = _filter.heat1
+                self.heat2 = _filter.heat2
+                self.heat3 = _filter.heat3
+                self.heat4 = _filter.heat4
+                self.heat5 = _filter.heat5
+                self.heat6 = _filter.heat6
+                self.heat7 = _filter.heat7
+                self.heat8 = _filter.heat8
+                self.heattemp = _filter.heattemp
+                self.heatsped = _filter.heatsped
+                self.tempturing1 = _filter.tempturing1
+                self.tempturing2 = _filter.tempturing2
+                self.tempturing3 = _filter.tempturing3
+                self.tempturing4 = _filter.tempturing4
+                self.tempturing5 = _filter.tempturing5
+                self.tempturing6 = _filter.tempturing6
+                self.tempturisped = _filter.tempturisped
+
+    # 5.進貨單產生工令號
+    @api.model
+    def create(self, vals):
+        # 進貨作業 S03N0120 且非wizard
+        if self._context.get('params')['action'] == 81 and self._context.get('wizard') != True:
+            # 儲存時給工令號
+            cn = vals["car_no"]
+            weight_item = self.env['yc.weight']
+            weight_cn = weight_item.search([('id', '=', cn)]).carno
+            purchase = self.env["yc.purchase"]
+            search = purchase.search(
+                [("name", "like", weight_cn[:-2]), ('factory_id', '=', self.env.user.factory_id.id)])
+            number = len(search) + 1
+            name = str(weight_cn) + str('%02d') % number
+            vals.update({"name": name})
+        return super(YcPurchase, self).create(vals)
+
+    ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
+
+    ### 分爐排程 plan_furna.xml 用 ###
+    # 1. 分爐排程進貨日期距現在日期超過十天返色提醒
+    def _ten_days_check(self):
+        if self._context.get('params')['action'] == 109:
+            for rec in self:
+                if rec.day:
+                    rec_day = dt.strptime(rec.day.replace("-", ""), "%Y%m%d").date()
+                    elapse = (dt.today().date() - rec_day).days
+                    if elapse > 10:
+                        rec.ckimportdate = 'over'
+
+    ### 爐類進貨 furna_import.xml 用 ###
+    # 1.在爐內進貨 序號改完要馬上更新資料庫資料
+    def update_serial(self):
+        vals = {"serial": self.serial}
+        purchase = self.env["yc.purchase"].search([("id", "=", self.id)])
+        purchase.write(vals)
+
+    # 2.重排序號(except 99.9 然後轉成未進爐)
+    def reorganize(self):
+        purchase = self.env["yc.purchase"]
+        rows = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "!=", 99.9),
+                                ('factory_id', '=', self.env.user.factory_id.id)])
+        purchase_list = []
+        for row in rows:
+            purchase_list.append([row.id, row.serial])
+        # 重新排序
+        purchase_list = sorted(purchase_list, key=lambda s: s[1])
+        # 重新賦值
+        for x in range(len(rows)):
+            purchase_list[x][1] = x + 1
+        # update data
+        for row in purchase_list:
+            purchase.search([("id", "=", row[0])]).write({'serial': row[1], 'status': 4})
+        # 99.9 狀態轉未進爐
+        notin_list = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "=", 99.9)])
+        for row in notin_list:
+            notin_list.search([("id", "=", row.id)]).write({'status': 4})
+
+    ### S05N0100 製程登錄作業 ###
+    # 以下為查詢欄位
+    searchname = fields.Char("工令查詢", help="搜尋工令欄位")
+    furn_in = fields.Many2one("yc.purchase", string="已進爐")
+    furn_notin = fields.Many2one("yc.purchase", string="未進爐")
+
+    # 1. 登入完轉成已進爐
+    @api.multi
+    def write(self, vals):
+        # 製程登錄作業 S03N0200
+        if self._context.get('params')['action'] == 111:
+            infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
+            if vals.get('ptime1') != '':
+                vals.update({'status': infurn_code})
+        return super(YcPurchase, self).write(vals)
 
     # 檢驗狀態
     @api.onchange("wholeck", "faceck")
@@ -869,6 +831,45 @@ class YcPurchase(models.Model):
             self.carb1v = t1.carburlayer
             self.sskvste = t1.sectionshrink
             self.safeload = t1.safeload
+
+    @api.model
+    def factory_filter(self):
+        ctx = self.env.context.copy()
+        if self._uid == 1:
+            factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
+        else:
+            factory_code = self.env.user.factory_id.id
+        # 不知道為什麼上面這段沒作用
+        ctx.update({'factory_id': [factory_code]})
+
+        if self._context.get('params')['action'] == 111:
+            reference = self.env.ref('yc_root.purchase_list_action_tree').id
+        elif self._context.get('params')['action'] == 109:
+            reference = self.env.ref('yc_root.planfurna_action_tree').id
+        elif self._context.get('params')['action'] == 110:
+            reference = self.env.ref('yc_root.furna_import_action_tree').id
+        return {
+            'name': '使用者廠別動態過濾',
+            'view_type': 'tree',
+            'view_mode': 'tree,form',
+            'res_model': 'yc.purchase',
+            'type': 'ir.actions.act_window',
+            'view_id': reference,
+            'context': dict(ctx),
+        }
+
+    def review_purchase(self):
+        return {
+            'name': self.name,
+            'res_model': 'yc.purchase',
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('yc_root.furna_import_form').id,
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+        }
 
 
 class YcProduceDetails(models.Model):

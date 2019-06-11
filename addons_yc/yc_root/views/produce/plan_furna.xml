@@ -1,6 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <!-- search -->
+        <record model="ir.ui.view" id="planfurna_search_view">
+            <field name="name">planfurna.search</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="status"/>
+                    <field name="retempt"/>
+                    <field name="wire_furn"/>
+                    <field name="customer_id"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="planfurna_action">
+            <field name="name">分爐排程作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <!--<field name="limit">100</field>-->
+            <!-- 已出貨不用出現在分爐 -->
+            <field name="domain">[('status','!=',11),("factory_id","in",[context.get('factory_id')])]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="planfurna_action_form">
+            <field name="act_window_id" ref="planfurna_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="planfurna_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="planfurna_action_tree">
+            <field name="act_window_id" ref="planfurna_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="planfurna_tree"/>
+        </record>
+        <!-- getcontext -->
+        <record id="purchase_filter_act" model="ir.actions.server">
+            <field name="name">使用者廠別動態過濾</field>
+            <field name="model_id" ref="yc_root.planfurna_action_tree"/>
+            <field name="state">code</field>
+            <field name="code">action = model.factory_filter()</field>
+        </record>
         <!-- tree view -->
         <record model="ir.ui.view" id="planfurna_tree">
             <field name="name">planfurna.tree</field>
@@ -163,44 +207,6 @@
                     </sheet>
                 </form>
             </field>
-        </record>
-        <!-- search -->
-        <record model="ir.ui.view" id="planfurna_search_view">
-            <field name="name">planfurna.search</field>
-            <field name="model">yc.purchase</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name"/>
-                    <field name="status"/>
-                    <field name="retempt"/>
-                    <field name="wire_furn"/>
-                    <field name="customer_id"/>
-                </search>
-            </field>
-        </record>
-        <!-- action -->
-        <record model="ir.actions.act_window" id="planfurna_action">
-            <field name="name">分爐排程作業</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">yc.purchase</field>
-            <field name="view_type">form</field>
-            <!--<field name="limit">100</field>-->
-            <field name="domain">[('status','!=',11)]</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="planfurna_action_form">
-            <field name="act_window_id" ref="planfurna_action"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="planfurna_form"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="planfurna_action_tree">
-            <field name="act_window_id" ref="planfurna_action"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="planfurna_tree"/>
         </record>
     </data>
 </odoo>

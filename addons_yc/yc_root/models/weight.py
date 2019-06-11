@@ -18,8 +18,10 @@ class YcWeight(models.Model):
     carno = fields.Char("車次序號")
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
-    purchase_times = fields.Integer("進貨次數", compute="_count_times", store=True)
+    purchase_times = fields.Integer("進貨次數")
     ship_times = fields.Integer("出貨次數")
+    display_purchase = fields.Integer("進貨次數")
+    display_shipment = fields.Integer("進貨次數")
     plate_no = fields.Char("車號", related="driver_id.plate_no")
     total = fields.Integer("總重 (KG)")
     curbweight = fields.Integer("空車重 (KG)")
@@ -57,7 +59,7 @@ class YcWeight(models.Model):
     def _get_time(self):
         # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
         # 有以上狀況 hour +8 即可解決
-        hour = dt.now().hour + 8
+        hour = dt.now().hour
         minute = dt.now().minute
         sec = dt.now().second
         if hour > 24:
@@ -75,7 +77,12 @@ class YcWeight(models.Model):
                 year = str(dt.now().year)
                 month = "%02d" % (dt.now().month)
                 day = "%02d" % (dt.now().day)
-                # S1
+                user_factory_id = self.env.user.factory_id.id
+                firm = self.env['yc.factory'].search([('id', '=', user_factory_id)])
+                if firm.name == '岡山廠':
+                    firm_code = '2'
+                else:
+                    firm_code = ''
                 if year[3:] == "0":
                     S1 = "A"
                 elif year[3:] == "1":
@@ -86,8 +93,6 @@ class YcWeight(models.Model):
                     S1 = "D"
                 else:
                     S1 = year[3:]
-
-                # S2
                 if month == "10":
                     S2 = "A"
                 elif month == "11":
@@ -96,26 +101,19 @@ class YcWeight(models.Model):
                     S2 = "C"
                 else:
                     S2 = month[1:]
-
-                # S3
                 day_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
                             'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
                             'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V']
                 S3 = day_list[int(day) - 1]
-
-                # S4 S5
-
                 S4 = rec.env["yc.driver"].search([('name', '=', rec.driver_id.name)]).code
-
                 check_day = dt.strptime(rec.day, "%Y-%m-%d")
                 check = rec.env["yc.weight"].search([('driver_id', '=', rec.driver_id.name), ('day', '=', check_day)])
                 if check:
-                    S5 = '%02d' % (len(check) + 1)
+                    S5 = '%d' % (len(check) + 1)
                 else:
-                    S5 = "01"
-
+                    S5 = "1"
                 if S1 and S2 and S3 and S4 and S5:
-                    self.carno = str(S1 + S2 + S3 + S4 + S5)
+                    self.carno = str(firm_code + S1 + S2 + S3 + S4 + S5)
                     rec.carno = self.carno
 
     # 檢查進出貨分類是否填寫
@@ -125,38 +123,27 @@ class YcWeight(models.Model):
             raise Warning("進出貨分類空值")
 
     # 進出貨次數自動計算
-    # , compute = "_count", store = True
     @api.multi
     @api.onchange('day', 'in_out', 'driver_id')
-    def _count(self):
-        for rec in self:
-            check_day = dt.strptime(rec.day, "%Y-%m-%d")
-            driver = self.driver_id.id
-            check_in = self.env["yc.weight"].search(
-                [('in_out', '=', 'I'), ('day', '=', check_day), ('driver_id', '=', driver)])
-            check_out = self.env["yc.weight"].search(
-                [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
-
-            if rec.in_out:  # 進出貨有值
-                if driver and rec.day:
-                    self.ship_times = len(check_out)
-                    self.purchase_times = len(check_in)
-                    # 新增模式(db無單號)
-                    if not self.env["yc.weight"].search([("name", "=", self.name)]):
-                        if rec.in_out == 'I':
-                            rec.ship_times = self.ship_times
-                            rec.purchase_times = self.purchase_times + 1
-                        elif rec.in_out == 'O':
-                            # onchange decorator 要存到db 需要rec.field = self.field 這種寫法 ps.只有新增有用
-                            rec.ship_times = self.ship_times + 1
-                            rec.purchase_times = self.purchase_times
-                    else:  # 修改模式 無法儲存 要另寫compute 更新資料
-                        if rec.in_out == 'I':
-                            rec.ship_times = self.ship_times
-                            rec.purchase_times = self.purchase_times + 1
-                        elif rec.in_out == 'O':
-                            rec.ship_times = self.ship_times
-                            rec.purchase_times = self.purchase_times + 1
+    def times_count(self):
+        if self.day and self.in_out and self.driver_id:
+            for rec in self:
+                check_day = dt.strptime(rec.day, "%Y-%m-%d")
+                driver = self.driver_id.id
+                check_in = self.env["yc.weight"].search(
+                    [('in_out', '=', 'I'), ('day', '=', check_day), ('driver_id', '=', driver)])
+                check_out = self.env["yc.weight"].search(
+                    [('in_out', '=', 'O'), ('day', '=', check_day), ('driver_id', '=', driver)])
+                self.ship_times = len(check_out)
+                self.purchase_times = len(check_in)
+                if rec.in_out == 'I':
+                    rec.ship_times = self.ship_times
+                    rec.purchase_times = self.purchase_times + 1
+                elif rec.in_out == 'O':
+                    rec.ship_times = self.ship_times + 1
+                    rec.purchase_times = self.purchase_times
+                self.display_purchase = rec.purchase_times
+                self.display_shipment = rec.ship_times
 
     # 選完司機名稱，車牌自動帶入 > 改用related 取代
     # @api.multi
@@ -179,7 +166,9 @@ class YcWeight(models.Model):
     @api.model
     def create(self, vals):
         _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
-        vals.update({"net": _net})
+        vals.update({"net": _net,
+                     "display_purchase": vals['purchase_times'],
+                     "display_shipment": vals['ship_times']})
         return super(YcWeight, self).create(vals)
 
     # 覆寫修改資料:write()
@@ -237,7 +226,7 @@ class YcWeight(models.Model):
             factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
         else:
             factory_code = self.env.user.factory_id.id
-
+        # 不知道為什麼上面這段沒作用
         ctx.update({'factory_id': [factory_code]})
         return {
             'name': '使用者廠別動態過濾',
