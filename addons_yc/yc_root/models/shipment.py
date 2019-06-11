@@ -68,14 +68,16 @@ class YcShipment(models.Model):
     def create(self, vals):
         # 新增狀態時會先按wizard button
         day = vals['day']
-        firm = vals['factory_id']
-        fire_code = 0
-        if firm==12:
-            fire_code = 2
+        user_factory_id = self.env.user.factory_id.id
+        firm = self.env['yc.factory'].search([('id', '=', user_factory_id)])
+        if firm.name == '岡山廠':
+            firm_code = '2'
+        else:
+            firm_code = ''
         year = int(day[0:4]) - 1911
         month = int(day[5:7])
         ship = self.env["yc.shipment"]
-        prefix = str(fire_code) + str(year) + "%02d" % month
+        prefix = str(firm_code) + str(year) + "%02d" % month
         bunch = ship.search([("name","=", prefix)])
         serial = len(bunch) + 1
         name = prefix + '%04d' % serial

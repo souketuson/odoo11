@@ -82,7 +82,7 @@
                     <field name="surface_code" readonly="1"/>
                     <field name="retempt"/>
                     <field name="weighbuckets" readonly="1"/>
-                    <field name="net" readonly="1"/>
+                    <field name="net" sum="總重" readonly="1"/>
                     <field name="surfhrd" readonly="1"/>
                     <field name="corehrd" readonly="1"/>
                     <field name="wire_furn" readonly="1"/>

@@ -64,7 +64,7 @@
                                     </div>
                                     <div style="overflow-x:auto;width:750px;display:block">
                                         <field name="ship_details_ids">
-                                            <tree create="false" string="Shipment Details" editable="top">
+                                            <tree create="false" edit="false" string="Shipment Details" editable="top">
                                                 <!--<field name="toship_check" widget="chechbox"/>-->
                                                 <field name="order" string="工令"/>
                                                 <field name="furnace"/>

@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="quantity_data_entry_action">
+            <field name="name">產量登錄作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <!--<field name="target">inline</field>-->
+        </record>
+        <record model="ir.actions.act_window.view" id="quantity_data_entry_action_form">
+            <field name="act_window_id" ref="quantity_data_entry_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="quantity_data_entry_form"/>
+        </record>
         <!-- tree view -->
         <!--<record model="ir.ui.view" id="process_data_entry_tree">-->
         <!--<field name="name">pde.tree</field>-->
@@ -174,7 +189,7 @@
                                     <div>
                                         <field name="produce_details_ids" eval="[(0,0,{'rawweight':0})]"
                                                style="width: 350px;overflow-x: auto;">
-                                            <tree create="false" string="Produce Details" editable="bottom">
+                                            <tree create="false" delete="false" string="Produce Details" editable="bottom">
                                                 <!--<field name="name"/>-->
                                                 <field name="bucket_no"/>
                                                 <field name="rawweight"/>
@@ -207,21 +222,6 @@
                     <field name="name"/>
                 </search>
             </field>
-        </record>
-        <!-- action -->
-        <record model="ir.actions.act_window" id="quantity_data_entry_action">
-            <field name="name">產量登錄作業</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">yc.purchase</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <!--<field name="target">inline</field>-->
-        </record>
-        <record model="ir.actions.act_window.view" id="quantity_data_entry_action_form">
-            <field name="act_window_id" ref="quantity_data_entry_action"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="quantity_data_entry_form"/>
         </record>
     </data>
 </odoo>

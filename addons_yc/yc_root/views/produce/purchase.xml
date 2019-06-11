@@ -75,7 +75,7 @@
                                                 <label string="製表日期" style="font-weight:bold"/>
                                                 <field name="copy_createdate" attrs="{'readonly': True }"
                                                        style="width: 80px"/>
-                                                <field name="time" style="width: 50px"/>
+                                                <field name="time" style="width: 60px"/>
                                                 <label string="所屬工廠" style="font-weight:bold"/>
                                                 <field name="factory_id" style="width: 80px"/>
                                                 <span style="display:inline-block; width: 40px;"/>
