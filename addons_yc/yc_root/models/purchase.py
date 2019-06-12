@@ -450,7 +450,7 @@ class YcPurchase(models.Model):
     def _count_bag(self):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
 
-    # 4. 工令查詢
+    # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
@@ -471,11 +471,11 @@ class YcPurchase(models.Model):
                 self._cr.execute(sql)
             id = self.env['yc.purchase'].search(
                 [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
-            # 自動新增details資料
+            # 自動新增6筆空資料到details (應該也可以用default_get新增)
             to_create_order = purchase.search([('id','=',id)])
-            for i in range(1, 7):
-                to_create_order.produce_details_ids = [(0, 0, {'name': id , 'bucket_no': i})]
-            k= []
+            if len(to_create_order.produce_details_ids)== 0:
+                for i in range(1, 7):
+                    to_create_order.produce_details_ids = [(0, 0, {'name': id , 'bucket_no': i})]
             return {
                 'name': self.searchname,
                 'res_model': 'yc.purchase',
@@ -560,31 +560,32 @@ class YcPurchase(models.Model):
                                "notweighted_order": [("order_furn", "=", self.order_furn.id)]}}
 
     # 7.濾出只有和使用者同樣廠別的紀錄
-    @api.model
-    def factory_filter(self):
-        ctx = self.env.context.copy()
-        if self._uid == 1:
-            factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
-        else:
-            factory_code = self.env.user.factory_id.id
-        # 不知道為什麼上面這段沒作用
-        ctx.update({'factory_id': [factory_code]})
-
-        if self._context.get('params')['action'] == 111:
-            reference = self.env.ref('yc_root.purchase_list_action_tree').id
-        elif self._context.get('params')['action'] == 109:
-            reference = self.env.ref('yc_root.planfurna_action_tree').id
-        elif self._context.get('params')['action'] == 110:
-            reference = self.env.ref('yc_root.furna_import_action_tree').id
-        return {
-            'name': '使用者廠別動態過濾',
-            'view_type': 'tree',
-            'view_mode': 'tree,form',
-            'res_model': 'yc.purchase',
-            'type': 'ir.actions.act_window',
-            'view_id': reference,
-            'context': dict(ctx),
-        }
+    # 目前以修改odoo11.0 > odoo > http.py L# 1095 讓頁面抓到context 取代這一段功能
+    # @api.model
+    # def factory_filter(self):
+    #     ctx = self.env.context.copy()
+    #     if self._uid == 1:
+    #         factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
+    #     else:
+    #         factory_code = self.env.user.factory_id.id
+    #     # 不知道為什麼上面這段沒作用
+    #     ctx.update({'factory_id': [factory_code]})
+    #
+    #     if self._context.get('params')['action'] == 111:
+    #         reference = self.env.ref('yc_root.purchase_list_action_tree').id
+    #     elif self._context.get('params')['action'] == 109:
+    #         reference = self.env.ref('yc_root.planfurna_action_tree').id
+    #     elif self._context.get('params')['action'] == 110:
+    #         reference = self.env.ref('yc_root.furna_import_action_tree').id
+    #     return {
+    #         'name': '使用者廠別動態過濾',
+    #         'view_type': 'tree',
+    #         'view_mode': 'tree,form',
+    #         'res_model': 'yc.purchase',
+    #         'type': 'ir.actions.act_window',
+    #         'view_id': reference,
+    #         'context': dict(ctx),
+    #     }
 
     # 8.進貨單wizard 只能帶出一筆資料，超過一筆提醒
     @api.constrains("wizard_check")
@@ -749,6 +750,7 @@ class YcPurchase(models.Model):
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
+            # 如果沒有車次序號要raise error
             weight_cn = weight_item.search([('id', '=', cn)]).carno
             purchase = self.env["yc.purchase"]
             search = purchase.search(
@@ -762,6 +764,12 @@ class YcPurchase(models.Model):
     def _default_date(self):
         if self._context.get('params')['action'] == 81:
             return dt.today()
+
+    # 7. 空值警告
+    @api.constrains("car_no")
+    def _verify(self):
+        if not self.car_no:
+            raise Warning("車次序號不能空")
 
     ################################
     ### 分爐排程 plan_furna.xml 用 ###
@@ -936,17 +944,26 @@ class YcProduceDetails(models.Model):
         self.weightdiff = self.rawweight - self.tweight
 
     # 製造項目檔有存入一筆就跳過磅狀態為已過磅
-    @api.model
-    def create(self, vals):
-        if self._context.get('params')['action'] == 111 and vals['name']:
-            id = vals['name']
-            purchase = self.env['yc.purchase'].search(
-                [('id', '=', id), ('factory_id', '=', self.env.user.factory_id.id)])
-            if purchase.weighstate == False:
-                # sql = "update yc_purchase set weighstate='已過磅' where id=%d" % id
-                # self._cr.execute(sql)
-                purchase.weighstate = '已過磅'
-        return super(YcProduceDetails, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     if self._context.get('params')['action'] == 111 and vals['name']:
+    #         id = vals['name']
+    #         purchase = self.env['yc.purchase'].search(
+    #             [('id', '=', id), ('factory_id', '=', self.env.user.factory_id.id)])
+    #         if purchase.weighstate == False:
+    #             # sql = "update yc_purchase set weighstate='已過磅' where id=%d" % id
+    #             # self._cr.execute(sql)
+    #             purchase.weighstate = '已過磅'
+    #     return super(YcProduceDetails, self).create(vals)
+
+    # def write(self, vals):
+    #     ke=[]
+    #     if self._context.get('params')['action'] == 111:
+    #         id = self.id
+    #         purchase = self.env['yc.purchase'].search(
+    #             [('id', '=', id), ('factory_id', '=', self.env.user.factory_id.id)])
+    #         purchase.weighstate = '已過磅'
+    #     return super(YcProduceDetails, self).write(vals)
 
 
 class YcPurchaseStore(models.Model):

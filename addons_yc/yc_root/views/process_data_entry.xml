@@ -31,6 +31,7 @@
                                     <button string="資料查詢" type="object" class="oe_highlight"
                                             name="yc_purchase_search_name"/>
                                     <br/>
+                                    <label string="頭部記號" style="position: absolute;left: 750px;"/>
                                     <br/>
                                     <label string="進貨日期" style="font-weight:bold"/>
                                     <field name="day" style="width: 120px"/>
@@ -40,6 +41,10 @@
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="線材爐號" style="font-weight:bold"/>
                                     <field name="wire_furn" style="width: 150px"/>
+                                    <span style="display:inline-block; width: 70px;"></span>
+
+                                    <field name="headsign" widget='image' height="90" width="90"
+                                           style="width:100px;position:absolute;top:85px;left:750px"/>
                                     <br/>
                                     <label string="客戶批號" style="font-weight:bold"/>
                                     <field name="batch" style="width: 120px"/>
@@ -242,6 +247,9 @@
                                         <div>
                                             <button string="資料儲存" type="object" class="oe_highlight"
                                                     name="save_entry_data"/>
+                                            <span style="display:inline-block; width: 30px;"></span>
+                                            <label string="袋裝合計" style="font-weight:bold;font-size: x-large;"/>
+                                    <field name="num1" style="width:80px;font-size: x-large;"/>
                                         </div>
                                     </group>
                                     <field name="produce_details_ids">

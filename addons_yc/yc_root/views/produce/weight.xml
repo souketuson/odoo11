@@ -7,38 +7,6 @@
                 <script type="text/javascript" src="/yc_root/static/src/js/my_js.js"></script>
             </xpath>
         </template>
-
-        <!-- action -->
-        <record model="ir.actions.act_window" id="weight_list_action">
-            <field name="name">過磅單作業</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">yc.weight</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[("factory_id","in",[context.get('factory_id')])]</field>
-            <field name="context">{}</field>
-        </record>
-        <record model="ir.actions.act_window.view" id="weight_list_action_form">
-            <field name="act_window_id" ref="weight_list_action"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="weight_fom"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="weight_list_action_tree">
-            <field name="act_window_id" ref="weight_list_action"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="weight_tree"/>
-        </record>
-
-        <!-- getcontext -->
-        <record id="weight_filter_act" model="ir.actions.server">
-            <field name="name">使用者廠別動態過濾</field>
-            <field name="model_id" ref="yc_root.weight_list_action_tree"/>
-            <field name="state">code</field>
-            <field name="code">action = model.factory_filter()</field>
-        </record>
-
         <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>
@@ -156,7 +124,37 @@
                 </form>
             </field>
         </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="weight_list_action">
+            <field name="name">過磅單作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.weight</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[("factory_id","in",[context.get('factory_id')])]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="weight_list_action_form">
+            <field name="act_window_id" ref="weight_list_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="weight_fom"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="weight_list_action_tree">
+            <field name="act_window_id" ref="weight_list_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="weight_tree"/>
+        </record>
 
+        <!-- getcontext -->
+        <!-- 目前以修改odoo11.0>odoo>http.py L#1095 讓頁面抓到context 取代這一段功能 -->
+        <!--<record id="weight_filter_act" model="ir.actions.server">-->
+            <!--<field name="name">使用者廠別動態過濾</field>-->
+            <!--<field name="model_id" ref="yc_root.weight_list_action_tree"/>-->
+            <!--<field name="state">code</field>-->
+            <!--<field name="code">action = model.factory_filter()</field>-->
+        <!--</record>-->
         <!-- auto generate number-->
         <!-- 使用ir.sequence 模組，可能問題 1. 兩人同時登入使用，產生單號可能會相同
                                             2. 取消創建會跳號 implement 設no gap一樣-->

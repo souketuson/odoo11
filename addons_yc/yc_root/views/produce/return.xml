@@ -31,16 +31,6 @@
                 </form>
             </field>
         </record>
-        <!-- search -->
-        <record model="ir.ui.view" id="return_search_view">
-            <field name="name">return.search</field>
-            <field name="model">yc.return</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name"/>
-                </search>
-            </field>
-        </record>
         <!-- action -->
         <record model="ir.actions.act_window" id="return_action">
             <field name="name">開發中頁面</field>
@@ -62,6 +52,16 @@
             <field name="sequence" eval="10"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="return_tree"/>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="return_search_view">
+            <field name="name">return.search</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
         </record>
     </data>
 </odoo>

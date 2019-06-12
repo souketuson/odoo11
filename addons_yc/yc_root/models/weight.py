@@ -270,17 +270,28 @@ class YcWeightDetails(models.Model):
         if self.customer_id:
             self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
 
+    # def default_get(self, fields_list):
+    #     res = super(YcWeightDetails,self).default_get(fields_list)
+    #
+    #     k=[]
+    #     return
+    # def get_lines(self):
+    #     context = self._context
+    #     lines = self.env['yc.weight.details'].browse(context.get('active_ids'))
+
+
+
     # 轉檔要關掉?
-    @api.model
-    def create(self, vals):
-        main_key = self.env["yc.weight"].search([], order="id desc", limit=1).id
-        item_key = vals["name"]
-        # main equal to item only in create mode
-        # 應該不用修正
-        if item_key and main_key == item_key:
-            number = len(self.env["yc.weight.details"].search([("name", "=", item_key)]))
-            vals.update({"no": number + 1})
-            return super(YcWeightDetails, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     main_key = self.env["yc.weight"].search([], order="id desc", limit=1).id
+    #     item_key = vals["name"]
+    #     # main equal to item only in create mode
+    #     # 應該不用修正
+    #     if item_key and main_key == item_key:
+    #         number = len(self.env["yc.weight.details"].search([("name", "=", item_key)]))
+    #         vals.update({"no": number + 1})
+    #         return super(YcWeightDetails, self).create(vals)
 
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='tree', toolbar=False, submenu=False):

@@ -8,27 +8,7 @@
                 <!--<script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>-->
             </xpath>
         </template>
-        <!-- action must define before than use or it will return error-->
-        <record model="ir.actions.act_window" id="furna_import_action">
-            <field name="name">爐內進貨</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">yc.purchase</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('status','!=',11),("factory_id","in",[context.get('factory_id')])]</field>
-        </record>
-        <record model="ir.actions.act_window.view" id="furna_import_action_form">
-            <field name="act_window_id" ref="furna_import_action"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="furna_import_form"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="furna_import_action_tree">
-            <field name="act_window_id" ref="furna_import_action"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="furna_import_tree"/>
-        </record>
+
         <!--<act_window id="furna_import_review_form"-->
         <!--name="檢視表"-->
         <!--res_model="yc.purchase"-->
@@ -56,23 +36,17 @@
         <!--<field name="view_mode">form</field>-->
         <!--<field name="view_id" ref="furna_import_form"/>-->
         <!--</record>-->
-        <!-- getcontext -->
-        <record id="purchase_filter_act" model="ir.actions.server">
-            <field name="name">使用者廠別動態過濾</field>
-            <field name="model_id" ref="yc_root.furna_import_action_tree"/>
-            <field name="state">code</field>
-            <field name="code">action = model.factory_filter()</field>
-        </record>
         <!-- tree view -->
         <record model="ir.ui.view" id="furna_import_tree">
             <field name="name">furnaimport.tree</field>
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
-                <tree string="furna_import Tree" editable="top"  default_order='serial'>
+                <tree string="furna_import Tree" editable="top" default_order='serial'>
                     <button type="object" name="review_purchase" icon="fa-search" class="btn btn-secondary btn-lg"/>
                     <field name="order_furn"/>
                     <field name="serial"/>
-                    <button type="object" name="update_serial" icon="fa-refresh"  string="重編" class="btn btn-secondary btn-lg"/>
+                    <button type="object" name="update_serial" icon="fa-refresh" string="重編"
+                            class="btn btn-secondary btn-lg"/>
                     <field name="customer_id" readonly="1"/>
                     <field name="name" readonly="1"/>
                     <field name="day" readonly="1"/>
@@ -88,7 +62,8 @@
                     <field name="wire_furn" readonly="1"/>
                     <field name="giveday"/>
                     <field name="process1" readonly="1"/>
-                    <button type="object" icon="fa-sort-amount-asc" name="reorganize" string="重排" class="btn btn-secondary btn-lg"/>
+                    <button type="object" icon="fa-sort-amount-asc" name="reorganize" string="重排"
+                            class="btn btn-secondary btn-lg"/>
                 </tree>
             </field>
         </record>
@@ -254,6 +229,27 @@
                 </form>
             </field>
         </record>
+        <!-- action must define before than use or it will return error-->
+        <record model="ir.actions.act_window" id="furna_import_action">
+            <field name="name">爐內進貨</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('status','!=',11),("factory_id","in",[context.get('factory_id')])]</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="furna_import_action_form">
+            <field name="act_window_id" ref="furna_import_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="furna_import_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="furna_import_action_tree">
+            <field name="act_window_id" ref="furna_import_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="furna_import_tree"/>
+        </record>
         <!-- search -->
         <record model="ir.ui.view" id="furna_import_search_view">
             <field name="name">furnaimport.search</field>
@@ -269,5 +265,13 @@
                 </search>
             </field>
         </record>
+        <!-- getcontext -->
+        <!-- 目前以修改odoo11.0>odoo>http.py L#1095 讓頁面抓到context 取代這一段功能 -->
+        <!--<record id="purchase_filter_act" model="ir.actions.server">-->
+            <!--<field name="name">使用者廠別動態過濾</field>-->
+            <!--<field name="model_id" ref="yc_root.furna_import_action_tree"/>-->
+            <!--<field name="state">code</field>-->
+            <!--<field name="code">action = model.factory_filter()</field>-->
+        <!--</record>-->
     </data>
 </odoo>

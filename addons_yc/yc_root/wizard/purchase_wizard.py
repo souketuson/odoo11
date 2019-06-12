@@ -61,7 +61,7 @@ class YcPurchaseWizard(models.TransientModel):
         if len(domain) > 0:
             purchase = self.env['yc.purchase']
             # 搜尋出來的list要排除掉自己
-            domain += ('id', '!=', source.id)
+            domain += ('id', '!=', source.id),
             records = purchase.search([(d) for d in domain])
             for rec in self:
                 # 搜尋並列表

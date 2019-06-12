@@ -18,6 +18,7 @@
 
     ],
     'data': [
+        'views/quantity_data_entry.xml',
         'report/purchase_report.xml',
         'wizard/purchase_wizard.xml',
         'wizard/purchase_preorder.xml',
@@ -33,7 +34,6 @@
         'views/business/process1.xml',
         'views/business/process2.xml',
         'views/shipment.xml',
-        'views/quantity_data_entry.xml',
         'views/process_data_entry.xml',
         'views/produce/plan_furna.xml',
         'views/produce/furna_import.xml',
