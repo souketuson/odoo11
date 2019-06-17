@@ -8,7 +8,7 @@ import collections
 
 class YcPurchase(models.Model):
     _name = "yc.purchase"
-    _order = 'day desc'
+    _order = 'day desc,time desc'
 
     name = fields.Char("工令號碼")
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
@@ -80,6 +80,9 @@ class YcPurchase(models.Model):
     pre_furn = fields.Char("以前爐號")
     # 0517設成Many2one 轉檔要抓id 不能直接匯入
     order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
+    currnt_furno = fields.Many2one("yc.setfurnace", string="預排爐號")
+    # 上面兩個重複
+
     norcls = fields.Char("規範分類")
     wxr_txtur = fields.Char("華司材質")
     wxrhard = fields.Char("華司硬度")
@@ -334,7 +337,7 @@ class YcPurchase(models.Model):
     pweight = fields.Integer("進貨重量")
     tweight = fields.Integer("磅後總重")
     wdiff = fields.Integer("重量差")
-    currnt_furno = fields.Many2one("yc.setfurnace", string="預排爐號")
+
     serial = fields.Float("序號", default=99.9)
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
@@ -644,23 +647,10 @@ class YcPurchase(models.Model):
                 self.elecplswitch = 'OFF'
                 rec.elecpl_code = None
 
-    # 3.自動搜尋舊資料並資料帶出
-    # 品名分類(clsf_code)以及規格(norm_code)帶出 1.依據標準 2.表面硬度 3.心部硬度 4.試片 5.抗拉強度 6.扭力
-    # 以norm_code 的 parameter1值 去搜尋落在 產品機械性質主檔的 規格代碼起迄內之資料
-    # ! 舊資料庫 一層代碼的S03N0004 規格 裡面參數1資料不乾淨 造成查詢資料出現bug 須提供新的資料
-    # select * from 產品機械性質主檔 a WHERE a.產品分類代號 = 品名分類代碼.SelectedValue \
-    #  and a.強度級數 = 強度級數.SelectedValue \
-    #  and CAST(a.規格對照起 AS float) <=" + 直徑規格數字.ToString \
-    #  and CAST(a.規格對照迄 AS float) >=" + 直徑規格數字.ToString \
-
-    # select * from 扭力規格主檔 a
-    # WHERE a.品名分類= 品名分類代碼.SelectedValue
-    # and a.強度級數= 強度級數.SelectedValue
-    # and a.直徑規格= 規格代碼.SelectedValue
+    # 3.以品名分類、強度級數、規格，搜尋機械性質主檔並帶出 依據標準、表面硬度、心部硬度、試片、抗拉強度、扭力
     @api.onchange("clsf_code", "strength_level", "norm_code")
     def _fetch_norm_code_info(self):
         if self.norm_code and self.clsf_code and self._context.get('params')['action'] == 81:
-
             norm = self.env["yc.setnorm"]
             # 規格找出參數值
             norm_para = norm.search([('id', '=', self.norm_code.id)]).parameter1
@@ -688,6 +678,9 @@ class YcPurchase(models.Model):
                 self.tensihrd = mp.innertensihrd
                 self.carburlayer = mp.innercarburlayer
                 self.torsion = tor.torsion1
+            else:
+                raise Warning("沒有這個機械性質")
+
 
     # 4.搜尋舊檔WIZARD
     # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
@@ -754,7 +747,7 @@ class YcPurchase(models.Model):
             weight_cn = weight_item.search([('id', '=', cn)]).carno
             purchase = self.env["yc.purchase"]
             search = purchase.search(
-                [("name", "like", weight_cn[:-2]), ('factory_id', '=', self.env.user.factory_id.id)])
+                [("name", "like", weight_cn), ('factory_id', '=', self.env.user.factory_id.id)])
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
             vals.update({"name": name})

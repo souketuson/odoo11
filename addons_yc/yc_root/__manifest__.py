@@ -20,6 +20,7 @@
     'data': [
         'views/quantity_data_entry.xml',
         'report/purchase_report.xml',
+        'wizard/order_display.xml',
         'wizard/purchase_wizard.xml',
         'wizard/purchase_preorder.xml',
         'wizard/shipment_wizard.xml',
