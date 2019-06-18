@@ -23,7 +23,7 @@ class YcPurchaseDisplay(models.TransientModel):
             domain += ('order_furn', '=', self.order_furn.id ),
         if len(domain) > 0:
             purchase = self.env["yc.purchase"]
-            records = purchase.search([(d) for d in domain], limit= self.record_limit)
+            records = purchase.search([(d) for d in domain], limit=self.record_limit)
             if len(records) == 0:
                 self.records_number = '找不到資料'
             else:
@@ -53,7 +53,7 @@ class YcPurchaseDisplay(models.TransientModel):
 
         if len(domain) > 0:
             purchase = self.env["yc.purchase"]
-            records = purchase.search([(d) for d in domain], order='serial', limit= self.record_limit)
+            records = purchase.search([(d) for d in domain], order='serial', limit=self.record_limit)
             if len(records) == 0:
                 self.records_number2 = '找不到資料'
             else:
