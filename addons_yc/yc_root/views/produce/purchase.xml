@@ -50,7 +50,7 @@
                                                        style="width: 80px"/>
                                                 <field name="time" style="width: 60px"/>
                                                 <label string="所屬工廠" style="font-weight:bold"/>
-                                                <field name="factory_id" style="width: 80px"/>
+                                                <field name="factory_id" style="width: 80px" readonly="1"/>
                                                 <span style="display:inline-block; width: 40px;"/>
                                                 <label string="前工令號" style="font-weight:bold"/>
                                                 <field name="pre_order" style="width: 100px"/>

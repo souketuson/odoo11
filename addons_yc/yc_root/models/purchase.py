@@ -852,10 +852,11 @@ class YcPurchase(models.Model):
         if self._context.get('params')['action'] == 111:
             infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
             not_infurn_code = self.env['yc.setstatus'].search([('name', '=', '未進爐')]).id
-            if vals.get('ptime1') != False:
-                vals.update({'status': infurn_code})
-            elif vals.get('ptime1') == False:
+            if vals.get('ptime1') == False or vals.get('ptime1') == None:
                 vals.update({'status': not_infurn_code})
+            else:
+                vals.update({'status': infurn_code})
+
         return super(YcPurchase, self).write(vals)
 
     ###########################
