@@ -159,7 +159,7 @@
                                     </div>
                                     <div style="height:10px;"></div>
                                     <div>
-                                        <field name="produce_details_ids" eval="[(0,0,{'rawweight':0})]"
+                                        <field name="produce_details_ids"
                                                style="width: 460px;overflow-x: auto;">
                                             <tree create="false" delete="false" string="Produce Details"
                                                   editable="bottom">

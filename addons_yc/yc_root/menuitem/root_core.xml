@@ -117,7 +117,7 @@
                 <menuitem id="manufacture_menu" name="製造" parent="main_manufacture_menu" sequence="10"/>
                     <!-- manufacture sub menu -->
                     <menuitem id="process_data_entry_menu" name="製造過程登錄作業" parent="manufacture_menu" sequence="20" action="process_data_entry_action"/>
-                    <menuitem id="quantity_data_entry_menu" name="產量數據登錄作業" parent="manufacture_menu" sequence="21" action="quantity_data_entry_action"/>
+                    <menuitem id="quantity_data_entry_menu" name="產量數據登錄作業" parent="manufacture_menu" sequence="21" action="quantity_review_action"/>
                 <!-- manufacture_maintain category menu -->
                 <menuitem id="manufacture_maintain_menu" name="製程管理基本對照檔維護" parent="main_manufacture_menu" sequence="101"/>
                     <!-- manufacture sub menu -->

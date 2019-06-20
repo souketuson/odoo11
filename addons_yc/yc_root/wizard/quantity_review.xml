@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record model="ir.ui.view" id="quantity_review_form">
+            <field name="name">quantity_review.form</field>
+            <field name="model">yc.purchase.quantity</field>
+            <field name="arch" type="xml">
+                <form string="QuantityDataEntry form">
+                    <sheet >
+                        <group>
+                            <div style="background-color: #e6e6fa;width:100%">
+                                <div style="overflow-x:auto;width:1000px;">
+                                    <div>
+                                        <label string="爐號" style="font-weight:bold;font-size: large"/>
+                                        <field name="order_furn" style="width: 100px;height: 30px;"
+                                               options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width: 40px;"/>
+                                        <label string="未過磅" style="font-weight:bold;font-size: large"/>
+                                        <field name="notweighted_order"
+                                               domain='[("status","=",3),("weighstate", "=", False)]'
+                                               style="width: 100px;height: 30px;" options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width: 40px;"/>
+                                        <label string="已過磅" style="font-weight:bold;font-size: large"/>
+                                        <field name="weighted_order"
+                                               domain='[("status","=","3"),("weighstate", "!=", False)]'
+                                               style="width: 100px;height: 30px;" options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width: 40px;"/>
+                                        <label string="工令輸入" style="font-weight:bold;font-size: large"/>
+                                        <field name="searchname" style="width: 100px;height: 30px;"/>
+                                        <span style="display:inline-block; width: 20px;"/>
+                                        <button string="資料查詢" type="object" class="oe_highlight"
+                                        name="quantity_review_search_name"/>
+                                        <br/>
+                                        <label string="進貨日期" style="font-weight:bold"/>
+                                        <field name="day" style="width: 120px" readonly="1"/>
+                                        <span style="display:inline-block; width: 40px;"/>
+                                        <field name="order_name" style="width: 120px" readonly="1"/>
+                                        <field name="hidden_name" style="width: 120px" invisible="1"/>
+                                        <label string="　　客戶" style="font-weight:bold"/>
+                                        <field name="customer_id" style="width: 150px" options="{'no_create': True}"
+                                               readonly="1"/>
+                                        <span style="display:inline-block; width: 40px;"/>
+                                        <label string="線材爐號" style="font-weight:bold"/>
+                                        <field name="wire_furn" style="width: 150px"/>
+                                        <br/>
+                                    </div>
+                                    <div style="float:left;">
+                                        <label string="　　品名" style="font-weight:bold"/>
+                                        <field name="product_code" style="width: 120px" options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width:40px;"/>
+                                        <label string="客戶批號" style="font-weight:bold"/>
+                                        <field name="batch" style="width: 120px"/>
+                                        <br/>
+                                        <label string="　　規格" style="font-weight:bold"/>
+                                        <field name="norm_code" style="width: 90px" options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width: 84px;"/>
+                                        <label string="牙分類" style="font-weight:bold"/>
+                                        <field name="fullorhalf" style="width: 120px"/>
+                                        <br/>
+                                        <label string="　　材質" style="font-weight:bold"/>
+                                        <field name="txtur_code" style="width: 90px" options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width: 70px;"/>
+                                        <label string="表面處理" style="font-weight:bold"/>
+                                        <field name="surface_code" style="width: 120px" options="{'no_create': True}"/>
+                                        <br/>
+                                        <label string="加工方式" style="font-weight:bold"/>
+                                        <field name="proces_code" style="width: 90px" options="{'no_create': True}"/>
+                                        <span style="display:inline-block; width: 70px;"/>
+                                        <label string="抗拉強度" style="font-weight:bold"/>
+                                        <field name="tensihrd" style="width: 120px"/>
+                                        <br/>
+                                        <label string="表面硬度" style="font-weight:bold"/>
+                                        <field name="surfhrd" style="width: 100px"/>
+                                        <span style="display:inline-block; width: 60px;"/>
+                                        <label string="心部硬度" style="font-weight:bold"/>
+                                        <field name="corehrd" style="width: 120px"/>
+                                        <br/>
+                                        <label string="　滲碳層" style="font-weight:bold"/>
+                                        <field name="carburlayer" style="width: 70px"/>
+                                        <span style="display:inline-block; width: 60px;"/>
+                                        <label string="製造日期" style="font-weight:bold"/>
+                                        <field name="produceday1" style="width: 120px"/>
+                                        <field name="ptime1" style="width: 50px"/>
+                                        <br/>
+                                        <label string="　　數量" style="font-weight:bold"/>
+                                        <field name="num1" style="width:30px"/>
+                                        <field name="unit1" style="width:50px" options="{'no_create': True}"/>
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num2" style="width:30px"/>
+                                        <field name="unit2" style="width:50px" options="{'no_create': True}"/>
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num3" style="width:30px"/>
+                                        <field name="unit3" style="width:50px" options="{'no_create': True}"/>
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num4" style="width:30px"/>
+                                        <field name="unit4" style="width:50px" options="{'no_create': True}"/>
+                                        <br/>
+                                        <div style="border:2px black solid;padding-left: 5px;width: 430px;">
+                                            <div style="height: 5px;"></div>
+                                            <label string="袋裝合計" style="font-weight:bold"/>
+                                            <field name="totalpack" style="width:80px"/>
+                                            <label string="　進貨重量" style="font-weight:bold"/>
+                                            <field name="pweight" style="width:80px"/>
+                                            <label string="　以前爐號" style="font-weight:bold"/>
+                                            <field name="pre_furn" style="width:50px"/>
+                                            <br/>
+                                            <label string="入料桶數" style="font-weight:bold"/>
+                                            <field name="feedbucket" style="width:80px"/>
+                                            <label string="　入料總重" style="font-weight:bold"/>
+                                            <field name="feedweight" style="width:80px"/>
+                                            <label string="　現在爐號" style="font-weight:bold"/>
+                                            <field name="currnt_furno" style="width:50px"
+                                                   options="{'no_create': True}"/>
+                                            <br/>
+                                            <label string="磅後桶數" style="font-weight:bold"/>
+                                            <field name="weighbuckets" style="width:80px"/>
+                                            <label string="　磅後總重" style="font-weight:bold"/>
+                                            <field name="tweight" style="width:80px"/>
+                                            <br/>
+                                        </div>
+                                        <div style="border:2px black solid;border-style: hidden solid solid solid;width: 430px;">
+                                            <div style="height: 5px;"></div>
+                                            <label string="　桶數差" style="font-weight:bold"/>
+                                            <field name="bdiff" style="width:50px"/>
+                                            <label string="　　重量差" style="font-weight:bold"/>
+                                            <field name="wdiff" style="width:50px"/>
+                                            <br/>
+                                        </div>
+                                        <div style="height: 5px;"></div>
+                                        <span style="display:inline-block">
+                                            <label string="操作人員" style="font-weight:bold"/>
+                                            <field name="op1" style="width:80px" options="{'no_create': True}"/>
+                                            <span style="display:inline-block; width: 40px;"/>
+                                            <label string="" style="font-weight:bold"/>
+                                            <field name="op2" style="width:80px" options="{'no_create': True}"/>
+                                            <span style="display:inline-block; width: 40px;"/>
+                                            <label string="" style="font-weight:bold"/>
+                                            <field name="op3" style="width:80px" options="{'no_create': True}"/>
+                                        </span>
+
+                                        <br/>
+                                        <label string="注意事項" style="font-weight:bold"/>
+                                        <field name="notices1" style="width:24%%;font-size: xx-small;"/>
+                                        <field name="notices2" style="width:24%%;font-size: xx-small;"/>
+                                        <field name="notices3" style="width:24%%;font-size: xx-small;"/>
+                                        <br/>
+                                        <label string="品管備註" style="font-weight:bold"/>
+                                        <field name="qcnote1" style="width:24%%;font-size: xx-small;"/>
+                                        <field name="qcnote2" style="width:24%%;font-size: xx-small;"/>
+                                        <field name="qcnote3" style="width:24%%;font-size: xx-small;"/>
+                                        <br/>
+                                        <label string="製造備註" style="font-weight:bold"/>
+                                        <field name="prodnote1" style="width:24%%;font-size: xx-small;"/>
+                                        <field name="prodnote2" style="width:24%%;font-size: xx-small;"/>
+                                        <field name="prodnote3" style="width:24%%;font-size: xx-small;"/>
+                                    </div>
+                                    <div style="float:left;padding:20px;width:600px;position: absolute;top: 100px;left: 450px;">
+                                        <div>
+                                            <button string="清除" type="object"
+                                                    class="oe_highlight glyphicon glyphicon-trash"
+                                                    name="" style=""/>
+                                            <span style="display:inline-block; width: 80px;"/>
+                                            <button string="資料儲存" type="object" class="oe_highlight"
+                                                    name="save_entry_data" icon="fa-save" style=""/>
+                                        </div>
+                                        <div style="height:10px;"></div>
+                                        <div>
+                                            <field name="produce_details_ids"
+                                                   style="width: 460px;overflow-x: auto;">
+                                                <tree create="false" delete="false" string="Produce Details"
+                                                      editable="bottom">
+                                                    <!--<field name="name"/>-->
+                                                    <field name="bucket_no" readonly="1"/>
+                                                    <field name="rawweight"/>
+                                                    <field name="emptybucket"/>
+                                                    <field name="unit"/>
+                                                    <field name="rawnetweight"/>
+                                                    <field name="feed_man"/>
+                                                    <field name="tweight"/>
+                                                    <field name="recevieemptybucket"/>
+                                                    <field name="recevietunit"/>
+                                                    <field name="tnetweight"/>
+                                                    <field name="recevie_man"/>
+                                                    <field name="weightdiff"/>
+                                                </tree>
+                                            </field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="quantity_review_action">
+            <field name="name">產量登錄作業</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.purchase.quantity</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="quantity_review_action_form">
+            <field name="act_window_id" ref="quantity_review_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="quantity_review_form"/>
+        </record>
+    </data>
+</odoo>

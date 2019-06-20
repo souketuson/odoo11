@@ -92,7 +92,7 @@ class YcPurchaseWizard(models.TransientModel):
 class YcYcPurchasePreorder(models.TransientModel):
     _name = 'yc.purchase.preorder'
 
-    condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回'), ('TR', '轉廠')],
+    condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')],
                                  string="退回來源")
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
 

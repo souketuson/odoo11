@@ -110,7 +110,7 @@
                                         <field name="customer_detail_ids">
                                             <tree string="Customer Details" editable="bottom">
                                                 <field name="no" invisible="1"/>
-                                                <field name="customer_code" style="width:100px"/>
+                                                <field name="customer_code" style="width:200px;"/>
                                                 <field name="customer_id"/>
                                                 <field name="processing_id"/>
                                                 <field name="note"/>

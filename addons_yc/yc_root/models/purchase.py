@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import datetime as dt
 import collections
 
@@ -80,8 +80,7 @@ class YcPurchase(models.Model):
     pre_furn = fields.Char("以前爐號")
     # 0517設成Many2one 轉檔要抓id 不能直接匯入
     order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
-    currnt_furno = fields.Many2one("yc.setfurnace", string="預排爐號")
-    # 上面兩個重複
+    currnt_furno = fields.Many2one("yc.setfurnace", string="現在爐號")
 
     norcls = fields.Char("規範分類")
     wxr_txtur = fields.Char("華司材質")
@@ -475,10 +474,10 @@ class YcPurchase(models.Model):
             id = self.env['yc.purchase'].search(
                 [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
             # 自動新增6筆空資料到details (應該也可以用default_get新增)
-            to_create_order = purchase.search([('id','=',id)])
-            if len(to_create_order.produce_details_ids)== 0:
+            to_create_order = purchase.search([('id', '=', id)])
+            if len(to_create_order.produce_details_ids) == 0:
                 for i in range(1, 7):
-                    to_create_order.produce_details_ids = [(0, 0, {'name': id , 'bucket_no': i})]
+                    to_create_order.produce_details_ids = [(0, 0, {'name': id, 'bucket_no': i})]
             return {
                 'name': self.searchname,
                 'res_model': 'yc.purchase',
@@ -497,35 +496,35 @@ class YcPurchase(models.Model):
             # 'target': 'inline',
             # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
             # }
-        elif self._context.get('params')['action'] == 112:
-            # S05N0200 產量登錄作業
-            purchase = self.env["yc.purchase"]
-            repeated_name_record = purchase.search(
-                [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)])
-            empty_name_record = purchase.search([('name', '=', None), ('factory_id', '=', self.env.user.factory_id.id)])
-            # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
-            if len(repeated_name_record) > 1:
-                to_delete_id = purchase.search(
-                    [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)], order='id desc',
-                    limit=1).id
-                sql = "delete from yc_purchase where id=%d" % to_delete_id
-                self._cr.execute(sql)
-            if len(empty_name_record) >= 1:
-                sql = "delete from yc_purchase where name is NULL"
-                self._cr.execute(sql)
-            id = self.env['yc.purchase'].search(
-                [('name', '=', self.searchname or self.weighted_order.name or self.notweighted_order.name),
-                 ('factory_id', '=', self.env.user.factory_id.id)]).id
-            return {
-                'name': self.searchname,
-                'res_model': 'yc.purchase',
-                'type': 'ir.actions.act_window',
-                'res_id': id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
-                'target': 'inline',
-            }
+        # elif self._context.get('params')['action'] == 112:
+        #     # S05N0200 產量登錄作業
+        #     purchase = self.env["yc.purchase"]
+        #     repeated_name_record = purchase.search(
+        #         [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)])
+        #     empty_name_record = purchase.search([('name', '=', None), ('factory_id', '=', self.env.user.factory_id.id)])
+        #     # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
+        #     if len(repeated_name_record) > 1:
+        #         to_delete_id = purchase.search(
+        #             [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)], order='id desc',
+        #             limit=1).id
+        #         sql = "delete from yc_purchase where id=%d" % to_delete_id
+        #         self._cr.execute(sql)
+        #     if len(empty_name_record) >= 1:
+        #         sql = "delete from yc_purchase where name is NULL"
+        #         self._cr.execute(sql)
+        #     id = self.env['yc.purchase'].search(
+        #         [('name', '=', self.searchname or self.weighted_order.name or self.notweighted_order.name),
+        #          ('factory_id', '=', self.env.user.factory_id.id)]).id
+        #     return {
+        #         'name': self.searchname,
+        #         'res_model': 'yc.purchase',
+        #         'type': 'ir.actions.act_window',
+        #         'res_id': id,
+        #         'view_type': 'form',
+        #         'view_mode': 'form',
+        #         'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
+        #         'target': 'inline',
+        #     }
         elif self._context.get('params')['action'] == 124:
             # S04N0200
             to_delete_id = self.env["yc.purchase"].search(
@@ -679,8 +678,8 @@ class YcPurchase(models.Model):
                 self.carburlayer = mp.innercarburlayer
                 self.torsion = tor.torsion1
             else:
-                raise Warning("沒有這個機械性質")
-
+                return {
+                    'warning': {'title': _('提醒'), 'message': _("沒有這個機械性質")}}
 
     # 4.搜尋舊檔WIZARD
     # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
@@ -764,12 +763,32 @@ class YcPurchase(models.Model):
         if not self.car_no:
             raise Warning("車次序號不能空")
 
+    # 8. 加熱爐和回火爐自動填值
+    @api.onchange('heat2', 'tempturing2')
+    def _auto_fill_in(self):
+        if self.heat2:
+            init = int(self.heat2)
+            self.heat1 = init - 30
+            self.heat3 = init
+            self.heat4 = init
+            self.heat5 = init
+            self.heat6 = init
+            self.heat7 = init
+            self.heat8 = init
+        if self.tempturing2:
+            init = int(self.tempturing2)
+            self.tempturing1 = init - 30
+            self.tempturing3 = init
+            self.tempturing4 = init
+            self.tempturing5 = init
+            self.tempturing6 = init
+
     ################################
     ### 分爐排程 plan_furna.xml 用 ###
     ################################
     # 1. 分爐排程進貨日期距現在日期超過十天返色提醒
     def _ten_days_check(self):
-        if self._context.get('params')['action'] == 109:
+        if self._context.get('params')['action'] == 187:
             for rec in self:
                 if rec.day:
                     rec_day = dt.strptime(rec.day.replace("-", ""), "%Y%m%d").date()
@@ -781,33 +800,33 @@ class YcPurchase(models.Model):
     ### 爐類進貨 furna_import.xml 用 ###
     ##################################
     # 1.在爐內進貨 序號改完要馬上更新資料庫資料
-    def update_serial(self):
-        vals = {"serial": self.serial}
-        purchase = self.env["yc.purchase"].search(
-            [("id", "=", self.id), ('factory_id', '=', self.env.user.factory_id.id)])
-        purchase.write(vals)
+    # def update_serial(self):
+    #     vals = {"serial": self.serial}
+    #     purchase = self.env["yc.purchase"].search(
+    #         [("id", "=", self.id), ('factory_id', '=', self.env.user.factory_id.id)])
+    #     purchase.write(vals)
 
     # 2.重排序號(except 99.9 然後轉成未進爐)
-    def reorganize(self):
-        purchase = self.env["yc.purchase"]
-        rows = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "!=", 99.9),
-                                ('factory_id', '=', self.env.user.factory_id.id)])
-        purchase_list = []
-        for row in rows:
-            purchase_list.append([row.id, row.serial])
-        # 重新排序
-        purchase_list = sorted(purchase_list, key=lambda s: s[1])
-        # 重新賦值
-        for x in range(len(rows)):
-            purchase_list[x][1] = x + 1
-        # update data
-        for row in purchase_list:
-            purchase.search([("id", "=", row[0])]).write({'serial': row[1], 'status': 4})
-        # 99.9 狀態轉未進爐
-        notin_list = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "=", 99.9),
-                                      ('factory_id', '=', self.env.user.factory_id.id)])
-        for row in notin_list:
-            notin_list.search([("id", "=", row.id)]).write({'status': 4})
+    # def reorganize(self):
+    #     purchase = self.env["yc.purchase"]
+    #     rows = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "!=", 99.9),
+    #                             ('factory_id', '=', self.env.user.factory_id.id)])
+    #     purchase_list = []
+    #     for row in rows:
+    #         purchase_list.append([row.id, row.serial])
+    #     # 重新排序
+    #     purchase_list = sorted(purchase_list, key=lambda s: s[1])
+    #     # 重新賦值
+    #     for x in range(len(rows)):
+    #         purchase_list[x][1] = x + 1
+    #     # update data
+    #     for row in purchase_list:
+    #         purchase.search([("id", "=", row[0])]).write({'serial': row[1], 'status': 4})
+    #     # 99.9 狀態轉未進爐
+    #     notin_list = purchase.search([("order_furn", "=", self.order_furn.id), ("serial", "=", 99.9),
+    #                                   ('factory_id', '=', self.env.user.factory_id.id)])
+    #     for row in notin_list:
+    #         notin_list.search([("id", "=", row.id)]).write({'status': 4})
 
     # 3.爐內進貨導向form view
     def review_purchase(self):
@@ -832,23 +851,12 @@ class YcPurchase(models.Model):
         # 製程登錄作業 S03N0200
         if self._context.get('params')['action'] == 111:
             infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
-            if vals.get('ptime1') != '':
+            not_infurn_code = self.env['yc.setstatus'].search([('name', '=', '未進爐')]).id
+            if vals.get('ptime1') != False:
                 vals.update({'status': infurn_code})
+            elif vals.get('ptime1') == False:
+                vals.update({'status': not_infurn_code})
         return super(YcPurchase, self).write(vals)
-
-    ################
-    ### 品質主檔用 ###
-    ################
-    # 1.檢驗狀態
-    @api.onchange("wholeck", "faceck")
-    def _set_checkstate(self):
-        for rec in self:
-            if rec.wholeck == '待處理':
-                self.checkstate = '待處理'
-            elif rec.wholeck == '不合格' or rec.faceck == '不合格':
-                self.checkstate = '檢驗不合格'
-            elif rec.wholeck == '合格' and rec.faceck == '合格':
-                self.checkstate = '檢驗合格'
 
     ###########################
     ### S05N0200 製程登錄作業 ###
@@ -895,6 +903,20 @@ class YcPurchase(models.Model):
             self.carb1v = t1.carburlayer
             self.sskvste = t1.sectionshrink
             self.safeload = t1.safeload
+
+    ################
+    ### 品質主檔用 ###
+    ################
+    # 1.檢驗狀態
+    @api.onchange("wholeck", "faceck")
+    def _set_checkstate(self):
+        for rec in self:
+            if rec.wholeck == '待處理':
+                self.checkstate = '待處理'
+            elif rec.wholeck == '不合格' or rec.faceck == '不合格':
+                self.checkstate = '檢驗不合格'
+            elif rec.wholeck == '合格' and rec.faceck == '合格':
+                self.checkstate = '檢驗合格'
 
 
 class YcProduceDetails(models.Model):
@@ -949,14 +971,13 @@ class YcProduceDetails(models.Model):
     #             purchase.weighstate = '已過磅'
     #     return super(YcProduceDetails, self).create(vals)
 
-    # def write(self, vals):
-    #     ke=[]
-    #     if self._context.get('params')['action'] == 111:
-    #         id = self.id
-    #         purchase = self.env['yc.purchase'].search(
-    #             [('id', '=', id), ('factory_id', '=', self.env.user.factory_id.id)])
-    #         purchase.weighstate = '已過磅'
-    #     return super(YcProduceDetails, self).write(vals)
+    def write(self, vals):
+        if self._context.get('params')['action'] == 188 and self.bucket_no == 1:
+            # 找到該工令明細檔的第一桶 磅後重如果大於0 該工令過磅狀態變成已過磅
+            if vals['tweight'] > 0:
+                purchase = self.env['yc.purchase'].search([('name', '=', self.name.name)])
+                purchase.write({'weighstate': '已過磅'})
+        return super(YcProduceDetails, self).write(vals)
 
 
 class YcPurchaseStore(models.Model):

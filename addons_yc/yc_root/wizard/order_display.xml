@@ -9,32 +9,37 @@
             <form string="Shipment Wizard">
                 <sheet>
                     <div>
-                    <label string="筆數" style="font-weight:bold;position:absolute;right:90px;"/>
-                    <field name="record_limit" style="width:40px;position:absolute;right:50px;"/>
+                        <button name="form_refresh" string="重排" type="object"/>
+                        <label string="筆數" style="font-weight:bold;position:absolute;right:90px;"/>
+                        <field name="record_limit" style="width:40px;position:absolute;right:50px;"/>
                     </div>
                     <notebook>
                         <page string="分爐排程">
                             <group>
                                 <div>
-                                    <label string="客戶" style="font-weight:bold"/>
-                                    <field name="customer_id" style="width:120px" options="{'no_create': True}"/>
-                                    <span style="display:inline-block; width:45px;"/>
                                     <label string="爐號" style="font-weight:bold"/>
                                     <field name="order_furn" style="width:120px" options="{'no_create': True}"/>
+                                    <span style="display:inline-block; width:45px;"/>
+                                    <label string="客戶" style="font-weight:bold"/>
+                                    <field name="customer_id" style="width:120px" options="{'no_create': True}"/>
                                     <br/>
+                                    <!--style="width: 950px;overflow-x: auto;"-->
                                     <field name="purchase_ids" widget="many2many">
                                         <tree create="false" edit="true" delete="false" string="分爐排程"
-                                              editable="top" default_order='day'>
-                                            <field name="customer_id" string="客戶簡稱" readonly="1"/>
+                                              editable="top" decoration-danger="ckimportdate == 'over'"
+                                              default_order='day'>
+                                            <!--<field name="factory_id" readonly="1"/>-->
+                                            <field name="ckimportdate" invisible="1"/>
+                                            <field name="customer_id" string="客戶" readonly="1"/>
                                             <field name="order_furn" string="爐號"/>
-                                            <field name="day" string="進貨日期" readonly="1"/>
+                                            <field name="day" string="進貨日" readonly="1"/>
                                             <field name="name" string="工令號碼" readonly="1"/>
                                             <field name="product_code" string="品名" readonly="1"/>
                                             <field name="norm_code" string="規格" readonly="1"/>
                                             <field name="txtur_code" string="材質" readonly="1"/>
                                             <field name="surface_code" string="表面" readonly="1"/>
                                             <field name="retempt" string="回溫" readonly="1"/>
-                                            <field name="totalpack" string="袋裝合計(桶數)" readonly="1"/>
+                                            <field name="totalpack" string="袋(桶數)" readonly="1"/>
                                             <field name="net" string="淨重" sum="總重" readonly="1"/>
                                             <field name="status" string="狀態" readonly="1"/>
                                             <field name="surfhrd" string="表面硬度" readonly="1"/>
@@ -57,24 +62,26 @@
                                     <field name="purchase_ids2" widget="many2many">
                                         <tree create="false" edit="true" delete="false" string="爐內進貨"
                                               editable="top" default_order='serial'>
+                                            <field name="ckimportdate" invisible="1"/>
                                             <button type="object" name="review_purchase" icon="fa-search"
                                                     class="btn btn-secondary btn-lg"/>
-                                            <field name="order_furn" string="爐號"/>
+                                            <field name="order_furn" string="爐號" readonly="1"/>
+                                            <!--<field name="factory_id" readonly="1"/>-->
                                             <field name="serial"/>
-                                            <field name="customer_id" readonly="1"/>
-                                            <field name="name" readonly="1"/>
-                                            <field name="day" readonly="1"/>
+                                            <field name="customer_id" string="客戶" readonly="1"/>
+                                            <field name="name" string="工令" readonly="1"/>
+                                            <field name="day" string="進貨日" readonly="1"/>
                                             <field name="product_code" readonly="1"/>
                                             <field name="norm_code" readonly="1"/>
                                             <field name="txtur_code" readonly="1"/>
-                                            <field name="surface_code" readonly="1"/>
-                                            <field name="retempt"/>
-                                            <field name="weighbuckets" readonly="1"/>
-                                            <field name="net" sum="總重" readonly="1"/>
+                                            <field name="surface_code" string="表面" readonly="1"/>
+                                            <field name="retempt" string="回火"/>
+                                            <field name="giveday" string="交期"/>
+                                            <field name="wire_furn" string="線材爐" readonly="1"/>
                                             <field name="surfhrd" readonly="1"/>
                                             <field name="corehrd" readonly="1"/>
-                                            <field name="wire_furn" readonly="1"/>
-                                            <field name="giveday"/>
+                                            <field name="net" sum="總重" readonly="1"/>
+                                            <field name="weighbuckets" readonly="1"/>
                                             <field name="process1" readonly="1"/>
                                         </tree>
                                     </field>
