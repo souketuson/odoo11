@@ -10,6 +10,7 @@
                 <sheet>
                     <div>
                         <button name="form_refresh" string="重排" type="object"/>
+                        <!--<button name="clear_records" string="清除" type="object"/>-->
                         <label string="筆數" style="font-weight:bold;position:absolute;right:90px;"/>
                         <field name="record_limit" style="width:40px;position:absolute;right:50px;"/>
                     </div>

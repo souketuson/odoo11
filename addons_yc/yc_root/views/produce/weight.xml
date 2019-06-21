@@ -51,10 +51,10 @@
                                     <br/>
                                     <label string="司機名稱" style="font-weight:bold"/>
                                     <field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"
-                                           style="width:80px"/>
+                                           style="width:80px"  options="{'no_open': True}"/>
                                     <span style="display:inline-block; width:45px;"/>
                                     <label string="　過磅員" style="font-weight:bold"/>
-                                    <field name="person_id" style="width:70px"/>
+                                    <field name="person_id" style="width:70px" options="{'no_open': True}"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="進貨次數" style="font-weight:bold"/>
                                     <field name="purchase_times" invisible="1" style="width:50px"/>

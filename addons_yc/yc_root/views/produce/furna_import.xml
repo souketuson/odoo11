@@ -76,54 +76,54 @@
                     <sheet>
                         <div style="overflow-x:auto;width:1000px;">
                             <label string="工令號碼" style="font-weight:bold"/>
-                            <field name="name" style="width:100px" class="test"/>
+                            <field name="name" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="進貨日期" style="font-weight:bold"/>
-                            <field name="day" style="width:120px" class="test"/>
+                            <field name="day" style="width:120px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="客戶" style="font-weight:bold"/>
-                            <field name="customer_id" style="width:100px" class="test"/>
+                            <field name="customer_id" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="客戶批號" style="font-weight:bold"/>
-                            <field name="batch" style="width:100px" class="test"/>
+                            <field name="batch" style="width:100px" class="test" readonly="1"/>
                             <br/>
                             <span style="display:inline-block; width: 27px;"/>
                             <label string="品名" style="font-weight:bold"/>
-                            <field name="product_code" style="width:180px" class="test"/>
+                            <field name="product_code" style="width:180px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="規格" style="font-weight:bold"/>
-                            <field name="norm_code" style="width:100px" class="test"/>
+                            <field name="norm_code" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
-                            <field name="len_code" style="width:100px" class="test"/>
-                            <field name="len_descript" style="width:100px" class="test"/>
+                            <field name="len_code" style="width:100px" class="test" readonly="1"/>
+                            <field name="len_descript" style="width:100px" class="test" readonly="1"/>
                             <br/>
                             <label string="品名分類" style="font-weight:bold"/>
-                            <field name="clsf_code" style="width:150px" class="test"/>
+                            <field name="clsf_code" style="width:150px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="材質" style="font-weight:bold"/>
-                            <field name="txtur_code" style="width:100px" class="test"/>
+                            <field name="txtur_code" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="表面處理" style="font-weight:bold"/>
-                            <field name="surface_code" style="width:100px" class="test"/>
+                            <field name="surface_code" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="強度級數" style="font-weight:bold"/>
-                            <field name="strength_level" style="width:100px" class="test"/>
+                            <field name="strength_level" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="牙分類" style="font-weight:bold"/>
-                            <field name="fullorhalf" style="width:80px" class="test"/>
+                            <field name="fullorhalf" style="width:80px" class="test" readonly="1"/>
                             <br/>
                             <label string="加工方式" style="font-weight:bold"/>
-                            <field name="proces_code" style="width:100px" class="test"/>
+                            <field name="proces_code" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="數量　" style="font-weight:bold" class="oe_inline"/>
                             <field name="num1" style="width:70px" class="test"/>　
-                            <field name="unit1" nolabel="1" style="width:50px" class="test"/>
+                            <field name="unit1" nolabel="1" style="width:50px" class="test" readonly="1"/>
                             <field name="num2" style="width:70px" class="test"/>
-                            <field name="unit2" nolabel="1" style="width:50px" class="test"/>
+                            <field name="unit2" nolabel="1" style="width:50px" class="test" readonly="1"/>
                             <field name="num3" style="width:70px" class="test"/>
-                            <field name="unit3" nolabel="1" style="width:50px" class="test"/>
+                            <field name="unit3" nolabel="1" style="width:50px" class="test" readonly="1"/>
                             <field name="num4" style="width:70px" class="test"/>
-                            <field name="unit4" nolabel="1" style="width:50px" class="test"/>　
+                            <field name="unit4" nolabel="1" style="width:50px" class="test" readonly="1"/>　
                             <br/>
                             <span style="display:inline-block; width: 27px;"/>
                             <label string="淨重" style="font-weight:bold"/>

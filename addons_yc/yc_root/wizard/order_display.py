@@ -17,6 +17,8 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange("customer_id", "order_furn")
     def _filter_order(self):
         if self.customer_id or self.order_furn:
+            # 先清空list
+            self.purchase_ids = [(5,0,0)]
             domain = ()
             if self.customer_id:
                 domain += ('customer_id', '=', self.customer_id.id),
@@ -53,6 +55,7 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange("order_furn2")
     def _filter_order2(self):
         if self.order_furn2:
+            self.purchase_ids2 = [(5, 0, 0)]
             domain = ()
             domain += ('order_furn', '=', self.order_furn2.id),
             if len(domain) > 0:
@@ -104,3 +107,7 @@ class YcPurchaseDisplay(models.TransientModel):
                 purchase.search([('id', '=', sort_list[x][0])]).write(vals)
             self._filter_order()
             self._filter_order2()
+
+    def clear_records(self):
+        self.purchase_ids = [(5,0,0)]
+        self.purchase_ids2 = [(5, 0, 0)]
