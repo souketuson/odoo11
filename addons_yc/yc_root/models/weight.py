@@ -3,6 +3,7 @@
 
 from odoo import models, fields, api
 from datetime import datetime as dt
+import pytz
 
 
 class YcWeight(models.Model):
@@ -57,15 +58,9 @@ class YcWeight(models.Model):
 
     @api.model
     def _get_time(self):
-        # 不知道為什麼 odoo 有時候會把datetime.now()的時間丟到頁面後會 -8小時
-        # 有以上狀況 hour +8 即可解決
-        hour = dt.now().hour
-        minute = dt.now().minute
-        sec = dt.now().second
-        if hour > 24:
-            hour -= 24
-
-        time = "%02d:%02d:%02d" % (hour, minute, sec)
+        user_tz = self.env.user.tz
+        now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+        time = '%s:%s:%s' % (now[8:10], now[10:12], now[12:14])
         return time
 
     # 車次序號產生

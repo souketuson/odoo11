@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo import models, fields,api
+from odoo import models, fields, api
+
 
 # S01
 class YcSetFactory(models.Model):
@@ -11,11 +12,13 @@ class YcSetFactory(models.Model):
     code = fields.Char("廠別代碼")
     params1 = fields.Char("參數1")
 
+
 class YcSetDepartment(models.Model):
     # 部門 S01N0002
     _name = 'yc.department'
     name = fields.Char(string='部門名稱')
     code = fields.Char(string='部門代碼')
+
 
 class YcSetJobTitle(models.Model):
     # 職稱 S01N0004
@@ -23,11 +26,13 @@ class YcSetJobTitle(models.Model):
     name = fields.Char("職稱")
     code = fields.Char("職稱代碼")
 
+
 class YcSetSalaryItem(models.Model):
     # 薪資項目 S01N0005
     _name = "yc.setsalaryitem"
     name = fields.Char("薪資項目名稱")
     code = fields.Char("薪資項目代碼")
+
 
 class YcSetshift(models.Model):
     # 班別 S01N0006
@@ -38,11 +43,13 @@ class YcSetshift(models.Model):
     other2 = fields.Char("其他2")
     other3 = fields.Char("其他3")
 
+
 class YcSetleave(models.Model):
     # 假別 S01N0007
     _name = "yc.setleave"
     name = fields.Char("假別名稱")
     code = fields.Char("假別代碼")
+
 
 class YcSetBonus(models.Model):
     # 獎金 S01N0008
@@ -51,6 +58,7 @@ class YcSetBonus(models.Model):
     name = fields.Char("獎金項目")
     code = fields.Char("獎金代碼")
 
+
 # S02
 class YcSetcustomertype(models.Model):
     # 客戶種類 S02N0001
@@ -58,11 +66,13 @@ class YcSetcustomertype(models.Model):
     name = fields.Char("名稱")
     code = fields.Char("代碼")
 
+
 class YcSetsuppliertype(models.Model):
     # 廠商種類 S02N0002
     _name = "yc.setsuppliertype"
     name = fields.Char("名稱")
     code = fields.Char("代碼")
+
 
 class YcSetpayment(models.Model):
     # 付款方式 S02N0003
@@ -70,11 +80,13 @@ class YcSetpayment(models.Model):
     name = fields.Char("名稱")
     code = fields.Char("代碼")
 
+
 class YcSetcurrency(models.Model):
     # 貨幣設定 S02N0004
     _name = "yc.setcurrency"
     name = fields.Char("名稱")
     code = fields.Char("代碼")
+
 
 class YcSetprocessingplanttype(models.Model):
     # 加工廠種類設定 S02N0005
@@ -82,11 +94,13 @@ class YcSetprocessingplanttype(models.Model):
     name = fields.Char("名稱")
     code = fields.Char("代碼")
 
+
 class YcSetprocessingareatype(models.Model):
     # 加工廠區域設定 S02N0005
     _name = "yc.setprocessingareatype"
     name = fields.Char("名稱")
     code = fields.Char("代碼")
+
 
 # S03
 class YcSetproduct(models.Model):
@@ -107,9 +121,9 @@ class YcSetproduct(models.Model):
             domain = [('name', operator, name)]
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
-
-        product = self.search(domain + args, limit=limit)
+        product = self.search(domain + args, limit=limit, order='name asc')
         return product.name_get()
+
 
 class YcSetstrength(models.Model):
     # 強度級數 S03N0002
@@ -144,6 +158,12 @@ class YcSetlength(models.Model):
     parmeter2 = fields.Float("參數2")
     parmeter3 = fields.Char("參數3")
 
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = [('name', '=like', '{0}%'.format(name))]
+        length = self.search(domain + args, limit=limit, order='name asc')
+        return length.name_get()
 
 class YcSetprocess(models.Model):
     #  加工方式 S03N0006
@@ -185,11 +205,13 @@ class YcSeteunit(models.Model):
     name = fields.Char("單位名稱")
     code = fields.Char("單位代碼")
 
+
 class YcSetStatus(models.Model):
     # 狀態
     _name = "yc.setstatus"
     name = fields.Char("狀態")
     code = fields.Char("狀態代碼")
+
 
 class YcSetfurnace(models.Model):
     # 爐號
@@ -197,12 +219,11 @@ class YcSetfurnace(models.Model):
     name = fields.Char("爐號")
     code = fields.Char("代碼")
 
+
 class YcFactory(models.Model):
     _name = "yc.factory"
     name = fields.Char("廠別名稱")
     code = fields.Char("廠別代碼")
-
-
 
 
 # S04
@@ -215,9 +236,10 @@ class YcSetproducenote(models.Model):
     parameter2 = fields.Char("參數2")
     parameter3 = fields.Char("參數3")
 
+
 class YcSethardness(models.Model):
     # 品質管理-硬度 S04N0003
-    _name ="yc.sethardness"
+    _name = "yc.sethardness"
     name = fields.Char("硬度名稱")
     code = fields.Char("硬度代碼")
     parameter1 = fields.Char("參數1")
@@ -227,7 +249,7 @@ class YcSethardness(models.Model):
 
 class YcSethardness(models.Model):
     # 品質管理-品管備註 S04N0004
-    _name ="yc.setqcnote"
+    _name = "yc.setqcnote"
     name = fields.Char("備註名稱")
     code = fields.Char("備註代碼")
     parameter1 = fields.Char("參數1")

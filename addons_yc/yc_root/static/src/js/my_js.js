@@ -10,10 +10,11 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             self._super.apply(this, arguments);
              /*  this is used to register a listener on an event.
                   form: .on(ev, node.callback, node.context);
-                   ev:
-                      'resize': implement when browser resize
-                      'DOM_updated': implement when DOM updated
-                      ...etc.                                      */
+                  ev:
+                     'resize': implement when browser resize
+                     'DOM_updated': implement when DOM updated
+                     ...etc.
+             */
              core.bus.on('click', "div[name='in_out'] div input:checked", self.bgChanger);
              core.bus.on('DOM_updated', "span[name='in_out']", self.post_bgChanger);
              core.bus.on('click', "button .o_pager_next", self.post_bgChanger);
