@@ -36,10 +36,10 @@
                             <group string="過磅單">
                                 <div>
                                     <label string="過磅日期" style="font-weight:bold"/>
-                                    <field name="day" style="width:120px"/>
+                                    <field name="weightime" style="width:70px;position: relative;left: 192px;"/>
                                     <span style="display:inline-block; width:5px;"/>
-                                    <label string="過磅時間" style="font-weight:bold"/>
-                                    <field name="weightime" style="width:70px"/>
+                                    <label string="過磅時間" style="font-weight:bold;position: relative;left: 60px;"/>
+                                    <field name="day" style="width:120px;position: relative;left: -135px;"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="進出貨" style="font-weight:bold"/>
                                     <field class="in_out" name="in_out" attrs="{'readonly': [('id', '!=', False)]}"
@@ -51,10 +51,10 @@
                                     <br/>
                                     <label string="司機名稱" style="font-weight:bold"/>
                                     <field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"
-                                           style="width:80px"  options="{'no_open': True}"/>
+                                           style="width:80px"  options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width:45px;"/>
                                     <label string="　過磅員" style="font-weight:bold"/>
-                                    <field name="person_id" style="width:70px" options="{'no_open': True}"/>
+                                    <field name="person_id" style="width:70px" options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="進貨次數" style="font-weight:bold"/>
                                     <field name="purchase_times" invisible="1" style="width:50px"/>
@@ -73,7 +73,7 @@
                                            style="width:70px"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="所屬工廠" style="font-weight:bold"/>
-                                    <field name="factory_id" style="width:70px" readonly="1"/>
+                                    <field name="factory_id" style="width:70px" readonly="1" options="{'no_open': True}"/>
                                     <br/>
                                     <label string="地磅序號" style="font-weight:bold"/>
                                     <field name="weighbridge" style="width:100px"/>
@@ -109,7 +109,6 @@
                                     <div>
                                         <field name="customer_detail_ids">
                                             <tree string="Customer Details" editable="bottom">
-                                                <field name="no" invisible="1"/>
                                                 <field name="customer_code" style="width:200px;"/>
                                                 <field name="customer_id"/>
                                                 <field name="processing_id"/>

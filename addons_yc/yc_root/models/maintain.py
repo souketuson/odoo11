@@ -154,8 +154,8 @@ class YcSetlength(models.Model):
     _name = "yc.setlength"
     name = fields.Char("長度名稱")
     code = fields.Char("長度代碼")
-    parameter1 = fields.Float("參數1")
-    parmeter2 = fields.Float("參數2")
+    parameter1 = fields.Char("參數1")
+    parmeter2 = fields.Char("參數2")
     parmeter3 = fields.Char("參數3")
 
     @api.model
@@ -247,7 +247,7 @@ class YcSethardness(models.Model):
     parameter3 = fields.Char("參數3")
 
 
-class YcSethardness(models.Model):
+class YcSetqcnote(models.Model):
     # 品質管理-品管備註 S04N0004
     _name = "yc.setqcnote"
     name = fields.Char("備註名稱")

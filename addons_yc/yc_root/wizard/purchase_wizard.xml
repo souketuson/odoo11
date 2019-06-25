@@ -51,7 +51,7 @@
                                 <field name="tensihrd" string="抗拉" readonly="1"/>
                                 <field name="carburlayer" string="滲碳" readonly="1"/>
                                 <field name="torsion" readonly="1"/>
-                                <field name="retempt" string="回火" readonly="1"/>
+                                <field name="tempturing2" string="回火" readonly="1"/>
                                 <field name="order_furn" string="預排爐" readonly="1"/>
                             </tree>
                         </field>

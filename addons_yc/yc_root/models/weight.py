@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from datetime import datetime as dt
 import pytz
 
@@ -117,6 +118,11 @@ class YcWeight(models.Model):
         if not self.in_out:
             raise Warning("進出貨分類空值")
 
+    @api.constrains("plate_no")
+    def _verify(self):
+        if not self.plate_no:
+            raise Warning("車號未填")
+
     # 進出貨次數自動計算
     @api.multi
     @api.onchange('day', 'in_out', 'driver_id')
@@ -158,12 +164,16 @@ class YcWeight(models.Model):
 
     # 覆寫新增資料:create()
     # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有create方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫
+
     @api.model
     def create(self, vals):
         _net = vals["total"] - vals["emptybucket"] - vals["curbweight"]
         vals.update({"net": _net,
                      "display_purchase": vals['purchase_times'],
                      "display_shipment": vals['ship_times']})
+        # 檢查項目檔至少有一筆
+        if not vals.get('customer_detail_ids'):
+            raise UserError(_('進貨項目不能是空的'))
         return super(YcWeight, self).create(vals)
 
     # 覆寫修改資料:write()
@@ -233,12 +243,9 @@ class YcWeight(models.Model):
             'context': dict(ctx),
         }
 
-
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"
     name = fields.Many2one("yc.weight", "訂單編號", ondelete='cascade')
-    no = fields.Integer("序號", store=True)
-    # compute_no = fields.Integer("最大數", compute= "_get_row_no")
     customer_id = fields.Many2one("yc.customer", "客戶名稱", required=True)
     processing_id = fields.Many2one("yc.processing", "加工廠名稱", required=True)
     note = fields.Char("備註")
@@ -273,20 +280,6 @@ class YcWeightDetails(models.Model):
     # def get_lines(self):
     #     context = self._context
     #     lines = self.env['yc.weight.details'].browse(context.get('active_ids'))
-
-
-
-    # 轉檔要關掉?
-    # @api.model
-    # def create(self, vals):
-    #     main_key = self.env["yc.weight"].search([], order="id desc", limit=1).id
-    #     item_key = vals["name"]
-    #     # main equal to item only in create mode
-    #     # 應該不用修正
-    #     if item_key and main_key == item_key:
-    #         number = len(self.env["yc.weight.details"].search([("name", "=", item_key)]))
-    #         vals.update({"no": number + 1})
-    #         return super(YcWeightDetails, self).create(vals)
 
     # @api.model
     # def fields_view_get(self, view_id=None, view_type='tree', toolbar=False, submenu=False):

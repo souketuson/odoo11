@@ -85,7 +85,7 @@ class YcPurchaseWizard(models.TransientModel):
                 source_list.tensihrd = wizard_checked.tensihrd
                 source_list.carburlayer = wizard_checked.carburlayer
                 source_list.torsion = wizard_checked.torsion
-                source_list.retempt = wizard_checked.retempt
+                source_list.tempturing2 = wizard_checked.tempturing2
                 source_list.order_furn = wizard_checked.order_furn
 
 

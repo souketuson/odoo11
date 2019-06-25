@@ -47,16 +47,16 @@
                                                 <label string="進貨日期" style="font-weight:bold;"/>
                                                 <!--<field name="day"-->
                                                        <!--style="width: 120px;position:absolute;top: 75px;left:81px;"/>-->
-                                                <field name="day" style="width: 120px;"/>
+                                                <field name="time" style="width: 60px;position: relative;left: 255px;"/>
                                                 <!--<label string="製表日期"-->
                                                        <!--style="font-weight:bold;position:absolute;top: 76px;left:210px;"/>-->
-                                                <label string="製表日期" style="font-weight:bold;"/>
+                                                <label string="製表日期" style="font-weight:bold;position: relative;left: 65px;"/>
                                                 <!--<field name="copy_createdate" attrs="{'readonly': True }"-->
                                                        <!--style="width: 80px;position:absolute;top: 76px;left:271px;"/>-->
-                                                <field name="copy_createdate" attrs="{'readonly': True }" style="width: 80px;"/>
+                                                <field name="copy_createdate" attrs="{'readonly': True }" style="width: 80px;position:relative;left: 67px;"/>
                                                 <!--<field name="time"-->
                                                        <!--style="width: 60px;position:absolute;top: 75px;left:345px;"/>-->
-                                                <field name="time" style="width: 60px;"/>
+                                                <field name="day" style="width: 120px;position: relative;left: -200px;"/>
                                                 <!--<label string="所屬工廠"-->
                                                        <!--style="font-weight:bold;position:absolute;top: 75px;left:445px;"/>-->
                                                 <label string="所屬工廠" style="font-weight:bold;"/>
@@ -103,39 +103,40 @@
                                                 <span style="display:inline-block; width: 20px;"/>
                                                 <label string="開單人員"
                                                        style="font-weight:bold;position: absolute;top:155px;left: 605px;"/>
-                                                <!--<field name="person" style="width: 100px" readonly="1"/>-->
+                                                <field name="person" style="width: 100px" readonly="1"/>
                                                 <span style="display:inline-block; width: 120px;"/>
 
                                                 <br/>
                                             </div>
                                             <div>
                                                 <div style="height: 5px;"/>
-                                                <span style="display:inline-block; width: 15px;"/>
+                                                <!--<span style="display:inline-block; width: 15px;"/>-->
+                                                <field name="ck4"/>
                                                 <label string="品名分類" style="font-weight:bold"/>
                                                 <field name="clsf_code" style="width:140px"
                                                        options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 30px;"/>
-
+                                                <field name="ck1"/>
                                                 <label string="品名" style="font-weight:bold"/>
                                                 <field name="product_code" style="width:150px"
                                                        options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 30px;"/>
-
+                                                <field name="ck7"/>
                                                 <label string="強度級數" style="font-weight:bold"/>
                                                 <field name="strength_level" style="width:100px"
                                                        options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 30px;"/>
-
+                                                <field name="ck6"/>
                                                 <label string="材質" style="font-weight:bold"/>
                                                 <field name="txtur_code" style="width:100px"
                                                        options="{'no_open': True}"/>
                                                 <br/>
-                                                <span style="display:inline-block; width: 15px;"/>
+                                                <field name="ck2"/>
                                                 <label string="規格　　" style="font-weight:bold"/>
                                                 <field name="norm_code" style="width:100px"
                                                        options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 20px;"/>
-
+                                                <field name="ck3"/>
                                                 <label string="長度" style="font-weight:bold"/>
                                                 <field name="len_code" style="width:100px" options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 10px;"/>
@@ -144,7 +145,8 @@
                                                 <label string="牙分類" style="font-weight:bold"/>
                                                 <field name="fullorhalf" style="width:100px;border: 1px black solid;"/>
                                                 <br/>
-                                                <span style="display:inline-block; width: 15px;"/>
+                                                <!--<span style="display:inline-block; width: 15px;"/>-->
+                                                <field name="ck5"/>
                                                 <label string="加工方式" style="font-weight:bold"/>
                                                 <field name="proces_code" style="width:100px"
                                                        options="{'no_open': True}"/>
@@ -158,27 +160,21 @@
                                                        attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"
                                                        style="width:100px" options="{'no_open': True}"/>　
                                                 <field name="elecplswitch" invisible="1"/>
-
                                             </div>
-
-
                                             <div>
                                                 <div>
                                                     <label string="數量　" style="font-weight:bold" class="oe_inline"/>
                                                     <field name="num1" style="width:50px"/>　
                                                     <field name="unit1" nolabel="1" style="width:50px"
                                                            options="{'no_open': True}"/>
-
                                                     <label string="" class="oe_inline"/>
                                                     <field name="num2" style="width:50px"/>
                                                     <field name="unit2" nolabel="1" style="width:50px"
                                                            options="{'no_open': True}"/>
-
                                                     <label string="" class="oe_inline"/>
                                                     <field name="num3" style="width:50px"/>
                                                     <field name="unit3" nolabel="1" style="width:50px"
                                                            options="{'no_open': True}"/>
-
                                                     <label string="" class="oe_inline"/>
                                                     <field name="num4" style="width:50px"/>
                                                     <field name="unit4" nolabel="1" style="width:50px"
@@ -205,6 +201,7 @@
                                                     <label string="依據標準" style="font-weight:bold"/>
                                                     <field name="standard" style="width:100px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
+                                                    <field name="ck8"/>
                                                     <label string="線材爐號" style="font-weight:bold"/>
                                                     <field name="wire_furn" style="width:100px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
@@ -242,7 +239,7 @@
                                                     <field name="torsion" style="width:90px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
                                                     <label string="回火溫度" style="font-weight:bold"/>
-                                                    <field name="retempt" style="width:90px"/>
+                                                    <field name="tempturing2" style="width:90px"/>
                                                     <span style="display:inline-block; width: 20px;"/>
                                                     <label string="預排爐號" style="font-weight:bold"/>
                                                     <field name="order_furn" style="width:60px"
@@ -260,7 +257,8 @@
                                                     <field name="wxrhard" style="width:90px"/>
                                                     <br/>
                                                 </div>
-                                                <div style="clear:both;">
+                                                <div style="clear:both;"></div>
+                                                <div style="float:left;padding:3px;">
                                                     <br/>
                                                     <label string="注意事項" style="font-weight:bold"/>
                                                     <field name="notices1" style="width:200px"/>
@@ -276,6 +274,10 @@
                                                     <field name="prodnote1" style="width:200px"/>
                                                     <field name="prodnote2" style="width:200px"/>
                                                     <field name="prodnote3" style="width:200px"/>
+                                                </div>
+                                                <div style="float:left;padding:3px;">
+                                                    <button name="%(action_qcnote_wizard)d" type="action" class="oe_highlight" icon="fa-plus"
+                                                            style="top: 50px;position: relative;left: 15px;"/>
                                                 </div>
                                             </div>
                                         </page>
@@ -336,17 +338,17 @@
                                 </group>
                             </div>
                         </sheet>
-                        <field name="ck4" style="position:absolute;top:187px;left: 15px;"/>
-                        <field name="ck1" style="position:absolute;top:187px;left: 245px;"/>
-                        <field name="ck7" style="position:absolute;top:187px;left: 457px;"/>
-                        <field name="ck6" style="position:absolute;top:187px;left: 645px;"/>
-                        <field name="ck2" style="position:absolute;top:214px;left: 15px;"/>
-                        <field name="ck3" style="position:absolute;top:214px;left: 195px;"/>
-                        <field name="ck5" style="position:absolute;top:242px;left: 15px;"/>
-                        <field name="ck8" style="position:absolute;top:406px;left: 179px;"/>
-                        <field name="list_man"
-                               style="width: 100px;position:absolute;top:155px;left:665px;border: 1px black solid;"
-                               readonly="1"/>
+                        <!--<field name="ck4" style="position:absolute;top:187px;left: 15px;"/>-->
+                        <!--<field name="ck1" style="position:absolute;top:187px;left: 245px;"/>-->
+                        <!--<field name="ck7" style="position:absolute;top:187px;left: 457px;"/>-->
+                        <!--<field name="ck6" style="position:absolute;top:187px;left: 645px;"/>-->
+                        <!--<field name="ck2" style="position:absolute;top:214px;left: 15px;"/>-->
+                        <!--<field name="ck3" style="position:absolute;top:214px;left: 195px;"/>-->
+                        <!--<field name="ck5" style="position:absolute;top:242px;left: 15px;"/>-->
+                        <!--<field name="ck8" style="position:absolute;top:406px;left: 179px;"/>-->
+                        <!--<field name="list_man"-->
+                               <!--style="width: 100px;position:absolute;top:155px;left:665px;border: 1px black solid;"-->
+                               <!--readonly="1"/>-->
                     </div>
                 </form>
             </field>

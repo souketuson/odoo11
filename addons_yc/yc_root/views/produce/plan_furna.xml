@@ -16,7 +16,7 @@
                     <field name="norm_code" readonly="1"/>
                     <field name="txtur_code" readonly="1"/>
                     <field name="surface_code" readonly="1"/>
-                    <field name="retempt" readonly="1"/>
+                    <field name="tempturing2" readonly="1"/>
                     <field name="weighbuckets" readonly="1"/>
                     <field name="net" sum="總重" readonly="1"/>
                     <field name="status" readonly="1"/>
@@ -195,7 +195,7 @@
                 <search>
                     <field name="name"/>
                     <field name="status"/>
-                    <field name="retempt"/>
+
                     <field name="wire_furn"/>
                     <field name="customer_id"/>
                 </search>

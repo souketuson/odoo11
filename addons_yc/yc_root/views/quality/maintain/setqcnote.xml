@@ -8,8 +8,6 @@
             <field name="arch" type="xml">
                 <tree string="setqcnote Tree">
                     <field name="name"/>
-                    <field name="code"/>
-                    <field name="parameter1"/>
                 </tree>
             </field>
         </record>
@@ -22,8 +20,6 @@
                     <sheet>
                         <group string="">
                             <field name="name"/>
-                            <field name="code"/>
-                            <field name="parameter1"/>
                         </group>
                     </sheet>
                 </form>
@@ -35,7 +31,6 @@
             <field name="model">yc.setqcnote</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="code"/>
                     <field name="name"/>
                 </search>
             </field>

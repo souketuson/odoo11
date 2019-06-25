@@ -45,6 +45,14 @@ class YcBusiness(models.Model):
     opost_code3 = fields.Char("其他郵遞區號3")
     oaddress3 = fields.Char("其他地址3")
 
+    @api.multi
+    def name_get(self):
+        # <field name="customer_id" context="{'type': 'display'}"/>
+        if self._context.get('type') == 'display':
+            return [(record.id, "%s %s" % (record.code, record.name)) for record in self]
+        else:
+            return [(record.id, record.name) for record in self]
+
     # 讓many2one下拉可以搜尋"代碼"來找產品
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):

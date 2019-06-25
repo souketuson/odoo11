@@ -8,7 +8,7 @@ class YcPurchaseDisplay(models.TransientModel):
     order_furn = fields.Many2one("yc.setfurnace", string="爐號")
     order_furn2 = fields.Many2one("yc.setfurnace", string="爐號")
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
-    purchase_ids2 = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
+    purchase_ids2 = fields.Many2many("yc.purchase", relation= 'yc_purchase_yc_purchase_display_rel2', string="purchase search", help="查詢列表")
     records_number = fields.Char("資料筆數", default='共　筆資料')
     records_number2 = fields.Char("資料筆數", default='共　筆資料')
     record_limit = fields.Integer("資料限制筆數", default=200, help="限制資料筆數")
@@ -18,7 +18,7 @@ class YcPurchaseDisplay(models.TransientModel):
     def _filter_order(self):
         if self.customer_id or self.order_furn:
             # 先清空list
-            self.purchase_ids = [(5,0,0)]
+            self.purchase_ids = [(5, 0, 0)]
             domain = ()
             if self.customer_id:
                 domain += ('customer_id', '=', self.customer_id.id),
@@ -108,6 +108,78 @@ class YcPurchaseDisplay(models.TransientModel):
             self._filter_order()
             self._filter_order2()
 
-    def clear_records(self):
-        self.purchase_ids = [(5,0,0)]
-        self.purchase_ids2 = [(5, 0, 0)]
+    # def clear_records(self):
+    #     self.purchase_ids = [(5, 0, 0)]
+    #     self.purchase_ids2 = [(5, 0, 0)]
+
+# class YcPurchaseDisplayWizard(models.TransientModel):
+#     _name="yc.purchase.display.wizard"
+#
+#     name = fields.Char("工令號碼")
+#     day = fields.Date("進貨日期")
+#     customer_id = fields.Many2one("yc.customer", "客戶名稱")
+#     batch = fields.Char("客戶批號")
+#     product_code = fields.Many2one("yc.setproduct", string="品名", index=True, auto_join=True)
+#     norm_code = fields.Many2one("yc.setnorm", string="規格")
+#     len_code = fields.Many2one("yc.setlength", string="長度")
+#     len_descript = fields.Char("長度說明")
+#     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
+#     txtur_code = fields.Many2one("yc.settexture", string="材質")
+#     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
+#     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
+#     fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+#     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
+#     num1 = fields.Integer("數量1")
+#     unit1 = fields.Many2one("yc.setunit", string="單位代號1")
+#     num2 = fields.Integer("數量2")
+#     unit2 = fields.Many2one("yc.setunit", string="單位代號2")
+#     num3 = fields.Integer("數量3")
+#     unit3 = fields.Many2one("yc.setunit", string="單位代號3")
+#     num4 = fields.Integer("數量4")
+#     unit4 = fields.Many2one("yc.setunit", string="單位代號4")
+#     net = fields.Integer("淨重")
+#     surfhrd = fields.Char("表面硬度")
+#     corehrd = fields.Char("心部硬度")
+#     storeplace = fields.Char("存放位置")
+#     tensihrd = fields.Char("抗拉強度")
+#     carburlayer = fields.Char("滲碳層")
+#     order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
+#     wire_furn = fields.Char("線材爐號")
+#     produceday1 = fields.Date("製造日期1")
+#     shift1 = fields.Many2one("yc.setshift", string="班別1")
+#     op1 = fields.Many2one("yc.hr", string="操作人員1")
+#     ptime1 = fields.Char("製造時間1")
+#     qc = fields.Many2one("yc.hr", string="品管人員")
+#     flow = fields.Char("流量")
+#     cp = fields.Char("CP值")
+#     nh31 = fields.Char("氨值1")
+#     nh32 = fields.Char("氨值2")
+#     nh33 = fields.Char("氨值3")
+#     nh34 = fields.Char("氨值4")
+#     heat1 = fields.Char("加熱爐1")
+#     heat2 = fields.Char("加熱爐2")
+#     heat3 = fields.Char("加熱爐3")
+#     heat4 = fields.Char("加熱爐4")
+#     heat5 = fields.Char("加熱爐5")
+#     heat6 = fields.Char("加熱爐6")
+#     heat7 = fields.Char("加熱爐7")
+#     heat8 = fields.Char("加熱爐8")
+#     heattemp = fields.Char("加熱爐油溫")
+#     heatsped = fields.Char("加熱爐速度")
+#     tempturing1 = fields.Char("回火爐1")
+#     tempturing2 = fields.Char("回火爐2")
+#     tempturing3 = fields.Char("回火爐3")
+#     tempturing4 = fields.Char("回火爐4")
+#     tempturing5 = fields.Char("回火爐5")
+#     tempturing6 = fields.Char("回火爐6")
+#     tempturisped = fields.Char("回火爐速度")
+#     notices1 = fields.Char("注意事項1")
+#     notices2 = fields.Char("注意事項2")
+#     notices3 = fields.Char("注意事項3")
+#     qcnote1 = fields.Char("品管備註1")
+#     qcnote2 = fields.Char("品管備註2")
+#     qcnote3 = fields.Char("品管備註3")
+#     prodnote1 = fields.Char("製造備註1")
+#     prodnote2 = fields.Char("製造備註2")
+#     prodnote3 = fields.Char("製造備註3")
+

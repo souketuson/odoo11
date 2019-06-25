@@ -33,7 +33,7 @@ class YcPurchase(models.Model):
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
-    list_man = fields.Many2one("res.users", string="開單人員", default= lambda self: self.env.user.id)
+    list_man = fields.Many2one("res.users", string="開單人員", default=lambda self: self.env.user.id)
     ck4 = fields.Boolean("品名分類check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
     ck7 = fields.Boolean("強度級數check", default=True, help="在搜尋舊檔wizard自動代入篩選")
@@ -41,12 +41,12 @@ class YcPurchase(models.Model):
     ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
-    product_code = fields.Many2one("yc.setproduct", string="品名")
+    product_code = fields.Many2one("yc.setproduct", string="品名", index=True, auto_join=True)
     # 和上面重複
     # productname = fields.Many2one("yc.setproduct", string="產品名稱")
     ck6 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
-    ck3 = fields.Boolean("品名check", default=False, help="在搜尋舊檔wizard自動代入篩選")
+    ck3 = fields.Boolean("長度check", default=False, help="在搜尋舊檔wizard自動代入篩選")
     len_code = fields.Many2one("yc.setlength", string="長度")
     # 待確定
     len_descript = fields.Char("長度說明")
@@ -437,7 +437,7 @@ class YcPurchase(models.Model):
     def _get_time(self):
         user_tz = self.env.user.tz
         now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
-        time = '%s:%s:%s' % (now[8:10],now[10:12],now[12:14])
+        time = '%s:%s:%s' % (now[8:10], now[10:12], now[12:14])
         # hour = dt.now().hour
         # minute = dt.now().minute
         # sec = dt.now().second
@@ -844,6 +844,26 @@ class YcPurchase(models.Model):
             'target': 'current',
             'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
         }
+
+    # 4.
+    def action_purchase_display_wizard(self):
+        return {
+            'name': self.name,
+            'res_model': 'yc.purchase',
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('yc_root.yc_purchase_display_wizard').id,
+            'target': 'new',
+            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+        }
+
+    # 5.
+    def wizard_comfirm(self):
+        # 修改完更新爐內進貨頁面資料
+        for rec in self.env['yc.purchase'].browse(self._context.get('active_ids')):
+            super(rec, 'yc.purchase.display')._filter_order2()
 
     ###########################
     ### S05N0100 製程登錄作業 ###
