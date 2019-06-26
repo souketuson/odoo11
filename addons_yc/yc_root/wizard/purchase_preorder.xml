@@ -24,7 +24,7 @@
                                 <field name="pre_order" readonly="1"/>
                                 <field name="notices3" readonly="1"/>
                             </tree>
-                        </field>
+                        </field> 
                     </div>
                 </group>
                 <footer>
