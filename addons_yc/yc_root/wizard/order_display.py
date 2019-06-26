@@ -118,8 +118,8 @@ class YcPurchaseDisplay(models.TransientModel):
                              'status': not_infurn})
                 # [(1, id, vals)] 好像無法用在create狀態
                 purchase.search([('id', '=', sort_list[x][0])]).write(vals)
-            self._filter_order()
-            self._filter_order2()
+        self._filter_order()
+        self._filter_order2()
 
     # def clear_records(self):
     #     self.purchase_ids = [(5, 0, 0)]
