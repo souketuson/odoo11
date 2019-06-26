@@ -63,7 +63,7 @@
                                                 <!--<field name="factory_id"-->
                                                        <!--style="width: 80px;position:absolute;top: 75px;left:505px;"-->
                                                        <!--readonly="1"/>-->
-                                                <field name="factory_id" style="width: 80px;" readonly="1"/>
+                                                <field name="factory_id" style="width: 80px;" readonly="1" options="{'no_open': True,'no_create': True}"/>
                                                 <!--<label string="前工令號" style="font-weight:bold;position:absolute;top: 75px;left:595px;"/>-->
                                                 <label string="前工令號" style="font-weight:bold;"/>
                                                 <!--<field name="pre_order" style="width: 100px;position:absolute;top: 76px;left:655px;"/>-->
@@ -114,27 +114,27 @@
                                                 <field name="ck4"/>
                                                 <label string="品名分類" style="font-weight:bold"/>
                                                 <field name="clsf_code" style="width:140px"
-                                                       options="{'no_open': True}"/>
+                                                       options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"/>
                                                 <field name="ck1"/>
                                                 <label string="品名" style="font-weight:bold"/>
                                                 <field name="product_code" style="width:150px"
-                                                       options="{'no_open': True}"/>
+                                                       options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"/>
                                                 <field name="ck7"/>
                                                 <label string="強度級數" style="font-weight:bold"/>
                                                 <field name="strength_level" style="width:100px"
-                                                       options="{'no_open': True}"/>
+                                                       options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"/>
                                                 <field name="ck6"/>
                                                 <label string="材質" style="font-weight:bold"/>
                                                 <field name="txtur_code" style="width:100px"
-                                                       options="{'no_open': True}"/>
+                                                       options="{'no_open': True,'no_create': True}"/>
                                                 <br/>
                                                 <field name="ck2"/>
                                                 <label string="規格　　" style="font-weight:bold"/>
                                                 <field name="norm_code" style="width:100px"
-                                                       options="{'no_open': True}"/>
+                                                       options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 20px;"/>
                                                 <field name="ck3"/>
                                                 <label string="長度" style="font-weight:bold"/>
@@ -166,19 +166,19 @@
                                                     <label string="數量　" style="font-weight:bold" class="oe_inline"/>
                                                     <field name="num1" style="width:50px"/>　
                                                     <field name="unit1" nolabel="1" style="width:50px"
-                                                           options="{'no_open': True}"/>
+                                                           options="{'no_open': True,'no_create': True}"/>
                                                     <label string="" class="oe_inline"/>
                                                     <field name="num2" style="width:50px"/>
                                                     <field name="unit2" nolabel="1" style="width:50px"
-                                                           options="{'no_open': True}"/>
+                                                           options="{'no_open': True,'no_create': True}"/>
                                                     <label string="" class="oe_inline"/>
                                                     <field name="num3" style="width:50px"/>
                                                     <field name="unit3" nolabel="1" style="width:50px"
-                                                           options="{'no_open': True}"/>
+                                                           options="{'no_open': True,'no_create': True}"/>
                                                     <label string="" class="oe_inline"/>
                                                     <field name="num4" style="width:50px"/>
                                                     <field name="unit4" nolabel="1" style="width:50px"
-                                                           options="{'no_open': True}"/>　
+                                                           options="{'no_open': True,'no_create': True}"/>　
                                                     <span style="display:inline-block; width: 30px;"/>　
                                                     <label string="存放地點" style="font-weight:bold"/>
                                                     <field name="storeplace" style="width:100px"/>

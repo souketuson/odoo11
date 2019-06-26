@@ -11,11 +11,18 @@
                         <label string="退回來源" style="font-weight:bold"/>
                         <field name="condition" style="width:100px" widget="radio" options="{'horizontal': True}"/>
                         <br/>
-                        <field name="purchase_ids" widget="many2many">
-                            <tree create="false" string="Purchase Details" editable="top">
-                                <!--<field name=""/>-->
-                                <field name="name"/>
-                                <!--<field name=""/>-->
+                        <field name="return_ids" widget="many2many" attrs="{'invisible': [('condition', '!=', 'OT')]}">
+                            <tree create="false" delete="false" string="Purchase Details" editable='top'>
+                                <field name="name" readonly="1"/>
+                                <field name="order" readonly="1"/>
+                                <field name="note" readonly="1"/>
+                            </tree>
+                        </field>
+                        <field name="purchase_ids" widget="many2many" attrs="{'invisible': [('condition', '!=', 'IT')]}">
+                            <tree create="false" delete="false" string="Purchase Details" editable="top">
+                                <field name="name" readonly="1"/>
+                                <field name="pre_order" readonly="1"/>
+                                <field name="notices3" readonly="1"/>
                             </tree>
                         </field>
                     </div>

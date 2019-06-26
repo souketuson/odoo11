@@ -2,7 +2,7 @@
 
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from datetime import datetime as dt
 import pytz
 
@@ -173,7 +173,7 @@ class YcWeight(models.Model):
                      "display_shipment": vals['ship_times']})
         # 檢查項目檔至少有一筆
         if not vals.get('customer_detail_ids'):
-            raise UserError(_('進貨項目不能是空的'))
+            raise ValidationError(_('進貨項目不能是空的'))
         return super(YcWeight, self).create(vals)
 
     # 覆寫修改資料:write()

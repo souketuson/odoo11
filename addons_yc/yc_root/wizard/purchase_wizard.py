@@ -63,9 +63,8 @@ class YcPurchaseWizard(models.TransientModel):
             # 搜尋出來的list要排除掉自己
             domain += ('id', '!=', source.id),
             records = purchase.search([(d) for d in domain])
-            for rec in self:
-                # 搜尋並列表
-                rec.purchase_ids = [(4, record.id) for record in records]
+            # 搜尋並列表
+            self.purchase_ids = [(4, record.id) for record in records]
 
     # 把表面硬度,心部硬度,試片,抗拉強度,滲碳層,以前爐號,扭力,回火溫度,預排爐號 帶入到現在的進貨單
     @api.multi
@@ -94,26 +93,23 @@ class YcYcPurchasePreorder(models.TransientModel):
 
     condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')],
                                  string="退回來源")
+    return_ids = fields.Many2many("yc.return", string="purchase search", help="查詢列表")
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
-
-    @api.onchange('condition ')
+    @api.onchange('condition')
     def search_purchase(self):
-        transmit_code = self.env['yc.setstatus'].search([('name', '=', '轉廠')]).id
-        # 要先建好出貨退回檔
+        if self.condition:
+            transmit_code = self.env['yc.setstatus'].search([('name', '=', '轉廠')]).id
+            # 要先建好出貨退回檔
+            # OT_list = [(name) for name in self.env['轉廠單項目檔'].search([]).name ]
+            if self.condition == 'OT':
+                records = self.env['yc.return'].search([])
+                self.return_ids = [(4, record.id) for record in records]
+            elif self.condition == 'IT':
+                # 廠內退回似乎在品質檢驗階段 如果被轉入進貨單 前工令單會自動key值
+                # IT 只要找出前工令號有值 and 等於工令號的紀錄
+                has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
+                records = has_preorder.search([('name', '=', has_preorder.pre_order)])
+                self.purchase_ids = [(4, rec.id) for rec in records]
 
-        # 要先建好轉廠主檔& 項目檔
-        # OT_list = [(name) for name in self.env['轉廠單項目檔'].search([]).name ]
-        domain = ()
-        if self.condition == 'IT':
-            IT_list = [(name) for name in self.env['yc.return'].search([]).name ]
-            domain = ('name', 'in', IT_list)
-        # elif self.condition == 'OT':
-        #     domain += ('name', 'in', OT_list)
-        # elif self.condition == 'TR':
-        #     domain += ('status', '=', transmit_code)
-
-        if len(domain) > 0:
-            purchase = self.env['yc.purchase']
-            records = purchase.search([(d) for d in domain])
-            for rec in self:
-                rec.purchase_ids = [(4, record.id) for record in records]
+    def comfirm(self):
+        return

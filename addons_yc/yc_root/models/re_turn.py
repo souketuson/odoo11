@@ -5,9 +5,9 @@ from datetime import datetime as dt
 class YcReturn(models.Model):
     _name = "yc.return"
     name = fields.Char("出貨退回編號")
-    order = fields.Char("工令號碼")
+    order = fields.Char("退回工令號碼")
     neworder = fields.Char("新工令號碼")
-    day = fields.Date("進貨日期", default=lambda self: self.dt.today())
+    day = fields.Date("進貨日期", default=dt.today())
     ardebitday = fields.Datetime("應收帳款扣款日期")
     followup = fields.Char("處理方式")
     byear = fields.Char("所屬帳款年")

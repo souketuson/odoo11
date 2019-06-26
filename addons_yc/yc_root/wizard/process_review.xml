@@ -12,16 +12,16 @@
                                 <div style="background-color: #e6e6ff;">
                                     <label string="爐號" style="font-weight:bold;font-size: large"/>
                                     <field name="order_furn" style="width: 100px;height: 30px;"
-                                           options="{'no_create': True}"/>
+                                            options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="未進爐" style="font-weight:bold;font-size: large"/>
                                     <field name="furn_notin"
                                            domain='[("status", "=", "2"),("serial","!=", "99.9"),("serial",">","1")]'
-                                           style="width: 100px;height: 30px;" options="{'no_create': True}"/>
+                                           style="width: 100px;height: 30px;"  options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="已進爐" style="font-weight:bold;font-size: large"/>
                                     <field name="furn_in" domain='[("status", "=", "3")]'
-                                           style="width: 100px;height: 30px;" options="{'no_create': True}"/>
+                                           style="width: 100px;height: 30px;"  options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="工令輸入" style="font-weight:bold;font-size: large"/>
                                     <field name="searchname" style="width: 100px;height: 30px;"/>
@@ -36,7 +36,7 @@
                                     <field name="day" style="width: 120px"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="　　客戶" style="font-weight:bold"/>
-                                    <field name="customer_id" style="width: 150px"/>
+                                    <field name="customer_id" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="線材爐號" style="font-weight:bold"/>
                                     <field name="wire_furn" style="width: 150px"/>
@@ -49,38 +49,38 @@
                                     <field name="batch" style="width: 120px"/>
                                     <span style="display:inline-block; width:40px;"></span>
                                     <label string="　　品名" style="font-weight:bold"/>
-                                    <field name="product_code" style="width: 150px"/>
+                                    <field name="product_code" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
                                     <br/>
                                     <label string="　　規格" style="font-weight:bold"/>
-                                    <field name="norm_code" style="width: 120px"/>
+                                    <field name="norm_code" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 54px;"></span>
                                     <label string="牙分類" style="font-weight:bold"/>
                                     <field name="fullorhalf" style="width: 150px"/>
                                     <br/>
                                     <label string="　　材質" style="font-weight:bold"/>
-                                    <field name="txtur_code" style="width: 120px"/>
+                                    <field name="txtur_code" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="表面處理" style="font-weight:bold"/>
-                                    <field name="surface_code" style="width: 150px"/>
+                                    <field name="surface_code" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="強度級數" style="font-weight:bold"/>
-                                    <field name="strength_level" style="width: 150px"/>
+                                    <field name="strength_level" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
                                     <br/>
                                     <label string="加工方式" style="font-weight:bold"/>
-                                    <field name="proces_code" style="width: 120px"/>
+                                    <field name="proces_code" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="　　數量" style="font-weight:bold"/>
                                     <field name="num1" style="width:80px"/>
-                                    <field name="unit1" nolabel="1" style="width:50px"/>
+                                    <field name="unit1" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
                                     <label string="" class="oe_inline"/>
                                     <field name="num2" style="width:80px"/>
-                                    <field name="unit2" nolabel="1" style="width:50px"/>
+                                    <field name="unit2" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
                                     <label string="" class="oe_inline"/>
                                     <field name="num3" style="width:80px"/>
-                                    <field name="unit3" nolabel="1" style="width:50px"/>
+                                    <field name="unit3" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
                                     <label string="" class="oe_inline"/>
                                     <field name="num4" style="width:80px"/>
-                                    <field name="unit4" nolabel="1" style="width:50px"/>
+                                    <field name="unit4" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
                                     <br/>
                                     <label string="　　淨重" style="font-weight:bold"/>
                                     <field name="net" style="width: 70px"/>
@@ -118,10 +118,10 @@
                                                 <field name="ptime1" nolabel="1" style="width: 50px"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="班別" style="font-weight:bold"/>
-                                                <field name="shift1" style="width: 80px;"/>
+                                                <field name="shift1" style="width: 80px;" options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"></span>
                                                 <label string="操作人員" style="font-weight:bold"/>
-                                                <field name="op1" style="width: 60px"/>
+                                                <field name="op1" style="width: 60px" options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"></span>
                                                 <label string="桶數" style="font-weight:bold"/>
                                                 <field name="buckets1" style="width: 30px"/>
@@ -129,17 +129,17 @@
                                                 <label string="公斤"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="組長" style="font-weight:bold"/>
-                                                <field name="teamlead1" style="width: 60px"/>
+                                                <field name="teamlead1" style="width: 60px" options="{'no_open': True,'no_create': True}"/>
                                                 <br/>
                                                 <label string="製造日期" style="font-weight:bold"/>
                                                 <field name="produceday2" style="width: 120px"/>
                                                 <field name="ptime2" nolabel="1" style="width: 50px"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="班別" style="font-weight:bold"/>
-                                                <field name="shift2" style="width: 80px;"/>
+                                                <field name="shift2" style="width: 80px;" options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"></span>
                                                 <label string="操作人員" style="font-weight:bold"/>
-                                                <field name="op2" style="width: 60px"/>
+                                                <field name="op2" style="width: 60px" options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"></span>
                                                 <label string="桶數" style="font-weight:bold"/>
                                                 <field name="buckets2" style="width: 30px"/>
@@ -147,17 +147,17 @@
                                                 <label string="公斤"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="組長" style="font-weight:bold"/>
-                                                <field name="teamlead2" style="width: 60px"/>
+                                                <field name="teamlead2" style="width: 60px" options="{'no_open': True,'no_create': True}"/>
                                                 <br/>
                                                 <label string="製造日期" style="font-weight:bold"/>
                                                 <field name="produceday3" style="width: 120px"/>
                                                 <field name="ptime3" nolabel="1" style="width: 50px"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="班別" style="font-weight:bold"/>
-                                                <field name="shift3" style="width: 80px;"/>
+                                                <field name="shift3" style="width: 80px;" options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"></span>
                                                 <label string="操作人員" style="font-weight:bold"/>
-                                                <field name="op3" style="width: 60px"/>
+                                                <field name="op3" style="width: 60px" options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 30px;"></span>
                                                 <label string="桶數" style="font-weight:bold"/>
                                                 <field name="buckets3" style="width: 30px"/>
@@ -165,7 +165,7 @@
                                                 <label string="公斤"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="組長" style="font-weight:bold"/>
-                                                <field name="teamlead3" style="width: 60px"/>
+                                                <field name="teamlead3" style="width: 60px" options="{'no_open': True,'no_create': True}"/>
                                                 <br/>
                                             </div>
                                             <div style="background-color: red;float:left;border: 1px black solid;">
@@ -221,7 +221,7 @@
                                                 <field name="tempturisped" style="width: 50px"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="現在爐號" style="font-weight:bold"/>
-                                                <field name="currnt_furno" style="width: 50px"/>
+                                                <field name="currnt_furno" style="width: 50px" options="{'no_open': True,'no_create': True}"/>
                                                 <br/>
                                                 <label string="注意事項" style="font-weight:bold"/>
                                                 <field name="notices1" style="width:31%%"/>

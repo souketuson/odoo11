@@ -67,7 +67,7 @@
                     <!-- ship sub menu -->
                     <menuitem id="fake2_menu" name="轉待出貨作業" parent="ship_menu" sequence="20" action="fake_action"/>
                     <menuitem id="shipment_menu" name="出貨作業" parent="ship_menu" sequence="21" action="shipment_action"/>
-                    <menuitem id="fake4_menu" name="退回作業" parent="ship_menu" sequence="22" action="fake_action"/>
+                    <menuitem id="return_menu" name="退回作業" parent="ship_menu" sequence="22" action="return_action"/>
                 <menuitem id="turn_menu" name="轉廠出貨作業" parent="main_produce_menu" sequence="14"/>
                     <!-- turn sub menu -->
                     <menuitem id="fake5_menu" name="轉廠出貨作業" parent="turn_menu" sequence="20" action="fake_action"/>

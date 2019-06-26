@@ -5,6 +5,7 @@ from odoo import models, fields, api, _
 from datetime import datetime as dt
 import pytz
 import collections
+from addons_yc.yc_root.wizard import order_display
 
 
 class YcPurchase(models.Model):
@@ -741,7 +742,7 @@ class YcPurchase(models.Model):
     @api.model
     def create(self, vals):
         # 進貨作業 S03N0120 且非wizard
-        if self._context.get('params')['action'] == 81 and self._context.get('wizard') != True:
+        if self._context.get('params')['action'] == 81 and self.generate_state == True:
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
@@ -755,16 +756,25 @@ class YcPurchase(models.Model):
             vals.update({"name": name})
         return super(YcPurchase, self).create(vals)
 
+    # 詳情見generate_state.help說明
+    @api.onchange("car_no")
+    def _check_if_generate(self):
+        if self.car_no:
+            self.generate_state = True
+
+    generate_state = fields.Boolean("產生單號否", default=False, help='odoo按button會自動儲存，'
+                                                                 '為避免拉前工令單號時，因車次序後沒選填而產生錯誤')
+
     # 6.預設時間
     def _default_date(self):
         if self._context.get('params')['action'] == 81:
             return dt.today()
 
     # 7. 空值警告
-    @api.constrains("car_no")
-    def _verify(self):
-        if not self.car_no:
-            raise Warning("車次序號不能空")
+    # @api.constrains("car_no")
+    # def _verify(self):
+    #     if not self.car_no:
+    #         raise Warning("車次序號不能空")
 
     # 8. 加熱爐和回火爐自動填值
     @api.onchange('heat2', 'tempturing2')
@@ -785,6 +795,17 @@ class YcPurchase(models.Model):
             self.tempturing4 = init
             self.tempturing5 = init
             self.tempturing6 = init
+
+    # 8.1 如果其他檢視頁面動到加熱爐2 其他加熱爐需要跟著動
+    # Computational fields 不能手動改值
+    # @api.depends('tempturing2')
+    # def _refer_to_tempt2(self):
+    #     init = int(self.tempturing2)
+    #     self.tempturing1 = init - 30
+    #     self.tempturing3 = init
+    #     self.tempturing4 = init
+    #     self.tempturing5 = init
+    #     self.tempturing6 = init
 
     ################################
     ### 分爐排程 plan_furna.xml 用 ###
@@ -862,8 +883,7 @@ class YcPurchase(models.Model):
     # 5.
     def wizard_comfirm(self):
         # 修改完更新爐內進貨頁面資料
-        for rec in self.env['yc.purchase'].browse(self._context.get('active_ids')):
-            super(rec, 'yc.purchase.display')._filter_order2()
+        return
 
     ###########################
     ### S05N0100 製程登錄作業 ###
@@ -872,6 +892,7 @@ class YcPurchase(models.Model):
     @api.multi
     def write(self, vals):
         # 製程登錄作業 S03N0200
+        k = []
         if self._context.get('params')['action'] == 111:
             infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
             not_infurn_code = self.env['yc.setstatus'].search([('name', '=', '未進爐')]).id
