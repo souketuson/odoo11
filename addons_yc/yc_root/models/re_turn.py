@@ -20,3 +20,4 @@ class YcReturn(models.Model):
     weight = fields.Integer("退回重量")
     money = fields.Integer("退回金額")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
+    wizard_check = fields.Boolean("是否帶出", default=False, help='checkbox TorF判斷要帶出哪筆資料')

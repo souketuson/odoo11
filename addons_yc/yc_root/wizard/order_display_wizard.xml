@@ -91,7 +91,7 @@
                     <field name="ptime1" nolabel="1" style="width: 50px" readonly="1"/>
                     <span style="display:inline-block; width: 10px;"></span>
                     <label string="班別" style="font-weight:bold"/>
-                    <field name="shift1" style="width: 80px;"/>
+                    <field name="shift1" style="width: 80px;" options="{'no_open': True,'no_create': True}"/>
                     <span style="display:inline-block; width: 30px;"></span>
                     <label string="操作人員" style="font-weight:bold"/>
                     <field name="op1" style="width: 100px" readonly="1"/>

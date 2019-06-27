@@ -439,12 +439,6 @@ class YcPurchase(models.Model):
         user_tz = self.env.user.tz
         now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
         time = '%s:%s:%s' % (now[8:10], now[10:12], now[12:14])
-        # hour = dt.now().hour
-        # minute = dt.now().minute
-        # sec = dt.now().second
-        # if hour > 24:
-        #     hour -= 24
-        # time = "%02d:%02d:%02d" % (hour, minute, sec)
         return time
 
     # 2.製表日期
@@ -760,6 +754,7 @@ class YcPurchase(models.Model):
     @api.onchange("car_no")
     def _check_if_generate(self):
         if self.car_no:
+            # 如果車次序號有值
             self.generate_state = True
 
     generate_state = fields.Boolean("產生單號否", default=False, help='odoo按button會自動儲存，'

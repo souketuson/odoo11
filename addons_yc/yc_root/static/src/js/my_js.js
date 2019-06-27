@@ -18,6 +18,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
              core.bus.on('click', "div[name='in_out'] div input:checked", self.bgChanger);
              core.bus.on('DOM_updated', "span[name='in_out']", self.post_bgChanger);
              core.bus.on('click', "button .o_pager_next", self.post_bgChanger);
+             //core.bus.on('click', self, self.enable_btn);
+             //core.bus.on('rpc_request', "div[name='car_no'] input", self.enable_btn);
 
         },
         bgChanger: function() {
@@ -31,6 +33,17 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 if (_str=="出貨") { $('.o_form_sheet').css("background-color","#adff2f");}
                 else if(_str=="進貨") { $('.o_form_sheet').css("background-color","#ffc0cb");}
             }
+        },
+        enable_btn: function() {
+            var car_no=$('div[name="car_no"] input');
+            var btn=$('button[name="154"]');
+            if (car_no.val()=="") {
+                btn.css({"cursor": "not-allowed","pointer-events": "none","opacity": 0.65});
+            }
+            else if(car_no.val()!="") {
+                btn.css({"cursor": "","pointer-events": "unset","opacity": 1});
+            }
+
         },
     });
 

@@ -20,6 +20,7 @@
                         </field>
                         <field name="purchase_ids" widget="many2many" attrs="{'invisible': [('condition', '!=', 'IT')]}">
                             <tree create="false" delete="false" string="Purchase Details" editable="top">
+                                <field name="wizard_check"/>
                                 <field name="name" readonly="1"/>
                                 <field name="pre_order" readonly="1"/>
                                 <field name="notices3" readonly="1"/>

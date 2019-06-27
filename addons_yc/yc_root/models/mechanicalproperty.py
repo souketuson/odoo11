@@ -24,7 +24,7 @@ class YcMechanicalproperty(models.Model):
     sectionshrink = fields.Float("斷面收縮")
     ystrength = fields.Float("降伏點強度")
     carburlayer = fields.Char("滲碳層")
-    safeload = fields.Float("安全負荷")
+    safeload = fields.Char("安全負荷")
     headshot = fields.Integer("頭部敲擊")
     innertensihrd = fields.Char("內部抗拉強度")
     innercarburlayer = fields.Char("內部滲碳層")

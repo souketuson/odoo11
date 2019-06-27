@@ -54,7 +54,7 @@ class YcPurchaseDisplay(models.TransientModel):
     # page2: 爐內進貨
     @api.onchange("order_furn2")
     def _filter_order2(self):
-        self.purchase_ids = [(5, 0, 0)]
+        self.purchase_ids2 = [(5, 0, 0)]
         if self.order_furn2:
             domain = ()
             domain += ('order_furn', '=', self.order_furn2.id),

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class YcPurchaseWizard(models.TransientModel):
@@ -77,15 +78,15 @@ class YcPurchaseWizard(models.TransientModel):
             # 解掉checked
             wizard_checked.wizard_check = False
             # 目前進貨單current record : self._context.get('active_ids')
-            for source_list in self.env['yc.purchase'].browse(self._context.get('active_ids')):
-                source_list.surfhrd = wizard_checked.surfhrd
-                source_list.corehrd = wizard_checked.corehrd
-                source_list.piece = wizard_checked.piece
-                source_list.tensihrd = wizard_checked.tensihrd
-                source_list.carburlayer = wizard_checked.carburlayer
-                source_list.torsion = wizard_checked.torsion
-                source_list.tempturing2 = wizard_checked.tempturing2
-                source_list.order_furn = wizard_checked.order_furn
+            source_list = self.env['yc.purchase'].browse(self._context.get('active_ids'))
+            source_list.surfhrd = wizard_checked.surfhrd
+            source_list.corehrd = wizard_checked.corehrd
+            source_list.piece = wizard_checked.piece
+            source_list.tensihrd = wizard_checked.tensihrd
+            source_list.carburlayer = wizard_checked.carburlayer
+            source_list.torsion = wizard_checked.torsion
+            source_list.tempturing2 = wizard_checked.tempturing2
+            source_list.order_furn = wizard_checked.order_furn
 
 
 class YcYcPurchasePreorder(models.TransientModel):
@@ -108,8 +109,25 @@ class YcYcPurchasePreorder(models.TransientModel):
                 # 廠內退回似乎在品質檢驗階段 如果被轉入進貨單 前工令單會自動key值
                 # IT 只要找出前工令號有值 and 等於工令號的紀錄
                 has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
-                records = has_preorder.search([('name', '=', has_preorder.pre_order)])
-                self.purchase_ids = [(4, rec.id) for rec in records]
+                self.purchase_ids = [(4, rec.id) for rec in has_preorder]
 
     def comfirm(self):
+        # 先判斷要帶出退回來源
+        if self.condition== 'IT':
+            wizard_checked = self.purchase_ids.search([('wizard_check', '=', True)])
+            if len(wizard_checked) > 1:
+                wizard_checked.wizard_check = False
+                raise ValidationError((_('只能帶一筆')))
+            else:
+                wizard_checked.wizard_check = False
+                _id = self._context.get('active_ids')
+                purchase = self.env['yc.purchase'].search([('id','=', _id)])
+                copy = wizard_checked.copy()
+                _fields = []
+                for key in copy._proper_fields._map.keys():
+                    _fields.append(key)
+                # 要怎麼把勾選的整個資料複製到另一個紀錄
+        elif self.condition== 'OT':
+            pass
+
         return

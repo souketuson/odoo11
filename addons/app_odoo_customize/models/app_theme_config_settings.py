@@ -692,7 +692,7 @@ class ResConfigSettings(models.TransientModel):
                 'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 過磅單主檔")
-            rows = cursor.fetchmany(46312)
+            rows = cursor.fetchmany(500)
             weight = self.env["yc.weight"].search([])
             sql = "delete from yc_weight"
             self._cr.execute(sql)
@@ -841,7 +841,7 @@ class ResConfigSettings(models.TransientModel):
             cursor = cnxn.cursor()
             cursor.execute("SELECT * FROM 產品機械性質主檔")
             rows = cursor.fetchall()
-            mp = self.env["yc.mechanicalproperty"].search([])
+            mp = self.env["yc.mechanicalproperty"]
             sql = "delete from yc_mechanicalproperty"
             self._cr.execute(sql)
             for row in rows:
