@@ -18,8 +18,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
              core.bus.on('click', "div[name='in_out'] div input:checked", self.bgChanger);
              core.bus.on('DOM_updated', "span[name='in_out']", self.post_bgChanger);
              core.bus.on('click', "button .o_pager_next", self.post_bgChanger);
-             //core.bus.on('click', self, self.enable_btn);
-             //core.bus.on('rpc_request', "div[name='car_no'] input", self.enable_btn);
+
+             core.bus.on('rpc_request', null, self.enable_btn);
 
         },
         bgChanger: function() {
@@ -35,6 +35,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             }
         },
         enable_btn: function() {
+
             var car_no=$('div[name="car_no"] input');
             var btn=$('button[name="154"]');
             if (car_no.val()=="") {

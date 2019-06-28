@@ -96,6 +96,7 @@ class YcYcPurchasePreorder(models.TransientModel):
                                  string="退回來源")
     return_ids = fields.Many2many("yc.return", string="purchase search", help="查詢列表")
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
+
     @api.onchange('condition')
     def search_purchase(self):
         if self.condition:
@@ -113,21 +114,62 @@ class YcYcPurchasePreorder(models.TransientModel):
 
     def comfirm(self):
         # 先判斷要帶出退回來源
-        if self.condition== 'IT':
-            wizard_checked = self.purchase_ids.search([('wizard_check', '=', True)])
-            if len(wizard_checked) > 1:
-                wizard_checked.wizard_check = False
+        # 拉出的工令其工令名應該要產生新的，否則在製造或產量檢視表會出現錯誤
+        # 項目檔應該先清空
+        p_cked = self.purchase_ids.search([('wizard_check', '=', True)])
+        r_cked = self.return_ids.search([('wizard_check', '=', True)])
+        purchase = self.env['yc.purchase']
+
+        if self.condition == 'IT':
+            p_cked.wizard_check = False
+            if len(p_cked) > 1:
                 raise ValidationError((_('只能帶一筆')))
             else:
-                wizard_checked.wizard_check = False
                 _id = self._context.get('active_ids')
-                purchase = self.env['yc.purchase'].search([('id','=', _id)])
-                copy = wizard_checked.copy()
+                new_order = purchase.search([('id', '=', _id)])
+                # 把欄位名稱都讀出來 self._proper_fields._map.keys()
+                # for loop: a.write({k :b['dic.key']})
                 _fields = []
-                for key in copy._proper_fields._map.keys():
+                vals = {}
+                for key in p_cked._proper_fields._map.keys():
                     _fields.append(key)
-                # 要怎麼把勾選的整個資料複製到另一個紀錄
-        elif self.condition== 'OT':
-            pass
+                for _f in _fields:
+                    # M2O has attr 'id'
+                    if hasattr(p_cked[_f],'id'):
+                        vals.update({_f: p_cked[_f].id})
+                    else:
+                        if _f == 'name':
+                            vals.update({_f: 'r'+ p_cked[_f]})
+                        else:
+                            vals.update({_f: p_cked[_f]})
+                new_order.write(vals)
+
+        elif self.condition == 'OT':
+            r_cked.wizard_check = False
+            if len(r_cked) > 1:
+                raise ValidationError((_('只能帶一筆')))
+            else:
+                _id = self._context.get('active_ids')
+                new_order = purchase.search([('id', '=', _id)])
+                res_order = purchase.search([('name', '=', r_cked.name)])
+                _fields = []
+                vals = {}
+                for key in res_order._proper_fields._map.keys():
+                    _fields.append(key)
+                for _f in _fields:
+                    try:
+                        if hasattr(res_order[_f], 'id'):
+                            if _f == 'produce_details_ids':
+                                vals.update({_f: False})
+                            else:
+                                vals.update({_f: res_order[_f].id})
+                        else:
+                            if _f == 'name':
+                                vals.update({_f: 'r'+ res_order[_f]})
+                            else:
+                                vals.update({_f: res_order[_f]})
+                        new_order.write(vals)
+                    except Exception as e:
+                        pass
 
         return

@@ -13,6 +13,7 @@
                         <br/>
                         <field name="return_ids" widget="many2many" attrs="{'invisible': [('condition', '!=', 'OT')]}">
                             <tree create="false" delete="false" string="Purchase Details" editable='top'>
+                                <field name="wizard_check"/>
                                 <field name="name" readonly="1"/>
                                 <field name="order" readonly="1"/>
                                 <field name="note" readonly="1"/>

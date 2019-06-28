@@ -109,12 +109,11 @@
                                                 <label string="客戶單號" style="font-weight:bold"/>
                                                 <field name="customer_no" style="width: 100px"/>
                                                 <span style="display:inline-block; width: 20px;"/>
+                                                <!--<label string="開單人員"-->
+                                                <!--style="font-weight:bold;position: absolute;top:155px;left: 605px;"/>-->
                                                 <label string="開單人員"
-                                                       style="font-weight:bold;position: absolute;top:155px;left: 605px;"/>
+                                                       style="font-weight:bold;"/>
                                                 <field name="person" style="width: 100px" readonly="1"/>
-                                                <span style="display:inline-block; width: 120px;"/>
-
-                                                <br/>
                                             </div>
                                             <div>
                                                 <div style="height: 5px;"/>
@@ -215,6 +214,7 @@
                                                     <span style="display:inline-block; width: 20px;"/>　
                                                     <button string="搜尋舊檔" type="action" class="oe_highlight"
                                                             name="%(action_purchase_wizard)d"
+                                                            style="cursor: not-allowed;pointer-events: none;opacity: 0.65;"
                                                             context="{'wizard':True}"/>
                                                     <!-- 新增完車次才能開啟舊檔: style="cursor: not-allowed;pointer-events: none;opacity: 0.65;" -->
                                                     <span style="display:inline-block; width: 180px;"/>　

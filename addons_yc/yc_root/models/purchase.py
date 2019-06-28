@@ -736,7 +736,7 @@ class YcPurchase(models.Model):
     @api.model
     def create(self, vals):
         # 進貨作業 S03N0120 且非wizard
-        if self._context.get('params')['action'] == 81 and self.generate_state == True:
+        if self._context.get('params')['action'] == 81 and vals['car_no']:
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
@@ -749,16 +749,6 @@ class YcPurchase(models.Model):
             name = str(weight_cn) + str('%02d') % number
             vals.update({"name": name})
         return super(YcPurchase, self).create(vals)
-
-    # 詳情見generate_state.help說明
-    @api.onchange("car_no")
-    def _check_if_generate(self):
-        if self.car_no:
-            # 如果車次序號有值
-            self.generate_state = True
-
-    generate_state = fields.Boolean("產生單號否", default=False, help='odoo按button會自動儲存，'
-                                                                 '為避免拉前工令單號時，因車次序後沒選填而產生錯誤')
 
     # 6.預設時間
     def _default_date(self):
