@@ -157,19 +157,17 @@ class YcYcPurchasePreorder(models.TransientModel):
                 for key in res_order._proper_fields._map.keys():
                     _fields.append(key)
                 for _f in _fields:
-                    try:
-                        if hasattr(res_order[_f], 'id'):
-                            if _f == 'produce_details_ids':
-                                vals.update({_f: False})
-                            else:
-                                vals.update({_f: res_order[_f].id})
+                    if hasattr(res_order[_f], 'id'):
+                        if _f == 'produce_details_ids':
+                            vals.update({_f: False})
                         else:
-                            if _f == 'name':
-                                vals.update({_f: 'r'+ res_order[_f]})
-                            else:
-                                vals.update({_f: res_order[_f]})
-                        new_order.write(vals)
-                    except Exception as e:
-                        pass
+                            vals.update({_f: res_order[_f].id})
+                    else:
+                        if _f == 'name':
+                            vals.update({_f: 'r'+ res_order[_f]})
+                        else:
+                            vals.update({_f: res_order[_f]})
+                    new_order.write(vals)
+
 
         return

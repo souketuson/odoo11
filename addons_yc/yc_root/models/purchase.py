@@ -19,7 +19,7 @@ class YcPurchase(models.Model):
     status = fields.Many2one("yc.setstatus", string="狀態", default=2)
     weighstate = fields.Char("過磅狀態")
     checkstate = fields.Char("檢驗狀態")
-    driver_id = fields.Many2one("yc.driver", string="司機名稱")
+    driver_id = fields.Many2one("yc.driver", string="司機名稱", related="car_no.driver_id")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     processing_phone = fields.Char("加工廠電話")
@@ -27,10 +27,10 @@ class YcPurchase(models.Model):
     combo_process = fields.Char("加工廠聯絡資訊", compute='_compute_process')
     pre_order = fields.Char("前工令號碼")
     car_no = fields.Many2one("yc.weight", string="車次序號")
-    customer_id = fields.Many2one("yc.customer", "客戶名稱")
+    customer_id = fields.Many2one("yc.customer", "客戶名稱", related="processing_attache.customer_id")
     customer_phone = fields.Char("客戶電話")
     customer_contact = fields.Char("客戶聯絡人")
-    combo_customer = fields.Char("客戶聯絡資訊")
+    combo_customer = fields.Char("客戶聯絡資訊", compute='_compute_process')
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
@@ -606,10 +606,10 @@ class YcPurchase(models.Model):
         return {'domain': {"car_no": [("day", "=", self.day), ("in_out", "=", "I")]}}
 
     # 1-2.填完車次序號 自動帶出該次司機
-    @api.onchange("car_no")
-    def _driver_id(self):
-        for rec in self:
-            rec.driver_id = self.car_no.driver_id.id
+    # @api.onchange("car_no")
+    # def _driver_id(self):
+    #     for rec in self:
+    #         rec.driver_id = self.car_no.driver_id.id
 
     # 1-3.選完車次序號 篩選出該車次之加工廠(找單號)
     @api.onchange("car_no")
@@ -747,7 +747,7 @@ class YcPurchase(models.Model):
                 [("name", "like", weight_cn), ('factory_id', '=', self.env.user.factory_id.id)])
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
-            vals.update({"name": name})
+            vals.update({"name": name},)
         return super(YcPurchase, self).create(vals)
 
     # 6.預設時間
