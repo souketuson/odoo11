@@ -20,6 +20,8 @@
     'data': [
         'views/quantity_data_entry.xml',
         'report/purchase_report.xml',
+
+        'report/weight_order1.xml',
         'wizard/process_review.xml',
         'wizard/qcnote_wizard.xml',
         'wizard/quantity_review.xml',

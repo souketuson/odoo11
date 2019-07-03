@@ -57,7 +57,7 @@
                                     </field>
                                     <span style="display:inline-block; width:100%%;">
                                         <field name="records_number" readonly="1"
-                                               style="position: absolute;right: 50px;"/>
+                                               style="position: absolute;left: 50px;"/>
                                     </span>
                                 </div>
                             </group>
@@ -104,7 +104,7 @@
 
                                     <span style="display:inline-block; width:100%%;">
                                         <field name="records_number2" readonly="1"
-                                               style="position: absolute;right: 50px;"/>
+                                               style="position: absolute;left: 50px;"/>
                                     </span>
                                 </div>
                             </group>

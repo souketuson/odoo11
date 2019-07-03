@@ -39,8 +39,6 @@ class YcHR(models.Model):
     lastlogtime = fields.Char("最後登入時間")
     log_state = fields.Selection([("Y", "是"), ("N", "否")], "允許登入")
 
-
-
     pay = fields.Char("基本薪資")
     raise_no = fields.Char("扶養人數")
     txcredit_date = fields.Date("代扣所得税日期")
@@ -55,7 +53,7 @@ class YcHR(models.Model):
     post_no = fields.Char("郵局局號")
     post_ac = fields.Char("郵局帳號")
     ac_name = fields.Char("戶名")
-    seniority = fields.Char(string="年資", compute="_get_year", store= True)
+    seniority = fields.Char(string="年資", compute="_get_year", store=True)
 
     # 特休日數
     # annual_leave_total
@@ -81,7 +79,7 @@ class YcHR(models.Model):
             now = dt.now().strftime("%Y-%m-%d")
             form_now = dt.strptime(now, "%Y-%m-%d")
 
-            if self.leave_date and self.leave_date !='':
+            if self.leave_date and self.leave_date != '':
                 delta = dt.strptime(self.leave_date, "%Y-%m-%d") - duty_date
             else:
                 delta = form_now - duty_date
@@ -121,3 +119,4 @@ class User(models.Model):
     _inherit = 'res.users'
 
     factory_id = fields.Many2one("yc.factory", string="廠別")
+

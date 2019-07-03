@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_weight_order1"
+                string="客戶加工單"
+                model="yc.purchase"
+                report_type="qweb-html"
+                file="yc_root.weight_order1"
+                name="yc_root.weight_order1"/>
+        <template id="weight_order1">
+            <t t-call="cfprint.html_container">
+                <t t-if="len(docs)>0"></t>
+                <div t-if="len(docs) &lt; 0"><h2 style="text-align: center;">没有可列印的數據，請返回。</h2></div>
+                <div t-if="len(docs) &gt;= 0"><h2 style="text-align: center;">正在列印，請稍候...</h2></div>
+                <script type="text/javascript">
+                    //cfp.exe listen address
+                    var cfprint_addr = "127.0.0.1";
+                    //close after print(ms), set -1 will not close
+                    var _delay_close = -1;
+                    // Note: put flie in CFP executive directory: root\templates
+                    var _data = {
+                                "template": "report_weightorder1.fr3",
+                                "ver": 4,
+                                "Copies": 1,
+                                "Duplex": 0,
+                                "Tables":[]
+                    };
+
+                    // define type, size, name ... of report data structure
+                    var _tableOrder = {
+                        "Name": "Order",
+                        "Cols":[
+                            { "type": "str", "size": 10, "name": "單號", "required": false },
+                            { "type": "str", "size": 10, "name": "id", "required": false },
+                            { "type": "str", "size": 10, "name": "日期", "required": false },
+                            { "type": "str", "size": 10, "name": "客戶", "required": false },
+                            { "type": "str", "size": 10, "name": "加工廠", "required": false },
+                            { "type": "str", "size": 15, "name": "品名", "required": false },
+                            { "type": "str", "size": 15, "name": "規格", "required": false },
+                            { "type": "str", "size": 15, "name": "材質", "required": false },
+                            { "type": "str", "size": 15, "name": "線材爐", "required": false },
+                            { "type": "str", "size": 15, "name": "長度", "required": false },
+                            { "type": "str", "size": 30, "name": "長度描述", "required": false },
+                            { "type": "str", "size": 3, "name": "數量1", "required": false },
+                            { "type": "str", "size": 5, "name": "單位1", "required": false },
+                            { "type": "str", "size": 8, "name": "淨重", "required": false },
+                            { "type": "str", "size": 10, "name": "加工方式", "required": false },
+                            { "type": "str", "size": 10, "name": "表面處理", "required": false },
+                            { "type": "str", "size": 10, "name": "電鍍別", "required": false },
+                            { "type": "str", "size": 15, "name": "批號", "required": false },
+                            { "type": "str", "size": 20, "name": "表面硬度", "required": false },
+                            { "type": "str", "size": 20, "name": "心部硬度", "required": false },
+                            { "type": "str", "size": 15, "name": "滲碳層", "required": false },
+                            { "type": "str", "size": 20, "name": "拉力", "required": false },
+                            { "type": "str", "size": 20, "name": "扭力", "required": false },
+                            { "type": "str", "size": 20, "name": "存放位置", "required": false },
+                            { "type": "str", "size": 20, "name": "注意事項1", "required": false },
+                            { "type": "str", "size": 20, "name": "注意事項2", "required": false },
+                            { "type": "str", "size": 20, "name": "注意事項3", "required": false },
+                            { "type": "str", "size": 20, "name": "製造備註1", "required": false },
+                            { "type": "str", "size": 20, "name": "製造備註2", "required": false },
+                            { "type": "str", "size": 20, "name": "製造備註3", "required": false },
+                            { "type": "str", "size": 5, "name": "開單人員", "required": false },
+                            { "type": "float", "size": 0, "name": "Copies", "required": false },
+                        ],
+                        "Data":[ ]
+                    };
+                    <t t-foreach="docs" t-as="doc">
+                        _tableOrder.Data.push({
+                                "id": "<t t-esc="doc.id"/>",
+                                "單號": "<t t-esc="doc.name"/>",
+                                "日期": "<t t-esc="doc.day"/>",
+                                "客戶": "<t t-esc="doc['customer_id'].abbrev"/>",
+                                "品名": "<t t-esc="doc['product_code'].name"/>",
+                                "規格": "<t t-esc="doc['norm_code'].name"/>",
+                                "材質": "<t t-esc="doc['txtur_code'].name"/>",
+                                "線材爐": "<t t-esc="doc.wire_furn"/>",
+                                "長度": "<t t-esc="doc['len_code'].name"/>",
+                                "長度描述": "<t t-esc="doc.len_descript"/>",
+                                "數量1": "<t t-esc="doc.num1"/>",
+                                "單位1": "<t t-esc="doc['unit1'].name"/>",
+                                "淨重": "<t t-esc="doc.net"/>",
+                                "加工方式": "<t t-esc="doc['proces_code'].name"/>",
+                                "表面處理": "<t t-esc="doc['surface_code'].name"/>",
+                                "電鍍別": "<t t-esc="doc['elecpl_code'].name"/>",
+                                "批號": "<t t-esc="doc.batch"/>",
+                                "表面硬度": "<t t-esc="doc.surfhrd"/>",
+                                "心部硬度": "<t t-esc="doc.corehrd"/>",
+                                "滲碳層": "<t t-esc="doc.carburlayer"/>",
+                                "拉力": "<t t-esc="doc.tensihrd"/>",
+                                "扭力": "<t t-esc="doc.torsion"/>",
+                                "存放位置": "<t t-esc="doc.storeplace"/>",
+                                "注意事項1": "<t t-esc="doc.notices1"/>",
+                                "注意事項2": "<t t-esc="doc.notices2"/>",
+                                "注意事項3": "<t t-esc="doc.notices3"/>",
+                                "製造備註1": "<t t-esc="doc.prodnote1"/>",
+                                "製造備註2": "<t t-esc="doc.prodnote2"/>",
+                                "製造備註3": "<t t-esc="doc.prodnote3"/>",
+                                "開單人員": "<t t-esc="doc['person'].name"/>",
+                                "Copies": <t t-esc="doc.num1"/>,
+                            });
+                    </t>
+                    /* if you have detail lines combine data after define it.*/
+
+                    _data["Tables"].push(_tableOrder);
+                    var _reportData = JSON.stringify(_data); //use json
+                    console.log(_reportData);
+                    //cfprint_ext.js call print
+                </script>
+            </t>
+        </template>
+    </data>
+</odoo>
