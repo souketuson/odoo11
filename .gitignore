@@ -2,6 +2,8 @@
 *.pyc
 /.idea
 /odoo-11.0
+/addons_topc
+/addons_yc/yc_data_import
 .idea
 .vscode
 *.zip

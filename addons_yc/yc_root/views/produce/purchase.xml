@@ -118,32 +118,33 @@
                                             <div>
                                                 <div style="height: 5px;"/>
                                                 <!--<span style="display:inline-block; width: 15px;"/>-->
-                                                <field name="ck4"/>
+                                                <field name="ck4" tabindex="-1"/>
                                                 <label string="品名分類" style="font-weight:bold"/>
                                                 <field name="clsf_code" style="width:140px"
-                                                       options="{'no_open': True,'no_create': True}"/>
+                                                       options="{'no_open': True,'no_create': True}" tabindex="0"/>
                                                 <span style="display:inline-block; width: 30px;"/>
-                                                <field name="ck1"/>
+                                                <field name="ck1" tabindex="-1"/>
                                                 <label string="品名" style="font-weight:bold"/>
+                                                <field name="product_code_searchbox" style="width:70px"/>
                                                 <field name="product_code" style="width:150px"
-                                                       options="{'no_open': True,'no_create': True}"/>
+                                                       options="{'no_open': True,'no_create': True}" tabindex="1"/>
                                                 <span style="display:inline-block; width: 30px;"/>
-                                                <field name="ck7"/>
+                                                <field name="ck7" tabindex="-1"/>
                                                 <label string="強度級數" style="font-weight:bold"/>
                                                 <field name="strength_level" style="width:100px"
-                                                       options="{'no_open': True,'no_create': True}"/>
+                                                       options="{'no_open': True,'no_create': True}" tabindex="2"/>
                                                 <span style="display:inline-block; width: 30px;"/>
-                                                <field name="ck6"/>
+                                                <field name="ck6" tabindex="-1"/>
                                                 <label string="材質" style="font-weight:bold"/>
                                                 <field name="txtur_code" style="width:100px"
-                                                       options="{'no_open': True,'no_create': True}"/>
+                                                       options="{'no_open': True,'no_create': True}" tabindex="3"/>
                                                 <br/>
-                                                <field name="ck2"/>
+                                                <field name="ck2" tabindex="-1"/>
                                                 <label string="規格　　" style="font-weight:bold"/>
                                                 <field name="norm_code" style="width:100px"
                                                        options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 20px;"/>
-                                                <field name="ck3"/>
+                                                <field name="ck3" tabindex="-1"/>
                                                 <label string="長度" style="font-weight:bold"/>
                                                 <field name="len_code" style="width:100px" options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 10px;"/>
@@ -153,7 +154,7 @@
                                                 <field name="fullorhalf" style="width:100px;border: 1px black solid;"/>
                                                 <br/>
                                                 <!--<span style="display:inline-block; width: 15px;"/>-->
-                                                <field name="ck5"/>
+                                                <field name="ck5" tabindex="-1"/>
                                                 <label string="加工方式" style="font-weight:bold"/>
                                                 <field name="proces_code" style="width:100px"
                                                        options="{'no_open': True}"/>
@@ -208,7 +209,7 @@
                                                     <label string="依據標準" style="font-weight:bold"/>
                                                     <field name="standard" style="width:100px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
-                                                    <field name="ck8"/>
+                                                    <field name="ck8" tabindex="-1"/>
                                                     <label string="線材爐號" style="font-weight:bold"/>
                                                     <field name="wire_furn" style="width:100px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　

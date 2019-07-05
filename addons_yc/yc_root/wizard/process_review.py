@@ -174,7 +174,6 @@ class YcPurchaseDisplay(models.TransientModel):
             purchase.write(vals)
             self._display_record(purchase.id)
 
-
     def clear_produce_data(self):
         to_clear_field = ['produceday1', 'ptime1', 'shift1', 'op1', 'buckets1', 'pw1', 'teamlead1',
                           'produceday2', 'ptime2', 'shift2', 'op2', 'buckets2', 'pw2', 'teamlead2',
@@ -191,7 +190,6 @@ class YcPurchaseDisplay(models.TransientModel):
         for field in to_clear_field:
             db.search([('id', '=', to_clear_id)]).write({field: None})
         self._display_record(to_clear_id)
-
 
     def _display_record(self, record_id):
         purchase = self.env["yc.purchase"]

@@ -28,6 +28,10 @@
                                     <field name="searchname" style="width: 100px;height: 30px;"/>
                                     <!--<field name="saveorread"/>-->
                                     <span style="display:inline-block; width: 20px;"></span>
+
+                                    <!-- tricks for button not trigger create method -->
+                                    <!--<label string="查詢" for="look_up" class="btn btn-sm btn-primary oe_highlight"/>-->
+                                    <!--<field name="look_up" invisible="1"/>-->
                                     <button string="資料查詢" type="object" class="oe_highlight"
                                             name="yc_purchase_search_name"/>
                                     <br/>

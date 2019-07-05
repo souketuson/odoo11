@@ -91,30 +91,29 @@ class YcPurchaseDisplay(models.TransientModel):
         if self.hidden_name:
             purchase = self.env['yc.purchase'].search([('name', '=', self.hidden_name)])
             # 儲存會異動的就好
-            vals.update({'product_code': self.product_code.id,'batch': self.batch,
-                         'norm_code': self.norm_code.id,'fullorhalf': self.fullorhalf,
-                         'txtur_code': self.txtur_code.id,'surface_code': self.surface_code.id,
-                         'proces_code': self.proces_code.id,'tensihrd': self.tensihrd,
-                         'surfhrd': self.surfhrd,'corehrd': self.corehrd,
-                         'carburlayer': self.carburlayer,'produceday1': self.produceday1,
-                         'ptime1': self.ptime1,'num1': self.num1,'unit1': self.unit1.id,
-                         'num2': self.num2,'unit2': self.unit2.id,'num3': self.num3,
-                         'unit3': self.unit3.id,'num4': self.num4,'unit4': self.unit4.id,
-                         'totalpack': self.totalpack,'pweight': self.pweight,
-                         'pre_furn': self.pre_furn,'feedbucket': self.feedbucket,
-                         'feedweight': self.feedweight,'currnt_furno': self.currnt_furno.id,
-                         'weighbuckets': self.weighbuckets,'tweight': self.tweight,
-                         'bdiff': self.bdiff,'wdiff': self.wdiff,'op1': self.op1.id,
-                         'op2': self.op2.id,'op3': self.op3.id,'notices1': self.notices1,
-                         'notices2': self.notices1,'notices3': self.notices3,
-                         'qcnote1': self.qcnote1,'qcnote2': self.qcnote2,
-                         'qcnote3': self.qcnote3,'prodnote1': self.prodnote1,
-                         'prodnote2': self.prodnote2,'prodnote3': self.prodnote3,
+            vals.update({'product_code': self.product_code.id, 'batch': self.batch,
+                         'norm_code': self.norm_code.id, 'fullorhalf': self.fullorhalf,
+                         'txtur_code': self.txtur_code.id, 'surface_code': self.surface_code.id,
+                         'proces_code': self.proces_code.id, 'tensihrd': self.tensihrd,
+                         'surfhrd': self.surfhrd, 'corehrd': self.corehrd,
+                         'carburlayer': self.carburlayer, 'produceday1': self.produceday1,
+                         'ptime1': self.ptime1, 'num1': self.num1, 'unit1': self.unit1.id,
+                         'num2': self.num2, 'unit2': self.unit2.id, 'num3': self.num3,
+                         'unit3': self.unit3.id, 'num4': self.num4, 'unit4': self.unit4.id,
+                         'totalpack': self.totalpack, 'pweight': self.pweight,
+                         'pre_furn': self.pre_furn, 'feedbucket': self.feedbucket,
+                         'feedweight': self.feedweight, 'currnt_furno': self.currnt_furno.id,
+                         'weighbuckets': self.weighbuckets, 'tweight': self.tweight,
+                         'bdiff': self.bdiff, 'wdiff': self.wdiff, 'op1': self.op1.id,
+                         'op2': self.op2.id, 'op3': self.op3.id, 'notices1': self.notices1,
+                         'notices2': self.notices1, 'notices3': self.notices3,
+                         'qcnote1': self.qcnote1, 'qcnote2': self.qcnote2,
+                         'qcnote3': self.qcnote3, 'prodnote1': self.prodnote1,
+                         'prodnote2': self.prodnote2, 'prodnote3': self.prodnote3,
                          # 'produce_details_ids': self.produce_details_ids,
                          })
             purchase.write(vals)
             self._display_record(purchase.id)
-
 
     def _display_record(self, record_id):
         purchase = self.env["yc.purchase"]
@@ -171,5 +170,3 @@ class YcPurchaseDisplay(models.TransientModel):
         self.prodnote1 = record.prodnote1
         self.prodnote2 = record.prodnote2
         self.prodnote3 = record.prodnote3
-
-

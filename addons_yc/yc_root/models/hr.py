@@ -118,5 +118,70 @@ class YcDriver(models.Model):
 class User(models.Model):
     _inherit = 'res.users'
 
+    name = fields.Char(string="員工姓名")
     factory_id = fields.Many2one("yc.factory", string="廠別")
+    employee_type = fields.Char(string="僱用關係")
+    title1 = fields.Char("職稱代碼1")
+    title2 = fields.Char("職稱代碼2")
+    title3 = fields.Char("職稱代碼3")
+    gender = fields.Selection(
+        [('M', '男性'), ('F', '女性'),
+         ('O', '其他')], '性別')
+    idcard = fields.Char(string="身分證號")
+    birthday = fields.Date('出生日期')
+    birthplace = fields.Char("籍貫")
+    marrige = fields.Selection([("已婚", "已婚"), ("未婚", "未婚"), ("其他", "其他")], "婚姻")
+    kids = fields.Char("子女數")
+    phone = fields.Char("電話")
+    mobile = fields.Char("手機")
+    email = fields.Char("E Mail")
+    addr_mail = fields.Char("通訊地址")
+    addr_born = fields.Char("戶籍地址")
+    ecp = fields.Char("緊急聯絡人", help='Emergent Contact Person')
+    rel_ecp = fields.Char("關係", help='Relationship of Emergent Contact Person')
+    em_phone = fields.Char("聯絡電話", help='Emergent Phone Number')
+    em_mobile = fields.Char("聯絡手機", help='Emergent Mobile Number')
+    date_duty = fields.Date("到職日")
+    date_leave = fields.Date("離職日")
+    note = fields.Text("備註")
+    last_log = fields.Char("最後登入時間")
+    log_state = fields.Selection([("Y", "是"), ("N", "否")], "允許登入")
+    pay = fields.Char("基本薪資")
+    raise_no = fields.Char("扶養人數")
+    whitd = fields.Date("代扣所得税日期", help='Withholding Income Tax Date')
+    whit = fields.Char("代扣所得稅", help='Withholding Income Tax')
+    liid = fields.Date("勞保加保日期", help='Labor Insurance Insured Date')
+    liis = fields.Char("勞保投保薪資", help='Labor Insurance Insured Salary')
+    lic = fields.Char("勞保保費", help='Labor Insurance Charge')
+    hiid = fields.Date("健保投保日期", help='Health Insurance Insured Date')
+    hiis = fields.Char("健保投保薪資", help='Health Insurance Insured Salary')
+    hic = fields.Char("健保保費", help='Health Insurance Charge')
+    post_office = fields.Char("立帳郵局")
+    post_no = fields.Char("郵局局號")
+    post_ac = fields.Char("郵局帳號")
+    ac_name = fields.Char("戶名")
+    seniority = fields.Char(string="年資", compute="_get_year", store=True)
+    user_class = fields.Char("分類帽")
 
+    @api.depends("date_duty", "date_leave")
+    def _get_year(self):
+        '''用@api.depends decorator 隨時更新數值
+        判斷離職或非離職，用datetime模組
+        strptime 和 strftime方法格式化日期
+
+        問題：如果非透過網頁創建資料 而是直接在postgre匯入資料 資料庫不會自動計算年資
+        一定要經過邏輯層
+        '''
+        for rec in self:
+            if rec.date_duty == False:
+                pass
+            else:
+                duty_date = dt.strptime(rec.date_duty, "%Y-%m-%d")
+                now = dt.now().strftime("%Y-%m-%d")
+                form_now = dt.strptime(now, "%Y-%m-%d")
+
+                if rec.date_leave and rec.date_leave != '':
+                    delta = dt.strptime(rec.date_leave, "%Y-%m-%d") - duty_date
+                else:
+                    delta = form_now - duty_date
+                return int(delta.days / 365)

@@ -35,7 +35,6 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             }
         },
         enable_btn: function() {
-
             var car_no=$('div[name="car_no"] input');
             var btn=$('button[name="154"]');
             if (car_no.val()=="") {
@@ -44,7 +43,10 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             else if(car_no.val()!="") {
                 btn.css({"cursor": "","pointer-events": "unset","opacity": 1});
             }
-
+        },
+        enable_tabindex: function() {
+            var radio= $('input[type="checkbox"]');
+            radio.attr('tabeindex','-1');
         },
     });
 

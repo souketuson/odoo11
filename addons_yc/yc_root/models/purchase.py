@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 from datetime import datetime as dt
 import pytz
 import collections
-from addons_yc.yc_root.wizard import order_display
+
 
 
 class YcPurchase(models.Model):
@@ -42,6 +42,23 @@ class YcPurchase(models.Model):
     ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    product_code_searchbox = fields.Char("搜尋品名或編號")
+
+    @api.onchange('product_code_searchbox')
+    def search_box(self):
+        if self.product_code_searchbox:
+            product = self.env['yc.setproduct']
+            domain = [('code', '=', self.product_code_searchbox)]
+            # 只能是精準搜尋
+            if len(product.search(domain)):
+                self.product_code = product.search(domain).id
+            else:
+                return  {'warning':{
+                    'title': _('提醒'), 'message': _("沒有這個代碼")}}
+
+
+
+
     product_code = fields.Many2one("yc.setproduct", string="品名", index=True, auto_join=True)
     # 和上面重複
     # productname = fields.Many2one("yc.setproduct", string="產品名稱")
@@ -402,7 +419,7 @@ class YcPurchase(models.Model):
     uqtreat = fields.Char("不合格品處理")
     uqweight = fields.Integer("不合格重量")
     followup = fields.Char("處理方式")
-    # should be one2many
+
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")
     amp1 = fields.Float("圖倍率1")
@@ -421,6 +438,7 @@ class YcPurchase(models.Model):
     wizard_check = fields.Boolean("是否帶出", default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
     # 以下為查詢欄位
+    look_up = fields.Boolean(store=False)
     searchname = fields.Char("工令查詢", help="搜尋工令欄位")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
@@ -471,7 +489,6 @@ class YcPurchase(models.Model):
                 self._cr.execute(sql)
             id = self.env['yc.purchase'].search(
                 [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
-            # 自動新增6筆空資料到details (應該也可以用default_get新增)
             to_create_order = purchase.search([('id', '=', id)])
             if len(to_create_order.produce_details_ids) == 0:
                 for i in range(1, 7):
@@ -485,44 +502,6 @@ class YcPurchase(models.Model):
                 'view_mode': 'form',
                 'view_id': self.env.ref('yc_root.process_data_entry_form').id,
                 'target': 'inline', }
-
-            # 下面是另一種方法去取得record data
-            # 但是onchange 也無法觸發下面這段，要用js寫了
-            # 'name': 'Go to website',
-            # 'res_model': 'ir.actions.act_url',
-            # 'type': 'ir.actions.act_url',
-            # 'target': 'inline',
-            # 'url': 'web?debug#id=%s&view_type=form&model=yc.purchase&menu_id=275&action=111' % id,
-            # }
-        # elif self._context.get('params')['action'] == 112:
-        #     # S05N0200 產量登錄作業
-        #     purchase = self.env["yc.purchase"]
-        #     repeated_name_record = purchase.search(
-        #         [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)])
-        #     empty_name_record = purchase.search([('name', '=', None), ('factory_id', '=', self.env.user.factory_id.id)])
-        #     # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
-        #     if len(repeated_name_record) > 1:
-        #         to_delete_id = purchase.search(
-        #             [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)], order='id desc',
-        #             limit=1).id
-        #         sql = "delete from yc_purchase where id=%d" % to_delete_id
-        #         self._cr.execute(sql)
-        #     if len(empty_name_record) >= 1:
-        #         sql = "delete from yc_purchase where name is NULL"
-        #         self._cr.execute(sql)
-        #     id = self.env['yc.purchase'].search(
-        #         [('name', '=', self.searchname or self.weighted_order.name or self.notweighted_order.name),
-        #          ('factory_id', '=', self.env.user.factory_id.id)]).id
-        #     return {
-        #         'name': self.searchname,
-        #         'res_model': 'yc.purchase',
-        #         'type': 'ir.actions.act_window',
-        #         'res_id': id,
-        #         'view_type': 'form',
-        #         'view_mode': 'form',
-        #         'view_id': self.env.ref('yc_root.quantity_data_entry_form').id,
-        #         'target': 'inline',
-        #     }
         elif self._context.get('params')['action'] == 124:
             # S04N0200
             to_delete_id = self.env["yc.purchase"].search(
@@ -544,6 +523,22 @@ class YcPurchase(models.Model):
                 'view_id': self.env.ref('yc_root.quality_form').id,
                 'target': 'inline',
             }
+
+    @api.onchange('look_up')
+    def _call_redirect(self):
+
+        if self.searchname:
+            self._redirect('process_data_entry')
+
+    def _redirect(self, _view):
+        detail = self.env['yc.produce.details']
+        if _view == 'process_data_entry':
+            vals = {}
+            for i in range(1, 7):
+                vals.update({'name': id, 'bucket_no': i})
+            detail.create({vals})
+
+
 
     # 5.各查詢表單後更新資料
     def save_entry_data(self):
@@ -885,7 +880,6 @@ class YcPurchase(models.Model):
                 vals.update({'status': not_infurn_code})
             else:
                 vals.update({'status': infurn_code})
-
         return super(YcPurchase, self).write(vals)
 
     ###########################

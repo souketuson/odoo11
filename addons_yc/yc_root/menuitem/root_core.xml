@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <!-- root -->
-        <menuitem id="main_root_menu" name="陽成 ERP" web_icon="yc_root,static/description/icon.png"/>
+        <menuitem id="main_root_menu" name="重盈陽成 ERP" web_icon="yc_root,static/description/icon.png"/>
             <!-- bar menu -->
             <menuitem id="main_hr_menu" name="人事" sequence="1" parent="main_root_menu"/>
                 <!-- hr category menu -->

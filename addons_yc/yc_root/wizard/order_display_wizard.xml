@@ -131,8 +131,9 @@
                     <field name="nh34" style="width: 70px"/>
                     <br/>
                     <label string="　加熱爐" style="font-weight:bold"/>
-                    <field name="heat1" style="width: 80px"/>
-                    <field name="heat2" style="width: 80px" default_focus="1"/>
+                    <field name="heat2" style="width: 80px;position: relative;left: 80px;" default_focus="1"/>
+                    <field name="heat1" style="width: 80px;position: relative;left: -80px;"/>
+
                     <field name="heat3" style="width: 80px"/>
                     <field name="heat4" style="width: 80px"/>
                     <field name="heat5" style="width: 80px"/>
@@ -147,8 +148,9 @@
                     <field name="heatsped" style="width: 80px"/>
                     <br/>
                     <label string="　回火爐" style="font-weight:bold"/>
-                    <field name="tempturing1" style="width: 80px"/>
-                    <field name="tempturing2" style="width: 80px"/>
+                    <field name="tempturing2" style="width: 80px;position: relative;left: 80px;"/>
+                    <field name="tempturing1" style="width: 80px;position: relative;left: -80px;"/>
+
                     <field name="tempturing3" style="width: 80px"/>
                     <field name="tempturing4" style="width: 80px"/>
                     <field name="tempturing5" style="width: 80px"/>
