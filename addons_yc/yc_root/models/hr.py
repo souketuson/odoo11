@@ -118,6 +118,7 @@ class YcDriver(models.Model):
 class User(models.Model):
     _inherit = 'res.users'
 
+    # 姓名
     name = fields.Char(string="員工姓名")
     factory_id = fields.Many2one("yc.factory", string="廠別")
     employee_type = fields.Char(string="僱用關係")
@@ -131,7 +132,7 @@ class User(models.Model):
     birthday = fields.Date('出生日期')
     birthplace = fields.Char("籍貫")
     marrige = fields.Selection([("已婚", "已婚"), ("未婚", "未婚"), ("其他", "其他")], "婚姻")
-    kids = fields.Char("子女數")
+    kids = fields.Integer("子女數")
     phone = fields.Char("電話")
     mobile = fields.Char("手機")
     email = fields.Char("E Mail")

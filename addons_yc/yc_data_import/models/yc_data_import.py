@@ -3,6 +3,7 @@
 import logging, pyodbc, time, collections, math
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+import random
 
 _logger = logging.getLogger(__name__)
 
@@ -15,8 +16,7 @@ class YcDataImport(models.TransientModel):
 
     # 開始連線
     def _connection_start(self):
-        self.cnxn = pyodbc.connect(
-            'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
+        self.cnxn = pyodbc.connect('DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
         return self.cnxn.cursor()
 
     # 結束連線
@@ -93,37 +93,44 @@ class YcDataImport(models.TransientModel):
         feet = 0
         traveler = self.env['yc.weight']
         goal = int(self.how_many_do_you_want)
+        skip = 0
         try:
             self._connection_start()
             cursor = self.cnxn.cursor()
-            cursor.execute('SELECT * FROM 過磅單主檔')
+            sql = "SELECT * FROM 過磅單主檔"
+            cursor.execute(sql)
             sql = "DELETE FROM yc_weight"
             self._cr.execute(sql)
             init = time.time()
             print(" \033[42m \033[0m 開始建立過磅主檔資料")
             while 1:
                 row = cursor.fetchone()
-                driver = self.env["yc.driver"].search([("code", '=', row.司機代號)])
+                if goal == feet or (goal < 0 and goal != -1) or not row:
+                    break
+                driver = self.env["yc.driver"].search([("code", '=', row.司機代號.replace(' ', ''))])
+                # condition: valid- 1. 代號 ;invalid- 1. 姓名 2.空白
                 if any(driver):
                     driver_id = driver.id
                 else:
-                    self.env['yc.driver'].create({'name':row.司機代號})
-                    print("新增一筆司機資料")
-                    driver_id = driver.search([('name', '=', row.司機代號)])
-                person = self.env["yc.hr"].search([("code", '=', row.過磅人員)])
+                    skip += 1
+                    print(" \033[45m \033[0m [" + str(skip) + "] 主檔單號:%s, 略過" % row.過磅單號)
+                    continue
+                person = self.env["res.users"].search([("login", '=', row.過磅人員)])
+                # condition: valid- 1. 登入代號 ;invalid- 1. 姓名 2.空白
                 if any(person):
                     person_id = person.id
                 else:
-                    self.env['res.users'].create({'name': row.過磅人員,
-                                                  "user_class": '1'})
-                    print("新增一筆員工資料")
-                    person_id = person.search([("code", '=', row.過磅人員)])
+                    skip += 1
+                    print(" \033[45m \033[0m [" + str(skip) + "] 主檔單號:%s, 略過" % row.過磅單號)
+                    continue
                 factory = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
                 if any(factory):
                     factory_id = factory.id
-                if goal == feet or (goal < 0 and goal != -1) or not row:
-                    break
-
+                # 舊資料裡面有些怪數據 重新賦值
+                row.淨重 = (row.總重 or 0.0) - (row.空車重 or 0.0) - (row.空桶重 or 0.0)
+                if row.淨重 != (row.調質重量 or 0.0) + (row.滲碳重量 or 0.0) + (row.其他重量 or 0.0) + (row.其他重量1 or 0.0):
+                    diff = row.淨重 - ((row.調質重量 or 0.0) + (row.滲碳重量 or 0.0) + (row.其他重量 or 0.0) + (row.其他重量1 or 0.0))
+                    row.調質重量 += diff
                 feet += 1
                 print(' \033[43m \033[0m [' + str(feet) + '] 主檔單號:' + row.過磅單號)
                 traveler.create({
@@ -132,13 +139,13 @@ class YcDataImport(models.TransientModel):
                     "weightime": row.時間, "carno": row.車次序號,
                     "person_id": person_id, "weighbridge": row.地磅序號,
                     "plate_no": row.車號, "refine": row.調質重量,
-                    "total": row.總重, "carbur": row.滲碳重量,
-                    "curbweight": row.空車重, "other": row.其他重量,
-                    "emptybucket": row.空桶重, "net": row.淨重,
+                    "total": row.總重 or 0.0, "carbur": row.滲碳重量 or 0.0,
+                    "curbweight": row.空車重 or 0.0, "other": row.其他重量 or 0.0,
+                    "emptybucket": row.空桶重 or 0.0, "net": row.淨重 or 0.0,
                     "purchase_times": row.進貨次數, "ship_times": row.出貨次數,
-                    "note": row.備註, "other1": row.其他重量1, "factory_id": factory_id,
+                    "note": row.備註, "other1": row.其他重量1 or 0.0, "factory_id": factory_id,
                 })
-            print(' \033[42m \033[0m 資料建立完成，總完成筆數:%s' % feet)
+            print(' \033[42m \033[0m 資料建立完成，總完成筆數:%s 略過%s筆' % (feet, skip))
             self._disconnction()
         except Exception as e:
             print(' \033[41m \033[0m Oops!\n %s' % e)
@@ -149,45 +156,61 @@ class YcDataImport(models.TransientModel):
         print(' \033[42m \033[0m 用時%s' % delta)
         return True
 
-    # 過磅單主檔
-    @api.multi
-    def insert_weight_main(self):
+    def weight_detail(self):
+        feet = 0
+        traveler = self.env['yc.weight.details']
+        goal = int(self.how_many_do_you_want)
+        skip = 0
         try:
-            cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
-            cursor = cnxn.cursor()
-            cursor.execute("SELECT * FROM 過磅單主檔")
-            rows = cursor.fetchmany(500)
-            weight = self.env["yc.weight"].search([])
-            sql = "delete from yc_weight"
+            self._connection_start()
+            cursor = self.cnxn.cursor()
+            sql = "SELECT * FROM 過磅單項目檔"
+            cursor.execute(sql)
+            sql = "DELETE FROM yc_weight_details"
             self._cr.execute(sql)
-
-            for row in rows:
-                # 先去除空白
-                for x in range(len(row)):
-                    if row[x] != None and type(row[x]) == str:
-                        row[x] = row[x].replace(' ', '')
-
-                driver_id = self.env["yc.driver"].search([("code", '=', row.司機代號)])
-                person_id = self.env["yc.hr"].search([("code", '=', row.過磅人員)])
-                factory_id = self.env["yc.factory"].search([("name", '=', row.所屬工廠)])
-                if row.司機代號 and driver_id and person_id:
-                    weight.create({
-                        "name": row.過磅單號, "in_out": row.分類,
-                        "driver_id": driver_id.id, "day": row.日期,
-                        "weightime": row.時間, "carno": row.車次序號,
-                        "person_id": person_id.id, "weighbridge": row.地磅序號,
-                        "plate_no": row.車號, "refine": row.調質重量,
-                        "total": row.總重, "carbur": row.滲碳重量,
-                        "curbweight": row.空車重, "other": row.其他重量,
-                        "emptybucket": row.空桶重, "net": row.淨重,
-                        "purchase_times": row.進貨次數, "ship_times": row.出貨次數,
-                        "note": row.備註, "other1": row.其他重量1,
-                        "factory_id": factory_id.id,
-                    })
+            init = time.time()
+            main = self.env['yc.weight'].search([]).mapped('name')
+            print(" \033[42m \033[0m 開始建立過磅主檔資料")
+            while 1:
+                row = cursor.fetchone()
+                if goal == feet or (goal < 0 and goal != -1) or not row:
+                    break
+                # 檢查單號有無存在在資料庫
+                # 已經被存進去後就要從list除名
+                if row.過磅單號 not in main:
+                    skip += 1
+                    print(" \033[45m \033[0m [" + str(skip) + "] 項目單號:%s, 略過" % row.過磅單號)
+                    continue
+                i = main.index(row.過磅單號)
+                main.pop(i)
+                customer = self.env["yc.customer"].search([("code", '=', row.客戶代號)])
+                if not any(customer):
+                    print(" \033[41m \033[0m 找不到%s這個客戶" % row.客戶代號)
+                    break
+                processing = self.env["yc.processing"].search([("code", '=', row.加工廠代號)])
+                if not any(processing):
+                    print(" \033[41m \033[0m 找不到%s這個加工廠" % row.加工廠代號)
+                    break
+                id_of_main = main.search([('name', '=', row.過磅單號)]).id
+                customer_id = customer.id
+                processing_id = processing.id
+                feet += 1
+                print(' \033[43m \033[0m [' + str(feet) + '] 項目單號:' + row.過磅單號)
+                traveler.create({
+                    "name": id_of_main,
+                    "customer_id": customer_id,
+                    "processing_id": processing_id,
+                    "note": row.備註,
+                })
         except Exception as e:
+            print(' \033[41m \033[0m Oops!\n %s' % e)
+            self._disconnction()
             pass
+        end = time.time()
+        delta = self._time_formater((end - init))
+        print(' \033[42m \033[0m 用時%s' % delta)
         return True
+
 
     # 過磅單項目檔 處理完主檔才能處理項目檔
     @api.multi

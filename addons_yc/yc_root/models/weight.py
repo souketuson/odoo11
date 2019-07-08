@@ -15,7 +15,7 @@ class YcWeight(models.Model):
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
     day = fields.Date("過磅日期", default=dt.today())
     weightime = fields.Char("過磅時間", default=lambda self: self._get_time())
-    person_id = fields.Many2one("yc.hr", string="過磅員")
+    person_id = fields.Many2one("res.users", string="過磅員")
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號")
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
@@ -194,8 +194,8 @@ class YcWeight(models.Model):
     # 檢查淨重是否等於貨重
     @api.constrains("refine", "carbur", "other", "other1")
     def _verify_weight(self):
-        total = self.refine + self.carbur + self.other + self.other1
-        if self.net and total != self.net:
+        _total = self.refine + self.carbur + self.other + self.other1
+        if self.net and _total != self.net:
             raise Warning("調質重量+滲碳單價+其他重量+其他重量1 應等於 淨重")
         else:
             pass

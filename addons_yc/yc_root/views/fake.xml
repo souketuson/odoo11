@@ -19,8 +19,6 @@
                 <form string="Book">
                     <group>
                         <field name="name"/>
-                        <field name="img" widget="image"/>
-                        <field name="img_attch" widget="html"/>
                     </group>
                 </form>
             </field>
