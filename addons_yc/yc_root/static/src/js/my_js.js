@@ -18,9 +18,12 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
              core.bus.on('click', "div[name='in_out'] div input:checked", self.bgChanger);
              core.bus.on('DOM_updated', "span[name='in_out']", self.post_bgChanger);
              core.bus.on('click', "button .o_pager_next", self.post_bgChanger);
-             core.bus.on('click', "label .open_the_door", self.hide_or_not);
+             core.bus.on('click', self, self._onCellClick);
              // core.bus.on('rpc_request', null, self.enable_btn);
 
+        },
+        test: function() {
+            $('.o_form_sheet').css("background-color","#adff2f");
         },
         bgChanger: function() {
             var v = $("div[name='in_out'] div input:checked").attr('data-value');
@@ -48,13 +51,16 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             var radio= $('input[type="checkbox"]');
             radio.attr('tabeindex','-1');
         },
-        hide_or_not: function() {
-            var div = $('#toggle_elf');
-            if (div.css('display')=='none'){
+        _onCellClick: function() {
+            var div = $('div #toggle_elf');
+            var btn = $("div[name='wizard_btn'] input");
+            if (btn.prop('checked')==true){
                 div.css('display','unset')
+                $('.open_the_door')[0].innerText = "關閉舊檔搜尋"
             }
             else{
                 div.css('display','none')
+                $('.open_the_door')[0].innerText = "開啟舊檔搜尋"
             }
         },
     });

@@ -422,7 +422,8 @@ class YcPurchase(models.Model):
                                   column1='col_name', column2='col_name_2')
     wizard_btn = fields.Boolean(default=False)
 
-    @api.onchange('wizard_btn')
+    @api.onchange('product_code', 'clsf_code', 'productname', 'norm_code',
+                  'proces_code', 'len_code', 'txtur_code', 'strength_level', 'wire_furn')
     def _toggle_wizard(self):
         if (self.product_code or self.clsf_code or self.norm_code or self.proces_code or
                 self.len_code or self.txtur_code or self.strength_level or self.wire_furn):
@@ -454,6 +455,34 @@ class YcPurchase(models.Model):
                     self.itself_ids = [(4, record.id) for record in records]
                 else:
                     self.itself_ids = [(5, 0, 0)]
+
+    # 變更itself時 要更動資料庫資料
+    # 這個就要觸動create了
+    @api.onchange('itself')
+    def itself_update(self):
+        self.itself_ids
+        pass
+
+    # 帶出資料
+    @api.onchange('wizard_btn')
+    def _bring_out(self):
+        if not self.wizard_btn:
+            # 當隱藏itself_ids時 帶出資料
+            wizard_checked = self.itself_ids.search([('wizard_check', '=', True)])
+            if len(wizard_checked) > 1:
+                for to_uncheck in wizard_checked:
+                    to_uncheck.wizard_check = False
+            if len(wizard_checked) == 1:
+                # 解掉checked
+                wizard_checked.wizard_check = False
+                self.surfhrd = wizard_checked.surfhrd
+                self.corehrd = wizard_checked.corehrd
+                self.piece = wizard_checked.piece
+                self.tensihrd = wizard_checked.tensihrd
+                self.carburlayer = wizard_checked.carburlayer
+                self.torsion = wizard_checked.torsion
+                self.tempturing2 = wizard_checked.tempturing2
+                self.order_furn = wizard_checked.order_furn
 
     # 以下為查詢欄位
     look_up = fields.Boolean(store=False)

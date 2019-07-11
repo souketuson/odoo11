@@ -217,7 +217,7 @@
                                                             name="%(action_purchase_wizard)d" style="display:none;"
                                                             context="{'wizard':True}"/>
                                                     <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
-                                                           rel='open_the_door'/>
+                                                           rel='open_the_door' id="open_the_door"/>
                                                     <field name="wizard_btn"/>
                                                     <!-- 新增完車次才能開啟舊檔: style="cursor: not-allowed;pointer-events: none;opacity: 0.65;" -->
                                                     <span style="display:inline-block; width: 180px;"/>　
@@ -248,7 +248,7 @@
                                                                        options="{'no_open': True,'no_create': True}"/>
                                                             </tree>
                                                     </field>
-
+                                                    <button type="object" name="itself_update" string="確定帶出"/>
                                                 </div>
                                                 <div style="float:left;border:2px black solid;padding: 2px;padding-right:43px;background:#FFECC9;">
                                                     <label string="表面硬度" style="font-weight:bold"/>
