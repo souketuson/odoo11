@@ -109,20 +109,20 @@ class YcSetproduct(models.Model):
     name = fields.Char("產品名稱")
     code = fields.Char("產品代碼")
 
-    @api.multi
-    def name_get(self):
-        return [(record.id, "%s %s" % (record.code, record.name)) for record in self]
+    # @api.multi
+    # def name_get(self):
+    #     return [(record.id, "%s %s" % (record.code, record.name)) for record in self]
 
     # 讓many2one下拉可以搜尋"代碼"來找產品
-    @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        args = args or []
-        if u'\u4e00' <= name <= u'\u9fff':
-            domain = [('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        product = self.search(domain + args, limit=limit, order='name asc')
-        return product.name_get()
+    # @api.model
+    # def name_search(self, name='', args=None, operator='ilike', limit=100):
+    #     args = args or []
+    #     if u'\u4e00' <= name <= u'\u9fff':
+    #         domain = [('name', operator, name)]
+    #     else:
+    #         domain = ['|', ('code', operator, name), ('name', operator, name)]
+    #     product = self.search(domain + args, limit=limit, order='name asc')
+    #     return product.name_get()
 
 
 class YcSetstrength(models.Model):
@@ -131,6 +131,17 @@ class YcSetstrength(models.Model):
     name = fields.Char("強度名稱")
     code = fields.Char("強度代碼")
 
+    # 讓many2one下拉可以搜尋"代碼"來找產品
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+
+        if name[0:1].capitalize()=='G' and name[1:2]:
+            domain = [('name', operator, "Grade %s" % name[1:4])]
+        else:
+            domain = [('name', operator, name)]
+        product = self.search(domain + args, limit=limit, order='name asc')
+        return product.name_get()
 
 class YcSetproductclassify(models.Model):
     # 產品分類 S03N0003

@@ -16,56 +16,65 @@ class YcPurchaseWizard(models.TransientModel):
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
     wire_furn = fields.Char("線材爐號")
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
+    rec_number = fields.Char("資料筆數", readonly=True)
 
     # 過濾查詢條件
-    @api.onchange('product_code', 'clsf_code', 'productname', 'norm_code', 'proces_code', 'len_code', 'txtur_code'
-        , 'strength_level', 'wire_furn')
+    @api.onchange('product_code', 'clsf_code', 'productname', 'norm_code',
+                  'proces_code', 'len_code', 'txtur_code', 'strength_level', 'wire_furn')
     def search_purchase(self):
-        # 如果check有被勾選 載入時會事先搜尋
         source = self.env['yc.purchase'].browse(self._context.get('active_ids'))
-        if source.ck1:
-            self.product_code = source.product_code
-        if source.ck2:
-            self.norm_code = source.norm_code
-        if source.ck3:
-            self.len_code = source.len_code
-        if source.ck4:
-            self.clsf_code = source.clsf_code
-        if source.ck5:
-            self.proces_code = source.proces_code
-        if source.ck6:
-            self.txtur_code = source.txtur_code
-        if source.ck7:
-            self.strength_level = source.strength_level
-        if source.ck8:
-            self.wire_furn = source.wire_furn
-
-        domain = ()
-        if self.product_code.id:
-            domain += ('product_code', '=', self.product_code.id),
-        if self.clsf_code.id:
-            domain += ('clsf_code', '=', self.clsf_code.id),
-        if self.productname.id:
-            domain += ('productname', '=', self.productname.id),
-        if self.norm_code.id:
-            domain += ('norm_code', '=', self.norm_code.id),
-        if self.proces_code.id:
-            domain += ('proces_code', '=', self.proces_code.id),
-        if self.len_code.id:
-            domain += ('len_code', '=', self.len_code.id),
-        if self.txtur_code.id:
-            domain += ('txtur_code', '=', self.txtur_code.id),
-        if self.strength_level.id:
-            domain += ('strength_level', '=', self.strength_level.id),
-        if self.wire_furn:
-            domain += ('wire_furn', '=', self.wire_furn),
-        if len(domain) > 0:
-            purchase = self.env['yc.purchase']
-            # 搜尋出來的list要排除掉自己
-            domain += ('id', '!=', source.id),
-            records = purchase.search([(d) for d in domain])
-            # 搜尋並列表
-            self.purchase_ids = [(4, record.id) for record in records]
+        # 如果wizard有任意欄位有值
+        if (self.product_code or self.clsf_code or self.productname or self.norm_code or self.proces_code or
+                self.len_code or self.txtur_code or self.strength_level or self.wire_furn):
+            domain = ()
+            if self.product_code:
+                domain += ('product_code', '=', self.product_code.id),
+            if self.clsf_code:
+                domain += ('clsf_code', '=', self.clsf_code.id),
+            if self.productname:
+                domain += ('productname', '=', self.productname.id),
+            if self.norm_code:
+                domain += ('norm_code', '=', self.norm_code.id),
+            if self.proces_code:
+                domain += ('proces_code', '=', self.proces_code.id),
+            if self.len_code:
+                domain += ('len_code', '=', self.len_code.id),
+            if self.txtur_code:
+                domain += ('txtur_code', '=', self.txtur_code.id),
+            if self.strength_level:
+                domain += ('strength_level', '=', self.strength_level.id),
+            if self.wire_furn:
+                domain += ('wire_furn', '=', self.wire_furn),
+            if len(domain) > 0:
+                purchase = self.env['yc.purchase']
+                # 搜尋出來的list要排除掉自己
+                domain += ('id', '!=', source.id),
+                records = purchase.search([d for d in domain])
+                # 搜尋並列表
+                if len(records) > 0:
+                    self.purchase_ids = [(4, record.id) for record in records]
+                    self.rec_number = ""
+                else:
+                    self.purchase_ids = None
+                    self.rec_number = "找不到資料"
+        else:
+            # 如果check有被勾選 載入時會事先搜尋
+            if source.ck1:
+                self.product_code = source.product_code
+            if source.ck2:
+                self.norm_code = source.norm_code
+            if source.ck3:
+                self.len_code = source.len_code
+            if source.ck4:
+                self.clsf_code = source.clsf_code
+            if source.ck5:
+                self.proces_code = source.proces_code
+            if source.ck6:
+                self.txtur_code = source.txtur_code
+            if source.ck7:
+                self.strength_level = source.strength_level
+            if source.ck8:
+                self.wire_furn = source.wire_furn
 
     # 把表面硬度,心部硬度,試片,抗拉強度,滲碳層,以前爐號,扭力,回火溫度,預排爐號 帶入到現在的進貨單
     @api.multi
@@ -135,11 +144,11 @@ class YcYcPurchasePreorder(models.TransientModel):
                     _fields.append(key)
                 for _f in _fields:
                     # M2O has attr 'id'
-                    if hasattr(p_cked[_f],'id'):
+                    if hasattr(p_cked[_f], 'id'):
                         vals.update({_f: p_cked[_f].id})
                     else:
                         if _f == 'name':
-                            vals.update({_f: 'r'+ p_cked[_f]})
+                            vals.update({_f: 'r' + p_cked[_f]})
                         else:
                             vals.update({_f: p_cked[_f]})
                 new_order.write(vals)
@@ -164,10 +173,8 @@ class YcYcPurchasePreorder(models.TransientModel):
                             vals.update({_f: res_order[_f].id})
                     else:
                         if _f == 'name':
-                            vals.update({_f: 'r'+ res_order[_f]})
+                            vals.update({_f: 'r' + res_order[_f]})
                         else:
                             vals.update({_f: res_order[_f]})
                     new_order.write(vals)
-
-
         return

@@ -3,9 +3,7 @@
 
 from odoo import models, fields, api, _
 from datetime import datetime as dt
-import pytz
-import collections
-
+import pytz, logging, collections
 
 
 class YcPurchase(models.Model):
@@ -42,23 +40,6 @@ class YcPurchase(models.Model):
     ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
-    product_code_searchbox = fields.Char("搜尋品名或編號")
-
-    @api.onchange('product_code_searchbox')
-    def search_box(self):
-        if self.product_code_searchbox:
-            product = self.env['yc.setproduct']
-            domain = [('code', '=', self.product_code_searchbox)]
-            # 只能是精準搜尋
-            if len(product.search(domain)):
-                self.product_code = product.search(domain).id
-            else:
-                return  {'warning':{
-                    'title': _('提醒'), 'message': _("沒有這個代碼")}}
-
-
-
-
     product_code = fields.Many2one("yc.setproduct", string="品名", index=True, auto_join=True)
     # 和上面重複
     # productname = fields.Many2one("yc.setproduct", string="產品名稱")
@@ -437,6 +418,43 @@ class YcPurchase(models.Model):
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
     wizard_check = fields.Boolean("是否帶出", default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
+    itself_ids = fields.Many2many(comodel_name="yc.purchase", relation='yc_purchase_yc_purchase_rel3',
+                                  column1='col_name', column2='col_name_2')
+    wizard_btn = fields.Boolean(default=False)
+
+    @api.onchange('wizard_btn')
+    def _toggle_wizard(self):
+        if (self.product_code or self.clsf_code or self.norm_code or self.proces_code or
+                self.len_code or self.txtur_code or self.strength_level or self.wire_furn):
+            domain = ()
+            if self.product_code and self.ck1:
+                domain += ('product_code', '=', self.product_code.id),
+            if self.clsf_code and self.ck4:
+                domain += ('clsf_code', '=', self.clsf_code.id),
+
+            if self.norm_code and self.ck2:
+                domain += ('norm_code', '=', self.norm_code.id),
+            if self.proces_code and self.ck5:
+                domain += ('proces_code', '=', self.proces_code.id),
+            if self.len_code and self.ck3:
+                domain += ('len_code', '=', self.len_code.id),
+            if self.txtur_code and self.ck6:
+                domain += ('txtur_code', '=', self.txtur_code.id),
+            if self.strength_level and self.ck7:
+                domain += ('strength_level', '=', self.strength_level.id),
+            if self.wire_furn and self.ck8:
+                domain += ('wire_furn', '=', self.wire_furn),
+            if len(domain) > 0:
+                purchase = self.env['yc.purchase']
+                # 搜尋出來的list要排除掉自己
+                domain += ('name', '!=', self.name),
+                records = purchase.search([d for d in domain])
+                # 搜尋並列表
+                if len(records) > 0:
+                    self.itself_ids = [(4, record.id) for record in records]
+                else:
+                    self.itself_ids = [(5, 0, 0)]
+
     # 以下為查詢欄位
     look_up = fields.Boolean(store=False)
     searchname = fields.Char("工令查詢", help="搜尋工令欄位")
@@ -447,6 +465,7 @@ class YcPurchase(models.Model):
     count = fields.Integer("數桶數", default=1)
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
+    product_code_searchbox = fields.Char("搜尋品名或編號")
 
     #########################
     ### views共用或部分共用 ###
@@ -538,8 +557,6 @@ class YcPurchase(models.Model):
                 vals.update({'name': id, 'bucket_no': i})
             detail.create({vals})
 
-
-
     # 5.各查詢表單後更新資料
     def save_entry_data(self):
         return True
@@ -591,6 +608,19 @@ class YcPurchase(models.Model):
                 [('wizard_check', '=', True), ('factory_id', '=', self.env.user.factory_id.id)])
             if len(wizard_checked) > 1:
                 raise Warning("只能選一筆資料帶出")
+
+    # 9. 快速搜尋品名
+    @api.onchange('product_code_searchbox')
+    def search_box(self):
+        if self.product_code_searchbox:
+            product = self.env['yc.setproduct']
+            domain = [('code', '=', self.product_code_searchbox)]
+            # 只能是精準搜尋
+            if len(product.search(domain)):
+                self.product_code = product.search(domain).id
+            else:
+                return {'warning': {
+                    'title': _('提醒'), 'message': _("沒有這個代碼")}}
 
     ######################
     ### purchase.xml用 ###
@@ -674,7 +704,7 @@ class YcPurchase(models.Model):
                 return {
                     'warning': {'title': _('提醒'), 'message': _("沒有這個機械性質")}}
 
-    # 4.搜尋舊檔WIZARD
+    # 4.搜尋舊檔
     # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
     @api.onchange("clsf_code", "product_code", "strength_level", "txtur_code", "norm_code", "proces_code", "wire_furn")
     def _search_process_condition(self):
@@ -742,7 +772,7 @@ class YcPurchase(models.Model):
                 [("name", "like", weight_cn), ('factory_id', '=', self.env.user.factory_id.id)])
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
-            vals.update({"name": name},)
+            vals.update({"name": name}, )
         return super(YcPurchase, self).create(vals)
 
     # 6.預設時間
@@ -864,6 +894,20 @@ class YcPurchase(models.Model):
     def wizard_comfirm(self):
         # 修改完更新爐內進貨頁面資料
         return
+
+    ###########################
+    ######### wizard ##########
+    ###########################
+    def open_wizard(self):
+        return {
+            'name': 'test',
+            'res_model': 'yc.purchase.wizard',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('yc_root.yc_purchase_wizard').id,
+            'target': 'current',
+        }
 
     ###########################
     ### S05N0100 製程登錄作業 ###

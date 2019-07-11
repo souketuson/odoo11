@@ -19,6 +19,7 @@
                     //close after print(ms), set -1 will not close
                     var _delay_close = -1;
                     // Note: put flie in CFP executive directory: root\templates
+                    var cfprint_port = 54321;
                     var _data = {
                                 "template": "report_weightorder1.fr3",
                                 "ver": 4,

@@ -87,6 +87,11 @@ class YcDataImport(models.TransientModel):
         print(' \033[42m \033[0m 用時%s' % delta)
         return True
 
+    # 合併過磅單主檔和項目檔
+    def import_yc_weight(self):
+        self.weight_main()
+        self.weight_details()
+
     # 過磅單、過磅單項目檔；進貨單、進貨單項目檔
     # constrain 和 create method check要關掉
     def weight_main(self):
@@ -94,6 +99,7 @@ class YcDataImport(models.TransientModel):
         traveler = self.env['yc.weight']
         goal = int(self.how_many_do_you_want)
         skip = 0
+        init = time.time()
         try:
             self._connection_start()
             cursor = self.cnxn.cursor()
@@ -101,7 +107,6 @@ class YcDataImport(models.TransientModel):
             cursor.execute(sql)
             sql = "DELETE FROM yc_weight"
             self._cr.execute(sql)
-            init = time.time()
             print(" \033[42m \033[0m 開始建立過磅主檔資料")
             while 1:
                 row = cursor.fetchone()
@@ -156,42 +161,51 @@ class YcDataImport(models.TransientModel):
         print(' \033[42m \033[0m 用時%s' % delta)
         return True
 
-    def weight_detail(self):
+    def weight_details(self):
         feet = 0
+        skip = 0
         traveler = self.env['yc.weight.details']
         goal = int(self.how_many_do_you_want)
-        skip = 0
+        init = time.time()
         try:
             self._connection_start()
             cursor = self.cnxn.cursor()
-            sql = "SELECT * FROM 過磅單項目檔"
+            _main = self.env['yc.weight']
+            print(" \033[42m \033[0m ...過磅主檔載入中...")
+            # PostgreSQL: 找出目前yc.weight 裡面有的單號
+            search_box = _main.search([]).mapped('name')
+            x = tuple(i for i in search_box)
+            # SQL strict form: SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN('xxxxxxxxx','oooooo')
+            # 舊資料庫: 搜尋只在yc_weight出現的單號
+            # Issue: search_box 的筆數 和 x 筆數不一樣; 第一筆有在yc_weight裡面search_box卻找不到?'E015000322' 可能是list pop錯index
+            sql = "SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN%s" % str(x)
             cursor.execute(sql)
-            sql = "DELETE FROM yc_weight_details"
-            self._cr.execute(sql)
-            init = time.time()
-            main = self.env['yc.weight'].search([]).mapped('name')
-            print(" \033[42m \033[0m 開始建立過磅主檔資料")
+            self._cr.execute("DELETE FROM yc_weight_details")
+            print(" \033[42m \033[0m 開始建立過磅明細檔資料")
             while 1:
                 row = cursor.fetchone()
-                if goal == feet or (goal < 0 and goal != -1) or not row:
+                if not row:
                     break
                 # 檢查單號有無存在在資料庫
-                # 已經被存進去後就要從list除名
-                if row.過磅單號 not in main:
+                if row.過磅單號 not in search_box:
                     skip += 1
-                    print(" \033[45m \033[0m [" + str(skip) + "] 項目單號:%s, 略過" % row.過磅單號)
+                    print(" \033[45m \033[0m [" + str(skip) + "] 項目單號:%s, 找不到關聯主檔，略過這筆" % row.過磅單號)
                     continue
-                i = main.index(row.過磅單號)
-                main.pop(i)
+                if row.客戶代號:
+                    row.客戶代號 = row.客戶代號.strip("\x00")
+                if row.加工廠代號:
+                    row.加工廠代號 = row.加工廠代號.strip("\x00")
                 customer = self.env["yc.customer"].search([("code", '=', row.客戶代號)])
                 if not any(customer):
-                    print(" \033[41m \033[0m 找不到%s這個客戶" % row.客戶代號)
-                    break
+                    skip += 1
+                    print(" \033[41m \033[0m 找不到 %s 這個客戶，請建檔" % row.客戶代號)
+                    continue
                 processing = self.env["yc.processing"].search([("code", '=', row.加工廠代號)])
                 if not any(processing):
-                    print(" \033[41m \033[0m 找不到%s這個加工廠" % row.加工廠代號)
-                    break
-                id_of_main = main.search([('name', '=', row.過磅單號)]).id
+                    skip += 1
+                    print(" \033[41m \033[0m 找不到 %s 這個加工廠，請建檔" % row.加工廠代號)
+                    continue
+                id_of_main = _main.search([('name', '=', row.過磅單號)]).id
                 customer_id = customer.id
                 processing_id = processing.id
                 feet += 1
@@ -202,6 +216,13 @@ class YcDataImport(models.TransientModel):
                     "processing_id": processing_id,
                     "note": row.備註,
                 })
+                # 已經被存進去後，從list除名，以加快搜尋速度
+                # 但是同一個單號有好幾張項目檔要全部找完才能pop
+                #i = search_box.index(row.過磅單號)
+                #if rows[feet+1].過磅單號 != row.過磅單號:
+                #    search_box.pop(i)
+            print(' \033[42m \033[0m 資料建立完成，總完成筆數:%s 略過%s筆' % (feet, skip))
+            self._disconnction()
         except Exception as e:
             print(' \033[41m \033[0m Oops!\n %s' % e)
             self._disconnction()
@@ -212,58 +233,7 @@ class YcDataImport(models.TransientModel):
         return True
 
 
-    # 過磅單項目檔 處理完主檔才能處理項目檔
-    @api.multi
-    def insert_weight_details(self):
-        try:
-            cnxn = pyodbc.connect(
-                'DRIVER={SQL Server}; SERVER=192.168.2.102; DATABASE=ERPALL; UID=erplogin; PWD=@53272162')
-            cursor = cnxn.cursor()
-            weight = self.env["yc.weight"].search([]).name_get()
-            _string = ''
-            for x in range(len(weight)):
-                if x != len(weight) - 1:
-                    _string += "'" + weight[x][1] + "',"
-                else:
-                    _string += "'" + weight[x][1] + "'"
-            # SQL strict form: SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN('xxxxxxxxx','oooooo')
-            db_sql = "SELECT * FROM 過磅單項目檔 WHERE 過磅單號 IN(%s)" % _string
-            cursor.execute(db_sql)
 
-            rows = cursor.fetchall()
-            weight_item = self.env["yc.weight.details"].search([])
-            sql = "delete from yc_weight_details"
-            self._cr.execute(sql)
-
-            for row in rows:
-                # 防止 ValueError
-                if row.客戶代號 != None:
-                    row.客戶代號 = row.客戶代號.strip("\x00")
-                if row.加工廠代號 != None:
-                    row.加工廠代號 = row.加工廠代號.strip("\x00")
-                customer_id = self.env["yc.customer"].search([("code", '=', row.客戶代號)])
-                processing_id = self.env["yc.processing"].search([("code", '=', row.加工廠代號)])
-                name_id = self.env["yc.weight"].search([("name", "=", row.過磅單號)])
-
-                weight_item.create({
-                    "name": name_id.id,
-                    "no": row.序號,
-                    "customer_id": customer_id.id,
-                    "processing_id": processing_id.id,
-                    "note": row.備註,
-                })
-        except Exception as e:
-            pass
-        return True
-
-    # 過磅單主檔 & 項目檔合併 一鍵完成
-    @api.multi
-    def insert_yc_weight(self):
-        insert_weight_main = YcDataImport.insert_weight_main
-        insert_weight_details = YcDataImport.insert_weight_details
-        funcs = insert_weight_main, insert_weight_details
-        for func in funcs:
-            func(self)
 
     @api.multi
     def insert_yc_sets01(self):

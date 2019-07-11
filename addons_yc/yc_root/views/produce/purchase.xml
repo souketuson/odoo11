@@ -214,9 +214,11 @@
                                                     <field name="wire_furn" style="width:100px"/>
                                                     <span style="display:inline-block; width: 20px;"/>　
                                                     <button string="搜尋舊檔" type="action" class="oe_highlight"
-                                                            name="%(action_purchase_wizard)d"
-                                                            style="cursor: not-allowed;pointer-events: none;opacity: 0.65;"
+                                                            name="%(action_purchase_wizard)d" style="display:none;"
                                                             context="{'wizard':True}"/>
+                                                    <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
+                                                           rel='open_the_door'/>
+                                                    <field name="wizard_btn"/>
                                                     <!-- 新增完車次才能開啟舊檔: style="cursor: not-allowed;pointer-events: none;opacity: 0.65;" -->
                                                     <span style="display:inline-block; width: 180px;"/>　
                                                     <label string="頭部記號" style="font-weight:bold"/>
@@ -224,6 +226,29 @@
                                                            style="width:100px;position:relative;top:60px"/>
                                                     <br/>
                                                     <br/>
+                                                </div>
+                                                <div id="toggle_elf" style="display:none;">
+                                                    <field name="itself_ids" widget="many2many">
+                                                            <tree create="false" delete="false"
+                                                                  string="Purchase Details" editable="top">
+                                                                <field name="wizard_check" string=' '
+                                                                       widget="checkbox"/>
+                                                                <field name="name" string="工令" readonly="1"/>
+                                                                <field name="customer_id" string="客戶" readonly="1"
+                                                                       options="{'no_open': True,'no_create': True}"/>
+                                                                <field name="norm_code" readonly="1"
+                                                                       options="{'no_open': True,'no_create': True}"/>
+                                                                <field name="surfhrd" string="表面" readonly="1"/>
+                                                                <field name="corehrd" string="心部" readonly="1"/>
+                                                                <field name="tensihrd" string="抗拉" readonly="1"/>
+                                                                <field name="carburlayer" string="滲碳" readonly="1"/>
+                                                                <field name="torsion" readonly="1"/>
+                                                                <field name="tempturing2" string="回火" readonly="1"/>
+                                                                <field name="order_furn" string="預排爐" readonly="1"
+                                                                       options="{'no_open': True,'no_create': True}"/>
+                                                            </tree>
+                                                    </field>
+
                                                 </div>
                                                 <div style="float:left;border:2px black solid;padding: 2px;padding-right:43px;background:#FFECC9;">
                                                     <label string="表面硬度" style="font-weight:bold"/>

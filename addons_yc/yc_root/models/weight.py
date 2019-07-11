@@ -118,10 +118,10 @@ class YcWeight(models.Model):
         if not self.in_out:
             raise Warning("進出貨分類空值")
 
-    # @api.constrains("plate_no")
-    # def _verify(self):
-    #     if not self.plate_no:
-    #         raise Warning("車號未填")
+    @api.constrains("plate_no")
+    def _verify(self):
+        if not self.plate_no:
+            raise Warning("車號未填")
 
     # 進出貨次數自動計算
     @api.multi
@@ -172,8 +172,11 @@ class YcWeight(models.Model):
                      "display_purchase": vals['purchase_times'],
                      "display_shipment": vals['ship_times']})
         # 檢查項目檔至少有一筆
-        # if not vals.get('customer_detail_ids'):
-        #     raise ValidationError(_('進貨項目不能是空的'))
+        if vals.get('in_out')=='O':
+            if not vals.get('customer_detail_ids'):
+                raise ValidationError(_('進貨項目不能是空的'))
+            if not (vals.get('refine') or vals.get('carbur') or vals.get('other') or vals.get('other1')):
+                raise ValidationError(_('出貨重量未填寫'))
         return super(YcWeight, self).create(vals)
 
     # 覆寫修改資料:write()

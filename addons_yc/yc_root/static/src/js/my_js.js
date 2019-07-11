@@ -1,8 +1,8 @@
 // odoo.define(moduleNmae, dependencies, function)
 odoo.define('yc_root.my_JS', function (require) {"use strict";
     var core = require('web.core');
-    var Widget = require('web.Widget');
 
+    var Widget = require('web.Widget');
     var bgdrawer = Widget.extend({
         /* <init: construct before loading DOM completely.>*/
         init: function() {
@@ -18,8 +18,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
              core.bus.on('click', "div[name='in_out'] div input:checked", self.bgChanger);
              core.bus.on('DOM_updated', "span[name='in_out']", self.post_bgChanger);
              core.bus.on('click', "button .o_pager_next", self.post_bgChanger);
-
-             core.bus.on('rpc_request', null, self.enable_btn);
+             core.bus.on('click', "label .open_the_door", self.hide_or_not);
+             // core.bus.on('rpc_request', null, self.enable_btn);
 
         },
         bgChanger: function() {
@@ -47,6 +47,15 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
         enable_tabindex: function() {
             var radio= $('input[type="checkbox"]');
             radio.attr('tabeindex','-1');
+        },
+        hide_or_not: function() {
+            var div = $('#toggle_elf');
+            if (div.css('display')=='none'){
+                div.css('display','unset')
+            }
+            else{
+                div.css('display','none')
+            }
         },
     });
 

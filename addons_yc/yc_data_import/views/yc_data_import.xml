@@ -17,11 +17,13 @@
                                 <br/>
                                 <button string="員工主檔" type="object" name="employee"
                                         confirm="確定匯入?" class="oe_highlight"/>
-                                |
+
                                 <button string="過磅單主檔" type="object" name="weight_main"
-                                        confirm="確定匯入?" class="oe_highlight"/>
-                                |
+                                        confirm="確定匯入?" class="oe_highlight" style="display:none;"/>
+
                                 <button string="過磅單項目檔" type="object" name="weight_detail"
+                                        confirm="確定匯入?" class="oe_highlight" style="display:none;"/>
+                                | <button string="過磅單" type="object" name="import_yc_weight"
                                         confirm="確定匯入?" class="oe_highlight"/>
                             </div>
                         </group>

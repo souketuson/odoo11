@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <report id="action_purchase_report"
-            string="進貨單列印"
+            string="進貨明細"
             model="yc.purchase"
             report_type="qweb-pdf"
             name="yc_root.report_purchase_template"/>

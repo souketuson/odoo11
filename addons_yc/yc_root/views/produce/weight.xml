@@ -123,13 +123,30 @@
                 </form>
             </field>
         </record>
+        <!--calendar view-->
+        <record id="view_weight_calendar" model="ir.ui.view">
+            <field name="name">yc.weight.calendar</field>
+            <field name="model">yc.weight</field>
+            <field name="arch" type="xml">
+                <calendar string="Weight" date_start="day" color="in_out">
+                    <field name="name"/>
+                    <field name="day"/>
+                    <field name="weightime"/>
+                    <field name="driver_id"/>
+                    <field name="person_id"/>
+                    <field name="carno"/>
+                    <field name="in_out"/>
+                    <field name="factory_id"/>
+                </calendar>
+            </field>
+        </record>
         <!-- action -->
         <record model="ir.actions.act_window" id="weight_list_action">
             <field name="name">過磅單作業</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">yc.weight</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[("factory_id","in",[context.get('factory_id')])]</field>
             <field name="context">{}</field>
         </record>
@@ -173,6 +190,7 @@
                     <field name="driver_id"/>
                     <field name="carno"/>
                     <field name="day"/>
+                    <field name="name"/>
                 </search>
             </field>
         </record>

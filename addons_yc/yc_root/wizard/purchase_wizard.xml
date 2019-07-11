@@ -55,6 +55,7 @@
                                 <field name="order_furn" string="預排爐" readonly="1" options="{'no_open': True,'no_create': True}"/>
                             </tree>
                         </field>
+                        <field name="rec_number"/>
                     </div>
                 </group>
                 <footer>
