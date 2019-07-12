@@ -217,20 +217,22 @@
                                                             name="%(action_purchase_wizard)d" style="display:none;"
                                                             context="{'wizard':True}"/>
                                                     <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
-                                                           rel='open_the_door' id="open_the_door"/>
-                                                    <field name="wizard_btn"/>
+                                                           rel='open_the_door' id="open_the_door"><span icon="fa-search"/></label>
+                                                    <button type="object" name="itself_update" string="確定帶出" style="display:none;"/>
+                                                    <field name="wizard_btn" style="display:none;"/>
                                                     <!-- 新增完車次才能開啟舊檔: style="cursor: not-allowed;pointer-events: none;opacity: 0.65;" -->
                                                     <span style="display:inline-block; width: 180px;"/>　
                                                     <label string="頭部記號" style="font-weight:bold"/>
                                                     <field name="headsign" widget='image' height="90" width="90"
-                                                           style="width:100px;position:relative;top:60px"/>
+                                                           style="width:100px;position:relative;top:20px"/>
                                                     <br/>
                                                     <br/>
                                                 </div>
-                                                <div id="toggle_elf" style="display:none;">
-                                                    <field name="itself_ids" widget="many2many">
+                                                <div id="toggle_elf" style="display:none;background:yellowgreen;">
+                                                    <field name="itself_ids" widget="many2many" style="width:860px;">
                                                             <tree create="false" delete="false"
                                                                   string="Purchase Details" editable="top">
+                                                                <!--<button name="itself_update" type="object" icon="fa fa-check-square-o"/>-->
                                                                 <field name="wizard_check" string=' '
                                                                        widget="checkbox"/>
                                                                 <field name="name" string="工令" readonly="1"/>
@@ -248,8 +250,9 @@
                                                                        options="{'no_open': True,'no_create': True}"/>
                                                             </tree>
                                                     </field>
-                                                    <button type="object" name="itself_update" string="確定帶出"/>
+
                                                 </div>
+                                                <div style="clear:both;"/>
                                                 <div style="float:left;border:2px black solid;padding: 2px;padding-right:43px;background:#FFECC9;">
                                                     <label string="表面硬度" style="font-weight:bold"/>
                                                     <field name="surfhrd" style="width:90px"/>

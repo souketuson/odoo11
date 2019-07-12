@@ -5,9 +5,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
     var Widget = require('web.Widget');
     var bgdrawer = Widget.extend({
         /* <init: construct before loading DOM completely.>*/
-        init: function() {
-            var self = this;
-            self._super.apply(this, arguments);
+        init: function(parent, options) {
+            this._super.apply(this, arguments);
              /*  this is used to register a listener on an event.
                   form: .on(ev, node.callback, node.context);
                   ev:
@@ -15,10 +14,10 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                      'DOM_updated': implement when DOM updated
                      ...etc.
              */
-             core.bus.on('click', "div[name='in_out'] div input:checked", self.bgChanger);
-             core.bus.on('DOM_updated', "span[name='in_out']", self.post_bgChanger);
-             core.bus.on('click', "button .o_pager_next", self.post_bgChanger);
-             core.bus.on('click', self, self._onCellClick);
+            core.bus.on('click', "div[name='in_out'] div input:checked", this.bgChanger);
+            core.bus.on('DOM_updated', "span[name='in_out']", this.post_bgChanger);
+            core.bus.on('click', "button .o_pager_next", this.post_bgChanger);
+            core.bus.on('click', this, this._onCellClick);
              // core.bus.on('rpc_request', null, self.enable_btn);
 
         },
@@ -52,16 +51,33 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             radio.attr('tabeindex','-1');
         },
         _onCellClick: function() {
-            var div = $('div #toggle_elf');
-            var btn = $("div[name='wizard_btn'] input");
-            if (btn.prop('checked')==true){
-                div.css('display','unset')
-                $('.open_the_door')[0].innerText = "關閉舊檔搜尋"
-            }
-            else{
-                div.css('display','none')
-                $('.open_the_door')[0].innerText = "開啟舊檔搜尋"
-            }
+
+                var div = $('div #toggle_elf');
+                var btn = $("div[name='wizard_btn'] input");
+                var wizard = $('.open_the_door')
+                var comfirm = $("button[name='itself_update']");
+                if (btn.prop('checked')==true){
+                    div.css('display','unset');
+                    comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
+                    wizard[0].innerText = "關閉舊檔搜尋";
+                    wizard.css("background-color","#568e8f");
+                    wizard.hover(function(e) {
+                          $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                    });
+                    comfirm.hover(function(e) {
+                        $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad");
+                    });
+                }
+                else if (btn.prop('checked')==false){
+                    div.css('display','none');
+                    comfirm.css('display','none');
+                    wizard[0].innerText = "開啟舊檔搜尋";
+                    wizard.css("background-color","#7c7bad");
+                    wizard.hover(function(e) {
+                          $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                    });
+                }
+
         },
     });
 

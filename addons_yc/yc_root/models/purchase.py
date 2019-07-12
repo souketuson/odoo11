@@ -2,6 +2,7 @@
 
 
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 from datetime import datetime as dt
 import pytz, logging, collections
 
@@ -449,7 +450,8 @@ class YcPurchase(models.Model):
                 purchase = self.env['yc.purchase']
                 # 搜尋出來的list要排除掉自己
                 domain += ('name', '!=', self.name),
-                records = purchase.search([d for d in domain])
+                # 要限制最多六筆 並且時間排序
+                records = purchase.search([d for d in domain], limit=6, order='create_date desc')
                 # 搜尋並列表
                 if len(records) > 0:
                     self.itself_ids = [(4, record.id) for record in records]
@@ -457,32 +459,44 @@ class YcPurchase(models.Model):
                     self.itself_ids = [(5, 0, 0)]
 
     # 變更itself時 要更動資料庫資料
-    # 這個就要觸動create了
-    @api.onchange('itself')
+    # 用button先進create 再跑這個程式
     def itself_update(self):
-        self.itself_ids
-        pass
+        purchase = self.env['yc.purchase']
+        checked = purchase.search([('wizard_check', '=', True)])
+        for rec in checked:
+            rec.write({'wizard_check': False})
+        if len(checked) == 1:
+            self.surfhrd = checked.surfhrd
+            self.corehrd = checked.corehrd
+            self.piece = checked.piece
+            self.tensihrd = checked.tensihrd
+            self.carburlayer = checked.carburlayer
+            self.torsion = checked.torsion
+            self.tempturing2 = checked.tempturing2
+            self.order_furn = checked.order_furn
+        self.wizard_btn = False
+        return {"type": "set_scrollTop"}
 
     # 帶出資料
-    @api.onchange('wizard_btn')
-    def _bring_out(self):
-        if not self.wizard_btn:
-            # 當隱藏itself_ids時 帶出資料
-            wizard_checked = self.itself_ids.search([('wizard_check', '=', True)])
-            if len(wizard_checked) > 1:
-                for to_uncheck in wizard_checked:
-                    to_uncheck.wizard_check = False
-            if len(wizard_checked) == 1:
-                # 解掉checked
-                wizard_checked.wizard_check = False
-                self.surfhrd = wizard_checked.surfhrd
-                self.corehrd = wizard_checked.corehrd
-                self.piece = wizard_checked.piece
-                self.tensihrd = wizard_checked.tensihrd
-                self.carburlayer = wizard_checked.carburlayer
-                self.torsion = wizard_checked.torsion
-                self.tempturing2 = wizard_checked.tempturing2
-                self.order_furn = wizard_checked.order_furn
+    # @api.onchange('wizard_btn')
+    # def _bring_out(self):
+    #     if not self.wizard_btn:
+    #         # 當隱藏itself_ids時 帶出資料
+    #         wizard_checked = self.itself_ids.search([('wizard_check', '=', True)])
+    #         if len(wizard_checked) > 1:
+    #             for to_uncheck in wizard_checked:
+    #                 to_uncheck.wizard_check = False
+    #         if len(wizard_checked) == 1:
+    #             # 解掉checked
+    #             wizard_checked.wizard_check = False
+    #             self.surfhrd = wizard_checked.surfhrd
+    #             self.corehrd = wizard_checked.corehrd
+    #             self.piece = wizard_checked.piece
+    #             self.tensihrd = wizard_checked.tensihrd
+    #             self.carburlayer = wizard_checked.carburlayer
+    #             self.torsion = wizard_checked.torsion
+    #             self.tempturing2 = wizard_checked.tempturing2
+    #             self.order_furn = wizard_checked.order_furn
 
     # 以下為查詢欄位
     look_up = fields.Boolean(store=False)
@@ -574,7 +588,6 @@ class YcPurchase(models.Model):
 
     @api.onchange('look_up')
     def _call_redirect(self):
-
         if self.searchname:
             self._redirect('process_data_entry')
 
@@ -636,6 +649,8 @@ class YcPurchase(models.Model):
             wizard_checked = self.env["yc.purchase"].search(
                 [('wizard_check', '=', True), ('factory_id', '=', self.env.user.factory_id.id)])
             if len(wizard_checked) > 1:
+                for rec in wizard_checked:
+                    rec.write({'wizard_check': False})
                 raise Warning("只能選一筆資料帶出")
 
     # 9. 快速搜尋品名
@@ -801,7 +816,7 @@ class YcPurchase(models.Model):
                 [("name", "like", weight_cn), ('factory_id', '=', self.env.user.factory_id.id)])
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
-            vals.update({"name": name}, )
+            vals.update({"name": name, 'wizard_btn': False})
         return super(YcPurchase, self).create(vals)
 
     # 6.預設時間
@@ -810,10 +825,10 @@ class YcPurchase(models.Model):
             return dt.today()
 
     # 7. 空值警告
-    # @api.constrains("car_no")
-    # def _verify(self):
-    #     if not self.car_no:
-    #         raise Warning("車次序號不能空")
+    @api.constrains("car_no")
+    def _verify(self):
+        if not self.car_no:
+            raise Warning("車次序號不能空")
 
     # 8. 加熱爐和回火爐自動填值
     @api.onchange('heat2', 'tempturing2')
@@ -953,6 +968,8 @@ class YcPurchase(models.Model):
                 vals.update({'status': not_infurn_code})
             else:
                 vals.update({'status': infurn_code})
+        if self._context.get('params')['action'] == 81:
+            vals.update({'wizard_btn': False})
         return super(YcPurchase, self).write(vals)
 
     ###########################

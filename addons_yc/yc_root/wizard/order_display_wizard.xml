@@ -7,175 +7,220 @@
         <field name="arch" type="xml">
             <form string="Purchase Report">
                 <div style="">
-                    <label string="工令號碼" style="font-weight:bold"/>
-                    <field name="name" style="width:100px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="進貨日期" style="font-weight:bold"/>
-                    <field name="day" style="width:120px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="客戶" style="font-weight:bold"/>
-                    <field name="customer_id" style="width:100px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="客戶批號" style="font-weight:bold"/>
-                    <field name="batch" style="width:100px" readonly="1"/>
-                    <br/>
-                    <span style="display:inline-block; width: 27px;"/>
-                    <label string="品名" style="font-weight:bold"/>
-                    <field name="product_code" style="width:180px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="規格" style="font-weight:bold" options="{'no_open': True,'no_create': True}"/>
-                    <field name="norm_code" style="width:100px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <field name="len_code" style="width:100px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <field name="len_descript" style="width:100px" readonly="1"/>
-                    <br/>
-                    <label string="品名分類" style="font-weight:bold"/>
-                    <field name="clsf_code" style="width:150px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 10px;"/>　
-                    <label string="材質" style="font-weight:bold"/>
-                    <field name="txtur_code" style="width:100px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 10px;"/>　
-                    <label string="表面處理" style="font-weight:bold"/>
-                    <field name="surface_code" style="width:80px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 10px;"/>　
-                    <label string="強度級數" style="font-weight:bold"/>
-                    <field name="strength_level" style="width:80px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 10px;"/>　
-                    <label string="牙分類" style="font-weight:bold"/>
-                    <field name="fullorhalf" style="width:80px" readonly="1"/>
-                    <br/>
-                    <label string="加工方式" style="font-weight:bold"/>
-                    <field name="proces_code" style="width:100px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="數量　" style="font-weight:bold" class="oe_inline"/>
-                    <field name="num1" style="width:70px" readonly="1"/>　
-                    <field name="unit1" nolabel="1" style="width:50px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <field name="num2" style="width:70px" readonly="1"/>
-                    <field name="unit2" nolabel="1" style="width:50px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <field name="num3" style="width:70px" readonly="1"/>
-                    <field name="unit3" nolabel="1" style="width:50px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <field name="num4" style="width:70px" readonly="1"/>
-                    <field name="unit4" nolabel="1" style="width:50px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>　
-                    <br/>
-                    <span style="display:inline-block; width: 27px;"/>
-                    <label string="淨重" style="font-weight:bold"/>
-                    <field name="net" style="width:60px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="表面硬度" style="font-weight:bold"/>
-                    <field name="surfhrd" style="width:90px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="心部硬度" style="font-weight:bold"/>
-                    <field name="corehrd" style="width:90px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="存放地點" style="font-weight:bold"/>
-                    <field name="storeplace" style="width:100px" readonly="1"/>
-                    <br/>
-                    <label string="抗拉強度" style="font-weight:bold"/>
-                    <field name="tensihrd" style="width:90px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="　滲碳層" style="font-weight:bold"/>
-                    <field name="carburlayer" style="width:90px" readonly="1"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="預排爐號" style="font-weight:bold"/>
-                    <field name="order_furn" style="width:60px" readonly="1"
-                           options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 20px;"/>　
-                    <label string="線材爐號" style="font-weight:bold" readonly="1"/>
-                    <field name="wire_furn" style="width:100px"/>
-                    <span style="display:inline-block; width: 20px;"/>
-                    <!--<button string="搜尋舊檔" type="action" class="oe_highlight"-->
-                            <!--style=""-->
-                            <!--name="%(action_purchase_wizard)d" context="{'wizard':True}"/>-->
-                    <button string="搜尋舊檔(測試版)" type="object" class="oe_highlight"
-                            name="open_wizard"
-                    />
-                    <br/>
-                    <label string="製造日期" style="font-weight:bold"/>
-                    <field name="produceday1" style="width: 120px" readonly="1"/>
-                    <field name="ptime1" nolabel="1" style="width: 50px" readonly="1"/>
-                    <span style="display:inline-block; width: 10px;"></span>
-                    <label string="班別" style="font-weight:bold"/>
-                    <field name="shift1" style="width: 80px;" readonly="1" options="{'no_open': True,'no_create': True}"/>
-                    <span style="display:inline-block; width: 30px;"></span>
-                    <label string="操作人員" style="font-weight:bold"/>
-                    <field name="op1" style="width: 100px" readonly="1" options="{'no_open': True,'no_create': True}"/>
-                    <label string="品管人員" style="font-weight:bold"/>
-                    <field name="qc" style="width:100px" readonly="1" options="{'no_open': True,'no_create': True}"/>
-                    <br/>
-                    <label string="　　流量" style="font-weight:bold"/>
-                    <field name="flow" style="width: 80px"/>
-                    <span style="display:inline-block; width: 20px;"/>
-                    <label string="CP值" style="font-weight:bold"/>
-                    <field name="cp" style="width: 90px"/>
-                    <span style="display:inline-block; width: 20px;"/>
-                    <label string="氨值" style="font-weight:bold"/>
-                    <field name="nh31" style="width: 70px"/>
-                    <span style="display:inline-block; width: 20px;"/>
-                    <label string="支" style="font-weight:bold"/>
-                    <field name="nh32" style="width: 70px"/>
-                    <span style="display:inline-block; width: 20px;"/>
-                    <label string="第" style="font-weight:bold"/>
-                    <field name="nh33" style="width: 70px"/>
-                    <span style="display:inline-block; width: 20px;"/>
-                    <label string="支" style="font-weight:bold"/>
-                    <field name="nh34" style="width: 70px"/>
-                    <br/>
-                    <label string="　加熱爐" style="font-weight:bold"/>
-                    <field name="heat2" style="width: 80px;position: relative;left: 80px;" default_focus="1"/>
-                    <field name="heat1" style="width: 80px;position: relative;left: -80px;"/>
+                    <div>
+                        <label string="工令號碼" style="font-weight:bold"/>
+                        <field name="name" style="width:100px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="進貨日期" style="font-weight:bold"/>
+                        <field name="day" style="width:120px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="客戶" style="font-weight:bold"/>
+                        <field name="customer_id" style="width:100px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="客戶批號" style="font-weight:bold"/>
+                        <field name="batch" style="width:100px" readonly="1"/>
+                        <br/>
+                        <span style="display:inline-block; width: 27px;"/>
+                        <label string="品名" style="font-weight:bold"/>
+                        <field name="product_code" style="width:180px"
+                               options="{'no_open': True,'no_create': True}"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="規格" style="font-weight:bold" options="{'no_open': True,'no_create': True}"/>
+                        <field name="norm_code" style="width:100px"
+                               options="{'no_open': True,'no_create': True}"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <field name="len_code" style="width:100px"
+                               options="{'no_open': True,'no_create': True}"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <field name="len_descript" style="width:100px" readonly="1"/>
+                        <br/>
+                        <label string="品名分類" style="font-weight:bold"/>
+                        <field name="clsf_code" style="width:150px"
+                               options="{'no_open': True,'no_create': True}"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <span style="display:inline-block; width: 10px;"/>　
+                        <label string="材質" style="font-weight:bold"/>
+                        <field name="txtur_code" style="width:100px"
+                               options="{'no_open': True,'no_create': True}"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <span style="display:inline-block; width: 10px;"/>　
+                        <label string="表面處理" style="font-weight:bold"/>
+                        <field name="surface_code" style="width:80px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 10px;"/>　
+                        <label string="強度級數" style="font-weight:bold"/>
+                        <field name="strength_level" style="width:100px"
+                               options="{'no_open': True,'no_create': True}"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <span style="display:inline-block; width: 10px;"/>　
+                        <label string="牙分類" style="font-weight:bold"/>
+                        <field name="fullorhalf" style="width:80px" readonly="1"/>
+                        <br/>
+                        <label string="加工方式" style="font-weight:bold"/>
+                        <field name="proces_code" style="width:100px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="數量　" style="font-weight:bold" class="oe_inline"/>
+                        <field name="num1" style="width:70px" readonly="1"/>　
+                        <field name="unit1" nolabel="1" style="width:50px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <field name="num2" style="width:70px" readonly="1"/>
+                        <field name="unit2" nolabel="1" style="width:50px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <field name="num3" style="width:70px" readonly="1"/>
+                        <field name="unit3" nolabel="1" style="width:50px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <field name="num4" style="width:70px" readonly="1"/>
+                        <field name="unit4" nolabel="1" style="width:50px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>　
+                        <br/>
+                        <span style="display:inline-block; width: 27px;"/>
+                        <label string="淨重" style="font-weight:bold"/>
+                        <field name="net" style="width:60px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="表面硬度" style="font-weight:bold"/>
+                        <field name="surfhrd" style="width:90px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="心部硬度" style="font-weight:bold"/>
+                        <field name="corehrd" style="width:90px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="存放地點" style="font-weight:bold"/>
+                        <field name="storeplace" style="width:100px" readonly="1"/>
+                        <br/>
+                        <label string="抗拉強度" style="font-weight:bold"/>
+                        <field name="tensihrd" style="width:90px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="　滲碳層" style="font-weight:bold"/>
+                        <field name="carburlayer" style="width:90px" readonly="1"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="預排爐號" style="font-weight:bold"/>
+                        <field name="order_furn" style="width:60px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 20px;"/>　
+                        <label string="線材爐號" style="font-weight:bold"
+                               attrs="{'readonly': [('wizard_btn', '=', False)]}"/>
+                        <field name="wire_furn" style="width:100px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <!--<button string="搜尋舊檔" type="action" class="oe_highlight"-->
+                        <!--style=""-->
+                        <!--name="%(action_purchase_wizard)d" context="{'wizard':True}"/>-->
+                        <!--<button string="搜尋舊檔(測試版)" type="object" class="oe_highlight"-->
+                        <!--name="open_wizard"-->
+                        <!--/>-->
+                        <br/>
+                        <label string="製造日期" style="font-weight:bold"/>
+                        <field name="produceday1" style="width: 120px" readonly="1"/>
+                        <field name="ptime1" nolabel="1" style="width: 50px" readonly="1"/>
+                        <span style="display:inline-block; width: 10px;"></span>
+                        <label string="班別" style="font-weight:bold"/>
+                        <field name="shift1" style="width: 80px;" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        <label string="操作人員" style="font-weight:bold"/>
+                        <field name="op1" style="width: 100px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <label string="品管人員" style="font-weight:bold"/>
+                        <field name="qc" style="width:100px" readonly="1"
+                               options="{'no_open': True,'no_create': True}"/>
+                        <br/>
+                    </div>
+                    <div>
+                        <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
+                               rel='open_the_door' id="open_the_door"/>
+                        <button type="object" name="itself_update" string="確定帶出" style="display:none;"/>
+                        <field name="wizard_btn" style="display:none;"/>
+                    </div>
+                    <div style="height:10px;"/>
+                    <div id="toggle_elf" style="display:none;background:yellowgreen;">
+                        <field name="itself_ids" widget="many2many" style="width:860px;">
+                            <tree create="false" delete="false"
+                                  string="Purchase Details" editable="top">
+                                <!--<button name="itself_update" type="object" icon="fa fa-check-square-o"/>-->
+                                <field name="wizard_check" string=' '
+                                       widget="checkbox"/>
+                                <field name="name" string="工令" readonly="1"/>
+                                <field name="customer_id" string="客戶" readonly="1"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <field name="norm_code" readonly="1"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <field name="surfhrd" string="表面" readonly="1"/>
+                                <field name="corehrd" string="心部" readonly="1"/>
+                                <field name="tensihrd" string="抗拉" readonly="1"/>
+                                <field name="carburlayer" string="滲碳" readonly="1"/>
+                                <field name="torsion" readonly="1"/>
+                                <field name="tempturing2" string="回火" readonly="1"/>
+                                <field name="order_furn" string="預排爐" readonly="1"
+                                       options="{'no_open': True,'no_create': True}"/>
+                            </tree>
+                        </field>
 
-                    <field name="heat3" style="width: 80px"/>
-                    <field name="heat4" style="width: 80px"/>
-                    <field name="heat5" style="width: 80px"/>
-                    <field name="heat6" style="width: 80px"/>
-                    <field name="heat7" style="width: 80px"/>
-                    <field name="heat8" style="width: 80px"/>
-                    <br/>
-                    <label string="　　油溫" style="font-weight:bold"/>
-                    <field name="heattemp" style="width: 80px"/>
-                    <span style="display:inline-block; width: 10px;"></span>
-                    <label string="速度" style="font-weight:bold"/>
-                    <field name="heatsped" style="width: 80px"/>
-                    <br/>
-                    <label string="　回火爐" style="font-weight:bold"/>
-                    <field name="tempturing2" style="width: 80px;position: relative;left: 80px;"/>
-                    <field name="tempturing1" style="width: 80px;position: relative;left: -80px;"/>
+                    </div>
+                    <div>
+                        <label string="　　流量" style="font-weight:bold"/>
+                        <field name="flow" style="width: 80px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="CP值" style="font-weight:bold"/>
+                        <field name="cp" style="width: 90px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="氨值" style="font-weight:bold"/>
+                        <field name="nh31" style="width: 70px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="支" style="font-weight:bold"/>
+                        <field name="nh32" style="width: 70px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="第" style="font-weight:bold"/>
+                        <field name="nh33" style="width: 70px"/>
+                        <span style="display:inline-block; width: 20px;"/>
+                        <label string="支" style="font-weight:bold"/>
+                        <field name="nh34" style="width: 70px"/>
+                        <br/>
+                        <label string="　加熱爐" style="font-weight:bold"/>
+                        <field name="heat2" style="width: 80px;position: relative;left: 80px;" default_focus="1"/>
+                        <field name="heat1" style="width: 80px;position: relative;left: -80px;"/>
 
-                    <field name="tempturing3" style="width: 80px"/>
-                    <field name="tempturing4" style="width: 80px"/>
-                    <field name="tempturing5" style="width: 80px"/>
-                    <field name="tempturing6" style="width: 80px"/>
-                    <span style="display:inline-block; width: 10px;"></span>
-                    <label string="速度" style="font-weight:bold"/>
-                    <field name="tempturisped" style="width: 80px"/>
-                    <br/>
-                    <label string="注意事項" style="font-weight:bold"/>
-                    <field name="notices1" style="width:200px"/>
-                    <field name="notices2" style="width:200px"/>
-                    <field name="notices3" style="width:200px"/>
-                    <br/>
-                    <label string="品管備註" style="font-weight:bold"/>
-                    <field name="qcnote1" style="width:200px"/>
-                    <field name="qcnote2" style="width:200px"/>
-                    <field name="qcnote3" style="width:200px"/>
-                    <br/>
-                    <label string="製造備註" style="font-weight:bold"/>
-                    <field name="prodnote1" style="width:200px"/>
-                    <field name="prodnote2" style="width:200px"/>
-                    <field name="prodnote3" style="width:200px"/>
+                        <field name="heat3" style="width: 80px"/>
+                        <field name="heat4" style="width: 80px"/>
+                        <field name="heat5" style="width: 80px"/>
+                        <field name="heat6" style="width: 80px"/>
+                        <field name="heat7" style="width: 80px"/>
+                        <field name="heat8" style="width: 80px"/>
+                        <br/>
+                        <label string="　　油溫" style="font-weight:bold"/>
+                        <field name="heattemp" style="width: 80px"/>
+                        <span style="display:inline-block; width: 10px;"></span>
+                        <label string="速度" style="font-weight:bold"/>
+                        <field name="heatsped" style="width: 80px"/>
+                        <br/>
+                        <label string="　回火爐" style="font-weight:bold"/>
+                        <field name="tempturing2" style="width: 80px;position: relative;left: 80px;"/>
+                        <field name="tempturing1" style="width: 80px;position: relative;left: -80px;"/>
+
+                        <field name="tempturing3" style="width: 80px"/>
+                        <field name="tempturing4" style="width: 80px"/>
+                        <field name="tempturing5" style="width: 80px"/>
+                        <field name="tempturing6" style="width: 80px"/>
+                        <span style="display:inline-block; width: 10px;"></span>
+                        <label string="速度" style="font-weight:bold"/>
+                        <field name="tempturisped" style="width: 80px"/>
+                        <br/>
+                        <label string="注意事項" style="font-weight:bold"/>
+                        <field name="notices1" style="width:200px"/>
+                        <field name="notices2" style="width:200px"/>
+                        <field name="notices3" style="width:200px"/>
+                        <br/>
+                        <label string="品管備註" style="font-weight:bold"/>
+                        <field name="qcnote1" style="width:200px"/>
+                        <field name="qcnote2" style="width:200px"/>
+                        <field name="qcnote3" style="width:200px"/>
+                        <br/>
+                        <label string="製造備註" style="font-weight:bold"/>
+                        <field name="prodnote1" style="width:200px"/>
+                        <field name="prodnote2" style="width:200px"/>
+                        <field name="prodnote3" style="width:200px"/>
+                    </div>
                 </div>
             </form>
             <footer>
