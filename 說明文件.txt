@@ -9,6 +9,7 @@ xmlrpc_port = 8069
 pg_path = C:\Program Files\PostgreSQL\9.6\bin
 addons_path = addons,odoo\addons,,..\addons_yc,..\addons
 
+python odoo-bin shell -c odoo11.conf -d 資料庫名稱 --shell-interface ipython
 
 odoo directory structure:	
 odoo11 ┬─ \.git        -- git control file
