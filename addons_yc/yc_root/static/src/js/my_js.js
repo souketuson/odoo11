@@ -17,8 +17,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             core.bus.on('click', "div[name='in_out'] div input:checked", this.bgChanger);
             core.bus.on('DOM_updated', "span[name='in_out']", this.post_bgChanger);
             core.bus.on('click', "button .o_pager_next", this.post_bgChanger);
-            core.bus.on('click', this, this._onCellClick);
-             // core.bus.on('rpc_request', null, self.enable_btn);
+            core.bus.on('click', this, this.elf_Click);
+            core.bus.on('click', this, this.return_Click);
 
         },
         test: function() {
@@ -50,34 +50,56 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             var radio= $('input[type="checkbox"]');
             radio.attr('tabeindex','-1');
         },
-        _onCellClick: function() {
+        elf_Click: function() {
+            var div = $('div #toggle_elf');
+            var btn = $("div[name='wizard_btn'] input");
+            var wizard = $('.open_the_door')
+            var comfirm = $("button[name='itself_update']");
+            if (btn.prop('checked')==true){
+                div.css('display','unset');
+                comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
+                wizard[0].innerText = "關閉舊檔搜尋";
+                wizard.css("background-color","#568e8f");
+                wizard.hover(function(e) {
+                      $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                });
+                comfirm.hover(function(e) {
+                    $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad");
+                });
+            }
+            else if (btn.prop('checked')==false){
+                div.css('display','none');
+                comfirm.css('display','none');
+                wizard[0].innerText = "開啟舊檔搜尋";
+                wizard.css("background-color","#5f5e97");
+                wizard.hover(function(e) {
+                      $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                });
+            }
 
-                var div = $('div #toggle_elf');
-                var btn = $("div[name='wizard_btn'] input");
-                var wizard = $('.open_the_door')
-                var comfirm = $("button[name='itself_update']");
-                if (btn.prop('checked')==true){
-                    div.css('display','unset');
-                    comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
-                    wizard[0].innerText = "關閉舊檔搜尋";
-                    wizard.css("background-color","#568e8f");
-                    wizard.hover(function(e) {
-                          $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
-                    });
-                    comfirm.hover(function(e) {
-                        $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad");
-                    });
-                }
-                else if (btn.prop('checked')==false){
-                    div.css('display','none');
-                    comfirm.css('display','none');
-                    wizard[0].innerText = "開啟舊檔搜尋";
-                    wizard.css("background-color","#7c7bad");
-                    wizard.hover(function(e) {
-                          $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
-                    });
-                }
-
+        },
+        return_Click: function() {
+            var div = $('div #toggle_return');
+            var btn = $("div[name='return_btn'] input");
+            var wizard = $('.mummy_return');
+            if (btn.prop('checked')==true){
+                div.css('display','unset');
+                // comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
+                wizard[0].innerText = "關閉退回";
+                wizard.css("background-color","#568e8f");
+                wizard.hover(function(e) {
+                      $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                });
+            }
+            else if (btn.prop('checked')==false){
+                div.css('display','none');
+                //comfirm.css('display','none');
+                wizard[0].innerText = "搜尋退回";
+                wizard.css("background-color","#5f5e97");
+                wizard.hover(function(e) {
+                      $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                });
+            }
         },
     });
 

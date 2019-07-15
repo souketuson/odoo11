@@ -421,82 +421,15 @@ class YcPurchase(models.Model):
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
     itself_ids = fields.Many2many(comodel_name="yc.purchase", relation='yc_purchase_yc_purchase_rel3',
                                   column1='col_name', column2='col_name_2')
+    return_in_fac_ids = fields.Many2many(comodel_name="yc.purchase", relation='yc_purchase_yc_purchase_rel4',
+                                         column1='col_name_3', column2='col_name_4')
+    return_ids = fields.Many2many("yc.return", string="purchase search", help="查詢列表")
+    condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')], string="退回來源")
+    return_btn = fields.Boolean(default=False)
     wizard_btn = fields.Boolean(default=False)
-
-    @api.onchange('product_code', 'clsf_code', 'productname', 'norm_code',
-                  'proces_code', 'len_code', 'txtur_code', 'strength_level', 'wire_furn')
-    def _toggle_wizard(self):
-        if (self.product_code or self.clsf_code or self.norm_code or self.proces_code or
-                self.len_code or self.txtur_code or self.strength_level or self.wire_furn):
-            domain = ()
-            if self.product_code and self.ck1:
-                domain += ('product_code', '=', self.product_code.id),
-            if self.clsf_code and self.ck4:
-                domain += ('clsf_code', '=', self.clsf_code.id),
-
-            if self.norm_code and self.ck2:
-                domain += ('norm_code', '=', self.norm_code.id),
-            if self.proces_code and self.ck5:
-                domain += ('proces_code', '=', self.proces_code.id),
-            if self.len_code and self.ck3:
-                domain += ('len_code', '=', self.len_code.id),
-            if self.txtur_code and self.ck6:
-                domain += ('txtur_code', '=', self.txtur_code.id),
-            if self.strength_level and self.ck7:
-                domain += ('strength_level', '=', self.strength_level.id),
-            if self.wire_furn and self.ck8:
-                domain += ('wire_furn', '=', self.wire_furn),
-            if len(domain) > 0:
-                purchase = self.env['yc.purchase']
-                # 搜尋出來的list要排除掉自己
-                domain += ('name', '!=', self.name),
-                # 要限制最多六筆 並且時間排序
-                records = purchase.search([d for d in domain], limit=6, order='create_date desc')
-                # 搜尋並列表
-                if len(records) > 0:
-                    self.itself_ids = [(4, record.id) for record in records]
-                else:
-                    self.itself_ids = [(5, 0, 0)]
-
-    # 變更itself時 要更動資料庫資料
-    # 用button先進create 再跑這個程式
-    def itself_update(self):
-        purchase = self.env['yc.purchase']
-        checked = purchase.search([('wizard_check', '=', True)])
-        for rec in checked:
-            rec.write({'wizard_check': False})
-        if len(checked) == 1:
-            self.surfhrd = checked.surfhrd
-            self.corehrd = checked.corehrd
-            self.piece = checked.piece
-            self.tensihrd = checked.tensihrd
-            self.carburlayer = checked.carburlayer
-            self.torsion = checked.torsion
-            self.tempturing2 = checked.tempturing2
-            self.order_furn = checked.order_furn
-        self.wizard_btn = False
-        return {"type": "set_scrollTop"}
-
-    # 帶出資料
-    # @api.onchange('wizard_btn')
-    # def _bring_out(self):
-    #     if not self.wizard_btn:
-    #         # 當隱藏itself_ids時 帶出資料
-    #         wizard_checked = self.itself_ids.search([('wizard_check', '=', True)])
-    #         if len(wizard_checked) > 1:
-    #             for to_uncheck in wizard_checked:
-    #                 to_uncheck.wizard_check = False
-    #         if len(wizard_checked) == 1:
-    #             # 解掉checked
-    #             wizard_checked.wizard_check = False
-    #             self.surfhrd = wizard_checked.surfhrd
-    #             self.corehrd = wizard_checked.corehrd
-    #             self.piece = wizard_checked.piece
-    #             self.tensihrd = wizard_checked.tensihrd
-    #             self.carburlayer = wizard_checked.carburlayer
-    #             self.torsion = wizard_checked.torsion
-    #             self.tempturing2 = wizard_checked.tempturing2
-    #             self.order_furn = wizard_checked.order_furn
+    action_id_main = fields.Integer(
+        default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
+        help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
 
     # 以下為查詢欄位
     look_up = fields.Boolean(store=False)
@@ -509,6 +442,20 @@ class YcPurchase(models.Model):
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     product_code_searchbox = fields.Char("搜尋品名或編號")
+
+    @api.onchange('condition')
+    def search_purchase(self):
+        if self.condition:
+            # 要先建好出貨退回檔
+            # OT_list = [(name) for name in self.env['轉廠單項目檔'].search([]).name ]
+            if self.condition == 'OT':
+                records = self.env['yc.return'].search([])
+                self.return_ids = [(6, _, records.ids)]
+            elif self.condition == 'IT':
+                # 廠內退回似乎在品質檢驗階段 如果被轉入進貨單 前工令單會自動key值
+                # IT 只要找出前工令號有值 and 等於工令號的紀錄
+                has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
+                self.return_in_fac_ids = [(6, _, has_preorder.ids)]
 
     #########################
     ### views共用或部分共用 ###
@@ -666,6 +613,133 @@ class YcPurchase(models.Model):
                 return {'warning': {
                     'title': _('提醒'), 'message': _("沒有這個代碼")}}
 
+    # 進貨單作業:itself m2m更新、自動帶入參數
+    # 爐內進貨  :itself m2m更新
+    @api.onchange('product_code', 'clsf_code', 'norm_code', 'proces_code', 'len_code', 'txtur_code',
+                  'strength_level', 'wire_furn')
+    def _toggle_wizard(self):
+        _bool = bool(self.product_code or self.clsf_code or self.norm_code or self.proces_code or
+                     self.len_code or self.txtur_code or self.strength_level or self.wire_furn)
+        if _bool:
+            action = self.env['ir.actions.act_window']
+            action_id = action.search([('name', '=', '分爐排程')], limit=1).id
+            # itself更新
+            purchase = self.env['yc.purchase']
+            # 先更新itself
+            if self._context['params'].get('action') == action_id or self.action_id_main:
+                domain = ()
+                if self.product_code and self.ck1:
+                    domain += ('product_code', '=', self.product_code.id),
+                if self.clsf_code and self.ck4:
+                    domain += ('clsf_code', '=', self.clsf_code.id),
+                if self.norm_code and self.ck2:
+                    domain += ('norm_code', '=', self.norm_code.id),
+                if self.proces_code and self.ck5:
+                    domain += ('proces_code', '=', self.proces_code.id),
+                if self.len_code and self.ck3:
+                    domain += ('len_code', '=', self.len_code.id),
+                if self.txtur_code and self.ck6:
+                    domain += ('txtur_code', '=', self.txtur_code.id),
+                if self.strength_level and self.ck7:
+                    domain += ('strength_level', '=', self.strength_level.id),
+                if self.wire_furn and self.ck8:
+                    domain += ('wire_furn', '=', self.wire_furn),
+                if len(domain) > 0:
+                    # 搜尋出來的list要排除掉自己
+                    domain += ('name', '!=', self.name),
+                    # 要限制最多六筆 並且時間排序
+                    records = purchase.search([d for d in domain], limit=6, order='create_date desc')
+                    # 搜尋並列表
+                    if len(records) > 0:
+                        self.itself_ids = [(6, 0, records.ids)]
+                    else:
+                        self.itself_ids = [(5, 0, 0)]
+            # 再看進貨單
+            if self._context['params'].get('actions') == self.action_id_main:
+                domain = ()
+                if self.wire_furn:
+                    domain += ('wire_furn', '=', self.wire_furn),
+                if self.clsf_code:
+                    domain += ("clsf_code", "=", self.clsf_code.id),
+                if self.product_code:
+                    domain += ("product_code", "=", self.product_code.id),
+                if self.strength_level:
+                    domain += ("strength_level", "=", self.strength_level.id),
+                if self.txtur_code:
+                    domain += ("txtur_code", "=", self.txtur_code.id),
+                if self.norm_code:
+                    domain += ("norm_code", "=", self.norm_code.id),
+                if self.proces_code:
+                    domain += ("proces_code", "=", self.proces_code.id),
+                if len(domain) > 0:
+                    # 防止搜尋到自己
+                    if isinstance(self.id, int):
+                        domain += ('id', '!=', self.id),
+                    domain += ('factory_id', '=', self.env.user.factory_id.id),
+                    r = purchase.search([d for d in domain], limit=1, order="day desc,time desc")
+                    self.flow, self.cp = r.flow, r.cp
+                    self.nh31, self.nh32, self.nh33, self.nh34 = r.nh31, r.nh32, r.nh33, r.nh34
+                    self.heat1, self.heat2, self.heat3, self.heat4 = r.heat1, r.heat2, r.heat3, r.heat4
+                    self.heat5, self.heat6, self.heat7, self.heat8 = r.heat5, r.heat6, r.heat7, r.heat8
+                    self.heattemp = r.heattemp
+                    self.heatsped = r.heatsped
+                    self.tempturing1 = r.tempturing1
+                    self.tempturing2 = r.tempturing2
+                    self.tempturing3 = r.tempturing3
+                    self.tempturing4 = r.tempturing4
+                    self.tempturing5 = r.tempturing5
+                    self.tempturing6 = r.tempturing6
+                    self.tempturisped = r.tempturisped
+
+    # 要拉出itself checked要先寫進資料庫才能判定哪一筆要拉出
+    # 用button先進create 再跑這個程式
+    def itself_update(self):
+        purchase = self.env['yc.purchase']
+        checked = purchase.search([('wizard_check', '=', True)])
+        for rec in checked:
+            rec.write({'wizard_check': False})
+        if len(checked) == 1:
+            action = self.env['ir.actions.act_window']
+            action_id = action.search([('name', '=', '分爐排程')], limit=1).id
+            # 分爐排程 只拉參數? 還有拉什麼?
+            if self._context['params'].get('action') == action_id:
+                self.flow = checked.flow
+                self.cp = checked.cp
+                self.nh31 = checked.nh31
+                self.nh32 = checked.nh32
+                self.nh33 = checked.nh33
+                self.nh34 = checked.nh34
+                self.heat1 = checked.heat1
+                self.heat2 = checked.heat2
+                self.heat3 = checked.heat3
+                self.heat4 = checked.heat4
+                self.heat5 = checked.heat5
+                self.heat6 = checked.heat6
+                self.heat7 = checked.heat7
+                self.heat8 = checked.heat8
+                self.heattemp = checked.heattemp
+                self.heatsped = checked.heatsped
+                self.tempturing1 = checked.tempturing1
+                self.tempturing2 = checked.tempturing2
+                self.tempturing3 = checked.tempturing3
+                self.tempturing4 = checked.tempturing4
+                self.tempturing5 = checked.tempturing5
+                self.tempturing6 = checked.tempturing6
+                self.tempturisped = checked.tempturisped
+            # 進貨作業只拉 設定?
+            elif self._context['params'].get('action') == self.action_id_main:
+                self.surfhrd = checked.surfhrd
+                self.corehrd = checked.corehrd
+                self.piece = checked.piece
+                self.tensihrd = checked.tensihrd
+                self.carburlayer = checked.carburlayer
+                self.torsion = checked.torsion
+                self.tempturing2 = checked.tempturing2
+                self.order_furn = checked.order_furn
+        self.wizard_btn = False
+        # 防止wizard 結束視窗
+        return {"type": "set_scrollTop"}
+
     ######################
     ### purchase.xml用 ###
     ######################
@@ -747,59 +821,6 @@ class YcPurchase(models.Model):
             else:
                 return {
                     'warning': {'title': _('提醒'), 'message': _("沒有這個機械性質")}}
-
-    # 4.搜尋舊檔
-    # 邊在輸入進貨資料時，系統就會一邊在幫我們蒐尋舊資料,品名分類、品名、強度級數、材質、規格、加工方式、線材爐號
-    @api.onchange("clsf_code", "product_code", "strength_level", "txtur_code", "norm_code", "proces_code", "wire_furn")
-    def _search_process_condition(self):
-        if self.clsf_code or self.product_code or self.strength_level or \
-                self.txtur_code or self.norm_code or self.proces_code or self.wire_furn and self._context.get('params')[
-            'action'] == 81:
-            domain = ()
-            purchase = self.env["yc.purchase"]
-            if self.wire_furn:
-                domain += ('wire_furn', '=', self.wire_furn),
-            if self.clsf_code:
-                domain += ("clsf_code", "=", self.clsf_code.id),
-            if self.product_code:
-                domain += ("product_code", "=", self.product_code.id),
-            if self.strength_level:
-                domain += ("strength_level", "=", self.strength_level.id),
-            if self.txtur_code:
-                domain += ("txtur_code", "=", self.txtur_code.id),
-            if self.norm_code:
-                domain += ("norm_code", "=", self.norm_code.id),
-            if self.proces_code:
-                domain += ("proces_code", "=", self.proces_code.id),
-            if len(domain) > 1:
-                # 防止搜尋到自己
-                if isinstance(self.id, int):
-                    domain += ('id', '!=', self.id),
-                domain += ('factory_id', '=', self.env.user.factory_id.id),
-                _filter = purchase.search([(d) for d in domain], limit=1, order="day desc,time desc")
-                self.flow = _filter.flow
-                self.cp = _filter.cp
-                self.nh31 = _filter.nh31
-                self.nh32 = _filter.nh32
-                self.nh33 = _filter.nh33
-                self.nh34 = _filter.nh34
-                self.heat1 = _filter.heat1
-                self.heat2 = _filter.heat2
-                self.heat3 = _filter.heat3
-                self.heat4 = _filter.heat4
-                self.heat5 = _filter.heat5
-                self.heat6 = _filter.heat6
-                self.heat7 = _filter.heat7
-                self.heat8 = _filter.heat8
-                self.heattemp = _filter.heattemp
-                self.heatsped = _filter.heatsped
-                self.tempturing1 = _filter.tempturing1
-                self.tempturing2 = _filter.tempturing2
-                self.tempturing3 = _filter.tempturing3
-                self.tempturing4 = _filter.tempturing4
-                self.tempturing5 = _filter.tempturing5
-                self.tempturing6 = _filter.tempturing6
-                self.tempturisped = _filter.tempturisped
 
     # 5.進貨單產生工令號
     @api.model

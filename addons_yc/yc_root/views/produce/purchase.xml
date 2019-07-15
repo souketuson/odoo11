@@ -72,14 +72,19 @@
                                                 <label string="前工令號" style="font-weight:bold;"/>
                                                 <!--<field name="pre_order" style="width: 100px;position:absolute;top: 76px;left:655px;"/>-->
                                                 <field name="pre_order" style="width: 100px;"/>
+                                                <span style="display:inline-block; width: 15px;"/>
+                                                <label for="return_btn" string="退回來源"
+                                                       class="btn btn-primary btn-sm mummy_return" icon="fa-bullseye">
+                                                </label>
+                                                <field name="return_btn" style="display:none;"/>
                                                 <!--<button icon="fa-search" type="action" class="oe_highlight"-->
                                                 <!--name="%(action_purchase_preorder)d" style="position:absolute;top: 73px;left:765px;"/>-->
                                                 <button icon="fa-search" type="action" class="oe_highlight"
-                                                        name="%(action_purchase_preorder)d" style=""/>
+                                                        name="%(action_purchase_preorder)d" style="display:none"/>
                                                 <br/>
                                                 <!--<span style="display:inline-block;height:10px; width: 10px;border: 1px black solid;"/>-->
                                                 <label string="車次序號" style="font-weight:bold"/>
-                                                <field name="car_no" attrs="{'readonly': [('id', '!=', False)]}"
+                                                <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
                                                        style="width: 80px"
                                                        options="{'no_open': True,'no_create': True}"/>
                                                 <span style="display:inline-block; width: 40px;"/>
@@ -116,8 +121,43 @@
                                                 <field name="person" style="width: 100px" readonly="1"/>
                                             </div>
                                             <div>
+                                                <field name="action_id_main" invisible="1"/>
                                                 <div style="height: 5px;"/>
                                                 <!--<span style="display:inline-block; width: 15px;"/>-->
+                                                <!---->
+                                                <div id="toggle_return" style="display:none;">
+                                                    <label string="搜尋退回" style="font-weight:bold"/>
+                                                    <field name="condition" style="width:100px" widget="radio"
+                                                           options="{'horizontal': True}"/>
+                                                    <br/>
+                                                    <div style="width: max-content;">
+                                                        <field name="return_ids" widget="many2many"
+                                                               attrs="{'invisible': [('condition', '!=', 'OT')]}"
+                                                               style="width:700px;">
+                                                            <tree create="false" delete="false"
+                                                                  string="Purchase Details"
+                                                                  editable='top'>
+                                                                <field name="wizard_check" string=" " style="width:30px;"/>
+                                                                <field name="name" readonly="1"/>
+                                                                <field name="order" readonly="1"/>
+                                                                <field name="note" readonly="1"/>
+                                                            </tree>
+                                                        </field>
+                                                        <field name="return_in_fac_ids" widget="many2many"
+                                                               attrs="{'invisible': [('condition', '!=', 'IT')]}"
+                                                               style="width:700px;">
+                                                            <tree create="false" delete="false"
+                                                                  string="Purchase Details"
+                                                                  editable="top">
+                                                                <field name="wizard_check" string=" " style="width:30px;"/>
+                                                                <field name="name" readonly="1"/>
+                                                                <field name="pre_order" readonly="1"/>
+                                                                <field name="notices3" readonly="1"/>
+                                                            </tree>
+                                                        </field>
+                                                    </div>
+                                                </div>
+                                                <br/>
                                                 <field name="ck4" tabindex="-1"/>
                                                 <label string="品名分類" style="font-weight:bold"/>
                                                 <field name="clsf_code" style="width:140px"
@@ -216,9 +256,12 @@
                                                     <button string="搜尋舊檔" type="action" class="oe_highlight"
                                                             name="%(action_purchase_wizard)d" style="display:none;"
                                                             context="{'wizard':True}"/>
-                                                    <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
-                                                           rel='open_the_door' id="open_the_door"><span icon="fa-search"/></label>
-                                                    <button type="object" name="itself_update" string="確定帶出" style="display:none;"/>
+                                                    <label for="wizard_btn" string="開啟舊檔搜尋"
+                                                           class="btn btn-primary btn-sm open_the_door"
+                                                           rel='open_the_door' id="open_the_door">
+                                                    </label>
+                                                    <button type="object" name="itself_update" string="確定帶出"
+                                                            style="display:none;"/>
                                                     <field name="wizard_btn" style="display:none;"/>
                                                     <!-- 新增完車次才能開啟舊檔: style="cursor: not-allowed;pointer-events: none;opacity: 0.65;" -->
                                                     <span style="display:inline-block; width: 180px;"/>　
@@ -230,25 +273,25 @@
                                                 </div>
                                                 <div id="toggle_elf" style="display:none;background:yellowgreen;">
                                                     <field name="itself_ids" widget="many2many" style="width:860px;">
-                                                            <tree create="false" delete="false"
-                                                                  string="Purchase Details" editable="top">
-                                                                <!--<button name="itself_update" type="object" icon="fa fa-check-square-o"/>-->
-                                                                <field name="wizard_check" string=' '
-                                                                       widget="checkbox"/>
-                                                                <field name="name" string="工令" readonly="1"/>
-                                                                <field name="customer_id" string="客戶" readonly="1"
-                                                                       options="{'no_open': True,'no_create': True}"/>
-                                                                <field name="norm_code" readonly="1"
-                                                                       options="{'no_open': True,'no_create': True}"/>
-                                                                <field name="surfhrd" string="表面" readonly="1"/>
-                                                                <field name="corehrd" string="心部" readonly="1"/>
-                                                                <field name="tensihrd" string="抗拉" readonly="1"/>
-                                                                <field name="carburlayer" string="滲碳" readonly="1"/>
-                                                                <field name="torsion" readonly="1"/>
-                                                                <field name="tempturing2" string="回火" readonly="1"/>
-                                                                <field name="order_furn" string="預排爐" readonly="1"
-                                                                       options="{'no_open': True,'no_create': True}"/>
-                                                            </tree>
+                                                        <tree create="false" delete="false"
+                                                              string="Purchase Details" editable="top">
+                                                            <!--<button name="itself_update" type="object" icon="fa fa-check-square-o"/>-->
+                                                            <field name="wizard_check" string=' '
+                                                                   widget="checkbox"/>
+                                                            <field name="name" string="工令" readonly="1"/>
+                                                            <field name="customer_id" string="客戶" readonly="1"
+                                                                   options="{'no_open': True,'no_create': True}"/>
+                                                            <field name="norm_code" readonly="1"
+                                                                   options="{'no_open': True,'no_create': True}"/>
+                                                            <field name="surfhrd" string="表面" readonly="1"/>
+                                                            <field name="corehrd" string="心部" readonly="1"/>
+                                                            <field name="tensihrd" string="抗拉" readonly="1"/>
+                                                            <field name="carburlayer" string="滲碳" readonly="1"/>
+                                                            <field name="torsion" readonly="1"/>
+                                                            <field name="tempturing2" string="回火" readonly="1"/>
+                                                            <field name="order_furn" string="預排爐" readonly="1"
+                                                                   options="{'no_open': True,'no_create': True}"/>
+                                                        </tree>
                                                     </field>
 
                                                 </div>
@@ -367,12 +410,12 @@
                                             <label string="速度" style="font-weight:bold"/>
                                             <field name="tempturisped" style="width: 80px"/>
                                         </page>
-                                        <page string="136行套表">
-                                        </page>
-                                        <page string="選擇列印">
-                                        </page>
-                                        <page string="136行套表(岡山)">
-                                        </page>
+                                        <!--<page string="136行套表">-->
+                                        <!--</page>-->
+                                        <!--<page string="選擇列印">-->
+                                        <!--</page>-->
+                                        <!--<page string="136行套表(岡山)">-->
+                                        <!--</page>-->
                                     </notebook>
                                 </group>
                             </div>
@@ -408,6 +451,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[("factory_id","in",[context.get('factory_id')])]</field>
+
         </record>
         <record model="ir.actions.act_window.view" id="purchase_list_action_form">
             <field name="act_window_id" ref="purchase_list_action"/>

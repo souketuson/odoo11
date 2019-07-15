@@ -40,9 +40,8 @@
             <field name="res_model">yc.fake</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="fake">開發中
-                </p>
+            <field name="help">
+                uq_f
             </field>
         </record>
         <record model="ir.actions.act_window.view" id="fake_action_form">
