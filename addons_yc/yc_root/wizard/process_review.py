@@ -126,6 +126,7 @@ class YcPurchaseDisplay(models.TransientModel):
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
                 self.produce_details_ids = [(6, _, details.ids)]
             else:
+
                 raise ValidationError(_('沒有這一筆資料'))
 
     def save_entry_data(self):
