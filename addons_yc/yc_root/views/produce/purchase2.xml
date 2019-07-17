@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- view of purchase tree  -->
+        <record model="ir.ui.view" id="purchase2_tree">
+            <field name="name">purchase.tree</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase tree">
+                    <field name="name"/>
+                    <field name="day"/>
+                    <field name="time"/>
+                    <field name="car_no"/>
+                    <field name="customer_id" string="客戶簡稱"/>
+                    <field name="customer_no"/>
+                    <field name="factory_id" readonly="1"/>
+                    <field name="status"/>
+                    <field name="weighstate"/>
+                    <field name="checkstate"/>
+                </tree>
+            </field>
+        </record>
+        <!-- view of purchase form-->
+        <record model="ir.ui.view" id="purchase2_form">
+            <field name="name">purchase.form</field>
+            <field name="model">yc.purchase</field>
+            <field name="arch" type="xml">
+                <form string="Purchase form">
+                    <sheet>
+                        <group col="8">
+                            <field name="time"/>
+                            <field name="copy_createdate" attrs="{'readonly': True }"/>
+                            <field name="day"/>
+                            <field name="factory_id" style="width: 80px;" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="processing_attache"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="customer_id" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="driver_id" attrs="{'readonly': True }"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="combo_process" readonly="1"/>
+                            <field name="combo_customer" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="batch"/>
+                            <field name="customer_no"/>
+                            <field name="person" readonly="1"/>
+                            <field name="pre_order"/>
+                        </group>
+
+                        <notebook>
+                            <page string="基本資料">
+                                <group col="8">
+                                    <field name="clsf_code"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="product_code_searchbox"/>
+                                    <field name="product_code"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="strength_level"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="txtur_code"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="norm_code"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="len_code" options="{'no_open': True}"/>
+                                    <field name="len_descript" placeholder="長度說明" tabindex="100"/>
+                                    <field name="fullorhalf"/>
+                                    <field name="action_id_main" invisible="1"/>
+                                    <field name="proces_code" options="{'no_open': True}"/>
+                                    <field name="surface_code" options="{'no_open': True}"/>
+                                    <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"
+                                           options="{'no_open': True}"/>　
+
+                                </group>
+
+
+                                <field name="elecplswitch" invisible="1"/>
+                                <div>
+                                    <div>
+                                        <label string="數量　" style="font-weight:bold" class="oe_inline"/>
+                                        <field name="num1" style="width:50px"/>　
+                                        <field name="unit1" nolabel="1" style="width:50px"
+                                               options="{'no_open': True,'no_create': True}"/>
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num2" style="width:50px"/>
+                                        <field name="unit2" nolabel="1" style="width:50px"
+                                               options="{'no_open': True,'no_create': True}"/>
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num3" style="width:50px"/>
+                                        <field name="unit3" nolabel="1" style="width:50px"
+                                               options="{'no_open': True,'no_create': True}"/>
+                                        <label string="" class="oe_inline"/>
+                                        <field name="num4" style="width:50px"/>
+                                        <field name="unit4" nolabel="1" style="width:50px"
+                                               options="{'no_open': True,'no_create': True}"/>　
+                                    </div>
+                                </div>
+                                <group col="6">
+                                    <field name="storeplace"/>
+                                    <field name="net"/>
+                                    <field name="process1"
+                                           options="{'no_open': True}"/>
+                                    <field name="totalpack"/>
+                                    <field name="process2"
+                                           options="{'no_open': True}"/>
+                                    <field name="standard"/>
+                                    <field name="wire_furn"/>
+                                    <field name="headsign" widget='image' height="90" width="90"/>
+                                    <field name="surfhrd"/>
+                                    <field name="corehrd"/>
+                                    <field name="piece" widget="radio"
+                                           options="{'horizontal': True}"/>
+                                    <field name="tensihrd"/>
+                                    <field name="carburlayer"/>
+                                    <field name="pre_furn"/>
+                                    <field name="torsion"/>
+                                    <field name="tempturing2"/>
+                                    <field name="order_furn"
+                                           options="{'no_open': True}"/>
+                                    <field name="norcls"/>
+                                    <field name="wxr_txtur"/>
+                                    <field name="wxrhard"/>
+                                    <field name="notices1"/>
+                                    <field name="notices2"/>
+                                    <field name="notices3"/>
+                                    <field name="qcnote1"/>
+                                    <field name="qcnote2"/>
+                                    <field name="qcnote3"/>
+                                    <field name="prodnote1"/>
+                                    <field name="prodnote2"/>
+                                    <field name="prodnote3"/>
+                                </group>
+                                <footer>
+                                    <button string="搜尋舊檔" type="action" class="oe_highlight"
+                                            name="%(action_purchase_wizard)d"/>
+                                    |
+                                    <button name="%(action_qcnote_wizard)d" type="action" class="oe_highlight"
+                                            icon="fa-plus"/>
+                                </footer>
+                            </page>
+                            <page string="作業條件">
+                                <div style="height: 50px;"/>
+                                <label string="　　流量" style="font-weight:bold"/>
+                                <field name="flow" style="width: 80px"/>
+                                <span style="display:inline-block; width: 20px;"/>
+                                <label string="CP值" style="font-weight:bold"/>
+                                <field name="cp" style="width: 90px"/>
+                                <span style="display:inline-block; width: 20px;"/>
+                                <label string="氨值" style="font-weight:bold"/>
+                                <field name="nh31" style="width: 70px"/>
+                                <span style="display:inline-block; width: 20px;"/>
+                                <label string="支" style="font-weight:bold"/>
+                                <field name="nh32" style="width: 70px"/>
+                                <span style="display:inline-block; width: 20px;"/>
+                                <label string="第" style="font-weight:bold"/>
+                                <field name="nh33" style="width: 70px"/>
+                                <span style="display:inline-block; width: 20px;"/>
+                                <label string="支" style="font-weight:bold"/>
+                                <field name="nh34" style="width: 70px"/>
+                                <br/>
+                                <label string="　加熱爐" style="font-weight:bold"/>
+                                <field name="heat1" style="width: 80px"/>
+                                <field name="heat2" style="width: 80px"/>
+                                <field name="heat3" style="width: 80px"/>
+                                <field name="heat4" style="width: 80px"/>
+                                <field name="heat5" style="width: 80px"/>
+                                <field name="heat6" style="width: 80px"/>
+                                <field name="heat7" style="width: 80px"/>
+                                <field name="heat8" style="width: 80px"/>
+                                <br/>
+                                <label string="　　油溫" style="font-weight:bold"/>
+                                <field name="heattemp" style="width: 80px"/>
+                                <span style="display:inline-block; width: 10px;"></span>
+                                <label string="速度" style="font-weight:bold"/>
+                                <field name="heatsped" style="width: 80px"/>
+                                <br/>
+                                <label string="　回火爐" style="font-weight:bold"/>
+                                <field name="tempturing1" style="width: 80px"/>
+                                <field name="tempturing2" style="width: 80px"/>
+                                <field name="tempturing3" style="width: 80px"/>
+                                <field name="tempturing4" style="width: 80px"/>
+                                <field name="tempturing5" style="width: 80px"/>
+                                <field name="tempturing6" style="width: 80px"/>
+                                <span style="display:inline-block; width: 10px;"></span>
+                                <label string="速度" style="font-weight:bold"/>
+                                <field name="tempturisped" style="width: 80px"/>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- auto generate number-->
+        <record id="auto_number_purchase2" model="ir.sequence">
+            <field name="name">Purchase List Code</field>
+            <field name="code">Purchase.sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">PL%(y)s%(month)s%(day)s</field>
+            <field name="padding">3</field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="purchase2_action">
+            <field name="name">進貨單2作業</field>
+            <field name="res_model">yc.purchase</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="purchase2_action_form">
+            <field name="act_window_id" ref="purchase2_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase2_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="purchase2_action_tree">
+            <field name="act_window_id" ref="purchase2_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase2_tree"/>
+        </record>
+
+        <menuitem id="purchase2_menu" name="進貨單2作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
+    </data>
+</odoo>

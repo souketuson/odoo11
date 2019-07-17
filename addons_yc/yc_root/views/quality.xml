@@ -77,41 +77,41 @@
                         <notebook>
                             <page string="數據登錄">
                                 <group>
-                                    <div>
+                                    <div style="overflow-x:auto;width:1000px;">
                                         <label string="依據國際標準" style="font-weight:bold"/>
                                         <field name="standard" style="width:150px"/>
                                         <span style="display:inline-block; width: 10px;"></span>
                                         <label string="拉力機編號" style="font-weight:bold"/>
-                                        <field name="tensile_no" widget="radio" style="width:150px"/>
+                                        <field name="tensile_no" widget="radio" style="width:150px" options="{'horizontal': True}"/>
                                         <button name="" string="清空拉力機" type="object" class="oe_highlight"/>
                                         <br/>
                                         <!-- -->
                                         <field name="cksfhv" widget="checkbox" nolabel="1"/>
                                         <label string="表面硬度" style="font-weight:bold"/>
-                                        <field name="surfhrd" style="width:180px"/>
-                                        <field name="sfhn" style="width:150px"/>
-                                        <field name="sfhv1" style="width:100px"/>
-                                        <field name="sfhv2" style="width:100px"/>
-                                        <field name="sfhv3" style="width:100px"/>
-                                        <field name="sfhv4" style="width:100px"/>
-                                        <field name="sfhv5" style="width:100px"/>
-                                        <field name="sfhv6" style="width:100px"/>
-                                        <field name="sfhv7" style="width:100px"/>
-                                        <field name="sfhv8" style="width:100px"/>
+                                        <field name="surfhrd" style="width:130px"/>
+                                        <field name="sfhn" style="width:130px"/>
+                                        <field name="sfhv1" style="width:80px"/>
+                                        <field name="sfhv2" style="width:80px"/>
+                                        <field name="sfhv3" style="width:80px"/>
+                                        <field name="sfhv4" style="width:80px"/>
+                                        <field name="sfhv5" style="width:80px"/>
+                                        <field name="sfhv6" style="width:90px"/>
+                                        <field name="sfhv7" style="width:80px"/>
+                                        <field name="sfhv8" style="width:80px"/>
                                         <br/>
                                         <!-- -->
                                         <field name="ckchv" widget="checkbox" nolabel="1"/>
                                         <label string="心部硬度" style="font-weight:bold"/>
-                                        <field name="corehrd" style="width:180px"/>
-                                        <field name="chn" style="width:150px"/>
-                                        <field name="chv1" style="width:100px"/>
-                                        <field name="chv2" style="width:100px"/>
-                                        <field name="chv3" style="width:100px"/>
-                                        <field name="chv4" style="width:100px"/>
-                                        <field name="chv5" style="width:100px"/>
-                                        <field name="chv6" style="width:100px"/>
-                                        <field name="chv7" style="width:100px"/>
-                                        <field name="chv8" style="width:100px"/>
+                                        <field name="corehrd" style="width:130px"/>
+                                        <field name="chn" style="width:130px"/>
+                                        <field name="chv1" style="width:80px"/>
+                                        <field name="chv2" style="width:80px"/>
+                                        <field name="chv3" style="width:80px"/>
+                                        <field name="chv4" style="width:80px"/>
+                                        <field name="chv5" style="width:80px"/>
+                                        <field name="chv6" style="width:80px"/>
+                                        <field name="chv7" style="width:80px"/>
+                                        <field name="chv8" style="width:80px"/>
                                         <br/>
                                         <!-- -->
                                         <field name="ckrtens" widget="checkbox" nolabel="1"/>
@@ -122,8 +122,8 @@
                                         <!-- -->
                                         <field name="ckyv" widget="checkbox" nolabel="1"/>
                                         <label string="降伏強度" style="font-weight:bold"/>
-                                        <field name="ysv" style="width:180px"/>
-                                        <field name="ysvste" style="width:150px"/>
+                                        <field name="ysv" style="width:130px"/>
+                                        <field name="ysvste" style="width:130px"/>
                                         <span style="display:inline-block; width: 10px;"></span>
                                         <field name="ckysvste" widget="checkbox" nolabel="1"/>
                                         <label string="降伏點　" style="font-weight:bold"/>
@@ -136,8 +136,8 @@
                                         <!-- -->
                                         <field name="ckelong" widget="checkbox" nolabel="1"/>
                                         <label string="伸長率　" style="font-weight:bold"/>
-                                        <field name="elohv" style="width:180px"/>
-                                        <field name="elohvste" style="width:150px"/>
+                                        <field name="elohv" style="width:130px"/>
+                                        <field name="elohvste" style="width:130px"/>
                                         <span style="display:inline-block; width: 10px;"></span>
                                         <field name="ckmlste" widget="checkbox" nolabel="1"/>
                                         <label string="最大負荷" style="font-weight:bold"/>
@@ -151,72 +151,72 @@
                                         <!-- -->
                                         <field name="cktorsion" widget="checkbox" nolabel="1"/>
                                         <label string="扭力強度" style="font-weight:bold"/>
-                                        <field name="torshv" style="width:180px"/>
-                                        <field name="torshv1" style="width:100px"/>
-                                        <field name="torshv2" style="width:100px"/>
-                                        <field name="torshv3" style="width:100px"/>
-                                        <field name="torshv4" style="width:100px"/>
-                                        <field name="torshv5" style="width:100px"/>
-                                        <field name="torshv6" style="width:100px"/>
-                                        <field name="torshv7" style="width:100px"/>
-                                        <field name="torshv8" style="width:100px"/>
+                                        <field name="torshv" style="width:130px"/>
+                                        <field name="torshv1" style="width:80px"/>
+                                        <field name="torshv2" style="width:80px"/>
+                                        <field name="torshv3" style="width:80px"/>
+                                        <field name="torshv4" style="width:80px"/>
+                                        <field name="torshv5" style="width:80px"/>
+                                        <field name="torshv6" style="width:80px"/>
+                                        <field name="torshv7" style="width:80px"/>
+                                        <field name="torshv8" style="width:80px"/>
                                         <br/>
                                         <!-- -->
                                         <field name="ckclv" widget="checkbox" nolabel="1"/>
                                         <label string="滲碳層　" style="font-weight:bold"/>
-                                        <field name="carb1v" style="width:180px"/>
+                                        <field name="carb1v" style="width:130px"/>
                                         <span style="display:inline-block; width: 10px;"></span>
                                         <field name="ckcl1v" widget="checkbox" nolabel="1"/>
-                                        <field name="carb1v1" style="width:100px"/>
-                                        <field name="carb1v2" style="width:100px"/>
-                                        <field name="carb1v3" style="width:100px"/>
-                                        <field name="carb1v4" style="width:100px"/>
-                                        <field name="carb1v5" style="width:100px"/>
-                                        <field name="carb1v6" style="width:100px"/>
-                                        <field name="carb1v7" style="width:100px"/>
-                                        <field name="carb1v8" style="width:100px"/>
+                                        <field name="carb1v1" style="width:80px"/>
+                                        <field name="carb1v2" style="width:80px"/>
+                                        <field name="carb1v3" style="width:80px"/>
+                                        <field name="carb1v4" style="width:80px"/>
+                                        <field name="carb1v5" style="width:80px"/>
+                                        <field name="carb1v6" style="width:80px"/>
+                                        <field name="carb1v7" style="width:80px"/>
+                                        <field name="carb1v8" style="width:80px"/>
                                         <br/>
                                         <!-- -->
                                         <label string="滲碳2硬度值" style="font-weight:bold"/>
-                                        <field name="clnorm" style="width:180px"/>
+                                        <field name="clnorm" style="width:130px"/>
                                         <span style="display:inline-block; width: 10px;"></span>
                                         <field name="ckecl2v" widget="checkbox" nolabel="1"/>
-                                        <field name="carb2v1" style="width:100px"/>
-                                        <field name="carb2v2" style="width:100px"/>
-                                        <field name="carb2v3" style="width:100px"/>
-                                        <field name="carb2v4" style="width:100px"/>
-                                        <field name="carb2v5" style="width:100px"/>
-                                        <field name="carb2v6" style="width:100px"/>
-                                        <field name="carb2v7" style="width:100px"/>
-                                        <field name="carb2v8" style="width:100px"/>
+                                        <field name="carb2v1" style="width:80px"/>
+                                        <field name="carb2v2" style="width:80px"/>
+                                        <field name="carb2v3" style="width:80px"/>
+                                        <field name="carb2v4" style="width:80px"/>
+                                        <field name="carb2v5" style="width:80px"/>
+                                        <field name="carb2v6" style="width:80px"/>
+                                        <field name="carb2v7" style="width:80px"/>
+                                        <field name="carb2v8" style="width:80px"/>
                                         <br/>
                                         <!-- -->
                                         <field name="cksskv" widget="checkbox" nolabel="1"/>
                                         <label string="斷面收縮率" style="font-weight:bold"/>
-                                        <field name="sskv" style="width:180px"/>
-                                        <field name="sskvste" style="width:100px"/>
-                                        <field name="sskv1" style="width:100px"/>
-                                        <field name="sskv2" style="width:100px"/>
-                                        <field name="sskv3" style="width:100px"/>
-                                        <field name="sskv4" style="width:100px"/>
-                                        <field name="sskv5" style="width:100px"/>
-                                        <field name="sskv6" style="width:100px"/>
-                                        <field name="sskv7" style="width:100px"/>
-                                        <field name="sskv8" style="width:100px"/>
+                                        <field name="sskv" style="width:130px"/>
+                                        <field name="sskvste" style="width:130px"/>
+                                        <field name="sskv1" style="width:80px"/>
+                                        <field name="sskv2" style="width:80px"/>
+                                        <field name="sskv3" style="width:80px"/>
+                                        <field name="sskv4" style="width:80px"/>
+                                        <field name="sskv5" style="width:80px"/>
+                                        <field name="sskv6" style="width:80px"/>
+                                        <field name="sskv7" style="width:80px"/>
+                                        <field name="sskv8" style="width:80px"/>
                                         <br/>
                                         <!-- -->
                                         <field name="cksl" widget="checkbox" nolabel="1"/>
                                         <label string="安全負荷" style="font-weight:bold"/>
-                                        <field name="safeload" style="width:180px"/>
-                                        <field name="slste" style="width:100px"/>
-                                        <field name="safeload1" style="width:100px"/>
-                                        <field name="safeload2" style="width:100px"/>
-                                        <field name="safeload3" style="width:100px"/>
-                                        <field name="safeload4" style="width:100px"/>
-                                        <field name="safeload5" style="width:100px"/>
-                                        <field name="safeload6" style="width:100px"/>
-                                        <field name="safeload7" style="width:100px"/>
-                                        <field name="safeload8" style="width:100px"/>
+                                        <field name="safeload" style="width:130px"/>
+                                        <field name="slste" style="width:130px"/>
+                                        <field name="safeload1" style="width:80px"/>
+                                        <field name="safeload2" style="width:80px"/>
+                                        <field name="safeload3" style="width:80px"/>
+                                        <field name="safeload4" style="width:80px"/>
+                                        <field name="safeload5" style="width:80px"/>
+                                        <field name="safeload6" style="width:80px"/>
+                                        <field name="safeload7" style="width:80px"/>
+                                        <field name="safeload8" style="width:80px"/>
                                         <br/>
                                     </div>
                                 </group>

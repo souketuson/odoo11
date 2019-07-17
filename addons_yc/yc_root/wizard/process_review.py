@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-
+from odoo.exceptions import ValidationError
 
 class YcPurchaseDisplay(models.TransientModel):
     _name = 'yc.purchase.process'
@@ -97,7 +97,7 @@ class YcPurchaseDisplay(models.TransientModel):
     tempturing6 = fields.Char("回火爐6")
     tempturisped = fields.Char("回火爐速度")
 
-    produce_details_ids = fields.Many2many("yc.produce.details", "name", "製造明細")
+    produce_details_ids = fields.Many2many("yc.produce.details")
 
     @api.onchange("order_furn")
     def _chech_order(self):
@@ -124,11 +124,9 @@ class YcPurchaseDisplay(models.TransientModel):
                         # issue: 如果用onchage call只能第六筆，用button才可以完整新增
                         to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
-                for rec in self:
-                    rec.produce_details_ids = [(4, list.id) for list in details]
+                self.produce_details_ids = [(6, _, details.ids)]
             else:
-                return {
-                    'warning': {'title': _('Warning!'), 'message': _("沒有這筆資料")}}
+                raise ValidationError(_('沒有這一筆資料'))
 
     def save_entry_data(self):
         vals = {}
@@ -283,3 +281,27 @@ class YcPurchaseDisplay(models.TransientModel):
         self.tempturing4 = record.tempturing4
         self.tempturing5 = record.tempturing5
         self.tempturing6 = record.tempturing6
+
+    def plus_one_line(self):
+        if self.order_name:
+            _no = len(self.produce_details_ids)
+            _id = self.produce_details_ids[0].name.id
+            purchase = self.env['yc.purchase']
+            record = purchase.search([('id', '=', _id)])
+            record.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': _no+1})]
+            self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
+
+    def delete_last_line(self):
+        if self.order_name:
+            _no = len(self.produce_details_ids)
+            if _no > 6:
+                _id = self.produce_details_ids[0].name.id
+                purchase = self.env['yc.purchase']
+                detail = self.env['yc.produce.details']
+                record = purchase.search([('id', '=', _id)])
+                _delete_id = detail.search([('name', '=', _id), ('bucket_no', '=', _no)])
+                # 再create狀態無法使用
+                _delete_id.unlink()
+                self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
+            else:
+                raise ValidationError(_('不要再刪了'))

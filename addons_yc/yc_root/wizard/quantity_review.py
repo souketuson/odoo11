@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-
+from odoo.exceptions import ValidationError
 
 class YcPurchaseDisplay(models.TransientModel):
     _name = 'yc.purchase.quantity'
@@ -60,7 +60,7 @@ class YcPurchaseDisplay(models.TransientModel):
     prodnote2 = fields.Char("製造備註2")
     prodnote3 = fields.Char("製造備註3")
 
-    produce_details_ids = fields.Many2many("yc.produce.details", "name", "製造明細")
+    produce_details_ids = fields.Many2many("yc.produce.details")
 
     @api.onchange("order_furn")
     def _chech_order(self):
@@ -80,11 +80,9 @@ class YcPurchaseDisplay(models.TransientModel):
             if _id:
                 self._display_record(_id)
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
-                for rec in self:
-                    rec.produce_details_ids = [(4, list.id) for list in details]
+                self.produce_details_ids = [(6, _, details.ids)]
             else:
-                return {
-                    'warning': {'title': _('Warning!'), 'message': _("沒有這筆資料")}}
+                raise ValidationError(_('沒有這一筆資料'))
 
     def save_entry_data(self):
         vals = {}

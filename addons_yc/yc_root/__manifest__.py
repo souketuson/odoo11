@@ -45,6 +45,7 @@
         'views/produce/plan_furna.xml',
         'views/produce/furna_import.xml',
         'views/produce/purchase.xml',
+        'views/produce/purchase2.xml',
         'views/produce/weight.xml',
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',

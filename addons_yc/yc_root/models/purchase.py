@@ -457,9 +457,11 @@ class YcPurchase(models.Model):
                 has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
                 self.return_in_fac_ids = [(6, _, has_preorder.ids)]
 
+
     #########################
     ### views共用或部分共用 ###
     #########################
+
     # 1.修正時間
     @api.model
     def _get_time(self):
@@ -650,10 +652,7 @@ class YcPurchase(models.Model):
                     # 要限制最多六筆 並且時間排序
                     records = purchase.search([d for d in domain], limit=6, order='create_date desc')
                     # 搜尋並列表
-                    if len(records) > 0:
-                        self.itself_ids = [(6, 0, records.ids)]
-                    else:
-                        self.itself_ids = [(5, 0, 0)]
+                    self.itself_ids = [(6, 0, records.ids)]
             # 再看進貨單
             if self._context['params'].get('actions') == self.action_id_main:
                 domain = ()
@@ -1110,8 +1109,7 @@ class YcProduceDetails(models.Model):
         if self._context.get('params')['action'] == 188 and self.bucket_no == 1:
             # 找到該工令明細檔的第一桶 磅後重如果大於0 該工令過磅狀態變成已過磅
             if vals['tweight'] > 0:
-                purchase = self.env['yc.purchase'].search([('name', '=', self.name.name)])
-                purchase.write({'weighstate': '已過磅'})
+                vals.update({'weighstate': '已過磅'})
         return super(YcProduceDetails, self).write(vals)
 
 

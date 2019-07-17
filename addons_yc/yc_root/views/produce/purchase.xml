@@ -129,6 +129,8 @@
                                                     <label string="搜尋退回" style="font-weight:bold"/>
                                                     <field name="condition" style="width:100px" widget="radio"
                                                            options="{'horizontal': True}"/>
+                                                    <span style="display:inline-block; width: 60px;"/>
+                                                    <!--<button name="return_return" type="object" class="oe_highlight"/>-->
                                                     <br/>
                                                     <div style="width: max-content;">
                                                         <field name="return_ids" widget="many2many"
@@ -160,7 +162,7 @@
                                                 <br/>
                                                 <field name="ck4" tabindex="-1"/>
                                                 <label string="品名分類" style="font-weight:bold"/>
-                                                <field name="clsf_code" style="width:140px"
+                                                <field name="clsf_code" style="width:140px;left:15px"
                                                        options="{'no_open': True,'no_create': True}" tabindex="0"/>
                                                 <span style="display:inline-block; width: 30px;"/>
                                                 <field name="ck1" tabindex="-1"/>
@@ -189,7 +191,7 @@
                                                 <field name="len_code" style="width:100px" options="{'no_open': True}"/>
                                                 <span style="display:inline-block; width: 10px;"/>
                                                 <field name="len_descript" nolabel="1" placeholder="長度說明"
-                                                       style="width:120px"/>
+                                                       style="width:120px" tabindex="100"/>
                                                 <label string="牙分類" style="font-weight:bold"/>
                                                 <field name="fullorhalf" style="width:100px;border: 1px black solid;"/>
                                                 <br/>
@@ -420,8 +422,8 @@
                                 </group>
                             </div>
                         </sheet>
-                        <!--<field name="ck4" style="position:absolute;top:187px;left: 15px;"/>-->
-                        <!--<field name="ck1" style="position:absolute;top:187px;left: 245px;"/>-->
+                        <!--<field name="ck4" style="position: relative;top: -500px;left: 15px;"/>-->
+                        <!--<field name="ck1" style="position: relative;top: -500px;left: 210px;"/>-->
                         <!--<field name="ck7" style="position:absolute;top:187px;left: 457px;"/>-->
                         <!--<field name="ck6" style="position:absolute;top:187px;left: 645px;"/>-->
                         <!--<field name="ck2" style="position:absolute;top:214px;left: 15px;"/>-->

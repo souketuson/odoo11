@@ -17,7 +17,6 @@ class YcPurchaseDisplay(models.TransientModel):
     # page1: 分爐排程
     @api.onchange("customer_id", "order_furn")
     def _filter_order(self):
-        self.purchase_ids = [(5, 0, 0)]
         if self.customer_id or self.order_furn:
             # 先清空list
             domain = ()
@@ -36,10 +35,10 @@ class YcPurchaseDisplay(models.TransientModel):
                     self.records_number = '找不到資料'
                 else:
                     self.records_number = '共 %d 筆資料' % len(records)
-                self.purchase_ids = [(4, record.id) for record in records]
+                self.purchase_ids = [(6, 0, records.ids)]
 
     @api.onchange("purchase_ids")
-    def _update_x2many(self):
+    def _update_order(self):
         if self.purchase_ids:
             # 要怎麼找到異動的那一筆id並更新? or 只能每一筆都更新?
             # issue: 異動完 查詢該爐號會出現改筆異動資料 但顯示爐號仍為修正前狀態(實際已修正) 但Refresh 後ok
@@ -54,7 +53,6 @@ class YcPurchaseDisplay(models.TransientModel):
     # page2: 爐內進貨
     @api.onchange("order_furn2")
     def _filter_order2(self):
-        self.purchase_ids2 = [(5, 0, 0)]
         if self.order_furn2:
             domain = ()
             domain += ('order_furn', '=', self.order_furn2.id),
@@ -69,7 +67,7 @@ class YcPurchaseDisplay(models.TransientModel):
                     self.records_number2 = '找不到資料'
                 else:
                     self.records_number2 = '共 %d 筆資料' % len(records)
-                self.purchase_ids2 = [(4, record.id) for record in records]
+                self.purchase_ids2 = [(6, 0, records.ids)]
 
     # 修改加熱爐2要連同修正其他加熱爐
     @api.onchange('purchase_ids2')

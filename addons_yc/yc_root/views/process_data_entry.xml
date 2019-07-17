@@ -38,75 +38,90 @@
                                     <label string="頭部記號" style="position: absolute;left: 750px;"/>
                                     <br/>
                                     <label string="進貨日期" style="font-weight:bold"/>
-                                    <field name="day" style="width: 120px"/>
+                                    <field name="day" style="width: 120px"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="　　客戶" style="font-weight:bold"/>
-                                    <field name="customer_id" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="customer_id" style="width: 150px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="線材爐號" style="font-weight:bold"/>
-                                    <field name="wire_furn" style="width: 150px"/>
+                                    <field name="wire_furn" style="width: 150px"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 70px;"></span>
 
                                     <field name="headsign" widget='image' height="90" width="90"
-                                           style="width:100px;position:absolute;top:85px;left:750px"/>
+                                           style="width:100px;position:absolute;top:85px;left:750px"
+                                    readonly="1"/>
                                     <br/>
                                     <label string="客戶批號" style="font-weight:bold"/>
-                                    <field name="batch" style="width: 120px"/>
+                                    <field name="batch" style="width: 120px" readonly="1"/>
                                     <span style="display:inline-block; width:40px;"></span>
                                     <label string="　　品名" style="font-weight:bold"/>
-                                    <field name="product_code" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="product_code" style="width: 150px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <br/>
                                     <label string="　　規格" style="font-weight:bold"/>
-                                    <field name="norm_code" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="norm_code" style="width: 120px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 54px;"></span>
                                     <label string="牙分類" style="font-weight:bold"/>
-                                    <field name="fullorhalf" style="width: 150px"/>
+                                    <field name="fullorhalf" style="width: 150px"
+                                    readonly="1"/>
                                     <br/>
                                     <label string="　　材質" style="font-weight:bold"/>
-                                    <field name="txtur_code" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="txtur_code" style="width: 120px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 40px;"></span>
                                     <label string="表面處理" style="font-weight:bold"/>
-                                    <field name="surface_code" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="surface_code" style="width: 150px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="強度級數" style="font-weight:bold"/>
-                                    <field name="strength_level" style="width: 150px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="strength_level" style="width: 150px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <br/>
                                     <label string="加工方式" style="font-weight:bold"/>
-                                    <field name="proces_code" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="proces_code" style="width: 120px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="　　數量" style="font-weight:bold"/>
-                                    <field name="num1" style="width:80px"/>
-                                    <field name="unit1" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="num1" style="width:80px" readonly="1"/>
+                                    <field name="unit1" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <label string="" class="oe_inline"/>
-                                    <field name="num2" style="width:80px"/>
-                                    <field name="unit2" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="num2" style="width:80px" readonly="1"/>
+                                    <field name="unit2" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <label string="" class="oe_inline"/>
-                                    <field name="num3" style="width:80px"/>
-                                    <field name="unit3" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="num3" style="width:80px" readonly="1"/>
+                                    <field name="unit3" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <label string="" class="oe_inline"/>
-                                    <field name="num4" style="width:80px"/>
-                                    <field name="unit4" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"/>
+                                    <field name="num4" style="width:80px" readonly="1"/>
+                                    <field name="unit4" nolabel="1" style="width:50px" options="{'no_open': True,'no_create': True}"
+                                    readonly="1"/>
                                     <br/>
                                     <label string="　　淨重" style="font-weight:bold"/>
-                                    <field name="net" style="width: 70px"/>
+                                    <field name="net" style="width: 70px" readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="表面硬度" style="font-weight:bold"/>
-                                    <field name="surfhrd" style="width: 100px"/>
+                                    <field name="surfhrd" style="width: 100px" readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="心部硬度" style="font-weight:bold"/>
-                                    <field name="corehrd" style="width: 100px"/>
+                                    <field name="corehrd" style="width: 100px" readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="工令號碼" style="font-weight:bold"/>
-                                    <field name="name" style="width: 100px"/>
+                                    <field name="name" style="width: 100px" readonly="1"/>
                                     <br/>
                                     <label string="抗拉強度" style="font-weight:bold"/>
-                                    <field name="tensihrd" style="width: 70px"/>
+                                    <field name="tensihrd" style="width: 70px" readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="　滲碳層" style="font-weight:bold"/>
-                                    <field name="carburlayer" style="width: 100px"/>
+                                    <field name="carburlayer" style="width: 100px" readonly="1"/>
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <label string="儲存位置" style="font-weight:bold"/>
-                                    <field name="storeplace" style="width: 100px"/>
+                                    <field name="storeplace" style="width: 100px" readonly="1"/>
                                     <span style="display:inline-block; width: 220px;"></span>
                                     <button string="刪除製程資料" type="object" name="clear_produce_data"
                                             style="background-color: bisque;"/>
