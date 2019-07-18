@@ -5,7 +5,7 @@
         <template id="assets_backend_quality" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link href="/yc_root/static/src/css/generalcss.css" rel="stylesheet"/>
-                 <!--<script type="text/javascript" src="/yc_root/static/src/js/javascriptfile.js"></script>-->
+                 <!--<script type="text/javascript" src="/yc_root/static/src/js/js1.js"></script>-->
             </xpath>
         </template>
         <record model="ir.ui.view" id="quality_form">

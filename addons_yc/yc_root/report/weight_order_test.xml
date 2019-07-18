@@ -2,18 +2,19 @@
 <odoo>
     <data>
         <report
-                id="action_report_weight_order1"
-                string="客戶加工單"
+                id="action_report_weight_order_test"
+                string="客戶加工單_test"
                 model="yc.purchase"
                 report_type="qweb-html"
-                file="yc_root.weight_order1"
-                name="yc_root.weight_order1"/>
-        <template id="weight_order1">
+                file="yc_root.weight_order_test"
+                name="yc_root.weight_order_test"/>
+        <template id="weight_order_test">
             <t t-call="cfprint.html_container">
                 <t t-if="len(docs)>0"></t>
                 <div t-if="len(docs) &lt; 0"><h2 style="text-align: center;">没有可列印的數據，請返回。</h2></div>
                 <div t-if="len(docs) &gt;= 0"><h2 style="text-align: center;">正在列印，請稍候...</h2></div>
                 <script type="text/javascript">
+                    // import {unescapeHTML,len} form "./yc_root/static/src/js/js1.js"
                     //cfp.exe listen address
                     var cfprint_addr = "127.0.0.1";
                     //close after print(ms), set -1 will not close
@@ -21,7 +22,7 @@
                     // Note: put flie in CFP executive directory: root\templates
                     var cfprint_port = 54321;
                     var _data = {
-                                "template": "report_weightorder1.fr3",
+                                "template": "report_weightorder_test.fr3",
                                 "ver": 4,
                                 "Copies": 1,
                                 "Duplex": 0,
@@ -104,7 +105,6 @@
                             });
                     </t>
                     /* if you have detail lines combine data after define it.*/
-
                     _data["Tables"].push(_tableOrder);
                     var _reportData = JSON.stringify(_data); //use json
                     console.log(_reportData);

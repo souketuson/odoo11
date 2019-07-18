@@ -4,7 +4,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime as dt
-import pytz, logging, collections
+import pytz, logging, collections, re
 
 
 class YcPurchase(models.Model):
@@ -442,6 +442,10 @@ class YcPurchase(models.Model):
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     product_code_searchbox = fields.Char("搜尋品名或編號")
+
+    @api.model
+    def conv(self,_cha):
+        return re.sub('&lt;', '<', _cha)
 
     @api.onchange('condition')
     def search_purchase(self):

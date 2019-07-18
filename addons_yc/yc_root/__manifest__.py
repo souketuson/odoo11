@@ -22,6 +22,7 @@
         'report/purchase_report.xml',
 
         'report/weight_order1.xml',
+        'report/weight_order_test.xml',
         'wizard/process_review.xml',
         'wizard/qcnote_wizard.xml',
         'wizard/quantity_review.xml',
