@@ -22,3 +22,19 @@
 /*.o_external_button{
     display:none;
 }*/
+.jhe_light{
+    background-color: #33bbff;
+    color: white;
+}
+.jhe_light:hover{
+    background-color: #00aaff;
+    color: white;
+}
+.jhe_light2{
+    background-color: #80b1b3;
+    color: white;
+}
+.jhe_light2:hover{
+    background-color: #568e8f;
+    color: white;
+}
