@@ -22,19 +22,20 @@
 /*.o_external_button{
     display:none;
 }*/
-.jhe_light{
-    background-color: #33bbff;
-    color: white;
-}
-.jhe_light:hover{
+/* */
+.search_btn{
     background-color: #00aaff;
     color: white;
 }
-.jhe_light2{
-    background-color: #80b1b3;
+.search_btn:hover{
+    background-color: #0088cc;
     color: white;
 }
-.jhe_light2:hover{
-    background-color: #568e8f;
+.create_btn{
+    background-color: #d62929;
+    color: white;
+}
+.create_btn:hover{
+    background-color: #b22222;
     color: white;
 }

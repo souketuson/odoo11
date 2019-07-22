@@ -9,27 +9,37 @@
             <form string="Purchase Report">
                 <group>
                     <div>
+
+                        <field name="initial" invisible="1"/>
+                        <field name="ck1"/>
                         <label string="　　品名" style="font-weight:bold"/>
                         <field name="product_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck2"/>
                         <label string="　　規格" style="font-weight:bold"/>
                         <field name="norm_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck3"/>
                         <label string="　　長度" style="font-weight:bold"/>
                         <field name="len_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <br/>
+                        <field name="ck7"/>
                         <label string="強度級數" style="font-weight:bold"/>
                         <field name="strength_level" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck4"/>
                         <label string="品名分類" style="font-weight:bold"/>
                         <field name="clsf_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck5"/>
                         <label string="加工方式" style="font-weight:bold"/>
                         <field name="proces_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <br/>
+                        <field name="ck6"/>
                         <label string="　　材質" style="font-weight:bold"/>
                         <field name="txtur_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck8"/>
                         <label string="線材爐號" style="font-weight:bold"/>
                         <field name="wire_furn" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                         <!--<span style="display:inline-block; width: 40px;"/>-->

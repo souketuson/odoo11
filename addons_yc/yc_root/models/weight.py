@@ -20,6 +20,7 @@ class YcWeight(models.Model):
     carno = fields.Char("車次序號")
     in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
+    company_id = fields.Many2one("res.company", string='所屬工廠', default=lambda self: self.env.user.company_id)
     purchase_times = fields.Integer("進貨次數")
     ship_times = fields.Integer("出貨次數")
     display_purchase = fields.Integer("進貨次數")

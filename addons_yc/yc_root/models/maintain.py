@@ -135,13 +135,13 @@ class YcSetstrength(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
-
-        if name[0:1].capitalize()=='G' and name[1:2]:
+        if (name[0:1].capitalize() == 'G' and name[1:2]) or (name[0:5].capitalize() == 'GRADE'):
             domain = [('name', operator, "Grade %s" % name[1:4])]
         else:
             domain = [('name', operator, name)]
         product = self.search(domain + args, limit=limit, order='name asc')
         return product.name_get()
+
 
 class YcSetproductclassify(models.Model):
     # 產品分類 S03N0003
@@ -159,6 +159,17 @@ class YcSetnorm(models.Model):
     parameter2 = fields.Char("參數2")
     parameter3 = fields.Char("參數3")
 
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+
+        if name[0:1].capitalize() == 'M' and name[1:2]:
+            domain = [('name', operator, "M%s" % name[1:4])]
+        else:
+            domain = [('name', operator, name)]
+        norm = self.search(domain + args, limit=limit, order='name asc')
+        return norm.name_get()
+
 
 class YcSetlength(models.Model):
     # 長度 S03N0005
@@ -175,6 +186,7 @@ class YcSetlength(models.Model):
         domain = [('name', '=like', '{0}%'.format(name))]
         length = self.search(domain + args, limit=limit, order='name asc')
         return length.name_get()
+
 
 class YcSetprocess(models.Model):
     #  加工方式 S03N0006

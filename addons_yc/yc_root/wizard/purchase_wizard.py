@@ -6,44 +6,87 @@ from odoo.exceptions import ValidationError
 class YcPurchaseWizard(models.TransientModel):
     _name = 'yc.purchase.wizard'
 
+    ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     product_code = fields.Many2one("yc.setproduct", string="品名")
+    ck4 = fields.Boolean("品名分類check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
     productname = fields.Many2one("yc.setproduct", string="產品名稱")
+    ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
+    ck5 = fields.Boolean("加工方式check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
+    ck3 = fields.Boolean("長度check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     len_code = fields.Many2one("yc.setlength", string="長度")
+    ck6 = fields.Boolean("材質check", default=True)
     txtur_code = fields.Many2one("yc.settexture", string="材質")
+    ck7 = fields.Boolean("強度級數check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
+    ck8 = fields.Boolean("線材爐號check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     wire_furn = fields.Char("線材爐號")
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
     rec_number = fields.Char("資料筆數", readonly=True)
+    initial = fields.Boolean(default=True)
+
+    @api.onchange('initial')
+    def _initial(self):
+        source = self.env['yc.purchase'].browse(self._context.get('active_ids'))
+        self.product_code = source.product_code
+        self.norm_code = source.norm_code
+        self.len_code = source.len_code
+        self.clsf_code = source.clsf_code
+        self.proces_code = source.proces_code
+        self.txtur_code = source.txtur_code
+        self.strength_level = source.strength_level
+        self.wire_furn = source.wire_furn
+
+    @api.onchange('ck1', 'ck2', 'ck3', 'ck4', 'ck5', 'ck6', 'ck7', 'ck8')
+    def _check_out(self):
+        if not self.ck1:
+            self.product_code = None
+        if not self.ck2:
+            self.norm_code = None
+        if not self.ck3:
+            self.len_code = None
+        if not self.ck4:
+            self.clsf_code = None
+        if not self.ck5:
+            self.proces_code = None
+        if not self.ck6:
+            self.txtur_code = None
+        if not self.ck7:
+            self.strength_level = None
+        if not self.ck8:
+            self.wire_furn = None
+        self.search_purchase()
+
+
+
 
     # 過濾查詢條件
     @api.onchange('product_code', 'clsf_code', 'productname', 'norm_code',
                   'proces_code', 'len_code', 'txtur_code', 'strength_level', 'wire_furn')
     def search_purchase(self):
+        # 剛載入執行
         source = self.env['yc.purchase'].browse(self._context.get('active_ids'))
         # 如果wizard有任意欄位有值
         if (self.product_code or self.clsf_code or self.productname or self.norm_code or self.proces_code or
                 self.len_code or self.txtur_code or self.strength_level or self.wire_furn):
             domain = ()
-            if self.product_code:
+            if self.product_code and self.ck1:
                 domain += ('product_code', '=', self.product_code.id),
-            if self.clsf_code:
+            if self.clsf_code and self.ck4:
                 domain += ('clsf_code', '=', self.clsf_code.id),
-            if self.productname:
-                domain += ('productname', '=', self.productname.id),
-            if self.norm_code:
+            if self.norm_code and self.ck2:
                 domain += ('norm_code', '=', self.norm_code.id),
-            if self.proces_code:
+            if self.proces_code and self.ck5:
                 domain += ('proces_code', '=', self.proces_code.id),
-            if self.len_code:
+            if self.len_code and self.ck3:
                 domain += ('len_code', '=', self.len_code.id),
-            if self.txtur_code:
+            if self.txtur_code and self.ck6:
                 domain += ('txtur_code', '=', self.txtur_code.id),
-            if self.strength_level:
+            if self.strength_level and self.ck7:
                 domain += ('strength_level', '=', self.strength_level.id),
-            if self.wire_furn:
+            if self.wire_furn and self.ck8:
                 domain += ('wire_furn', '=', self.wire_furn),
             if len(domain) > 0:
                 purchase = self.env['yc.purchase']
@@ -58,44 +101,49 @@ class YcPurchaseWizard(models.TransientModel):
                     self.purchase_ids = None
                     self.rec_number = "找不到資料"
         else:
-            # 如果check有被勾選 載入時會事先搜尋
-            if source.ck1:
-                self.product_code = source.product_code
-            if source.ck2:
-                self.norm_code = source.norm_code
-            if source.ck3:
-                self.len_code = source.len_code
-            if source.ck4:
-                self.clsf_code = source.clsf_code
-            if source.ck5:
-                self.proces_code = source.proces_code
-            if source.ck6:
-                self.txtur_code = source.txtur_code
-            if source.ck7:
-                self.strength_level = source.strength_level
-            if source.ck8:
-                self.wire_furn = source.wire_furn
+            self.purchase_ids = None
+            self.rec_number = "請勾選並依查詢下拉選擇品項"
+
 
     # 把表面硬度,心部硬度,試片,抗拉強度,滲碳層,以前爐號,扭力,回火溫度,預排爐號 帶入到現在的進貨單
     @api.multi
     def comfirm(self):
-        wizard_checked = self.purchase_ids.search([('wizard_check', '=', True)])
-        if len(wizard_checked) > 1:
-            for to_uncheck in wizard_checked:
+        checked = self.purchase_ids.search([('wizard_check', '=', True)])
+        if len(checked) > 1:
+            for to_uncheck in checked:
                 to_uncheck.wizard_check = False
-        if len(wizard_checked) == 1:
+            raise Warning("只能選一筆資料帶出")
+        if len(checked) == 1:
             # 解掉checked
-            wizard_checked.wizard_check = False
+            checked.wizard_check = False
             # 目前進貨單current record : self._context.get('active_ids')
-            source_list = self.env['yc.purchase'].browse(self._context.get('active_ids'))
-            source_list.surfhrd = wizard_checked.surfhrd
-            source_list.corehrd = wizard_checked.corehrd
-            source_list.piece = wizard_checked.piece
-            source_list.tensihrd = wizard_checked.tensihrd
-            source_list.carburlayer = wizard_checked.carburlayer
-            source_list.torsion = wizard_checked.torsion
-            source_list.tempturing2 = wizard_checked.tempturing2
-            source_list.order_furn = wizard_checked.order_furn
+            current = self.env['yc.purchase'].browse(self._context.get('active_ids'))
+            current.surfhrd = checked.surfhrd
+            current.corehrd = checked.corehrd
+            current.piece = checked.piece
+            current.tensihrd = checked.tensihrd
+            current.carburlayer = checked.carburlayer
+            current.torsion = checked.torsion
+            current.tempturing2 = checked.tempturing2
+            current.order_furn = checked.order_furn
+            if self.product_code and self.ck1:
+                current.product_code = self.product_code
+            if self.clsf_code and self.ck4:
+                current.clsf_code = self.clsf_code
+            if self.norm_code and self.ck2:
+                current.norm_code = self.norm_code
+            if self.proces_code and self.ck5:
+                current.proces_code = self.proces_code
+            if self.len_code and self.ck3:
+                current.len_code = self.len_code
+            if self.txtur_code and self.ck6:
+                current.txtur_code = self.txtur_code
+            if self.strength_level and self.ck7:
+                current.strength_level = self.strength_level
+            if self.wire_furn and self.ck8:
+                current.wire_furn = self.wire_furn
+
+
 
 
 class YcYcPurchasePreorder(models.TransientModel):

@@ -20,6 +20,7 @@ class YcPurchase(models.Model):
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱", related="car_no.driver_id")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
+    company_id = fields.Many2one("res.company", string='所屬工廠', default=lambda self: self.env.user.company_id)
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     processing_phone = fields.Char("加工廠電話")
     processing_contact = fields.Char("負責人")
@@ -569,29 +570,22 @@ class YcPurchase(models.Model):
     # 7.濾出只有和使用者同樣廠別的紀錄
     # 目前以修改odoo11.0 > odoo > http.py L# 1095 讓頁面抓到context 取代這一段功能
     # @api.model
-    # def factory_filter(self):
+    # def company_filter_filter(self):
     #     ctx = self.env.context.copy()
-    #     if self._uid == 1:
-    #         factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
-    #     else:
-    #         factory_code = self.env.user.factory_id.id
+    #     company_code = self.env.user.company_id.id
     #     # 不知道為什麼上面這段沒作用
-    #     ctx.update({'factory_id': [factory_code]})
-    #
-    #     if self._context.get('params')['action'] == 111:
-    #         reference = self.env.ref('yc_root.purchase_list_action_tree').id
-    #     elif self._context.get('params')['action'] == 109:
-    #         reference = self.env.ref('yc_root.planfurna_action_tree').id
-    #     elif self._context.get('params')['action'] == 110:
-    #         reference = self.env.ref('yc_root.furna_import_action_tree').id
+    #     ctx.update({'company_id': [company_code]})
+    #     if self._context.get('params')['action'] == 81:
+    #         reference = self.env.ref('yc_root.purchase_list_action').id
     #     return {
     #         'name': '使用者廠別動態過濾',
     #         'view_type': 'tree',
     #         'view_mode': 'tree,form',
     #         'res_model': 'yc.purchase',
     #         'type': 'ir.actions.act_window',
-    #         'view_id': reference,
+    #         # 'view_id': reference,
     #         'context': dict(ctx),
+    #         'domain': [('company_id', '=', self.env.user.company_id)]
     #     }
 
     # 8.進貨單wizard 只能帶出一筆資料，超過一筆提醒
@@ -852,7 +846,7 @@ class YcPurchase(models.Model):
     @api.constrains("car_no")
     def _verify(self):
         if not self.car_no:
-            raise Warning("車次序號不能空")
+            raise Warning("請選擇車次序號")
 
     # 8. 加熱爐和回火爐自動填值
     @api.onchange('heat2', 'tempturing2')
