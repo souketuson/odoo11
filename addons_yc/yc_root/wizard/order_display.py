@@ -27,7 +27,7 @@ class YcPurchaseDisplay(models.TransientModel):
             if len(domain) > 0:
                 # 排除非登入廠、已出貨
                 shiped = self.env['yc.setstatus'].search([('name', '=', '已出貨')]).id
-                domain += ('factory_id', '=', self.env.user.factory_id.id),
+                domain += ('company_id', '=', self.env.user.company_id.id),
                 domain += ('status', '!=', shiped),
                 purchase = self.env["yc.purchase"]
                 records = purchase.search([d for d in domain], limit=self.record_limit)
@@ -59,7 +59,7 @@ class YcPurchaseDisplay(models.TransientModel):
             if len(domain) > 0:
                 # 排除非登入廠、已出貨
                 shiped = self.env['yc.setstatus'].search([('name', '=', '已出貨')]).id
-                domain += ('factory_id', '=', self.env.user.factory_id.id),
+                domain += ('company_id', '=', self.env.user.company_id.id),
                 domain += ('status', '!=', shiped),
                 purchase = self.env["yc.purchase"]
                 records = purchase.search([d for d in domain], order='serial', limit=self.record_limit)
@@ -94,7 +94,7 @@ class YcPurchaseDisplay(models.TransientModel):
             unscheduled = self.env['yc.setstatus'].search([('name', '=', '未排程')]).id
             _domain = ()
             _domain += ('order_furn', '=', self.order_furn2.id),
-            _domain += ('factory_id', '=', self.env.user.factory_id.id),
+            _domain += ('company_id', '=', self.env.user.company_id.id),
             _domain += ('status', '!=', shiped),
             _domain_unscheduled, _domain__scheduled = _domain, _domain
             _domain_unscheduled += (('serial', '=', 99.9)),

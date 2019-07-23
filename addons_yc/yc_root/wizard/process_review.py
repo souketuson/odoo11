@@ -112,8 +112,8 @@ class YcPurchaseDisplay(models.TransientModel):
             # S05N0100 製程登錄作業
             purchase = self.env["yc.purchase"]
             _name = self.searchname or self.furn_in.name or self.furn_notin.name
-            _factory = self.env.user.factory_id.id
-            _id = purchase.search([('name', '=', _name), ('factory_id', '=', _factory)]).id
+            _company = self.env.user.company_id.id
+            _id = purchase.search([('name', '=', _name), ('company_id', '=', _company)]).id
 
             if _id:
                 self._display_record(_id)
@@ -183,8 +183,8 @@ class YcPurchaseDisplay(models.TransientModel):
                           'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2', 'prodnote3']
         db = self.env['yc.purchase']
         _name = self.hidden_name
-        _factory = self.env.user.factory_id.id
-        to_clear_id = db.search([('name', '=', _name), ('factory_id', '=', _factory)]).id
+        _company = self.env.user.company_id.id
+        to_clear_id = db.search([('name', '=', _name), ('company_id', '=', _company)]).id
         for field in to_clear_field:
             db.search([('id', '=', to_clear_id)]).write({field: None})
         self._display_record(to_clear_id)

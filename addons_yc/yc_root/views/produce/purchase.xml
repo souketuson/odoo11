@@ -462,13 +462,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[("company_id","=",[context.get('company_id')])]</field>
-            <!---->
+            <field name="context">{"view":"purchase1"}</field> <!--this line only be got on readonly form-->
+
         </record>
         <record model="ir.actions.act_window.view" id="purchase_list_action_form">
             <field name="act_window_id" ref="purchase_list_action"/>
             <field name="sequence" eval="20"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="purchase_form"/>
+
         </record>
         <record model="ir.actions.act_window.view" id="purchase_list_action_tree">
             <field name="act_window_id" ref="purchase_list_action"/>

@@ -25,16 +25,27 @@
             <field name="name">purchase.form</field>
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
+
                 <form string="Purchase form">
-                    <div style="background: ghostwhite">
+                    <div style="background: ghostwhite; width:1000px; overflow-x: auto;" class="purchase2_for_keypress">
                         <sheet>
+                            <header>
+                                <button string="搜尋舊檔" type="action" class="search_btn"
+                                        name="%(action_purchase_wizard)d"/>
+                                <button name="%(setproduct_action)d" type="action" class="create_btn"
+                                        icon="" string="品名新增"/>
+                                <button name="%(setlength_action)d" type="action" class="create_btn"
+                                        icon="" string="長度新增"/>
+                                <button name="%(setqcnote_action)d" type="action" class="create_btn"
+                                        icon="" string="備註搜尋"/>
+                            </header>
 
                             <group col="8">
-                                <field name="day"/>
+                                <field name="day" style="width: 110px;"/>
                                 <field name="time" default_focus="1"/>
                                 <field name="copy_createdate" attrs="{'readonly': True }"/>
 
-                                <field name="factory_id" style="width: 80px;" readonly="1"
+                                <field name="company_id" style="width: 80px;" readonly="1"
                                        options="{'no_open': True,'no_create': True}"/>
                                 <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
                                        options="{'no_open': True,'no_create': True}"/>
@@ -56,7 +67,7 @@
                             <notebook>
 
                                 <page string="基本資料">
-                                    <div style="position: absolute;margin-left: 200px;margin-top:-35px">
+                                    <div style="position: absolute;margin-left: 200px;margin-top:-35px; display:none;">
                                         <footer>
                                             <button string="搜尋舊檔" type="action" class="search_btn"
                                                     name="%(action_purchase_wizard)d"/>
@@ -66,6 +77,7 @@
                                             |
                                             <button name="%(setproduct_action)d" type="action" class="create_btn"
                                                     icon="" string="品名新增"/>
+
                                         </footer>
                                     </div>
                                     <group col="8">

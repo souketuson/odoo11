@@ -22,6 +22,7 @@ class YcShipment(models.Model):
     tweights = fields.Float("總重量")
     tmoney = fields.Float("總金額")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.user.company_id)
 
     searchorder = fields.Char("工令")
     searchfurn = fields.Char("爐號")

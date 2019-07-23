@@ -445,7 +445,7 @@ class YcPurchase(models.Model):
     product_code_searchbox = fields.Char("搜尋品名或編號")
 
     @api.model
-    def conv(self,_cha):
+    def conv(self, _cha):
         return re.sub('&lt;', '<', _cha)
 
     @api.onchange('condition')
@@ -461,7 +461,6 @@ class YcPurchase(models.Model):
                 # IT 只要找出前工令號有值 and 等於工令號的紀錄
                 has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
                 self.return_in_fac_ids = [(6, _, has_preorder.ids)]
-
 
     #########################
     ### views共用或部分共用 ###
@@ -491,12 +490,12 @@ class YcPurchase(models.Model):
             # S05N0100 製程登錄作業
             purchase = self.env["yc.purchase"]
             repeated_name_record = purchase.search(
-                [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)])
-            empty_name_record = purchase.search([('name', '=', None), ('factory_id', '=', self.env.user.factory_id.id)])
+                [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])
+            empty_name_record = purchase.search([('name', '=', None), ('company_id', '=', self.env.user.company_id.id)])
             # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
             if len(repeated_name_record) > 1:
                 to_delete_id = purchase.search(
-                    [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)], order='id desc',
+                    [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
                     limit=1).id
                 sql = "delete from yc_purchase where id=%d" % to_delete_id
                 self._cr.execute(sql)
@@ -521,14 +520,14 @@ class YcPurchase(models.Model):
         elif self._context.get('params')['action'] == 124:
             # S04N0200
             to_delete_id = self.env["yc.purchase"].search(
-                [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)], order='id desc',
+                [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
                 limit=1).id
             sql = "delete from yc_purchase where id=%d" % to_delete_id
             if len(self.env["yc.purchase"].search(
-                    [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)])) > 1:
+                    [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])) > 1:
                 self._cr.execute(sql)
             id = self.env['yc.purchase'].search(
-                [('name', '=', self.searchname), ('factory_id', '=', self.env.user.factory_id.id)]).id
+                [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)]).id
             return {
                 'name': self.searchname,
                 'res_model': 'yc.purchase',
@@ -594,7 +593,7 @@ class YcPurchase(models.Model):
         # 出貨作業會拉多筆資料進出貨項目檔，跳過這段提醒
         if self._context.get('params')['action'] != 158:
             wizard_checked = self.env["yc.purchase"].search(
-                [('wizard_check', '=', True), ('factory_id', '=', self.env.user.factory_id.id)])
+                [('wizard_check', '=', True), ('company_id', '=', self.env.user.company_id.id)])
             if len(wizard_checked) > 1:
                 for rec in wizard_checked:
                     rec.write({'wizard_check': False})
@@ -672,7 +671,7 @@ class YcPurchase(models.Model):
                     # 防止搜尋到自己
                     if isinstance(self.id, int):
                         domain += ('id', '!=', self.id),
-                    domain += ('factory_id', '=', self.env.user.factory_id.id),
+                    domain += ('company_id', '=', self.env.user.company_id.id),
                     r = purchase.search([d for d in domain], limit=1, order="day desc,time desc")
                     self.flow, self.cp = r.flow, r.cp
                     self.nh31, self.nh32, self.nh33, self.nh34 = r.nh31, r.nh32, r.nh33, r.nh34
@@ -763,9 +762,9 @@ class YcPurchase(models.Model):
         if self.processing_attache:
             for rec in self:
                 self.combo_process = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.processing_id.phone1, self.processing_attache.processing_id.contact)
+                    self.processing_attache.processing_id.phone1 or '', self.processing_attache.processing_id.contact or '')
                 self.combo_customer = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.customer_id.phone1, self.processing_attache.customer_id.contact)
+                    self.processing_attache.customer_id.phone1 or '', self.processing_attache.customer_id.contact or '')
                 self.customer_id = self.processing_attache.customer_id.id
 
     # 2.當表面處理開啟'電鍍'時，啟用電鍍類別
@@ -777,8 +776,10 @@ class YcPurchase(models.Model):
                 self.elecpl_code = 538
             elif rec.surface_code.id == 2:
                 self.elecpl_code = 385
+                self.elecplswitch = 'OFF'
             elif rec.surface_code.id == 1:
                 self.elecpl_code = 590
+                self.elecplswitch = 'OFF'
             else:
                 # 避免非電鍍類別存入資料
                 self.elecplswitch = 'OFF'
@@ -823,7 +824,8 @@ class YcPurchase(models.Model):
     @api.model
     def create(self, vals):
         # 進貨作業 S03N0120 且非wizard
-        if self._context.get('params')['action'] == 81 and vals['car_no']:
+        p2 = self.env['ir.actions.act_window'].search([('name', '=', '進貨單2作業')]).id
+        if self._context.get('params')['action'] in (self.action_id_main, p2) and vals['car_no']:
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
@@ -831,7 +833,7 @@ class YcPurchase(models.Model):
             weight_cn = weight_item.search([('id', '=', cn)]).carno
             purchase = self.env["yc.purchase"]
             search = purchase.search(
-                [("name", "like", weight_cn), ('factory_id', '=', self.env.user.factory_id.id)])
+                [("name", "like", weight_cn), ('company_id', '=', self.env.user.company_id.id)])
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
             vals.update({"name": name, 'wizard_btn': False})
@@ -839,7 +841,11 @@ class YcPurchase(models.Model):
 
     # 6.預設時間
     def _default_date(self):
-        if self._context.get('params')['action'] == 81:
+        # 剛載入create 頁面 default不會存值進入field要手動抓action_id
+        action = self.env['ir.actions.act_window']
+        p1 = action.search([('name', '=', '進貨單作業')]).id
+        p2 = action.search([('name', '=', '進貨單2作業')]).id
+        if self._context.get('params')['action'] in (p1, p2):
             return dt.today()
 
     # 7. 空值警告
@@ -986,7 +992,7 @@ class YcPurchase(models.Model):
                 vals.update({'status': not_infurn_code})
             else:
                 vals.update({'status': infurn_code})
-        if self._context.get('params')['action'] == 81:
+        if self._context.get('params')['action'] == self.action_id_main:
             vals.update({'wizard_btn': False})
         return super(YcPurchase, self).write(vals)
 
@@ -1004,7 +1010,7 @@ class YcPurchase(models.Model):
                           'tempturing5', 'tempturing6', 'tempturisped', 'currnt_furno', 'notices1', 'notices2',
                           'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2', 'prodnote3']
         db = self.env['yc.purchase']
-        to_clear_id = db.search([('name', '=', self.name), ('factory_id', '=', self.env.user.factory_id.id)]).id
+        to_clear_id = db.search([('name', '=', self.name), ('company_id', '=', self.env.user.company_id.id)]).id
         for field in to_clear_field:
             db.search([('id', '=', to_clear_id)]).write({field: None})
 
@@ -1080,7 +1086,7 @@ class YcProduceDetails(models.Model):
 
         p = self.env['yc.purchase']
         self.bucket_no = p.search(
-            [('name', '=', self.name.name), ('factory_id', '=', self.env.user.factory_id.id)]).count
+            [('name', '=', self.name.name), ('company_id', '=', self.env.user.company_id.id)]).count
         sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
         p._cr.execute(sql)
 

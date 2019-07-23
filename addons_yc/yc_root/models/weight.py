@@ -26,14 +26,14 @@ class YcWeight(models.Model):
     display_purchase = fields.Integer("進貨次數")
     display_shipment = fields.Integer("進貨次數")
     plate_no = fields.Char("車號", related="driver_id.plate_no")
-    total = fields.Integer("總重 (KG)")
-    curbweight = fields.Integer("空車重 (KG)")
-    emptybucket = fields.Integer("空桶重 (KG)")
-    net = fields.Integer("淨重 (KG)")
+    total = fields.Integer("總重")
+    curbweight = fields.Integer("空車重")
+    emptybucket = fields.Integer("空桶重")
+    net = fields.Integer("淨重")
     note = fields.Char("備註")
-    refine = fields.Integer("調質重量 (KG)")
+    refine = fields.Integer("調質重量")
     carbur = fields.Integer("滲碳重量")
-    other = fields.Integer("其他重量 (KG)")
+    other = fields.Integer("其他重量")
     other1 = fields.Integer("其他重量1")
     # count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
     # 一張過磅單 上面的貨物可能含有多家客戶
@@ -74,8 +74,8 @@ class YcWeight(models.Model):
                 year = str(dt.now().year)
                 month = "%02d" % (dt.now().month)
                 day = "%02d" % (dt.now().day)
-                user_factory_id = self.env.user.factory_id.id
-                firm = self.env['yc.factory'].search([('id', '=', user_factory_id)])
+                user_company_id = self.env.user.company_id.id
+                firm = self.env['res.company'].search([('id', '=', user_company_id)])
                 if firm.name == '岡山廠':
                     firm_code = '2'
                 else:
@@ -173,7 +173,7 @@ class YcWeight(models.Model):
                      "display_purchase": vals['purchase_times'],
                      "display_shipment": vals['ship_times']})
         # 檢查項目檔至少有一筆
-        if vals.get('in_out')=='O':
+        if vals.get('in_out') == 'O':
             if not vals.get('customer_detail_ids'):
                 raise ValidationError(_('進貨項目不能是空的'))
             if not (vals.get('refine') or vals.get('carbur') or vals.get('other') or vals.get('other1')):
@@ -215,12 +215,15 @@ class YcWeight(models.Model):
     @api.multi
     def name_get(self):
         result = []
+        action = self.env['ir.actions.act_window']
+        purchase_page = action.search([('name', '=', '進貨單作業')]).id
+        purchase2_page = action.search([('name', '=', '進貨單2作業')]).id
         for record in self:
-            # 轉檔時 self._context.get('params')['action'] = 107
-            # 過磅時 self._context.get('params')['action'] = 82
-            # 進貨創建時 self._context.get('params') = None
-            # 進貨瀏覽時 self._context.get('params')['action'] = 81
-            if not self._context.get('params') or self._context.get('params')['action'] == 81:
+            # 轉檔時 self._context.get('params')['action'] =
+            # 過磅時 self._context.get('params')['action'] =
+            # 進貨創建時 self._context.get('params') =
+            # 進貨瀏覽時 self._context.get('params')['action'] =
+            if not self._context.get('params') or self._context.get('params')['action'] in (purchase_page,purchase2_page):
                 name = record.carno
                 result.append((record.id, name))
             else:
@@ -228,24 +231,25 @@ class YcWeight(models.Model):
                 result.append((record.id, name))
         return result
 
-    @api.model
-    def factory_filter(self):
-        ctx = self.env.context.copy()
-        if self._uid == 1:
-            factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
-        else:
-            factory_code = self.env.user.factory_id.id
-        # 不知道為什麼上面這段沒作用
-        ctx.update({'factory_id': [factory_code]})
-        return {
-            'name': '使用者廠別動態過濾',
-            'view_type': 'tree',
-            'view_mode': 'tree,form',
-            'res_model': 'yc.weight',
-            'type': 'ir.actions.act_window',
-            'view_id': self.env.ref('yc_root.weight_list_action_tree').id,
-            'context': dict(ctx),
-        }
+    # @api.model
+    # def factory_filter(self):
+    #     ctx = self.env.context.copy()
+    #     if self._uid == 1:
+    #         factory_code = ((rec.id) for rec in self.env['yc.factory'].search([]))
+    #     else:
+    #         factory_code = self.env.user.factory_id.id
+    #     # 不知道為什麼上面這段沒作用
+    #     ctx.update({'factory_id': [factory_code]})
+    #     return {
+    #         'name': '使用者廠別動態過濾',
+    #         'view_type': 'tree',
+    #         'view_mode': 'tree,form',
+    #         'res_model': 'yc.weight',
+    #         'type': 'ir.actions.act_window',
+    #         'view_id': self.env.ref('yc_root.weight_list_action_tree').id,
+    #         'context': dict(ctx),
+    #     }
+
 
 class YcWeightDetails(models.Model):
     _name = "yc.weight.details"

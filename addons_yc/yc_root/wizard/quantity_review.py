@@ -75,8 +75,8 @@ class YcPurchaseDisplay(models.TransientModel):
             # S05N0200 產量登錄作業
             purchase = self.env["yc.purchase"]
             _name = self.searchname or self.weighted_order.name or self.notweighted_order.name
-            _factory = self.env.user.factory_id.id
-            _id = purchase.search([('name', '=', _name), ('factory_id', '=', _factory)]).id
+            _company  = self.env.user.company_id.id
+            _id = purchase.search([('name', '=', _name), ('company_id', '=', _company)]).id
             if _id:
                 self._display_record(_id)
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
