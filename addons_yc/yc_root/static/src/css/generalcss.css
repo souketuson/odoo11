@@ -39,3 +39,11 @@
     background-color: #b22222;
     color: white;
 }
+.widget_btn{
+    background-color: #7c7bad;
+    color: white;
+}
+.widget_btn:hover{
+    background-color: #5f5e97;
+    color: black;
+}

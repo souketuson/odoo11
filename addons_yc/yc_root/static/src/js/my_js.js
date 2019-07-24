@@ -18,7 +18,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             core.bus.on('DOM_updated', "span[name='in_out']", this.post_bgChanger);
             core.bus.on('click', "button .o_pager_next", this.post_bgChanger);
             core.bus.on('click', this, this.elf_Click);
-            core.bus.on('click', this, this.return_Click);
+            //core.bus.on('click', this, this.return_Click);
+            core.bus.on('click', this, this.return2_Click);
             core.bus.on('keypress', this, this.keypress_focus);
 
         },
@@ -102,6 +103,33 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 });
             }
         },
+        return2_Click: function() {
+            if ($('div .purchase2_for_keypress').length ==1){
+                var div = $('div #toggle_return');
+                var btn = $("div[name='return_btn'] input");
+                var wizard = $('.mummy_return');
+                if (btn.prop('checked')==true){
+                    div.css('display','unset');
+                    wizard.removeClass("glyphicon glyphicon-random");
+                    wizard.addClass('glyphicon glyphicon-remove');
+                    wizard.css("background-color","#568e8f");
+                    wizard.hover(function(e) {
+                          $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                    });
+                }
+                else if (btn.prop('checked')==false){
+                    div.css('display','none');
+
+                    wizard.removeClass("glyphicon glyphicon-remove");
+                    wizard.addClass('glyphicon glyphicon-random');
+
+                    wizard.css("background-color","#5f5e97");
+                    wizard.hover(function(e) {
+                          $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                    });
+                }
+            }
+        },
         keypress_focus: function(event){
             if ($('div .purchase2_for_keypress').length ==1 && (event.which== 13) ){
                 // light red: #ffcccc, light yellow: #ffffcc, light purple: #ccccff,
@@ -161,7 +189,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     field.css('background-color', _color);
                     window.setTimeout(( () => field.css({'background-color': 'white',
                                                          'transition': 'background-color 1s linear'
-                                                         }) ), 500);
+                                                         }) ), 300);
                 };
                 console.log(isFocus);
                 switch(isFocus){

@@ -444,10 +444,6 @@ class YcPurchase(models.Model):
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     product_code_searchbox = fields.Char("搜尋品名或編號")
 
-    @api.model
-    def conv(self, _cha):
-        return re.sub('&lt;', '<', _cha)
-
     @api.onchange('condition')
     def search_purchase(self):
         if self.condition:
