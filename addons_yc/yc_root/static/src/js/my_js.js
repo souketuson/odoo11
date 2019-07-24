@@ -103,7 +103,16 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             }
         },
         keypress_focus: function(event){
-            if ($('div .purchase2_for_keypress').length ==0 && event.which==13 ){
+            if ($('div .purchase2_for_keypress').length ==1 && (event.which== 13) ){
+                // light red: #ffcccc, light yellow: #ffffcc, light purple: #ccccff,
+                // cce6ff,d0e6fb
+                var _color = "#ccccff";
+                var _time = $('input[name="time"]');
+                var _day =  $('div[name="day"] input');
+                var carn = $('div[name="car_no"] input');
+                var prat = $('div[name="processing_attache"] input');
+                var bat = $('input[name="batch"]');
+                var cusn = $('input[name="customer_no"]');
                 var cls = $('div[name="clsf_code"] input');
                 var pcs = $('input[name="product_code_searchbox"]');
                 var sl = $('div[name="strength_level"] input');
@@ -127,67 +136,183 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 var net = $('input[name="net"]');
                 var pro1 = $('div[name="process1"] input');
                 var pro2 = $('div[name="process2"] input');
+                var wirf = $('input[name="wire_furn"]');
+                var surh = $('input[name="surfhrd"]');
+                var corh = $('input[name="corehrd"]');
+                var tenh = $('input[name="tensihrd"]');
+                var carb = $('input[name="carburlayer"]');
+                var tor = $('input[name="torsion"]');
+                var tem2= $('input[name="tempturing2"]');
+                var ordf = $('div[name="order_furn"] input');
+                var not1 = $('input[name="notices1"]');
+                var not2 = $('input[name="notices2"]');
+                var not3 = $('input[name="notices3"]');
+                var qcn1 = $('input[name="qcnote1"]');
+                var qcn2 = $('input[name="qcnote2"]');
+                var qcn3 = $('input[name="qcnote3"]');
+                var prn1 = $('input[name="prodnote1"]');
+                var prn2 = $('input[name="prodnote2"]');
+                var prn3 = $('input[name="prodnote3"]');
+                var norc = $('input[name="norcls"]');
+                var wxr = $('input[name="wxr_txtur"]');
+                var wxh = $('input[name="wxrhard"]');
                 var isFocus = (document.activeElement.parentNode.parentNode.getAttribute('name')) ? document.activeElement.parentNode.parentNode.getAttribute('name') : document.activeElement.getAttribute('name');
+                var color_set = function(field){
+                    field.css('background-color', _color);
+                    window.setTimeout(( () => field.css({'background-color': 'white',
+                                                         'transition': 'background-color 1s linear'
+                                                         }) ), 500);
+                };
                 console.log(isFocus);
                 switch(isFocus){
+                case 'time':
+                    _day.focus();
+                    break;
+                case 'day':
+                    carn.focus();
+                    color_set(carn);
+                    break;
+                case 'day':
+                    carn.focus();
+                    color_set(carn);
+                    break;
+                case 'car_no':
+                    prat.focus();
+                    color_set(prat);
+                    break;
+                case 'processing_attache':
+                    bat.focus();
+                    break;
+                case 'batch':
+                    cusn.focus();
+                    break;
+                case 'customer_no':
+                    cls.focus();
+                    color_set(cls);
+                    break;
                 case 'clsf_code':
                     pcs.focus();
                     break;
                 case 'product_code_searchbox':
                     sl.focus();
+                    color_set(sl);
                     break;
                 case 'strength_level':
                     txt.focus();
+                    color_set(txt);
                     break;
                 case 'txtur_code':
                     nor.focus();
+                    color_set(nor);
                     break;
                 case 'norm_code':
                     len.focus();
+                    color_set(len);
                     break;
                 case 'len_code':
                     lend.focus();
                     break;
                 case 'len_descript':
                     forh.focus();
+                    color_set(forh);
                     break;
                 case 'fullorhalf':
                     pro.focus();
                     break;
                 case 'proces_code':
                     sur.focus();
+                    color_set(sur);
                     break;
                 case 'surface_code':
                     sur_next.focus();
+                    color_set(sur_next);
                     break;
                 case 'elecpl_code':
                     num1.focus();
                     break;
                 case 'num1':
                     unit1.focus();
+                    color_set(unit1);
                     break;
                 case 'unit1':
                     stor.focus();
+                    color_set(stor);
                     break;
                 case 'storeplace':
                     net.focus();
                     break;
                 case 'net':
                     pro1.focus();
+                    color_set(pro1);
                     break;
-
                 case 'process1':
                     pro2.focus();
+                    color_set(pro2);
                     break;
-                /*case 'process2':
-                    num2.focus();
+                case 'process2':
+                    wirf.focus();
                     break;
-                case 'num4':
-                    unit4.focus();
+                case 'wire_furn':
+                    surh.focus();
                     break;
-                case 'unit4':
-                    stor.focus();
-                    break;*/
+                case 'surfhrd':
+                    corh.focus();
+                    break;
+                case 'corehrd':
+                    tenh.focus();
+                    break;
+                case 'tensihrd':
+                    carb.focus();
+                    break;
+                case 'carburlayer':
+                    tor.focus();
+                    break;
+                case 'torsion':
+                    tem2.focus();
+                    break;
+                case 'tempturing2':
+                    ordf.focus();
+                    color_set(ordf);
+                    break;
+                case 'order_furn':
+                    not1.focus();
+                    break;
+                case 'notices1':
+                    not2.focus();
+                    break;
+                case 'notices2':
+                    not3.focus();
+                    break;
+                case 'notices3':
+                    qcn1.focus();
+                    break;
+                case 'qcnote1':
+                    qcn2.focus();
+                    break;
+                case 'qcnote2':
+                    qcn3.focus();
+                    break;
+                case 'qcnote3':
+                    prn1.focus();
+                    break;
+                case 'prodnote1':
+                    prn2.focus();
+                    break;
+                case 'prodnote2':
+                    prn3.focus();
+                    break;
+                case 'prodnote3':
+                    norc.focus();
+                    break;
+                case 'norcls':
+                    wxr.focus();
+                    break;
+                case 'wxr_txtur':
+                    wxh.focus();
+                    break;
+                case 'wxrhard':
+                    _time.focus();
+                    break;
                 }
             }
         },

@@ -49,7 +49,7 @@
                                        options="{'no_open': True,'no_create': True}"/>
                                 <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
                                        options="{'no_open': True,'no_create': True}"/>
-                                <field name="processing_attache"
+                                <field name="processing_attache" attrs="{'readonly': [('id', '!=',False)]}"
                                        options="{'no_open': True,'no_create': True}"/>
                                 <field name="customer_id" readonly="1"
                                        options="{'no_open': True,'no_create': True}"/>
@@ -71,39 +71,41 @@
                                         <footer>
                                             <button string="搜尋舊檔" type="action" class="search_btn"
                                                     name="%(action_purchase_wizard)d"/>
-                                            |
-                                            <button name="%(action_qcnote_wizard)d" type="action" class="search_btn"
-                                                    icon="" string="備註搜尋"/>
-                                            |
                                             <button name="%(setproduct_action)d" type="action" class="create_btn"
                                                     icon="" string="品名新增"/>
-
+                                            <button name="%(setlength_action)d" type="action" class="create_btn"
+                                                    icon="" string="長度新增"/>
+                                            <button name="%(setqcnote_action)d" type="action" class="create_btn"
+                                                    icon="" string="備註搜尋"/>
                                         </footer>
                                     </div>
                                     <group col="8">
-                                        <field name="clsf_code"
+                                        <field name="clsf_code" style="width: 110px; font-size: smaller;"
                                                options="{'no_open': True,'no_create': True}"/>
-                                        <field name="product_code_searchbox" string="" placeholder="品名代號"/>
-                                        <field name="product_code"
+                                        <field name="product_code_searchbox" string="" placeholder="品名代號"
+                                               style="width: 60px;font-size: smaller;"/>
+                                        <field name="product_code" style="width: 110px; font-size: smaller;"
                                                options="{'no_open': True}"/>
-                                        <field name="strength_level"
+                                        <field name="strength_level" style="width: 80px;font-size: smaller;"
                                                options="{'no_open': True,'no_create': True}"/>
-                                        <field name="txtur_code"
+                                        <field name="txtur_code" style="width: 110px; font-size: smaller;"
                                                options="{'no_open': True,'no_create': True}"/>
-                                        <field name="norm_code"
+                                        <field name="norm_code" style="width: 60px"
                                                options="{'no_open': True,'no_create': True}"/>
-                                        <field name="len_code" options="{'no_open': True}"/>
-                                        <field name="len_descript" placeholder="長度說明" tabindex="100"/>
-                                        <field name="fullorhalf"/>
+                                        <field name="len_code" style="width: 110px; font-size: smaller;"
+                                               options="{'no_open': True}"/>
+                                        <field name="len_descript" placeholder="長度說明" style="width: 80px;"/>
+                                        <field name="fullorhalf" style="width: 110px; font-size: smaller;"/>
 
-                                        <field name="proces_code" options="{'no_open': True}"/>
-                                        <field name="surface_code" options="{'no_open': True}"/>
+                                        <field name="proces_code" options="{'no_open': True}" style="width: 60px"/>
+                                        <field name="surface_code" style="width: 110px; font-size: smaller;"
+                                               options="{'no_open': True}"/>
                                         <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"
-                                               options="{'no_open': True}"/>　
+                                               options="{'no_open': True}" style="width: 80px;font-size: smaller;"/>　
                                     </group>
                                     <field name="action_id_main" invisible="1"/>
                                     <field name="elecplswitch" invisible="1"/>
-                                    <group col="12">
+                                    <group col="14">
                                         <field name="num1" style="width:50px" string="數量"/>　
                                         <field name="unit1" nolabel="1" style="width:50px"
                                                options="{'no_open': True,'no_create': True}"/>
@@ -117,35 +119,38 @@
                                         <field name="unit4" nolabel="1" style="width:50px"
                                                options="{'no_open': True,'no_create': True}"/>　
                                         <field name="storeplace" style="width: 50px;"/>
+                                        <field name="totalpack" readonly="1"/>
                                     </group>
                                     <group col="6">
                                         <field name="net"/>
                                         <field name="process1"
                                                options="{'no_open': True}"/>
-                                        <field name="totalpack"/>
                                         <field name="process2"
                                                options="{'no_open': True}"/>
                                         <field name="standard"/>
                                         <field name="wire_furn"/>
-                                        <field name="headsign" widget='image' height="90" width="90"/>
+                                        <field name="headsign" widget='image' height="70" width="60"/>
                                     </group>
                                     <div style="">
-                                        <group col="6">
+                                        <group col="8" style="background-color: floralwhite;border: 1px solid;">
                                             <field name="surfhrd"/>
                                             <field name="corehrd"/>
                                             <field name="piece" widget="radio"
                                                    options="{'horizontal': True}"/>
+                                            <field name="norcls"/>
+                                            <!---->
                                             <field name="tensihrd"/>
                                             <field name="carburlayer"/>
                                             <field name="pre_furn"/>
+                                            <field name="wxr_txtur"/>
+                                            <!---->
                                             <field name="torsion"/>
-                                            <field name="tempturing2"/>
+                                            <field name="tempturing2" string="回火溫度"/>
                                             <field name="order_furn"
                                                    options="{'no_open': True}"/>
-                                            <field name="norcls"/>
-                                            <field name="wxr_txtur"/>
                                             <field name="wxrhard"/>
-
+                                        </group>
+                                        <group col="6">
                                             <field name="notices1" string="注意事項"/>
                                             <field name="notices2" string=""/>
                                             <field name="notices3" string=""/>
@@ -160,54 +165,41 @@
                                 </page>
 
                                 <page string="作業條件">
-                                    <div style="height: 50px;"/>
-                                    <label string="　　流量" style="font-weight:bold"/>
-                                    <field name="flow" style="width: 80px"/>
-                                    <span style="display:inline-block; width: 20px;"/>
-                                    <label string="CP值" style="font-weight:bold"/>
-                                    <field name="cp" style="width: 90px"/>
-                                    <span style="display:inline-block; width: 20px;"/>
-                                    <label string="氨值" style="font-weight:bold"/>
-                                    <field name="nh31" style="width: 70px"/>
-                                    <span style="display:inline-block; width: 20px;"/>
-                                    <label string="支" style="font-weight:bold"/>
-                                    <field name="nh32" style="width: 70px"/>
-                                    <span style="display:inline-block; width: 20px;"/>
-                                    <label string="第" style="font-weight:bold"/>
-                                    <field name="nh33" style="width: 70px"/>
-                                    <span style="display:inline-block; width: 20px;"/>
-                                    <label string="支" style="font-weight:bold"/>
-                                    <field name="nh34" style="width: 70px"/>
-                                    <br/>
-                                    <label string="　加熱爐" style="font-weight:bold"/>
-                                    <field name="heat1" style="width: 80px"/>
-                                    <field name="heat2" style="width: 80px"/>
-                                    <field name="heat3" style="width: 80px"/>
-                                    <field name="heat4" style="width: 80px"/>
-                                    <field name="heat5" style="width: 80px"/>
-                                    <field name="heat6" style="width: 80px"/>
-                                    <field name="heat7" style="width: 80px"/>
-                                    <field name="heat8" style="width: 80px"/>
-                                    <br/>
-                                    <label string="　　油溫" style="font-weight:bold"/>
-                                    <field name="heattemp" style="width: 80px"/>
-                                    <span style="display:inline-block; width: 10px;"></span>
-                                    <label string="速度" style="font-weight:bold"/>
-                                    <field name="heatsped" style="width: 80px"/>
-                                    <br/>
-                                    <label string="　回火爐" style="font-weight:bold"/>
-                                    <field name="tempturing1" style="width: 80px"/>
-                                    <field name="tempturing2" style="width: 80px"/>
-                                    <field name="tempturing3" style="width: 80px"/>
-                                    <field name="tempturing4" style="width: 80px"/>
-                                    <field name="tempturing5" style="width: 80px"/>
-                                    <field name="tempturing6" style="width: 80px"/>
-                                    <span style="display:inline-block; width: 10px;"></span>
-                                    <label string="速度" style="font-weight:bold"/>
-                                    <field name="tempturisped" style="width: 80px"/>
+                                    <div style="width: 500px;">
+                                        <group col="9">
+
+                                            <field name="flow" style="width: 60px"/>
+                                            <field name="cp" style="width: 60px"/>
+                                            <field name="nh31" string="氨值" style="width: 60px"/>
+                                            <field name="nh32" string="支" nolabel="1" style="width: 60px"/>
+                                            <field name="nh33" string="第" nolabel="1" style="width: 60px"/>
+                                            <field name="nh34" string="支" nolabel="1" style="width: 60px"/>
+                                            <!---->
+                                            <label for="heat1" string="加熱爐"/>
+                                            <field name="heat1" nolabel="1" style="width: 60px"/>
+                                            <field name="heat2" nolabel="1" style="width: 60px"/>
+                                            <field name="heat3" nolabel="1" style="width: 60px"/>
+                                            <field name="heat4" nolabel="1" style="width: 60px"/>
+                                            <field name="heat5" nolabel="1" style="width: 60px"/>
+                                            <field name="heat6" nolabel="1" style="width: 60px"/>
+                                            <field name="heat7" nolabel="1" style="width: 60px"/>
+                                            <field name="heat8" nolabel="1" style="width: 60px"/>
+                                            <!---->
+                                            <field name="heattemp" string="油溫" style="width: 60px"/>
+                                            <field name="heatsped" string="油溫" style="width: 60px"/>
+                                            <newline/>
+                                            <!---->
+                                            <field name="tempturing1" string="回火爐" style="width: 60px"/>
+                                            <field name="tempturing2" nolabel="1" style="width: 60px"/>
+                                            <field name="tempturing3" nolabel="1" style="width: 60px"/>
+                                            <field name="tempturing4" nolabel="1" style="width: 60px"/>
+                                            <field name="tempturing5" nolabel="1" style="width: 60px"/>
+                                            <field name="tempturing6" nolabel="1" style="width: 60px"/>
+                                            <field name="tempturisped" nolabel="1" style="width: 60px"/>
+                                        </group>
+                                    </div>
                                 </page>
                             </notebook>
-
                         </sheet>
                     </div>
                 </form>

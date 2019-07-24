@@ -8,7 +8,6 @@
             <field name="arch" type="xml">
                 <tree string="setlength Tree">
                     <field name="name"/>
-                    <field name="code"/>
                     <field name="parameter1"/>
                 </tree>
             </field>
@@ -22,7 +21,6 @@
                     <sheet>
                         <group string="">
                             <field name="name"/>
-                            <field name="code"/>
                             <field name="parameter1"/>
                         </group>
                     </sheet>
