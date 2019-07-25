@@ -34,7 +34,7 @@
             <field name="model">yc.purchase</field>
             <field name="arch" type="xml">
                 <form string="Purchase form">
-                    <div style="background:white;">
+                    <div class='purchase1_for_js' style="background:white;">
                         <sheet>
                             <div style="overflow-x:auto;width:1000px;">
                                 <group>

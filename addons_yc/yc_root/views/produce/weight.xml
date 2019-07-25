@@ -184,7 +184,7 @@
             <field name="res_model">yc.weight</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[("company_id","=",[context.get('company_id')])]</field>
+            <field name="domain">[("company_id","in",[context.get('company_id')])]</field>
             <field name="context">{}</field>
         </record>
         <record model="ir.actions.act_window.view" id="weight_list_action_form">
@@ -230,6 +230,7 @@
                     <field name="carno"/>
                     <field name="day"/>
                     <field name="name"/>
+
                 </search>
             </field>
         </record>

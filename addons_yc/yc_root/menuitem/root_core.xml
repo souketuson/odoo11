@@ -100,7 +100,7 @@
                 <!-- quality category menu -->
                 <menuitem id="quality_menu" name="品質" parent="main_quality_menu" sequence="10"/>
                     <!-- quality sub menu -->
-                    <menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_action"/>
+                    <menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_wizard_action"/>
                     <menuitem id="fake50_menu" name="不合格品處理作業" parent="quality_menu" sequence="21" action="fake_action"/>
                     <menuitem id="mechanicalproperty_menu" name="產品機械性質主檔" parent="quality_menu" sequence="22" action="mechanicalproperty_action"/>
                 <!-- quality_maintain category menu -->

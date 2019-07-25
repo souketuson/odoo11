@@ -26,6 +26,7 @@
         'wizard/process_review.xml',
         'wizard/qcnote_wizard.xml',
         'wizard/quantity_review.xml',
+        'wizard/quality_wizard.xml',
         'wizard/order_display.xml',
         'wizard/order_display_wizard.xml',
         'wizard/purchase_wizard.xml',

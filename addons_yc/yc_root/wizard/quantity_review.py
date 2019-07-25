@@ -2,11 +2,13 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
+
 class YcPurchaseDisplay(models.TransientModel):
     _name = 'yc.purchase.quantity'
 
     searchname = fields.Char("工令查詢", help="搜尋工令欄位")
-
+    checked = fields.Many2one("yc.purchase", string="已檢驗")
+    notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     order_name = fields.Char("工令號碼")
     hidden_name = fields.Char("工令號碼")
     order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
@@ -75,8 +77,8 @@ class YcPurchaseDisplay(models.TransientModel):
             # S05N0200 產量登錄作業
             purchase = self.env["yc.purchase"]
             _name = self.searchname or self.weighted_order.name or self.notweighted_order.name
-            _company  = self.env.user.company_id.id
-            _id = purchase.search([('name', '=', _name), ('company_id', '=', _company)]).id
+            # _company  = self.env.user.company_id.id
+            _id = purchase.search([('name', '=', _name)]).id
             if _id:
                 self._display_record(_id)
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
@@ -115,56 +117,18 @@ class YcPurchaseDisplay(models.TransientModel):
 
     def _display_record(self, record_id):
         purchase = self.env["yc.purchase"]
-        self.order_furn = None
-        self.notweighted_order = None
-        self.weighted_order = None
-        self.searchname = None
         record = purchase.search([('id', '=', record_id)])
-        self.order_name = record.name
-        self.hidden_name = record.name
-        self.day = record.day
-        self.customer_id = record.customer_id
-        self.wire_furn = record.wire_furn
-        self.product_code = record.product_code
-        self.batch = record.batch
-        self.norm_code = record.norm_code
-        self.fullorhalf = record.fullorhalf
-        self.txtur_code = record.txtur_code
-        self.surface_code = record.surface_code
-        self.proces_code = record.proces_code
-        self.tensihrd = record.tensihrd
-        self.surfhrd = record.surfhrd
-        self.corehrd = record.corehrd
-        self.carburlayer = record.carburlayer
-        self.produceday1 = record.produceday1
-        self.ptime1 = record.ptime1
-        self.num1 = record.num1
-        self.unit1 = record.unit1
-        self.num2 = record.num2
-        self.unit2 = record.unit2
-        self.num3 = record.num3
-        self.unit3 = record.unit3
-        self.num4 = record.num4
-        self.unit4 = record.unit4
-        self.totalpack = record.totalpack
-        self.pweight = record.pweight
-        self.pre_furn = record.pre_furn
-        self.feedbucket = record.feedbucket
-        self.feedweight = record.feedweight
-        self.currnt_furno = record.currnt_furno
-        self.weighbuckets = record.weighbuckets
-        self.tweight = record.tweight
-        self.bdiff = record.bdiff
-        self.wdiff = record.wdiff
-        self.op1 = record.op1
-        self.op2 = record.op2
-        self.op3 = record.op3
-        self.notices1 = record.notices1
-        self.notices2 = record.notices2
-        self.notices3 = record.notices3
-        self.qcnote1 = record.qcnote1
-        self.qcnote2 = record.qcnote2
-        self.qcnote3 = record.qcnote3
-        self.prodnote1 = record.prodnote1
-        self.prodnote2 = record.prodnote2
-        self.prodnote3 = record.prodnote3
+        # 蒐集attr_name list
+        # getattr() 返回物件屬性值
+        # setattr() 設置物件屬性
+        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname']
+        for fn in self._proper_fields._map.keys():
+            if fn == 'id':
+                pass
+            elif fn in ['order_name', 'hidden_name']:
+                setattr(self, fn, record.name)
+            elif fn in functional_group:
+                setattr(self, fn, None)
+            else:
+                _value = getattr(record, fn)
+                setattr(self, fn, _value)

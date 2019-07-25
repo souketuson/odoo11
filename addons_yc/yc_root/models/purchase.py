@@ -31,6 +31,17 @@ class YcPurchase(models.Model):
     customer_phone = fields.Char("客戶電話")
     customer_contact = fields.Char("客戶聯絡人")
     combo_customer = fields.Char("客戶聯絡資訊", compute='_compute_process')
+    combine_abbrev = fields.Char('客戶', compute='_combine')
+
+    @api.depends('processing_attache')
+    def _combine(self):
+            for rec in self:
+                if rec.processing_attache:
+                    _c = rec.processing_attache.customer_id.abbrev
+                    _p = rec.processing_attache.processing_id.name
+                    rec.combine_abbrev = _p + '-' + _c
+
+
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
@@ -848,7 +859,7 @@ class YcPurchase(models.Model):
     @api.constrains("car_no")
     def _verify(self):
         if not self.car_no:
-            raise Warning("請選擇車次序號")
+            raise Warning("車次序號未填")
 
     # 8. 加熱爐和回火爐自動填值
     @api.onchange('heat2', 'tempturing2')

@@ -17,6 +17,7 @@
                     <field name="status"/>
                     <field name="weighstate"/>
                     <field name="checkstate"/>
+
                 </tree>
             </field>
         </record>
@@ -27,7 +28,7 @@
             <field name="arch" type="xml">
 
                 <form string="Purchase form">
-                    <div style="background: ghostwhite; width:1000px; overflow-x: auto;" class="purchase2_for_keypress">
+                    <div style="background: ghostwhite; width:1000px; overflow-x: auto;" class="purchase2_for_js">
                         <sheet>
                             <header>
                                 <button string="搜尋舊檔" type="action" class="search_btn"
