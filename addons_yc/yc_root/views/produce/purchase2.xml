@@ -130,7 +130,7 @@
                                         <field name="product_code_searchbox" string="" placeholder="品名代號"
                                                style="width: 60px;font-size: smaller;"/>
                                         <field name="product_code" style="width: 110px; font-size: smaller;"
-                                               options="{'no_open': True}"/>
+                                               options="{'no_open': True, 'no_create': True}"/>
                                         <field name="strength_level" style="width: 80px;font-size: smaller;"
                                                options="{'no_open': True,'no_create': True}"/>
                                         <field name="txtur_code" style="width: 110px; font-size: smaller;"
@@ -165,6 +165,7 @@
                                                options="{'no_open': True,'no_create': True}"/>　
                                         <field name="storeplace" style="width: 50px;"/>
                                         <field name="totalpack" readonly="1"/>
+
                                     </group>
                                     <group col="6">
                                         <field name="net"/>

@@ -194,7 +194,8 @@
                                         <field name="ckwhrd" widget="checkbox" nolabel="1"/>
                                         <label string="華司硬度" style="font-weight:bold"/>
                                         <field name="wxrhard" style="width:150px"/>
-                                        <field name="ckhf" style="width:150px" options="{'no_open': True,'no_create': True}"/>
+                                        <field name="ckhf" style="width:150px"
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <br/>
                                         <!-- -->
                                         <field name="cktorsion" widget="checkbox" nolabel="1"/>
@@ -375,93 +376,124 @@
                                         <label string="彎曲度30" style="font-weight:bold"/>
                                         <br/>
                                         <label string="品管備註" style="font-weight:bold"/>
-                                        <field name="qcnote" style="width:500px" options="{'no_open': True,'no_create': True}"/>
+                                        <field name="qcnote" style="width:500px"
+                                               options="{'no_open': True,'no_create': True}"/>
                                     </div>
                                 </group>
                             </page>
                             <page string="製造條件" col="10">
                                 <group>
                                     <group>
-                                        <div>
+                                        <div style="padding-left: 10px;width:820px;">
                                             <label string="製造日期" style="font-weight:bold"/>
-                                            <field name="produceday1" style="width:100px"/>
-                                            <field name="ptime1" style="width:100px"/>
+                                            <field name="produceday1" style="width: 120px"/>
+                                            <field name="ptime1" nolabel="1" style="width: 50px"/>
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="班別" style="font-weight:bold"/>
-                                            <field name="shift1" style="width:100px"/>
+                                            <field name="shift1" style="width: 80px;"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <span style="display:inline-block; width: 30px;"/>
                                             <label string="操作人員" style="font-weight:bold"/>
-                                            <field name="op1" style="width:100px"/>
+                                            <field name="op1" style="width: 60px"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <span style="display:inline-block; width: 30px;"/>
                                             <label string="桶數" style="font-weight:bold"/>
-                                            <field name="buckets1" style="width:100px"/>
+                                            <field name="buckets1" style="width: 30px"/>
+
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="組長" style="font-weight:bold"/>
-                                            <field name="teamlead1" style="width:100px"/>
+                                            <field name="teamlead1" style="width: 60px"
+                                                   options="{'no_open': True,'no_create': True}"/>
                                             <br/>
                                             <label string="製造日期" style="font-weight:bold"/>
-                                            <field name="produceday2" style="width:100px"/>
-                                            <field name="ptime2" style="width:100px"/>
+                                            <field name="produceday2" style="width: 120px"/>
+                                            <field name="ptime2" nolabel="1" style="width: 50px"/>
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="班別" style="font-weight:bold"/>
-                                            <field name="shift2" style="width:100px"/>
+                                            <field name="shift2" style="width: 80px;"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <span style="display:inline-block; width: 30px;"/>
                                             <label string="操作人員" style="font-weight:bold"/>
-                                            <field name="op2" style="width:100px"/>
+                                            <field name="op2" style="width: 60px"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <span style="display:inline-block; width: 30px;"/>
                                             <label string="桶數" style="font-weight:bold"/>
-                                            <field name="buckets2" style="width:100px"/>
+                                            <field name="buckets2" style="width: 30px"/>
+
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="組長" style="font-weight:bold"/>
-                                            <field name="teamlead2" style="width:100px"/>
+                                            <field name="teamlead2" style="width: 60px"
+                                                   options="{'no_open': True,'no_create': True}"/>
                                             <br/>
                                             <label string="製造日期" style="font-weight:bold"/>
-                                            <field name="produceday3" style="width:100px"/>
-                                            <field name="ptime3" style="width:100px"/>
+                                            <field name="produceday3" style="width: 120px"/>
+                                            <field name="ptime3" nolabel="1" style="width: 50px"/>
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="班別" style="font-weight:bold"/>
-                                            <field name="shift3" style="width:100px"/>
+                                            <field name="shift3" style="width: 80px;"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <span style="display:inline-block; width: 30px;"/>
                                             <label string="操作人員" style="font-weight:bold"/>
-                                            <field name="op3" style="width:100px"/>
+                                            <field name="op3" style="width: 60px"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <span style="display:inline-block; width: 30px;"/>
                                             <label string="桶數" style="font-weight:bold"/>
-                                            <field name="buckets3" style="width:100px"/>
+                                            <field name="buckets3" style="width: 30px"/>
+
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="組長" style="font-weight:bold"/>
-                                            <field name="teamlead3" style="width:100px"/>
+                                            <field name="teamlead3" style="width: 60px"
+                                                   options="{'no_open': True,'no_create': True}"/>
                                             <br/>
                                             <label string="完爐日期" style="font-weight:bold"/>
-                                            <field name="ffday" style="width:100px"/>
-                                            <field name="fftime" style="width:100px"/>
+                                            <field name="ffday" style="width: 120px"/>
+                                            <field name="fftime" style="width: 50px"/>
                                             <br/>
-                                            <label string="流量" style="font-weight:bold"/>
-                                            <field name="flow" style="width:100px"/>
+
+                                            <label string="　　流量" style="font-weight:bold"/>
+                                            <field name="flow" style="width: 80px"/>
                                             <label string="CP值" style="font-weight:bold"/>
-                                            <field name="cp" style="width:100px"/>
+                                            <field name="cp" style="width: 90px"/>
                                             <label string="氨值" style="font-weight:bold"/>
-                                            <field name="nh31" style="width:100px"/>
+                                            <field name="nh31" style="width: 70px"/>
                                             <label string="支" style="font-weight:bold"/>
-                                            <field name="nh32" style="width:100px"/>
+                                            <field name="nh32" style="width: 70px"/>
                                             <label string="第" style="font-weight:bold"/>
-                                            <field name="nh33" style="width:100px"/>
+                                            <field name="nh33" style="width: 70px"/>
                                             <label string="支" style="font-weight:bold"/>
-                                            <field name="nh34" style="width:100px"/>
+                                            <field name="nh34" style="width: 70px"/>
                                             <br/>
-                                            <label string="加熱爐" style="font-weight:bold"/>
-                                            <field name="heat1" style="width:100px"/>
-                                            <field name="heat2" style="width:100px"/>
-                                            <field name="heat3" style="width:100px"/>
-                                            <field name="heat4" style="width:100px"/>
-                                            <field name="heat5" style="width:100px"/>
-                                            <field name="heat6" style="width:100px"/>
-                                            <field name="heat7" style="width:100px"/>
-                                            <field name="heat8" style="width:100px"/>
+                                            <label string="　加熱爐" style="font-weight:bold"/>
+                                            <field name="heat1" style="width: 50px"/>
+                                            <field name="heat2" style="width: 50px"/>
+                                            <field name="heat3" style="width: 50px"/>
+                                            <field name="heat4" style="width: 50px"/>
+                                            <field name="heat5" style="width: 50px"/>
+                                            <field name="heat6" style="width: 50px"/>
+                                            <field name="heat7" style="width: 50px"/>
+                                            <field name="heat8" style="width: 50px"/>
                                             <br/>
-                                            <label string="油溫" style="font-weight:bold"/>
-                                            <field name="heattemp" style="width:100px"/>
+                                            <label string="　　油溫" style="font-weight:bold"/>
+                                            <field name="heattemp" style="width: 50px"/>
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="速度" style="font-weight:bold"/>
-                                            <field name="heatsped" style="width:100px"/>
+                                            <field name="heatsped" style="width: 50px"/>
+                                            <span style="display:inline-block; width: 260px;"/>
+                                            <label string="以前爐號" style="font-weight:bold"/>
+                                            <field name="pre_furn" style="width: 50px"/>
                                             <br/>
-                                            <label string="回火爐" style="font-weight:bold"/>
-                                            <field name="tempturing1" style="width:100px"/>
-                                            <field name="tempturing2" style="width:100px"/>
-                                            <field name="tempturing3" style="width:100px"/>
-                                            <field name="tempturing4" style="width:100px"/>
-                                            <field name="tempturing5" style="width:100px"/>
-                                            <field name="tempturing6" style="width:100px"/>
+                                            <label string="　回火爐" style="font-weight:bold"/>
+                                            <field name="tempturing1" style="width: 50px"/>
+                                            <field name="tempturing2" style="width: 50px"/>
+                                            <field name="tempturing3" style="width: 50px"/>
+                                            <field name="tempturing4" style="width: 50px"/>
+                                            <field name="tempturing5" style="width: 50px"/>
+                                            <field name="tempturing6" style="width: 50px"/>
+                                            <span style="display:inline-block; width: 10px;"/>
                                             <label string="速度" style="font-weight:bold"/>
-                                            <field name="tempturisped" style="width:100px"/>
+                                            <field name="tempturisped" style="width: 50px"/>
                                             <br/>
-                                            <label string="品管備註"/>
+                                            <label string="品管備註" style="font-weight:bold"/>
                                             <field name="qcnote1" style="width:250px"/>
                                             <field name="qcnote2" style="width:250px"/>
                                             <field name="qcnote3" style="width:250px"/>
@@ -470,20 +502,95 @@
                                 </group>
                             </page>
                             <page string="拉力資料">
-                                <group>
 
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                    <!--<field name=""/>-->
-                                </group>
+                                <div>
+
+                                    <label string="　斷面積" style="font-weight:bold"/>
+                                    <field name="ssk" style="width:100px"/>
+                                    <span style="display:inline-block; width: 100px;"/>
+                                    <field name="file" />
+                                    <br/>
+                                    <label string="最大負荷" style="font-weight:bold"/>
+                                    <field name="mxload1" style="width:100px"/>
+                                    <field name="mxload2" style="width:100px"/>
+                                    <field name="mxload3" style="width:100px"/>
+                                    <field name="mxload4" style="width:100px"/>
+                                    <field name="mxload5" style="width:100px"/>
+                                    <field name="mxload6" style="width:100px"/>
+                                    <field name="mxload7" style="width:100px"/>
+                                    <field name="mxload8" style="width:100px"/>
+                                    <br/>
+                                    <label string="抗拉強度" style="font-weight:bold"/>
+                                    <field name="resist1" style="width:100px"/>
+                                    <field name="resist2" style="width:100px"/>
+                                    <field name="resist3" style="width:100px"/>
+                                    <field name="resist4" style="width:100px"/>
+                                    <field name="resist5" style="width:100px"/>
+                                    <field name="resist6" style="width:100px"/>
+                                    <field name="resist7" style="width:100px"/>
+                                    <field name="resist8" style="width:100px"/>
+                                    <br/>
+                                    <label string="降伏點kg" style="font-weight:bold"/>
+                                    <field name="yield1" style="width:100px"/>
+                                    <field name="yield2" style="width:100px"/>
+                                    <field name="yield3" style="width:100px"/>
+                                    <field name="yield4" style="width:100px"/>
+                                    <field name="yield5" style="width:100px"/>
+                                    <field name="yield6" style="width:100px"/>
+                                    <field name="yield7" style="width:100px"/>
+                                    <field name="yield8" style="width:100px"/>
+                                    <br/>
+                                    <label string="降伏強度" style="font-weight:bold"/>
+                                    <field name="ystrength1" style="width:100px"/>
+                                    <field name="ystrength2" style="width:100px"/>
+                                    <field name="ystrength3" style="width:100px"/>
+                                    <field name="ystrength4" style="width:100px"/>
+                                    <field name="ystrength5" style="width:100px"/>
+                                    <field name="ystrength6" style="width:100px"/>
+                                    <field name="ystrength7" style="width:100px"/>
+                                    <field name="ystrength8" style="width:100px"/>
+                                    <br/>
+                                    <label string="　伸長率" style="font-weight:bold"/>
+                                    <field name="elong1" style="width:100px"/>
+                                    <field name="elong2" style="width:100px"/>
+                                    <field name="elong3" style="width:100px"/>
+                                    <field name="elong4" style="width:100px"/>
+                                    <field name="elong5" style="width:100px"/>
+                                    <field name="elong6" style="width:100px"/>
+                                    <field name="elong7" style="width:100px"/>
+                                    <field name="elong8" style="width:100px"/>
+                                    <br/>
+                                    <label string="　脫碳層" style="font-weight:bold"/>
+                                    <field name="decarb1" style="width:100px"/>
+                                    <field name="decarb2" style="width:100px"/>
+                                    <field name="decarb3" style="width:100px"/>
+                                    <field name="decarb4" style="width:100px"/>
+                                    <field name="decarb5" style="width:100px"/>
+                                    <field name="decarb6" style="width:100px"/>
+                                    <field name="decarb7" style="width:100px"/>
+                                    <field name="decarb8" style="width:100px"/>
+                                    <br/>
+                                    <label string="華司硬度" style="font-weight:bold"/>
+                                    <field name="wxrhrd1" style="width:100px"/>
+                                    <field name="wxrhrd2" style="width:100px"/>
+                                    <field name="wxrhrd3" style="width:100px"/>
+                                    <field name="wxrhrd4" style="width:100px"/>
+                                    <field name="wxrhrd5" style="width:100px"/>
+                                    <field name="wxrhrd6" style="width:100px"/>
+                                    <field name="wxrhrd7" style="width:100px"/>
+                                    <field name="wxrhrd8" style="width:100px"/>
+                                    <br/>
+                                    <label string="　　　　" style="font-weight:bold"/>
+                                    <field name="whrd2v1" style="width:100px"/>
+                                    <field name="whrd2v2" style="width:100px"/>
+                                    <field name="whrd2v3" style="width:100px"/>
+                                    <field name="whrd2v4" style="width:100px"/>
+                                    <field name="whrd2v5" style="width:100px"/>
+                                    <field name="whrd2v6" style="width:100px"/>
+                                    <field name="whrd2v7" style="width:100px"/>
+                                    <field name="whrd2v8" style="width:100px"/>
+                                </div>
+
                             </page>
                             <page string="金相報告書">
                                 <group>

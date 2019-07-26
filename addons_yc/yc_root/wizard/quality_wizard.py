@@ -345,6 +345,7 @@ class YcQualityWizard(models.TransientModel):
     mgchecker = fields.Many2one("yc.hr", string="金相檢驗人員")
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
+    file = fields.Binary("檔案")
 
     # since <img> attr scr can direct get img from directory, this method cloud be abandoned
     # def _default_image(self):

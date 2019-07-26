@@ -10,9 +10,9 @@
                 <form string="QuantityDataEntry form">
                     <sheet>
                         <header>
-                            <button name="yc_root.quantity_review_action" string="查看下一筆" type="action"
-                                    class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"
-                                    style="width: 110px; margin: 10px 3%;"/>
+                            <button name="yc_root.quantity_review_action" string="開新查詢" type="action"
+                                    class="btn btn-sm btn-primary glyphicon glyphicon-file widget_btn"
+                                    style="position: initial;"/>
                         </header>
                         <group>
                             <div style="background-color: #e6e6fa;width:100%">

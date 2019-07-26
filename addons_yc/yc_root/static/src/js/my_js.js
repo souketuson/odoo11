@@ -60,6 +60,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             var comfirm = $("button[name='itself_update']");
             if (btn.prop('checked')==true){
                 div.css('display','unset');
+                $('div .hidden_on_bush').addClass('hide', 0);
                 comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
                 wizard[0].innerText = "關閉舊檔搜尋";
                 wizard.css("background-color","#568e8f");
@@ -72,6 +73,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             }
             else if (btn.prop('checked')==false){
                 div.css('display','none');
+                $('div .hidden_on_bush').removeClass('hide', 0);
                 comfirm.css('display','none');
                 wizard[0].innerText = "開啟舊檔搜尋";
                 wizard.css("background-color","#5f5e97");
@@ -115,7 +117,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     div.css('display','unset');
                     wizard.removeClass("glyphicon glyphicon-random");
                     wizard.addClass('glyphicon glyphicon-remove');
-                    wizard.css("background-color","#568e8f");
+                    wizard.css("background-color","#80b1b3");
                     wizard.hover(function(e) {
                           $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
                     });
@@ -126,7 +128,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     wizard.removeClass("glyphicon glyphicon-remove");
                     wizard.addClass('glyphicon glyphicon-random');
 
-                    wizard.css("background-color","#5f5e97");
+                    wizard.css("background-color","#7c7bad");
                     wizard.hover(function(e) {
                           $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
                     });
@@ -134,9 +136,9 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             }
         },
         keypress_focus: function(event){
-            if ($('div .purchase2_for_js').length ==1 && (event.which== 13) ){
+            var da = document.activeElement;
+            if ($('div .purchase2_for_js').length ==1 && (event.which== 13) && da.tagName == "INPUT"){
                 // light red: #ffcccc, light yellow: #ffffcc, light purple: #ccccff,
-                // cce6ff,d0e6fb
                 var _time = $('input[name="time"]');
                 var _day =  $('div[name="day"] input');
                 var carn = $('div[name="car_no"] input');
@@ -186,7 +188,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 var norc = $('input[name="norcls"]');
                 var wxr = $('input[name="wxr_txtur"]');
                 var wxh = $('input[name="wxrhard"]');
-                var isFocus = (document.activeElement.parentNode.parentNode.getAttribute('name')) ? document.activeElement.parentNode.parentNode.getAttribute('name') : document.activeElement.getAttribute('name');
+                var isFocus = (da.parentNode.parentNode.getAttribute('name')) ? da.parentNode.parentNode.getAttribute('name') : da.getAttribute('name');
                 var color_set = function(field){
                     field.addClass('pulse', 0).removeClass('pulse', 2000);
                 };
@@ -205,6 +207,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     break;
                 case 'car_no':
                     prat.focus();
+                    prat.click();
                     color_set(prat);
                     break;
                 case 'processing_attache':
@@ -217,6 +220,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     break;
                 case 'customer_no':
                     cls.focus();
+                    cls.click();
                     color_set(cls);
                     break;
                 case 'clsf_code':
@@ -225,18 +229,22 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     break;
                 case 'product_code_searchbox':
                     sl.focus();
+                    sl.click();
                     color_set(sl);
                     break;
                 case 'strength_level':
                     txt.focus();
+                    txt.click();
                     color_set(txt);
                     break;
                 case 'txtur_code':
                     nor.focus();
+                    nor.click();
                     color_set(nor);
                     break;
                 case 'norm_code':
                     len.focus();
+                    len.click();
                     color_set(len);
                     break;
                 case 'len_code':
@@ -245,18 +253,21 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     break;
                 case 'len_descript':
                     forh.focus();
+                    forh.click();
                     color_set(forh);
                     break;
                 case 'fullorhalf':
+                    pro.click();
                     pro.focus();
-
                     break;
                 case 'proces_code':
                     sur.focus();
+                    sur.click();
                     color_set(sur);
                     break;
                 case 'surface_code':
                     sur_next.focus();
+                    sur_next.click();
                     color_set(sur_next);
                     break;
                 case 'elecpl_code':
@@ -265,6 +276,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     break;
                 case 'num1':
                     unit1.focus();
+                    unit1.click();
                     color_set(unit1);
                     break;
                 case 'unit1':
@@ -277,10 +289,12 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     break;
                 case 'net':
                     pro1.focus();
+                    pro1.click();
                     color_set(pro1);
                     break;
                 case 'process1':
                     pro2.focus();
+                    pro2.click();
                     color_set(pro2);
                     break;
                 case 'process2':

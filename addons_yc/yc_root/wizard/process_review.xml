@@ -8,9 +8,15 @@
                 <form string="ProcessReview form">
                     <sheet>
                         <header>
-                            <button name="yc_root.process_review_action" string="查看下一筆" type="action"
-                                    class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"
-                                    style="width: 110px; margin: 10px 3%;"/>
+                            <button name="yc_root.process_review_action" string="開新查詢" type="action"
+                                    class="btn btn-sm btn-primary glyphicon glyphicon-file oe_highlight"
+                                    style="position: initial;"/>
+                            <button string="資料查詢" type="object" class="glyphicon glyphicon-search oe_highlight"
+                                    name="process_review_search_name" style="position: initial;"/>
+                            <button string="資料儲存" type="object" class="glyphicon glyphicon-floppy-disk oe_highlight"
+                                    name="save_entry_data" style="position: initial;"/>
+                            <button string="刪除製程資料" type="object" name="clear_produce_data"
+                                            class="glyphicon glyphicon-trash" style="background-color: bisque;position: initial;" confirm="確定刪除製程相關資料?"/>
                         </header>
                         <div class="process_for_js" style="overflow-x:auto;width:1000px;">
                             <group>
@@ -34,8 +40,7 @@
                                     <field name="searchname" style="width: 100px;height: 30px;"/>
                                     <!--<field name="saveorread"/>-->
                                     <span style="display:inline-block; width: 20px;"></span>
-                                    <button string="資料查詢" type="object" class="oe_highlight"
-                                            name="process_review_search_name"/>
+
                                     <br/>
                                     <label string="頭部記號" style="position: absolute;left: 750px;"/>
                                     <br/>
@@ -123,8 +128,7 @@
                                     <label string="儲存位置" style="font-weight:bold"/>
                                     <field name="storeplace" style="width: 100px"/>
                                     <span style="display:inline-block; width: 220px;"></span>
-                                    <button string="刪除製程資料" type="object" name="clear_produce_data"
-                                            style="background-color: bisque;"/>
+
                                 </div>
                             </group>
                             <notebook>
@@ -274,8 +278,7 @@
                                 <page string="入爐前整桶貨重">
                                     <group>
                                         <div>
-                                            <button string="資料儲存" type="object" class="oe_highlight"
-                                                    name="save_entry_data"/>
+
                                             <span style="display:inline-block; width: 30px;"></span>
                                             <button name="plus_one_line" type="object" class="oe_highlight"
                                                     icon="fa-plus"/>

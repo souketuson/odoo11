@@ -19,6 +19,8 @@
                 <form string="Book">
                     <group>
                         <field name="name"/>
+                        <field name="file"/>
+                        <field name="data_get"/>
                     </group>
                 </form>
             </field>

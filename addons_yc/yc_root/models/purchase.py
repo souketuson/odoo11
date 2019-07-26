@@ -454,6 +454,7 @@ class YcPurchase(models.Model):
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     product_code_searchbox = fields.Char("搜尋品名或編號")
+    remainder = fields.Char()
 
     @api.onchange('condition')
     def search_purchase(self):
@@ -619,10 +620,30 @@ class YcPurchase(models.Model):
                 return {'warning': {
                     'title': _('提醒'), 'message': _("沒有這個代碼")}}
 
+    @api.onchange('ck1', 'ck2', 'ck3', 'ck4', 'ck5', 'ck6', 'ck7', 'ck8')
+    def _check_out(self):
+        if not self.ck1:
+            self.product_code = None
+        if not self.ck2:
+            self.norm_code = None
+        if not self.ck3:
+            self.len_code = None
+        if not self.ck4:
+            self.clsf_code = None
+        if not self.ck5:
+            self.proces_code = None
+        if not self.ck6:
+            self.txtur_code = None
+        if not self.ck7:
+            self.strength_level = None
+        if not self.ck8:
+            self.wire_furn = None
+        self._toggle_wizard()
+
     # 進貨單作業:itself m2m更新、自動帶入參數
     # 爐內進貨  :itself m2m更新
     @api.onchange('product_code', 'clsf_code', 'norm_code', 'proces_code', 'len_code', 'txtur_code',
-                  'strength_level', 'wire_furn')
+                  'strength_level', 'wire_furn', 'wizard_btn')
     def _toggle_wizard(self):
         _bool = bool(self.product_code or self.clsf_code or self.norm_code or self.proces_code or
                      self.len_code or self.txtur_code or self.strength_level or self.wire_furn)
@@ -632,7 +653,7 @@ class YcPurchase(models.Model):
             # itself更新
             purchase = self.env['yc.purchase']
             # 先更新itself
-            if self._context['params'].get('action') == action_id or self.action_id_main:
+            if self._context['params'].get('action') == action_id or self.action_id_main or 187:
                 domain = ()
                 if self.product_code and self.ck1:
                     domain += ('product_code', '=', self.product_code.id),
@@ -655,8 +676,11 @@ class YcPurchase(models.Model):
                     domain += ('name', '!=', self.name),
                     # 要限制最多六筆 並且時間排序
                     records = purchase.search([d for d in domain], limit=6, order='create_date desc')
-                    # 搜尋並列表
-                    self.itself_ids = [(6, 0, records.ids)]
+                    if len (records) > 0:
+                        self.itself_ids = [(6, 0, records.ids)]
+                    else:
+                        self.itself_ids = None
+                        self.remainder = "找不到資料"
             # 再看進貨單
             if self._context['params'].get('actions') == self.action_id_main:
                 domain = ()
@@ -693,6 +717,9 @@ class YcPurchase(models.Model):
                     self.tempturing5 = r.tempturing5
                     self.tempturing6 = r.tempturing6
                     self.tempturisped = r.tempturisped
+        else:
+            self.itself_ids = None
+            self.remainder = "請勾選並依查詢下拉選擇品項"
 
     # 要拉出itself checked要先寫進資料庫才能判定哪一筆要拉出
     # 用button先進create 再跑這個程式
@@ -701,7 +728,12 @@ class YcPurchase(models.Model):
         checked = purchase.search([('wizard_check', '=', True)])
         for rec in checked:
             rec.write({'wizard_check': False})
-        if len(checked) == 1:
+        if len(checked) > 1:
+            for to_uncheck in checked:
+                to_uncheck.wizard_check = False
+            raise Warning("只能選一筆資料帶出")
+
+        elif len(checked) == 1:
             action = self.env['ir.actions.act_window']
             action_id = action.search([('name', '=', '分爐排程')], limit=1).id
             # 分爐排程 只拉參數? 還有拉什麼?
@@ -981,7 +1013,7 @@ class YcPurchase(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': self.env.ref('yc_root.yc_purchase_wizard').id,
-            'target': 'current',
+            'target': 'new',
         }
 
     ###########################
