@@ -13,7 +13,7 @@
                     <field name="car_no"/>
                     <field name="customer_id" string="客戶簡稱"/>
                     <field name="customer_no"/>
-                    <field name="factory_id" readonly="1"/>
+                    <field name="company_id" readonly="1"/>
                     <field name="status"/>
                     <field name="weighstate"/>
                     <field name="checkstate"/>
@@ -63,7 +63,7 @@
                                 <field name="batch"/>
                                 <!---->
                                 <field name="customer_no"/>
-                                <field name="person" readonly="1"/>
+                                <field name="list_man" readonly="1" options="{'no_open': True,'no_create': True}"/>
                                 <field name="pre_order"/>
                                 <label for="return_btn" string=""
                                        class="btn btn-primary btn-sm glyphicon glyphicon-random widget_btn mummy_return">

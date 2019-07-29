@@ -5,9 +5,9 @@
 
     'summary': """ 轉檔 """,
 
-    'description': """ 重盈陽成舊資料轉檔 """,
+    'description': """ 重盈陽成舊資料轉檔 (last_update: 2019/07/29) v4""",
 
-    'author': '',
+    'author': 'ArJhe',
     'website': '',
     'category': 'Uncategorized',
     'version': '1.0',

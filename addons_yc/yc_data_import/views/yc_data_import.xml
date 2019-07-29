@@ -39,14 +39,17 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="topc_import_menu" name="試試看"
-                  parent="base.menu_administration" sequence="1" groups="base.group_system"/>
-        <menuitem id="topc_import_db"
-                  parent="topc_import_menu" sequence="1" groups="base.group_system"
-                  action="yc_data_import_action"/>
 
-        <menuitem name="資料導入" id="Import_root" web_icon=""/>
-        <menuitem id="import_db"
-                  parent="Import_root" sequence="1" action="yc_data_import_action"/>
+        <!--<menuitem id="topc_import_menu" name="試試看"-->
+                  <!--parent="base.menu_administration" sequence="1" groups="base.group_system"/>-->
+        <!--<menuitem id="topc_import_db"-->
+                  <!--parent="topc_import_menu" sequence="1" groups="base.group_system"-->
+                  <!--action="yc_data_import_action"/>-->
+
+        <!--<menuitem name="資料導入" id="Import_root" web_icon=""/>-->
+        <menuitem
+                  parent="base.menu_administration" id="import_db" sequence="2" action="yc_data_import_action" groups="base.group_system"/>
+
+
     </data>
 </odoo>

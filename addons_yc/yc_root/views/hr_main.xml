@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="users Tree">
                     <field name="login"/>
-                    <field name="factory_id"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -21,7 +21,7 @@
                 <form string="Book">
                     <group>
                         <field name="login"/>
-                        <field name="factory_id"/>
+                        <field name="company_id"/>
 
                         <field name="name"/>
                         <field name="employee_type"/>
@@ -63,7 +63,7 @@
                         <field name="post_ac"/>
                         <field name="ac_name"/>
                         <field name="seniority"/>
-                        <field name="user_class"/>
+                        <field name="user_class" invisible="1"/>
                     </group>
                 </form>
             </field>
@@ -103,5 +103,14 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="users_tree"/>
         </record>
+        <!--<record id="user_rule" model="ir.rule">-->
+            <!--<field name="name">User can see its own records</field>-->
+            <!--<field name="model_id" ref="model_res_users"/>-->
+            <!--<field name="domain_force">[('user_id','=',user.id)]</field>-->
+            <!--<field name='perm_create' eval='True'/>-->
+            <!--<field name='perm_read' eval='True'/>-->
+            <!--<field name='perm_unlink' eval='True'/>-->
+            <!--<field name='perm_write' eval='True'/>-->
+        <!--</record>-->
     </data>
 </odoo>

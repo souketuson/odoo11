@@ -20,9 +20,7 @@ class YcFake(models.Model):
 
     @api.onchange('data_get')
     def _get_data(self):
-        fp = tempfile.NamedTemporaryFile(suffix=".xlsx")
-        fp.write(binascii.a2b_base64(self.file))
-        fp.seek(0)
-        workbook = open_workbook(fp.name)
-        sheet = workbook.sheet_by_index(0)
+        data = open_workbook("C:/Users/User/Desktop/新增資料夾/1.xlsx")
+        table = data.sheets()[0]
+
 

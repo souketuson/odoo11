@@ -277,6 +277,7 @@
                 </sheet>
             </form>
             <footer>
+                <!--attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"-->
                 <button name="wizard_comfirm" string="修改完畢" type="object" class="oe_highlight"/>
                 <button string="取消" special="cancel"/>
             </footer>

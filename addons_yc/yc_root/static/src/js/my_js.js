@@ -60,6 +60,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             var comfirm = $("button[name='itself_update']");
             if (btn.prop('checked')==true){
                 div.css('display','unset');
+                $('button[name="wizard_comfirm"]').attr("disabled", true);
                 $('div .hidden_on_bush').addClass('hide', 0);
                 comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
                 wizard[0].innerText = "關閉舊檔搜尋";
@@ -73,6 +74,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             }
             else if (btn.prop('checked')==false){
                 div.css('display','none');
+                $('button[name="wizard_comfirm"]').attr("disabled", false);
                 $('div .hidden_on_bush').removeClass('hide', 0);
                 comfirm.css('display','none');
                 wizard[0].innerText = "開啟舊檔搜尋";

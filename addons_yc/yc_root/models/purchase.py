@@ -729,10 +729,7 @@ class YcPurchase(models.Model):
         for rec in checked:
             rec.write({'wizard_check': False})
         if len(checked) > 1:
-            for to_uncheck in checked:
-                to_uncheck.wizard_check = False
-            raise Warning("只能選一筆資料帶出")
-
+            raise ValidationError(_("只能選一筆資料帶出"))
         elif len(checked) == 1:
             action = self.env['ir.actions.act_window']
             action_id = action.search([('name', '=', '分爐排程')], limit=1).id
@@ -1000,6 +997,12 @@ class YcPurchase(models.Model):
     # 5.
     def wizard_comfirm(self):
         # 修改完更新爐內進貨頁面資料
+        purchase = self.env['yc.purchase']
+        checked = purchase.search([('wizard_check', '=', True)])
+        for to_uncheck in checked:
+            to_uncheck.wizard_check = False
+        if len(checked) > 1:
+            raise ValidationError(_("只能選一筆資料帶出"))
         return
 
     ###########################

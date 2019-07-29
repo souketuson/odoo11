@@ -43,7 +43,7 @@ class YcDataImport(models.TransientModel):
     def employee(self):
         feet = 0
         traveler = self.env['res.users']
-        goal = int(self.how_many_do_you_wants)
+        goal = int(self.how_many_do_you_want)
         try:
             self._connection_start()
             cursor = self.cnxn.cursor()
@@ -75,6 +75,8 @@ class YcDataImport(models.TransientModel):
                     "date_leave": row.離職日期, "note": row.備註,
                     "last_log": row.最後登入時間, "log_state": row.登入否,
                     "user_class": '1',
+                    "company_ids":[(6, 0, [3,4])],
+                    "company_id": 3,
                 })
             print(' \033[42m \033[0m 資料建立完成，總完成筆數:%s' % feet)
             self._disconnction()
