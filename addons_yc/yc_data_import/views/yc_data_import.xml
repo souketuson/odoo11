@@ -25,6 +25,8 @@
                                         confirm="確定匯入?" class="oe_highlight" style="display:none;"/>
                                 | <button string="過磅單" type="object" name="import_yc_weight"
                                         confirm="確定匯入?" class="oe_highlight"/>
+                                | <button string="加工廠主檔更新" type="object" name="processing_update"
+                                        confirm="確定匯入?" class="oe_highlight"/>
                             </div>
                         </group>
                     </sheet>

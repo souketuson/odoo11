@@ -147,7 +147,7 @@
                     <menuitem id="fake72_menu" name="客戶每月出貨統計" parent="finance_maintain_menu" sequence="33" action="fake_action"/>
             <!-- bar menu -->
             <menuitem id="main_statistics_menu" name="產量統計" sequence="7" parent="main_root_menu"/>
-                    <menuitem id="fake73_menu" name="司機載貨明細" parent="main_statistics_menu" sequence="20" action="fake_action"/>
+                    <menuitem id="fake73_menu" name="司機載貨明細" parent="main_statistics_menu" sequence="20" action="yc_cargo_action"/>
                     <menuitem id="fake74_menu" name="操作員生產量明細" parent="main_statistics_menu" sequence="21" action="fake_action"/>
                     <menuitem id="fake75_menu" name="各爐生產量明細" parent="main_statistics_menu" sequence="22" action="fake_action"/>
                     <menuitem id="fake76_menu" name="各爐產量統計" parent="main_statistics_menu" sequence="23" action="fake_action"/>

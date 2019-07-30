@@ -29,7 +29,7 @@ class YcWeight(models.Model):
     total = fields.Integer("總重")
     curbweight = fields.Integer("空車重")
     emptybucket = fields.Integer("空桶重")
-    net = fields.Integer("淨重")
+    net = fields.Integer("淨重", compute='_net')
     note = fields.Char("備註")
     refine = fields.Integer("調質重量")
     carbur = fields.Integer("滲碳重量")
@@ -162,6 +162,10 @@ class YcWeight(models.Model):
     @api.onchange("total", "curbweight", "emptybucket")
     def _NetWeight(self):
         self.net = self.total - self.emptybucket - self.curbweight
+    @api.depends("total", "curbweight", "emptybucket")
+    def _net(self):
+        for rec in self:
+            rec.net = rec.total - rec.emptybucket - rec.curbweight
 
     # 覆寫新增資料:create()
     # onchange 裝飾中的函式資料是在虛擬record中，在odoo原有create方法中，參數vals抓不到這些onchange所裝飾的函式資料，所以無法存進資料庫

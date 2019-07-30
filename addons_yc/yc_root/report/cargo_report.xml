@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report id="action_yc_cargo_report"
+            string="司機載貨明細"
+            model="yc.cargo"
+            report_type="qweb-pdf"
+            name="yc_root.yc_cargo_report_view"/>
+    <!--name <module_name>.<identifier_name>-->
+
+    <template id="yc_cargo_report_view">
+        <style>
+              .text-center{ text-align: center; }
+            </style>
+        <div class="header" style="border-bottom: 2px solid black">
+            <h3 class="text-center">司機載貨明細</h3>
+            <h4 class="text-center">
+                <span style="left:5px; position: absolute;">
+                    <strong>司機姓名</strong>:
+                    <t t-esc="driver_name"/>
+                </span>
+                <strong>統計日期</strong>:
+                <t t-esc="date_start"/>
+                <strong> - </strong>
+                <t t-esc="date_end"/>
+            </h4>
+        </div>
+        <div class="article">
+            <table class="table table-condensed table-bordered" style="width: 100%">
+                <thead>
+                    <th class="text-center" style="width: 10%">日期</th>
+                    <th class="text-center" style="width: 10%">時間</th>
+                    <th class="text-center" style="width: 10%">地磅序號</th>
+                    <th class="text-center" style="width: 15%">重量</th>
+                    <th class="text-center" style="width: 10%">單價</th>
+                    <th class="text-center" style="width: 10%">金額</th>
+                    <th class="text-center" style="width: 20%">備註</th>
+                    <th class="text-center" style="width: 15%">類別</th>
+                </thead>
+                <tbody>
+                    <t t-foreach="docs" t-as="doc">
+                        <tr>
+                            <td class="text-center" style="width: 10%">
+                                <span t-esc="doc['day']"/>
+                            </td>
+                            <td class="text-center" style="width: 10%">
+                                <span t-esc="doc['time']"/>
+                            </td>
+                            <td class="text-center" style="width: 10%">
+                                <span t-esc="doc['weighbridge']"/>
+                            </td>
+                            <td class="text-center" style="width: 15%">
+                                <span t-esc="doc['net']"/>
+                            </td>
+                            <td class="text-center" style="width: 10%">
+                                <span t-esc="doc['per_price']"/>
+                            </td>
+                            <td class="text-center" style="width: 10%">
+                                <span t-esc="doc['tt_price']"/>
+                            </td>
+                            <td class="text-center" style="width: 20%">
+                                <span t-esc="doc['note']"/>
+                            </td>
+                            <td class="text-center" style="width: 15%">
+                                <span t-esc="doc['type']"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+        <div class="footer">
+            <div class="row text-center" style="border-top: 1px solid black;">
+                <div class="col-xs-3 col-xs-offset-9 text-right">
+                    <ul class="list-inline" style="margin-top:10px;">
+                        <li>Page:</li>
+                        <li>
+                            <span class="page"/>
+                        </li>
+                        <li>/</li>
+                        <li>
+                            <span class="topage"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+</odoo>

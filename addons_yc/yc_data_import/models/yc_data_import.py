@@ -41,6 +41,7 @@ class YcDataImport(models.TransientModel):
     # 匯入員工資料
     # ps. 如果在odoo裡面欄位性質是x2x 只能填寫ID進去資料庫
     def employee(self):
+        init = time.time()
         feet = 0
         traveler = self.env['res.users']
         goal = int(self.how_many_do_you_want)
@@ -50,7 +51,6 @@ class YcDataImport(models.TransientModel):
             cursor.execute('SELECT * FROM 員工主檔')
             sql = "DELETE FROM res_users WHERE user_class='1'"
             self._cr.execute(sql)
-            init = time.time()
             print(" \033[42m \033[0m 開始建立資料")
             while 1:
                 row = cursor.fetchone()
@@ -234,8 +234,138 @@ class YcDataImport(models.TransientModel):
         print(' \033[42m \033[0m 用時%s' % delta)
         return True
 
+    def processing(self):
+        # 如果已經有資料表引用並必填就無法刪除了
+        init = time.time()
+        feet = 0
+        traveler = self.env['yc.processing']
+        goal = int(self.how_many_do_you_want)
+        try:
+            self._connection_start()
+            cursor = self.cnxn.cursor()
+            cursor.execute('SELECT * FROM 加工廠主檔')
+            sql = "DELETE FROM yc_processing"
+            self._cr.execute(sql)
+            print(" \033[42m \033[0m 開始建立資料")
+            while 1:
+                row = cursor.fetchone()
+                if goal == feet or (goal < 0 and goal != -1) or not row:
+                    break
+                feet += 1
+                print(' \033[43m \033[0m [' + str(feet) + '] 建立:' + row.簡稱)
 
+                traveler.create({
+                    'code': row.加工廠代號,
+                    'name ': row.公司名稱,
+                    'type': row.加工廠類型,
+                    #'cls_code':row.分類代碼,
+                    'locate_code': row.區域代碼,
+                    'taxid': row.統一編號,
+                    'abbrev': row.簡稱,
+                    'contact': row.負責人,
+                    'title': row.公司抬頭,
+                    'post_code': row.營業郵遞區號,
+                    'address': row.營業地址,
+                    # 'bpost_code': row.帳單郵遞區號,
+                    'baddress': row.帳單地址,
+                    # 'fpost_code': row.工廠郵遞區號,
+                    'faddress': row.工廠地址,
+                    'phone1': row.電話1,
+                    'phone2': row.電話2,
+                    'phone3': row.電話3,
+                    'fax1': row.傳真1,
+                    'fax2': row.傳真2,
+                    # 'fphone1': row.工廠電話1,
+                    # 'website': row.網址,
+                    # 'email': row.E_Mail,
+                    # 'item': row.產品項目,
+                    # 'note1': row.備註1,
+                    # 'note2': row.備註2,
+                    # 'note3': row.備註3,
+                    # 'note4': row.備註4,
+                    # 'note5': row.備註5,
+                    # 'note6': row.備註6,
+                    # 'note7': row.備註7,
+                    # 'note8': row.備註8,
+                    # 'note9': row.備註9,
+                    # 'note10': row.備註10,
+                })
+            print(' \033[42m \033[0m 資料建立完成，總完成筆數:%s' % feet)
+            self._disconnction()
+        except Exception as e:
+            print(' \033[41m \033[0m Oops!\n %s' % e)
+            self._disconnction()
+            pass
+        end = time.time()
+        delta = self._time_formater((end - init))
+        print(' \033[42m \033[0m 用時%s' % delta)
+        return True
 
+    def processing_update(self):
+        # 如果已經有資料表引用並避填就無法刪除了
+        init = time.time()
+        feet = 0
+        traveler = self.env['yc.processing']
+        goal = int(self.how_many_do_you_want)
+        try:
+            self._connection_start()
+            cursor = self.cnxn.cursor()
+            cursor.execute('SELECT * FROM 加工廠主檔')
+            print(" \033[42m \033[0m 開始更新資料")
+            while 1:
+                row = cursor.fetchone()
+                if goal == feet or (goal < 0 and goal != -1) or not row:
+                    break
+                feet += 1
+                print(' \033[43m \033[0m [' + str(feet) + '] 更新:' + row.簡稱)
+                vals= {}
+                vals.update({
+                    'code': row.加工廠代號,
+                    'name ': row.公司名稱,
+                    'type': row.加工廠類型,
+                    # 'cls_code':row.分類代碼,
+                    'locate_code': row.所屬區域代碼,
+                    'taxid': row.統一編號,
+                    'abbrev': row.簡稱,
+                    'contact': row.負責人,
+                    'title': row.公司抬頭,
+                    'post_code': row.營業郵遞區號,
+                    'address': row.營業地址,
+                    # 'bpost_code': row.帳單郵遞區號,
+                    'baddress': row.帳單地址,
+                    # 'fpost_code': row.工廠郵遞區號,
+                    'faddress': row.工廠地址,
+                    'phone1': row.電話1,
+                    'phone2': row.電話2,
+                    'phone3': row.電話3,
+                    'fax1': row.傳真1,
+                    'fax2': row.傳真2,
+                    # 'fphone1': row.工廠電話1,
+                    # 'website': row.網址,
+                    # 'email': row.E_Mail,
+                    # 'item': row.產品項目,
+                    # 'note1': row.備註1,
+                    # 'note2': row.備註2,
+                    # 'note3': row.備註3,
+                    # 'note4': row.備註4,
+                    # 'note5': row.備註5,
+                    # 'note6': row.備註6,
+                    # 'note7': row.備註7,
+                    # 'note8': row.備註8,
+                    # 'note9': row.備註9,
+                    # 'note10': row.備註10,
+                })
+                traveler.search([('code', '=', row.加工廠代號)]).write(vals)
+            print(' \033[42m \033[0m 資料更新完成，總完成筆數:%s' % feet)
+            self._disconnction()
+        except Exception as e:
+            print(' \033[41m \033[0m Oops!\n %s' % e)
+            self._disconnction()
+            pass
+        end = time.time()
+        delta = self._time_formater((end - init))
+        print(' \033[42m \033[0m 用時%s' % delta)
+        return True
 
     @api.multi
     def insert_yc_sets01(self):
