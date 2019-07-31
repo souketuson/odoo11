@@ -8,14 +8,6 @@
             <field name="arch" type="xml">
                 <tree string="return Tree">
                     <field name="name"/>
-                    <field name="order"/>
-                    <field name="day"/>
-                    <field name="customer_id"/>
-                    <field name="neworder"/>
-                    <field name="note"/>
-                    <field name="factiory_id"/>
-                    <field name="ardebitday"/>
-                    <field name="money"/>
                 </tree>
             </field>
         </record>
@@ -25,10 +17,52 @@
             <field name="model">yc.return</field>
             <field name="arch" type="xml">
                 <form string="Book">
-                    <group>
-                        <field name="name"/>
-                    </group>
+                    <sheet>
+                        <style>
+                            .tb{ width:100%;}
+                        </style>
+
+                        <group col="8">
+                            <field name="day"/>
+                            <field name="customer_code" string=""/>
+                            <field name="customer_id"/>
+                            <field name="ardebitday"/>
+                            <!---->
+                            <field name="purchase_id"/>
+                            <field name="name"/>
+                            <field name="driver_id"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+
+
+                        </group>
+                        <table border="1" class="tb">
+                            <tr>
+                                <td></td>
+                                <td>工令號碼</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <field name="product_id"/>
+                                </td>
+                                <td>
+                                    <field name="order_id"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </sheet>
                 </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="return_search_view">
+            <field name="name">return.search</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
             </field>
         </record>
         <!-- action -->
@@ -38,8 +72,6 @@
             <field name="res_model">yc.return</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-            </field>
         </record>
         <record model="ir.actions.act_window.view" id="return_action_form">
             <field name="act_window_id" ref="return_action"/>
@@ -52,16 +84,6 @@
             <field name="sequence" eval="10"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="return_tree"/>
-        </record>
-        <!-- search -->
-        <record model="ir.ui.view" id="return_search_view">
-            <field name="name">return.search</field>
-            <field name="model">yc.return</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name"/>
-                </search>
-            </field>
         </record>
     </data>
 </odoo>

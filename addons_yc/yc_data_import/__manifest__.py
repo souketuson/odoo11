@@ -15,7 +15,7 @@
         "web",
     ],
     'data': [
-        'views/yc_data_import.xml',
+        'views/yc_import_data.xml',
      ],
     'images': ['',],
 }

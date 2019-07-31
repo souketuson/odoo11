@@ -53,7 +53,7 @@ class YcPurchase(models.Model):
     ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
-    product_code = fields.Many2one("yc.setproduct", string="品名", index=True, auto_join=True)
+    product_code = fields.Many2one("yc.setproduct", string="品名")
     # 和上面重複
     # productname = fields.Many2one("yc.setproduct", string="產品名稱")
     ck6 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")

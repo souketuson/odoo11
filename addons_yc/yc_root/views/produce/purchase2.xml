@@ -17,7 +17,6 @@
                     <field name="status"/>
                     <field name="weighstate"/>
                     <field name="checkstate"/>
-
                 </tree>
             </field>
         </record>
@@ -30,6 +29,33 @@
                 <form string="Purchase form">
                     <div style="background: ghostwhite; width:1000px; overflow-x: auto;" class="purchase2_for_js">
                         <sheet>
+                            <script>
+                                $(document).on('click', "label.btn", function(event){
+                                    var div = $('div #toggle_return');
+                                    var btn = $("div[name='return_btn'] input");
+                                    var wizard = $('.mummy_return');
+                                    if (btn.prop('checked')==true){
+                                        div.css('display','unset');
+                                        wizard.removeClass("glyphicon glyphicon-random");
+                                        wizard.addClass('glyphicon glyphicon-remove');
+                                        wizard.css("background-color","#80b1b3");
+                                        wizard.hover(function(e) {
+                                              $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                                        });
+                                    }
+                                    else if (btn.prop('checked')==false){
+                                        div.css('display','none');
+
+                                        wizard.removeClass("glyphicon glyphicon-remove");
+                                        wizard.addClass('glyphicon glyphicon-random');
+
+                                        wizard.css("background-color","#7c7bad");
+                                        wizard.hover(function(e) {
+                                              $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                                        });
+                                    }
+                                });
+                            </script>
                             <header>
                                 <button string="搜尋舊檔" type="action" class="search_btn"
                                         name="%(action_purchase_wizard)d"/>
@@ -64,17 +90,20 @@
                                 <!---->
                                 <field name="customer_no"/>
                                 <field name="list_man" readonly="1" options="{'no_open': True,'no_create': True}"/>
-                                <field name="pre_order"/>
+
                                 <label for="return_btn" string=""
                                        class="btn btn-primary btn-sm glyphicon glyphicon-random widget_btn mummy_return">
                                 </label>
+                                <field name="pre_order" nolabel="1" invisible="1"/>
+                                <field name="pre_order"/>
+                                <!---->
                                 <field name="return_btn" style="display:none;" nolabel="1"/>
                             </group>
                             <div id="toggle_return" style="display:none;">
                                 <group col="2">
-                                <field name="condition" style="width:100px" widget="radio"
-                                       options="{'horizontal': True}"/>
-                                <newline/>
+                                    <field name="condition" style="width:100px" widget="radio"
+                                           options="{'horizontal': True}"/>
+                                    <newline/>
                                 </group>
                                 <span style="display:inline-block; width: 60px;"/>
                                 <!--<button name="return_return" type="object" class="oe_highlight"/>-->
@@ -138,15 +167,17 @@
                                         <field name="norm_code" style="width: 60px"
                                                options="{'no_open': True,'no_create': True}"/>
                                         <field name="len_code" style="width: 110px; font-size: smaller;"
-                                               options="{'no_open': True}"/>
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <field name="len_descript" placeholder="長度說明" style="width: 80px;"/>
                                         <field name="fullorhalf" style="width: 110px; font-size: smaller;"/>
 
-                                        <field name="proces_code" options="{'no_open': True}" style="width: 60px"/>
+                                        <field name="proces_code" options="{'no_open': True,'no_create': True}"
+                                               style="width: 60px"/>
                                         <field name="surface_code" style="width: 110px; font-size: smaller;"
-                                               options="{'no_open': True}"/>
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <field name="elecpl_code" attrs="{'readonly': [('elecplswitch', '=', 'OFF')]}"
-                                               options="{'no_open': True}" style="width: 80px;font-size: smaller;"/>　
+                                               options="{'no_open': True,'no_create': True}"
+                                               style="width: 80px;font-size: smaller;"/>　
                                     </group>
                                     <field name="action_id_main" invisible="1"/>
                                     <field name="elecplswitch" invisible="1"/>
@@ -170,9 +201,9 @@
                                     <group col="6">
                                         <field name="net"/>
                                         <field name="process1"
-                                               options="{'no_open': True}"/>
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <field name="process2"
-                                               options="{'no_open': True}"/>
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <field name="standard"/>
                                         <field name="wire_furn"/>
                                         <field name="headsign" widget='image' height="70" width="60"/>

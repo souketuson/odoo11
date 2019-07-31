@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import yc_data_import
+from . import yc_import_data

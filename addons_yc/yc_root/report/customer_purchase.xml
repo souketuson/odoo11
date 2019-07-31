@@ -20,7 +20,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="get_report" string="產生報表" type="object" class="oe_highlight"/>
+                        <button name="get_report" string="Get Report" type="object" class="oe_highlight"/>
                         <button string="Cancel" special="cancel"/>
                     </footer>
                 </form>

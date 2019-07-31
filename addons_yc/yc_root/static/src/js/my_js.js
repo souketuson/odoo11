@@ -14,76 +14,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                      'DOM_updated': implement when DOM updated
                      ...etc.
              */
-            core.bus.on('click', "div[name='in_out'] div input:checked", this.bgChanger); //過磅進出貨變色
-            core.bus.on('DOM_updated', "span[name='in_out']", this.post_bgChanger); // 過磅進出貨變色
-            core.bus.on('click', "button .o_pager_next", this.post_bgChanger); //過磅下一筆變色
-            core.bus.on('click', this, this.elf_Click); //版面1搜尋舊檔
             core.bus.on('click', this, this.return_Click); //版面1退回
-            core.bus.on('click', this, this.return2_Click); //版面2退回
             core.bus.on('keypress', this, this.keypress_focus); //key jump
-            core.bus.on('click', this, this.cuckoo); // 點擊報時
-
-        },
-        test: function() {
-            $('.o_form_sheet').css("background-color","#adff2f");
-        },
-        bgChanger: function() {
-            var v = $("div[name='in_out'] div input:checked").attr('data-value');
-            if (v =='O') { $('.o_form_sheet').css("background-color","#adff2f");}
-            else if(v =='I') { $('.o_form_sheet').css("background-color","#ffc0cb");}
-        },
-        post_bgChanger: function() {
-            if ($("span[name='in_out']")[0]){
-                var _str = $("span[name='in_out']")[0].innerHTML;
-                if (_str=="出貨") { $('.o_form_sheet').css("background-color","#adff2f");}
-                else if(_str=="進貨") { $('.o_form_sheet').css("background-color","#ffc0cb");}
-            }
-        },
-        enable_btn: function() {
-            var car_no=$('div[name="car_no"] input');
-            var btn=$('button[name="154"]');
-            if (car_no.val()=="") {
-                btn.css({"cursor": "not-allowed","pointer-events": "none","opacity": 0.65});
-            }
-            else if(car_no.val()!="") {
-                btn.css({"cursor": "","pointer-events": "unset","opacity": 1});
-            }
-        },
-        enable_tabindex: function() {
-            var radio= $('input[type="checkbox"]');
-            radio.attr('tabeindex','-1');
-        },
-        elf_Click: function() {
-            var div = $('div #toggle_elf');
-            var btn = $("div[name='wizard_btn'] input");
-            var wizard = $('.open_the_door')
-            var comfirm = $("button[name='itself_update']");
-            if (btn.prop('checked')==true){
-                div.css('display','unset');
-                $('button[name="wizard_comfirm"]').attr("disabled", true);
-                $('div .hidden_on_bush').addClass('hide', 0);
-                comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
-                wizard[0].innerText = "關閉舊檔搜尋";
-                wizard.css("background-color","#568e8f");
-                wizard.hover(function(e) {
-                      $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
-                });
-                comfirm.hover(function(e) {
-                    $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad");
-                });
-            }
-            else if (btn.prop('checked')==false){
-                div.css('display','none');
-                $('button[name="wizard_comfirm"]').attr("disabled", false);
-                $('div .hidden_on_bush').removeClass('hide', 0);
-                comfirm.css('display','none');
-                wizard[0].innerText = "開啟舊檔搜尋";
-                wizard.css("background-color","#5f5e97");
-                wizard.hover(function(e) {
-                      $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
-                });
-            }
-
         },
         return_Click: function() {
             if ($('div .purchase1_for_js').length ==1){
@@ -104,33 +36,6 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     //comfirm.css('display','none');
                     wizard[0].innerText = "搜尋退回";
                     wizard.css("background-color","#5f5e97");
-                    wizard.hover(function(e) {
-                          $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
-                    });
-                }
-            }
-        },
-        return2_Click: function() {
-            if ($('div .purchase2_for_js').length ==1){
-                var div = $('div #toggle_return');
-                var btn = $("div[name='return_btn'] input");
-                var wizard = $('.mummy_return');
-                if (btn.prop('checked')==true){
-                    div.css('display','unset');
-                    wizard.removeClass("glyphicon glyphicon-random");
-                    wizard.addClass('glyphicon glyphicon-remove');
-                    wizard.css("background-color","#80b1b3");
-                    wizard.hover(function(e) {
-                          $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
-                    });
-                }
-                else if (btn.prop('checked')==false){
-                    div.css('display','none');
-
-                    wizard.removeClass("glyphicon glyphicon-remove");
-                    wizard.addClass('glyphicon glyphicon-random');
-
-                    wizard.css("background-color","#7c7bad");
                     wizard.hover(function(e) {
                           $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
                     });
@@ -194,7 +99,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 var color_set = function(field){
                     field.addClass('pulse', 0).removeClass('pulse', 2000);
                 };
-                console.log('last field:',isFocus);
+                // console.log('last field:',isFocus);
                 switch(isFocus){
                 case 'time':
                     _day.focus();
@@ -384,24 +289,6 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     color_set(_time);
                     break;
                 }
-            }
-        },
-        cuckoo: function(){
-            if($('div .process_for_js').length == 1){
-                var today=new Date()
-                var _t = String(today.getHours()) + ':'+ String(today.getMinutes());
-                var isFocus = document.activeElement.getAttribute('name');
-                switch(isFocus){
-                    case 'ptime1':
-                        $('input[name="ptime1"]').val(_t);
-                        break;
-                    case 'ptime2':
-                        $('input[name="ptime2"]').val(_t);
-                        break;
-                    case 'ptime3':
-                        $('input[name="ptime3"]').val(_t);
-                        break;
-                };
             }
         },
     });

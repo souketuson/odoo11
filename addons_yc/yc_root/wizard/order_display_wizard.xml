@@ -10,6 +10,39 @@
                     <style>
                         .o_form_sheet{ background-color: ghostwhite; }
                     </style>
+                    <script>
+                        $(document).on('click', "label.btn", function(event){
+                            var div = $('div #toggle_elf');
+                            var btn = $("div[name='wizard_btn'] input");
+                            var wizard = $('.open_the_door')
+                            var comfirm = $("button[name='itself_update']");
+                            if (btn.prop('checked')==true){
+                                div.css('display','unset');
+                                $('button[name="wizard_comfirm"]').attr("disabled", true);
+                                $('div .hidden_on_bush').addClass('hide', 0);
+                                comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
+                                wizard[0].innerText = "關閉舊檔搜尋";
+                                wizard.css("background-color","#568e8f");
+                                wizard.hover(function(e) {
+                                    $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                                });
+                                comfirm.hover(function(e) {
+                                    $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad");
+                                });
+                            }
+                            else if (btn.prop('checked')==false){
+                                div.css('display','none');
+                                $('button[name="wizard_comfirm"]').attr("disabled", false);
+                                $('div .hidden_on_bush').removeClass('hide', 0);
+                                comfirm.css('display','none');
+                                wizard[0].innerText = "開啟舊檔搜尋";
+                                wizard.css("background-color","#5f5e97");
+                                wizard.hover(function(e) {
+                                    $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                                });
+                            }
+                        });
+                    </script>
                     <div style="width:100%;border-top:1px #f2f2f2 solid;border-bottom:1px #f2f2f2 solid;padding: 3px;background-color: white">
                         <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
                                rel='open_the_door' id="open_the_door"/>

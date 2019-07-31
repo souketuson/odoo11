@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <!-- load before document updated and can implement all page in the module-->
         <template id="assets_backend_weight" name="static_resources_demo assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <!--<link href="/yc_root/static/src/css/weight.css" rel="stylesheet"/>-->
@@ -32,94 +33,124 @@
             <field name="arch" type="xml">
                 <form string="Weight form">
                     <sheet>
-                        <div style="overflow-x:auto;width:850px;">
+                        <!-- only implement on weight_fom page -->
+                        <script>
+                            let bg = $('.bg')
+                            // change background-color while document has updated.
+                            if ($("span[name='in_out']")[0]){
+                                let io = $("span[name='in_out']")[0].innerHTML;
+                                $(document).ready(function(){
+                                    if (io == "出貨") {
+                                        bg.css("background-color","#adff2f");
+                                    }
+                                    else if(io == "進貨") {
+                                        bg.css("background-color","#ffc0cb");
+                                    }
+                                });
+                            };
+                            // check-box value decide background-color.
+                            $(document).on('click', "div[name='in_out']", function(event){
+                                let v = $("div[name='in_out'] div input:checked").attr('data-value');
+                                if (v =='O') {
+                                    bg.css("background-color","#adff2f");
+                                }
+                                else if(v =='I') {
+                                    bg.css("background-color","#ffc0cb");
+                                }
+                            });
+                        </script>
+                        <style>
+                            .bg{ overflow-x: auto; width: 1000px; padding: 8px; }
+                        </style>
+                        <div class='bg'>
                             <group col="8">
                                 <!--<div>-->
-                                    <!--<label string="過磅日期" style="font-weight:bold"/>-->
-                                    <!--<field name="weightime" style="width:70px;position: relative;left: 192px;" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="過磅時間" style="font-weight:bold;position: relative;left: 60px;"/>-->
-                                    <!--<field name="day" style="width:120px;position: relative;left: -135px;" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:40px;"/>-->
-                                    <!--<label string="進出貨" style="font-weight:bold"/>-->
-                                    <!--<field class="in_out" name="in_out" attrs="{'readonly': [('id', '!=', False)]}"-->
-                                           <!--widget="radio"-->
-                                           <!--style="width:100px" options="{'horizontal': True}"/>-->
-                                    <!--<span style="display:inline-block; width:40px;"/>-->
-                                    <!--<label string="過磅單號" style="font-weight:bold"/>-->
-                                    <!--<field name="name" readonly="1" style="width:100px" class="test"/>-->
-                                    <!--<br/>-->
-                                    <!--<label string="司機名稱" style="font-weight:bold"/>-->
-                                    <!--<field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"-->
-                                           <!--style="width:80px"  options="{'no_open': True,'no_create': True}" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:45px;"/>-->
-                                    <!--<label string="　過磅員" style="font-weight:bold"/>-->
-                                    <!--<field name="person_id" style="width:70px" options="{'no_open': True,'no_create': True}" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:40px;"/>-->
-                                    <!--<label string="進貨次數" style="font-weight:bold"/>-->
-                                    <!--<field name="purchase_times" invisible="1" style="width:50px"/>-->
-                                    <!--<field name="display_purchase" readonly="1" style="width:50px"/>-->
-                                    <!--<span style="display:inline-block; width:40px;"/>-->
-                                    <!--<label string="出貨次數" style="font-weight:bold"/>-->
-                                    <!--<field name="ship_times" invisible="1" style="width:50px"/>-->
-                                    <!--<field name="display_shipment" readonly="1" style="width:50px"/>-->
-                                    <!--<br/>-->
-                                    <!--<label string="車次序號" style="font-weight:bold"/>-->
-                                    <!--<field name="carno" attrs="{'readonly': [('id', '!=', False)]}"-->
-                                           <!--style="width:100px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:25px;"/>-->
-                                    <!--<label string="　　車號" style="font-weight:bold"/>-->
-                                    <!--<field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"-->
-                                           <!--style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:40px;"/>-->
-                                    <!--<label string="所屬工廠" style="font-weight:bold"/>-->
-                                    <!--<field name="company_id" style="width:70px" readonly="1" options="{'no_open': True}" class="test"/>-->
-                                    <!--<br/>-->
-                                    <!--<label string="地磅序號" style="font-weight:bold"/>-->
-                                    <!--<field name="weighbridge" style="width:100px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:25px;"/>-->
-                                    <!--<label string="總重(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="total" style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="空車重(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="curbweight" style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="空桶重(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="emptybucket" style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="淨重(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="net" attrs="{'readonly': True}" style="width:70px" class="test"/>-->
-                                    <!--<br/>-->
-                                    <!--<label string="調質重量(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="refine" style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="滲碳重量(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="carbur" style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="其他重量(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="other" style="width:70px" class="test"/>-->
-                                    <!--<span style="display:inline-block; width:5px;"/>-->
-                                    <!--<label string="其他重量1(KG)" style="font-weight:bold"/>-->
-                                    <!--<field name="other1" style="width:70px" class="test"/>-->
-                                    <!--<br/>-->
+                                <!--<label string="過磅日期" style="font-weight:bold"/>-->
+                                <!--<field name="weightime" style="width:70px;position: relative;left: 192px;" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="過磅時間" style="font-weight:bold;position: relative;left: 60px;"/>-->
+                                <!--<field name="day" style="width:120px;position: relative;left: -135px;" class="test"/>-->
+                                <!--<span style="display:inline-block; width:40px;"/>-->
+                                <!--<label string="進出貨" style="font-weight:bold"/>-->
+                                <!--<field class="in_out" name="in_out" attrs="{'readonly': [('id', '!=', False)]}"-->
+                                <!--widget="radio"-->
+                                <!--style="width:100px" options="{'horizontal': True}"/>-->
+                                <!--<span style="display:inline-block; width:40px;"/>-->
+                                <!--<label string="過磅單號" style="font-weight:bold"/>-->
+                                <!--<field name="name" readonly="1" style="width:100px" class="test"/>-->
+                                <!--<br/>-->
+                                <!--<label string="司機名稱" style="font-weight:bold"/>-->
+                                <!--<field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"-->
+                                <!--style="width:80px"  options="{'no_open': True,'no_create': True}" class="test"/>-->
+                                <!--<span style="display:inline-block; width:45px;"/>-->
+                                <!--<label string="　過磅員" style="font-weight:bold"/>-->
+                                <!--<field name="person_id" style="width:70px" options="{'no_open': True,'no_create': True}" class="test"/>-->
+                                <!--<span style="display:inline-block; width:40px;"/>-->
+                                <!--<label string="進貨次數" style="font-weight:bold"/>-->
+                                <!--<field name="purchase_times" invisible="1" style="width:50px"/>-->
+                                <!--<field name="display_purchase" readonly="1" style="width:50px"/>-->
+                                <!--<span style="display:inline-block; width:40px;"/>-->
+                                <!--<label string="出貨次數" style="font-weight:bold"/>-->
+                                <!--<field name="ship_times" invisible="1" style="width:50px"/>-->
+                                <!--<field name="display_shipment" readonly="1" style="width:50px"/>-->
+                                <!--<br/>-->
+                                <!--<label string="車次序號" style="font-weight:bold"/>-->
+                                <!--<field name="carno" attrs="{'readonly': [('id', '!=', False)]}"-->
+                                <!--style="width:100px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:25px;"/>-->
+                                <!--<label string="　　車號" style="font-weight:bold"/>-->
+                                <!--<field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"-->
+                                <!--style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:40px;"/>-->
+                                <!--<label string="所屬工廠" style="font-weight:bold"/>-->
+                                <!--<field name="company_id" style="width:70px" readonly="1" options="{'no_open': True}" class="test"/>-->
+                                <!--<br/>-->
+                                <!--<label string="地磅序號" style="font-weight:bold"/>-->
+                                <!--<field name="weighbridge" style="width:100px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:25px;"/>-->
+                                <!--<label string="總重(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="total" style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="空車重(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="curbweight" style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="空桶重(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="emptybucket" style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="淨重(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="net" attrs="{'readonly': True}" style="width:70px" class="test"/>-->
+                                <!--<br/>-->
+                                <!--<label string="調質重量(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="refine" style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="滲碳重量(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="carbur" style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="其他重量(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="other" style="width:70px" class="test"/>-->
+                                <!--<span style="display:inline-block; width:5px;"/>-->
+                                <!--<label string="其他重量1(KG)" style="font-weight:bold"/>-->
+                                <!--<field name="other1" style="width:70px" class="test"/>-->
+                                <!--<br/>-->
                                 <!--</div>-->
 
                                 <field name="day" style="width:110px;"/>
                                 <field name="weightime" default_focus="1" style="width:60px;"/>
-                                <field class="in_out" name="in_out" attrs="{'readonly': [('id', '!=', False)]}" widget="radio"
-                                           options="{'horizontal': False}" style="width:70px;"/>
+                                <field class="in_out" name="in_out" attrs="{'readonly': [('id', '!=', False)]}"
+                                       widget="radio"
+                                       options="{'horizontal': False}" style="width:70px;"/>
                                 <field name="name" readonly="1" style="width:100px;"/>
                                 <!---->
 
                                 <field name="driver_id" attrs="{'readonly': [('id', '!=', False)]}"
-                                           options="{'no_open': True,'no_create': True}"/>
+                                       options="{'no_open': True,'no_create': True}"/>
                                 <field name="person_id" options="{'no_open': True,'no_create': True}"/>
                                 <field name="display_purchase" readonly="1"/>
                                 <field name="display_shipment" readonly="1"/>
                             </group>
                             <group col="8">
                                 <!---->
-                                <field name="carno" attrs="{'readonly': [('id', '!=', False)]}"  style="width:70px;"/>
+                                <field name="carno" attrs="{'readonly': [('id', '!=', False)]}" style="width:70px;"/>
                                 <field name="plate_no" attrs="{'readonly': [('id', '!=', False)]}"/>
                                 <field name="company_id" readonly="1" options="{'no_open': True}"/>
                                 <field name="ship_times" invisible="1" style="" nolabel="1"/>
@@ -127,12 +158,12 @@
                             <group col="8">
                                 <!---->
                                 <field name="weighbridge" style="width:70px"/>
-                                <field name="total"  style="width:70px"/>
-                                <field name="curbweight"  style="width:70px"/>
-                                <field name="emptybucket"  style="width:70px"/>
+                                <field name="total" style="width:70px"/>
+                                <field name="curbweight" style="width:70px"/>
+                                <field name="emptybucket" style="width:70px"/>
 
                                 <!---->
-                                <field name="net" attrs="{'readonly': True}"  style="width:70px"/>
+                                <field name="net" attrs="{'readonly': True}" style="width:70px"/>
                                 <field name="refine"/>
                                 <field name="carbur"/>
                                 <field name="other"/>
@@ -165,6 +196,7 @@
             <field name="name">yc.weight.calendar</field>
             <field name="model">yc.weight</field>
             <field name="arch" type="xml">
+                <!-- 以 record 型式 逐條展示-->
                 <calendar string="Weight" date_start="day" color="in_out">
                     <field name="name"/>
                     <field name="day"/>
@@ -184,8 +216,9 @@
             <field name="res_model">yc.weight</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[("company_id","in",[context.get('company_id')])]</field>
+            <field name="domain"></field>
             <field name="context">{}</field>
+            <!--[("company_id","in",[context.get('company_id')])]-->
         </record>
         <record model="ir.actions.act_window.view" id="weight_list_action_form">
             <field name="act_window_id" ref="weight_list_action"/>

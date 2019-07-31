@@ -5,8 +5,11 @@ from odoo import models, fields, api
 class YcCargo(models.TransientModel):
     _name = 'yc.cargo'
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
-    date_start = fields.Date(string="統計日期", required=True, default=fields.Date.today)
-    date_end = fields.Date(string="To", required=True, default=fields.Date.today)
+    year = fields.Char()
+    month = fields.Char()
+
+
+
     def get_report(self):
         if self.driver_id:
             data = {
@@ -25,6 +28,7 @@ class YcCargo(models.TransientModel):
 
 class YcCargoReport(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
+
     _name = 'report.yc_root.yc_cargo_report_view'
 
     @api.model

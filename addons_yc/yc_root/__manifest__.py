@@ -50,6 +50,7 @@
         'views/produce/purchase.xml',
         'views/produce/purchase2.xml',
         'views/produce/weight.xml',
+        'views/produce/return.xml',
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',
@@ -65,7 +66,7 @@
         'views/maintain/setleave.xml',
         'views/maintain/setbonus.xml',
         'views/mechanicalproperty.xml',
-        'views/return.xml',
+
         'views/driver.xml',
         'views/hr_main.xml',
         'views/quality.xml',

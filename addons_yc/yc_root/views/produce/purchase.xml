@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-        <!--css-->
-        <template id="assets_backend_purchase" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <!--<link href="/yc_root/static/src/css/purchase.css" rel="stylesheet"/>-->
-                <!--<script type="text/javascript" src="/yc_root/static/src/js/javcriptfile.js"></script>-->
-            </xpath>
-        </template>
         <!-- view of purchase tree  -->
         <record model="ir.ui.view" id="purchase_tree">
             <field name="name">purchase.tree</field>

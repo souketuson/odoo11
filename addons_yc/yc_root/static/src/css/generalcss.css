@@ -1,57 +1,22 @@
 /*  在一個module下 只要一個頁面有調用css 其他頁面擁有同元素的也會被影響*/
 
-/*  品質主檔:判定登錄頁底圖 */
-.img_update{
-    background-image: url("https://i.imgur.com/2JtX2Db.png");
-    background-repeat: no-repeat;
-    position:relative;
-    left:150px;
-    width:200px;
-    height:200px;
-}
 /*  各頁list table格線*/
 .o_list_view, .o_data_cell,.o_list_record_selector,.o_column_sortable{
-    border: 1px solid black;
-}
+    border: 1px solid black; }
 /*  可以邊更儲存完頁面資訊*/
 .test{
     border:1px black solid;
-    padding-left: 4px;
-}
+    padding-left: 4px; }
 /*.o_external_button{
     display:none;
 }*/
-/* */
-.search_btn{
-    background-color: #00aaff;
-    color: white;
-}
-.search_btn:hover{
-    background-color: #0088cc;
-    color: white;
-}
-.create_btn{
-    background-color: #d62929;
-    color: white;
-}
-.create_btn:hover{
-    background-color: #b22222;
-    color: white;
-}
-.widget_btn{
-    background-color: #7c7bad;
-    color: white;
-}
-.widget_btn:hover{
-    background-color: #5f5e97;
-    color: black;
-}
-.pulse{
-    background-color: #ccccff;
-}
-.custom_label{
-    font-weight:bold;
-}
-.hide{
-    display:none;
-}
+.search_btn{ background-color: #00aaff; color: white; }
+.search_btn:hover{ background-color: #0088cc; color: white;}
+.create_btn{ background-color: #d62929; color: white;}
+.create_btn:hover{ background-color: #b22222; color: white;}
+.widget_btn{ background-color: #7c7bad; color: white;}
+.widget_btn:hover{ background-color: #5f5e97; color: black;}
+.pulse{ background-color: #ccccff;}
+.custom_label{ font-weight: bold;}
+.hide{ display: none;}
+.ui-autocomplete { max-height: 300px; overflow-y: scroll; overflow-x: hidden;}
