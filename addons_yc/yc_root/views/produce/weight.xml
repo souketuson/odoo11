@@ -177,9 +177,11 @@
                                     <div>
                                         <field name="customer_detail_ids">
                                             <tree string="Customer Details" editable="bottom">
-                                                <field name="customer_code" style="width:200px;"/>
-                                                <field name="customer_id"/>
-                                                <field name="processing_id"/>
+                                                <field name="name" invisible="1"/>
+                                                <field name="customer_code"/>
+                                                <field name="customer_id" options="{'no_open': True,'no_create': True}"/>
+                                                <field name="processing_id" options="{'no_open': True,'no_create': True}"/>
+                                                <field name="storeplace_id" options="{'no_open': True,'no_create': True}"/>
                                                 <field name="note"/>
                                             </tree>
                                         </field>

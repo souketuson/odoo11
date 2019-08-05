@@ -1,7 +1,8 @@
 // odoo.define(moduleNmae, dependencies, function)
 odoo.define('yc_root.my_JS', function (require) {"use strict";
+    var ajax = require('web.ajax');
     var core = require('web.core');
-
+    var rpc = require('web.rpc');
     var Widget = require('web.Widget');
     var bgdrawer = Widget.extend({
         /* <init: construct before loading DOM completely.>*/
@@ -15,7 +16,8 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                      ...etc.
              */
             core.bus.on('click', this, this.return_Click); //版面1退回
-            core.bus.on('keypress', this, this.keypress_focus); //key jump
+            core.bus.on('DOM_updated', this, this.note_auto_complete); // 備註autocomplete
+
         },
         return_Click: function() {
             if ($('div .purchase1_for_js').length ==1){
@@ -42,255 +44,155 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 }
             }
         },
-        keypress_focus: function(event){
-            var da = document.activeElement;
-            if ($('div .purchase2_for_js').length ==1 && (event.which== 13) && da.tagName == "INPUT"){
-                // light red: #ffcccc, light yellow: #ffffcc, light purple: #ccccff,
-                var _time = $('input[name="time"]');
-                var _day =  $('div[name="day"] input');
-                var carn = $('div[name="car_no"] input');
-                var prat = $('div[name="processing_attache"] input');
-                var bat = $('input[name="batch"]');
-                var cusn = $('input[name="customer_no"]');
-                var cls = $('div[name="clsf_code"] input');
-                var pcs = $('input[name="product_code_searchbox"]');
-                var sl = $('div[name="strength_level"] input');
-                var txt = $('div[name="txtur_code"] input');
-                var nor = $('div[name="norm_code"] input');
-                var len = $('div[name="len_code"] input');
-                var lend = $('input[name="len_descript"]');
-                var forh = $('select[name="fullorhalf"]');
-                var pro = $('div[name="proces_code"] input');
-                var sur = $('div[name="surface_code"] input');
-                var sur_next = $('div[name="elecpl_code"] input').length == 1 ? $('div[name="elecpl_code"] input') : $('input[name="num1"]');
-                var num1 = $('input[name="num1"]');
-                var num2 = $('input[name="num2"]');
-                var num3 = $('input[name="num3"]');
-                var num4 = $('input[name="num4"]');
-                var unit1 = $('div[name="unit1"] input');
-                var unit2 = $('div[name="unit2"] input');
-                var unit3 = $('div[name="unit3"] input');
-                var unit4 = $('div[name="unit4"] input');
-                var stor = $('input[name="storeplace"]');
-                var net = $('input[name="net"]');
-                var pro1 = $('div[name="process1"] input');
-                var pro2 = $('div[name="process2"] input');
-                var wirf = $('input[name="wire_furn"]');
-                var surh = $('input[name="surfhrd"]');
-                var corh = $('input[name="corehrd"]');
-                var tenh = $('input[name="tensihrd"]');
-                var carb = $('input[name="carburlayer"]');
-                var tor = $('input[name="torsion"]');
-                var tem2= $('input[name="tempturing2"]');
-                var ordf = $('div[name="order_furn"] input');
-                var not1 = $('input[name="notices1"]');
-                var not2 = $('input[name="notices2"]');
-                var not3 = $('input[name="notices3"]');
-                var qcn1 = $('input[name="qcnote1"]');
-                var qcn2 = $('input[name="qcnote2"]');
-                var qcn3 = $('input[name="qcnote3"]');
-                var prn1 = $('input[name="prodnote1"]');
-                var prn2 = $('input[name="prodnote2"]');
-                var prn3 = $('input[name="prodnote3"]');
-                var norc = $('input[name="norcls"]');
-                var wxr = $('input[name="wxr_txtur"]');
-                var wxh = $('input[name="wxrhard"]');
-                var isFocus = (da.parentNode.parentNode.getAttribute('name')) ? da.parentNode.parentNode.getAttribute('name') : da.getAttribute('name');
-                var color_set = function(field){
-                    field.addClass('pulse', 0).removeClass('pulse', 2000);
-                };
-                // console.log('last field:',isFocus);
-                switch(isFocus){
-                case 'time':
-                    _day.focus();
-                    break;
-                case 'day':
-                    carn.focus();
-                    color_set(carn);
-                    break;
-                case 'day':
-                    carn.focus();
-                    color_set(carn);
-                    break;
-                case 'car_no':
-                    prat.focus();
-                    prat.click();
-                    color_set(prat);
-                    break;
-                case 'processing_attache':
-                    bat.focus();
-                    color_set(bat);
-                    break;
-                case 'batch':
-                    cusn.focus();
-                    color_set(cusn);
-                    break;
-                case 'customer_no':
-                    cls.focus();
-                    cls.click();
-                    color_set(cls);
-                    break;
-                case 'clsf_code':
-                    pcs.focus();
-                    color_set(pcs);
-                    break;
-                case 'product_code_searchbox':
-                    sl.focus();
-                    sl.click();
-                    color_set(sl);
-                    break;
-                case 'strength_level':
-                    txt.focus();
-                    txt.click();
-                    color_set(txt);
-                    break;
-                case 'txtur_code':
-                    nor.focus();
-                    nor.click();
-                    color_set(nor);
-                    break;
-                case 'norm_code':
-                    len.focus();
-                    len.click();
-                    color_set(len);
-                    break;
-                case 'len_code':
-                    lend.focus();
-                    color_set(lend);
-                    break;
-                case 'len_descript':
-                    forh.focus();
-                    forh.click();
-                    color_set(forh);
-                    break;
-                case 'fullorhalf':
-                    pro.click();
-                    pro.focus();
-                    break;
-                case 'proces_code':
-                    sur.focus();
-                    sur.click();
-                    color_set(sur);
-                    break;
-                case 'surface_code':
-                    sur_next.focus();
-                    sur_next.click();
-                    color_set(sur_next);
-                    break;
-                case 'elecpl_code':
-                    num1.focus();
-                    color_set(num1);
-                    break;
-                case 'num1':
-                    unit1.focus();
-                    unit1.click();
-                    color_set(unit1);
-                    break;
-                case 'unit1':
-                    stor.focus();
-                    color_set(stor);
-                    break;
-                case 'storeplace':
-                    net.focus();
-                    color_set(net);
-                    break;
-                case 'net':
-                    pro1.focus();
-                    pro1.click();
-                    color_set(pro1);
-                    break;
-                case 'process1':
-                    pro2.focus();
-                    pro2.click();
-                    color_set(pro2);
-                    break;
-                case 'process2':
-                    wirf.focus();
-                    color_set(wirf);
-                    break;
-                case 'wire_furn':
-                    surh.focus();
-                    color_set(surh);
-                    break;
-                case 'surfhrd':
-                    corh.focus();
-                    color_set(corh);
-                    break;
-                case 'corehrd':
-                    tenh.focus();
-                    color_set(tenh);
-                    break;
-                case 'tensihrd':
-                    carb.focus();
-                    color_set(carb);
-                    break;
-                case 'carburlayer':
-                    tor.focus();
-                    color_set(tor);
-                    break;
-                case 'torsion':
-                    tem2.focus();
-                    color_set(tem2);
-                    break;
-                case 'tempturing2':
-                    ordf.focus();
-                    color_set(ordf);
-                    break;
-                case 'order_furn':
-                    not1.focus();
-                    color_set(not1);
-                    break;
-                case 'notices1':
-                    not2.focus();
-                    color_set(not2);
-                    break;
-                case 'notices2':
-                    not3.focus();
-                    color_set(not3);
-                    break;
-                case 'notices3':
-                    qcn1.focus();
-                    color_set(qcn1);
-                    break;
-                case 'qcnote1':
-                    qcn2.focus();
-                    color_set(qcn2);
-                    break;
-                case 'qcnote2':
-                    qcn3.focus();
-                    color_set(qcn3);
-                    break;
-                case 'qcnote3':
-                    prn1.focus();
-                    color_set(prn1);
-                    break;
-                case 'prodnote1':
-                    prn2.focus();
-                    color_set(prn2);
-                    break;
-                case 'prodnote2':
-                    prn3.focus();
-                    color_set(prn3);
-                    break;
-                case 'prodnote3':
-                    norc.focus();
-                    color_set(norc);
-                    break;
-                case 'norcls':
-                    wxr.focus();
-                    color_set(wxr);
-                    break;
-                case 'wxr_txtur':
-                    wxh.focus();
-                    color_set(wxh);
-                    break;
-                case 'wxrhard':
-                    _time.focus();
-                    color_set(_time);
-                    break;
-                }
-            }
+        // this work while dom loaded
+        note_auto_complete: function(){
+            var note1 = $("input[name='notices1']");
+            var note2 = $("input[name='notices2']");
+            var note3 = $("input[name='notices3']");
+            var qc1 = $("input[name='qcnote1']");
+            var qc2 = $("input[name='qcnote2']");
+            var qc3 = $("input[name='qcnote3']");
+            var pn1 = $("input[name='prodnote1']");
+            var pn2 = $("input[name='prodnote2']");
+            var pn3 = $("input[name='prodnote3']");
+
+            note1.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": note1.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            note2.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": note2.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            note3.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": note3.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            qc1.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": qc1.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            qc2.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": qc2.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            qc3.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": qc3.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            pn1.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": pn1.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            pn2.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": pn2.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
+            pn3.autocomplete({
+                position: { my: "left bottom", at: "left top", collision: "flip" },
+                minLength: 1,
+                source: function (request, response) {
+                    ajax.jsonRpc("/serial_search", "call", {"serial": pn3.val()})
+                        .then(function (data) {
+                            response(data);
+                        });
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 1) {
+                        ui.item = ui.content[0];
+                    }
+                },
+            });
         },
+
     });
 
     // Init a new bgdrawer when the web client is ready

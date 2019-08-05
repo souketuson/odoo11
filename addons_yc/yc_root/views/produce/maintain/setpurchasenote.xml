@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="setpurchasenote_tree">
+            <field name="name">setpurchasenote.tree</field>
+            <field name="model">yc.setpurchasenote</field>
+            <field name="arch" type="xml">
+                <tree string="setpurchasenote Tree">
+                    <field name="name"/>
+
+
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="setpurchasenote_form">
+            <field name="name">setpurchasenote.form</field>
+            <field name="model">yc.setpurchasenote</field>
+            <field name="arch" type="xml">
+                <form string="setpurchasenote form">
+                    <sheet>
+                        <group string="">
+                            <field name="name"/>
+
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="setpurchasenote_search_view">
+            <field name="name">setpurchasenote.search</field>
+            <field name="model">yc.setpurchasenote</field>
+            <field name="arch" type="xml">
+                <search>
+
+                    <field name="name"/>
+
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="setpurchasenote_action">
+            <field name="name">存位設定</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.setpurchasenote</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="setpurchasenote_action_form">
+            <field name="act_window_id" ref="setpurchasenote_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="setpurchasenote_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="setpurchasenote_action_tree">
+            <field name="act_window_id" ref="setpurchasenote_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="setpurchasenote_tree"/>
+        </record>
+    </data>
+</odoo>

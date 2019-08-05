@@ -93,7 +93,8 @@
                     <menuitem id="fake19_menu" name="電鍍別" parent="produce_maintain_menu" sequence="28" action="fake_action"/>
                     <menuitem id="fake20_menu" name="單位(桶別稱)" parent="produce_maintain_menu" sequence="29" action="fake_action"/>
                     <menuitem id="fake21_menu" name="各爐產能設定" parent="produce_maintain_menu" sequence="30" action="fake_action"/>
-                    <menuitem id="fake22_menu" name="進貨備註" parent="produce_maintain_menu" sequence="31" action="fake_action"/>
+                    <menuitem id="setpurchasenote_menu" name="進貨備註" parent="produce_maintain_menu" sequence="31" action="setpurchasenote_action"/>
+                    <menuitem id="setstoreplace_menu" name="儲存位置" parent="produce_maintain_menu" sequence="24" action="setstoreplace_action"/>
 
             <!-- bar menu -->
             <menuitem id="main_quality_menu" name="品質" sequence="4" parent="main_root_menu"/>

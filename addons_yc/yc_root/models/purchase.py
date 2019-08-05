@@ -77,6 +77,7 @@ class YcPurchase(models.Model):
     num4 = fields.Integer("數量4")
     unit4 = fields.Many2one("yc.setunit", string="單位代號4")
     storeplace = fields.Char("存放位置")
+    storeplace_id = fields.Many2one("yc.setstoreplace", related="processing_attache.storeplace_id")
     net = fields.Integer("淨重")
     process1 = fields.Many2one("yc.processing", "次加工廠")
     process2 = fields.Many2one("yc.processing", "二次加工")

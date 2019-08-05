@@ -55,6 +55,8 @@
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',
         'views/produce/maintain/setlength.xml',
+        'views/produce/maintain/setstoreplace.xml',
+        'views/produce/maintain/setpurchasenote.xml',
         'views/quality/maintain/setproducenote.xml',
         'views/quality/maintain/sethardness.xml',
         'views/quality/maintain/setqcnote.xml',

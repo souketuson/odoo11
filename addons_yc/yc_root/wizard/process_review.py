@@ -105,7 +105,7 @@ class YcPurchaseDisplay(models.TransientModel):
             return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
                                "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}
 
-    @api.onchange('searchname')
+    # @api.onchange('searchname')
     def process_review_search_name(self):
         if self._context.get('params')['action'] == 189 and bool(
                 self.searchname or self.furn_in or self.furn_notin) == True:

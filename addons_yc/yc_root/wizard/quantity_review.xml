@@ -58,29 +58,35 @@
                                     <div style="float:left;">
                                         <label string="　　品名" style="font-weight:bold"/>
                                         <field name="product_code" style="width: 120px"
-                                               options="{'no_open': True,'no_create': True}"/>
+                                               options="{'no_open': True,'no_create': True}"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <span style="display:inline-block; width:40px;"/>
                                         <label string="客戶批號" style="font-weight:bold"/>
                                         <field name="batch" style="width: 120px"/>
                                         <br/>
                                         <label string="　　規格" style="font-weight:bold"/>
                                         <field name="norm_code" style="width: 90px"
-                                               options="{'no_open': True,'no_create': True}"/>
+                                               options="{'no_open': True,'no_create': True}"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <span style="display:inline-block; width: 84px;"/>
                                         <label string="牙分類" style="font-weight:bold"/>
-                                        <field name="fullorhalf" style="width: 120px"/>
+                                        <field name="fullorhalf" style="width: 120px"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <br/>
                                         <label string="　　材質" style="font-weight:bold"/>
                                         <field name="txtur_code" style="width: 90px"
-                                               options="{'no_open': True,'no_create': True}"/>
+                                               options="{'no_open': True,'no_create': True}"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <span style="display:inline-block; width: 70px;"/>
                                         <label string="表面處理" style="font-weight:bold"/>
                                         <field name="surface_code" style="width: 120px"
-                                               options="{'no_open': True,'no_create': True}"/>
+                                               options="{'no_open': True,'no_create': True}"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <br/>
                                         <label string="加工方式" style="font-weight:bold"/>
                                         <field name="proces_code" style="width: 90px"
-                                               options="{'no_open': True,'no_create': True}"/>
+                                               options="{'no_open': True,'no_create': True}"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <span style="display:inline-block; width: 70px;"/>
                                         <label string="抗拉強度" style="font-weight:bold"/>
                                         <field name="tensihrd" style="width: 120px"/>
@@ -101,7 +107,8 @@
                                         <label string="　　數量" style="font-weight:bold"/>
                                         <field name="num1" style="width:30px"/>
                                         <field name="unit1" style="width:50px"
-                                               options="{'no_open': True,'no_create': True}"/>
+                                               options="{'no_open': True,'no_create': True}"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <label string="" class="oe_inline"/>
                                         <field name="num2" style="width:30px"/>
                                         <field name="unit2" style="width:50px"

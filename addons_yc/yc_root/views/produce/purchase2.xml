@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <!-- load before document updated and can implement all page in the module-->
+        <template id="assets_backend_purchase2" name="static_resources assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <!--<script src="/yc_root/static/src/js/purchase_rpc.js" type="text/javascript"/>-->
+            </xpath>
+        </template>
         <!-- view of purchase tree  -->
         <record model="ir.ui.view" id="purchase2_tree">
             <field name="name">purchase.tree</field>
@@ -29,32 +35,11 @@
                 <form string="Purchase form">
                     <div style="background: ghostwhite; width:1000px; overflow-x: auto;" class="purchase2_for_js">
                         <sheet>
-                            <script>
-                                $(document).on('click', "label.btn", function(event){
-                                    var div = $('div #toggle_return');
-                                    var btn = $("div[name='return_btn'] input");
-                                    var wizard = $('.mummy_return');
-                                    if (btn.prop('checked')==true){
-                                        div.css('display','unset');
-                                        wizard.removeClass("glyphicon glyphicon-random");
-                                        wizard.addClass('glyphicon glyphicon-remove');
-                                        wizard.css("background-color","#80b1b3");
-                                        wizard.hover(function(e) {
-                                              $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
-                                        });
-                                    }
-                                    else if (btn.prop('checked')==false){
-                                        div.css('display','none');
-
-                                        wizard.removeClass("glyphicon glyphicon-remove");
-                                        wizard.addClass('glyphicon glyphicon-random');
-
-                                        wizard.css("background-color","#7c7bad");
-                                        wizard.hover(function(e) {
-                                              $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
-                                        });
-                                    }
-                                });
+                            <style>
+                                .block1{background-color: #ffcc99; padding-left: 8px;}
+                            </style>
+                            <script type="text/javascript" src="/yc_root/static/src/js/purchase2.js">
+                                // 從 static/src/js 調用 jsfile
                             </script>
                             <header>
                                 <button string="搜尋舊檔" type="action" class="search_btn"
@@ -63,42 +48,43 @@
                                         icon="" string="品名新增"/>
                                 <button name="%(setlength_action)d" type="action" class="create_btn"
                                         icon="" string="長度新增"/>
-                                <button name="%(setqcnote_action)d" type="action" class="create_btn"
+                                <button name="%(setpurchasenote_action)d" type="action" class="create_btn"
                                         icon="" string="備註搜尋"/>
                             </header>
+                            <div class="block1">
+                                <group col="8">
+                                    <field name="day" style="width: 110px;"/>
+                                    <field name="copy_createdate" attrs="{'readonly': True }"/>
+                                    <field name="time" default_focus="1"/>
+                                    <field name="company_id" style="width: 80px;" readonly="1"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <!---->
+                                    <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="processing_attache" attrs="{'readonly': [('id', '!=',False)]}"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="customer_id" readonly="1"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <field name="driver_id" attrs="{'readonly': True }"
+                                           options="{'no_open': True,'no_create': True}"/>
+                                    <!---->
+                                    <field name="combo_process" readonly="1"/>
+                                    <field name="combo_customer" readonly="1"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="batch"/>
+                                    <!---->
+                                    <field name="customer_no"/>
+                                    <field name="list_man" readonly="1" options="{'no_open': True,'no_create': True}"/>
 
-                            <group col="8">
-                                <field name="day" style="width: 110px;"/>
-                                <field name="time" default_focus="1"/>
-                                <field name="copy_createdate" attrs="{'readonly': True }"/>
-                                <field name="company_id" style="width: 80px;" readonly="1"
-                                       options="{'no_open': True,'no_create': True}"/>
-                                <!---->
-                                <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
-                                       options="{'no_open': True,'no_create': True}"/>
-                                <field name="processing_attache" attrs="{'readonly': [('id', '!=',False)]}"
-                                       options="{'no_open': True,'no_create': True}"/>
-                                <field name="customer_id" readonly="1"
-                                       options="{'no_open': True,'no_create': True}"/>
-                                <field name="driver_id" attrs="{'readonly': True }"
-                                       options="{'no_open': True,'no_create': True}"/>
-                                <!---->
-                                <field name="combo_process" readonly="1"/>
-                                <field name="combo_customer" readonly="1"/>
-                                <field name="name" readonly="1"/>
-                                <field name="batch"/>
-                                <!---->
-                                <field name="customer_no"/>
-                                <field name="list_man" readonly="1" options="{'no_open': True,'no_create': True}"/>
-
-                                <label for="return_btn" string=""
-                                       class="btn btn-primary btn-sm glyphicon glyphicon-random widget_btn mummy_return">
-                                </label>
-                                <field name="pre_order" nolabel="1" invisible="1"/>
-                                <field name="pre_order"/>
-                                <!---->
-                                <field name="return_btn" style="display:none;" nolabel="1"/>
-                            </group>
+                                    <label for="return_btn" string=""
+                                           class="btn btn-primary btn-sm glyphicon glyphicon-random widget_btn mummy_return">
+                                    </label>
+                                    <field name="pre_order" nolabel="1" invisible="1"/>
+                                    <field name="pre_order"/>
+                                    <!---->
+                                    <field name="return_btn" style="display:none;" nolabel="1"/>
+                                </group>
+                            </div>
                             <div id="toggle_return" style="display:none;">
                                 <group col="2">
                                     <field name="condition" style="width:100px" widget="radio"
@@ -194,7 +180,7 @@
                                         <field name="num4" style="width:50px" nolabel="1"/>
                                         <field name="unit4" nolabel="1" style="width:50px"
                                                options="{'no_open': True,'no_create': True}"/>　
-                                        <field name="storeplace" style="width: 50px;"/>
+                                        <field name="storeplace_id" style="width: 50px;"/>
                                         <field name="totalpack" readonly="1"/>
 
                                     </group>
@@ -208,25 +194,27 @@
                                         <field name="wire_furn"/>
                                         <field name="headsign" widget='image' height="70" width="60"/>
                                     </group>
-                                    <div style="">
-                                        <group col="8" style="background-color: #b1b1ce;border: 5px ridge;">
-                                            <field name="surfhrd"/>
-                                            <field name="corehrd"/>
-                                            <field name="piece" widget="radio"
-                                                   options="{'horizontal': True}"/>
-                                            <field name="norcls"/>
-                                            <!---->
-                                            <field name="tensihrd"/>
-                                            <field name="carburlayer"/>
-                                            <field name="pre_furn"/>
-                                            <field name="wxr_txtur"/>
-                                            <!---->
-                                            <field name="torsion"/>
-                                            <field name="tempturing2" string="回火溫度"/>
-                                            <field name="order_furn"
-                                                   options="{'no_open': True}"/>
-                                            <field name="wxrhard"/>
-                                        </group>
+                                    <div>
+                                        <div class="block1" style="border: 5px ridge;">
+                                            <group col="8">
+                                                <field name="surfhrd"/>
+                                                <field name="corehrd"/>
+                                                <field name="piece" widget="radio"
+                                                       options="{'horizontal': True}"/>
+                                                <field name="norcls"/>
+                                                <!---->
+                                                <field name="tensihrd"/>
+                                                <field name="carburlayer"/>
+                                                <field name="pre_furn"/>
+                                                <field name="wxr_txtur"/>
+                                                <!---->
+                                                <field name="torsion"/>
+                                                <field name="tempturing2" string="回火溫度"/>
+                                                <field name="order_furn"
+                                                       options="{'no_open': True}"/>
+                                                <field name="wxrhard"/>
+                                            </group>
+                                        </div>
                                         <group col="6">
                                             <field name="notices1" string="注意事項"/>
                                             <field name="notices2" string=""/>

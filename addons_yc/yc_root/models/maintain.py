@@ -228,6 +228,12 @@ class YcSeteunit(models.Model):
     name = fields.Char("單位名稱")
     code = fields.Char("單位代碼")
 
+class YcSetPurchasenote(models.Model):
+    # 製造備註 S03N0012
+    _name = "yc.setpurchasenote"
+    name = fields.Char()
+
+
 
 class YcSetStatus(models.Model):
     # 狀態
@@ -248,6 +254,10 @@ class YcFactory(models.Model):
     name = fields.Char("廠別名稱")
     code = fields.Char("廠別代碼")
 
+class YcSetStoreplace(models.Model):
+    _name = "yc.setstoreplace"
+    name = fields.Char("存放地點")
+    company_id = fields.Many2one("res.company", string='所屬工廠')
 
 # S04
 class YcSetproducenote(models.Model):

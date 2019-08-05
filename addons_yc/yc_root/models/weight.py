@@ -261,6 +261,7 @@ class YcWeightDetails(models.Model):
     customer_id = fields.Many2one("yc.customer", "客戶名稱", required=True)
     processing_id = fields.Many2one("yc.processing", "加工廠名稱", required=True)
     note = fields.Char("備註")
+    storeplace_id = fields.Many2one("yc.setstoreplace", "儲放位置")
     customer_code = fields.Char("客戶代碼")
 
     @api.multi
@@ -283,6 +284,11 @@ class YcWeightDetails(models.Model):
     def _search_customer(self):
         if self.customer_id:
             self.customer_code = self.env["yc.customer"].search([('name', '=', self.customer_id.name)]).code
+
+    @api.onchange("name")
+    def _storeplace(self):
+        return {'domain': {'storeplace_id': [('company_id', '=', self.name.company_id.id)]}}
+
 
     # def default_get(self, fields_list):
     #     res = super(YcWeightDetails,self).default_get(fields_list)
