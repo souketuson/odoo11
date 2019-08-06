@@ -116,7 +116,7 @@
                                         <tree create="false" delete="false"
                                               string="Purchase Details"
                                               editable="top">
-                                            <field name="wizard_check" string=" "
+                                            <field name="return_in_fac_check" string=" "
                                                    style="width:30px;"/>
                                             <field name="name" readonly="1"/>
                                             <field name="pre_order" readonly="1"/>

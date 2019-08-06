@@ -413,7 +413,7 @@ class YcPurchase(models.Model):
     whrd2v8 = fields.Float("華司硬度2值8")
     uqtreat = fields.Char("不合格品處理")
     uqweight = fields.Integer("不合格重量")
-    followup = fields.Char("處理方式")
+    followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
 
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")
@@ -436,6 +436,7 @@ class YcPurchase(models.Model):
                                   column1='col_name', column2='col_name_2')
     return_in_fac_ids = fields.Many2many(comodel_name="yc.purchase", relation='yc_purchase_yc_purchase_rel4',
                                          column1='col_name_3', column2='col_name_4')
+    return_in_fac_check = fields.Boolean(default=False)
     return_ids = fields.Many2many("yc.return", string="purchase search", help="查詢列表")
     condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')], string="退回來源")
     return_btn = fields.Boolean(default=False)
@@ -460,58 +461,62 @@ class YcPurchase(models.Model):
     @api.onchange('condition')
     def search_purchase(self):
         if self.condition:
-            # 要先建好出貨退回檔
-            # OT_list = [(name) for name in self.env['轉廠單項目檔'].search([]).name ]
+            # 處理方式為"轉入進貨單"者現身
+            domain = [('followup', '=', 'migrate')]
             if self.condition == 'OT': #廠外退回
-                records = self.env['yc.return'].search([])
+                records = self.env['yc.return'].search(domain)
                 self.return_ids = [(6, _, records.ids)]
-            elif self.condition == 'IT':
-                # 廠內退回似乎在品質檢驗階段 如果被轉入進貨單 前工令單會自動key值
-                # IT 只要找出前工令號有值 and 等於工令號的紀錄
-                has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
-                self.return_in_fac_ids = [(6, _, has_preorder.ids)]
+            elif self.condition == 'IT': #廠內退回
+                #  "SELECT 工令號碼 as 出貨退回編號,工令號碼,不合格品處理 as 退回備註,b.前工令號碼"
+                #   from 進貨單主檔 a"
+                #   left join (select 前工令號碼 from 進貨單主檔) b on a.工令號碼=b.前工令號碼"
+                #   WHERE 處理方式='轉入進貨單' and b.前工令號碼 is null"
+                #   order by 工令號碼 ASC"
+                purchase = self.env['yc.purchase'].search(domain)
+                self.return_in_fac_ids = [(6, _, purchase.ids)]
 
     def comfirm_return(self):
         '''
-        1. 確認勾選紀錄有幾筆，超過1筆警告
-        2. 解掉勾勾
-        3. 1筆，找到該紀錄拉出資料
+        1. 確認退回來源
+        2. 確認勾選紀錄有幾筆，超過1筆警告
+        3. 解掉勾勾
+        4. 1筆，找到該紀錄拉出資料
         :return:
         '''
-        checked = self.return_ids.filtered(lambda r: r.wizard_check)
-        if len(checked) > 1:
-            raise ValidationError(_('只能選一筆'))
-        elif len(checked) == 0:
-            return 1
-        checked.write({'wizard_check': False})
-        purchase = self.env['yc.purchase']
-        record = purchase.search([('name', '=', checked.name)])
-        #TODO: 待確認 ('norcls') 這個從頭到尾沒看過哪一個地方 key-in
-        wanted = ['len_code', 'product_code', 'piece', 'customer_no', 'batch', 'len_descript',
-                  'norm_code', 'strength_level', 'norcls', 'clsf_code', 'proces_code', 'txtur_code',
-                  'surface_code', 'elecpl_code', 'process1', 'process2', 'num1', 'unit1', 'num2',
-                  'unit2', 'num3', 'unit3', 'num4', 'unit4', 'order_furn', 'totalpack', 'net',
-                  'wire_furn', 'standard', 'surfhrd', 'corehrd', 'tensihrd', 'carburlayer', 'torsion',
-                  'wxr_txtur', 'wxr_txtur', 'storeplace_id', 'tempturing2', 'pre_furn',  'notices1',
-                  'notices2', 'notices3', 'notices4', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1',
-                  'prodnote2', 'prodnote3', 'flow',  'cp', 'nh31', 'nh32', 'nh33', 'nh34', 'heat1',
-                  'heat2', 'heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8', 'heattemp', 'heatsped',
-                  'tempturing1', 'tempturing2', 'tempturing3', 'tempturing4', 'tempturing5',
-                  'tempturing6', 'tempturisped', 'fullorhalf'
-                  ]
-        for _field in wanted:
-            _val = getattr(record, _field)
-            setattr(self, _field, _val)
-
-    # TODO: If 前工令號碼.Text <> "" Then
-    #             strSSQL = "update 出貨退回主檔"
-    #             strSSQL &= "  set  新工令號碼 = '" & 工令號碼.Text & "'"
-    #             strSSQL &= " where 出貨退回編號 = '" & 前工令號碼.Text & "'"
-    #             blnCheck = dbExecute(DNS, strSSQL)
-    #         End If
-    # 如果前工令號碼有值 把新工令號更新到退回主檔
-
-
+        if self.condition == 'OT':
+            checked = self.return_ids.filtered(lambda r: r.wizard_check)
+            if len(checked) > 1:
+                raise ValidationError(_('只能選一筆'))
+            elif len(checked) == 0:
+                return 1
+            purchase = self.env['yc.purchase']
+            # TODO: 待確認 ('norcls') 這個從頭到尾沒看過哪一個地方 key-in
+            wanted = ['len_code', 'product_code', 'piece', 'customer_no', 'batch', 'len_descript',
+                      'norm_code', 'strength_level', 'norcls', 'clsf_code', 'proces_code', 'txtur_code',
+                      'surface_code', 'elecpl_code', 'process1', 'process2', 'num1', 'unit1', 'num2',
+                      'unit2', 'num3', 'unit3', 'num4', 'unit4', 'order_furn', 'totalpack', 'net',
+                      'wire_furn', 'standard', 'surfhrd', 'corehrd', 'tensihrd', 'carburlayer', 'torsion',
+                      'wxr_txtur', 'wxr_txtur', 'storeplace_id', 'tempturing2', 'pre_furn', 'notices1',
+                      'notices2', 'notices3', 'notices4', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1',
+                      'prodnote2', 'prodnote3', 'flow', 'cp', 'nh31', 'nh32', 'nh33', 'nh34', 'heat1',
+                      'heat2', 'heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8', 'heattemp', 'heatsped',
+                      'tempturing1', 'tempturing2', 'tempturing3', 'tempturing4', 'tempturing5',
+                      'tempturing6', 'tempturisped', 'fullorhalf'
+                      ]
+            checked.write({'wizard_check': False})
+            record = purchase.search([('name', '=', checked.name)])
+            for _field in wanted:
+                _val = getattr(record, _field)
+                setattr(self, _field, _val)
+            # 按下拉出退回btn 會先create() 再經過這裡 所以可以一律用write
+            checked.write({"neworder": self.name})
+        elif self.condition == 'IT':
+            checked = self.return_in_fac_ids.filtered(lambda r: r.return_in_fac_check)
+            if len(checked) > 1:
+                raise ValidationError(_('只能選一筆'))
+            elif len(checked) == 0:
+                return 1
+            checked.write({'return_in_fac_check': False})
 
 
     #########################
@@ -906,7 +911,7 @@ class YcPurchase(models.Model):
     # 5.進貨單產生工令號
     @api.model
     def create(self, vals):
-        # 進貨作業 S03N0120 且非wizard
+
         p2 = self.env['ir.actions.act_window'].search([('name', '=', '進貨單2作業')]).id
         if self._context.get('params')['action'] in (self.action_id_main, p2) and vals['car_no']:
             # 儲存時給工令號
@@ -920,6 +925,9 @@ class YcPurchase(models.Model):
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
             vals.update({"name": name, 'wizard_btn': False})
+        elif self._context.get('params')['action'] in (self.action_id_main, p2) and vals['condition'] == 'IT':
+            # TODO: 車次序號用轉廠的車次，待修正
+            vals.update({"name": 'TEMP1234', 'wizard_btn': False})
         return super(YcPurchase, self).create(vals)
 
     # 6.預設時間
@@ -934,7 +942,7 @@ class YcPurchase(models.Model):
     # 7. 空值警告
     @api.constrains("car_no")
     def _verify(self):
-        if not self.car_no:
+        if not self.car_no and self.condition != "IT":
             raise Warning("車次序號未填")
 
     # 8. 加熱爐和回火爐自動填值
