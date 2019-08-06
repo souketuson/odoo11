@@ -4,7 +4,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
     var core = require('web.core');
     var rpc = require('web.rpc');
     var Widget = require('web.Widget');
-    var bgdrawer = Widget.extend({
+    var custom_widget = Widget.extend({
         /* <init: construct before loading DOM completely.>*/
         init: function(parent, options, event) {
             this._super.apply(this, arguments);
@@ -44,7 +44,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 }
             }
         },
-        // this work while dom loaded
+        // this work while dom is loaded
         note_auto_complete: function(){
             var note1 = $("input[name='notices1']");
             var note2 = $("input[name='notices2']");
@@ -57,10 +57,12 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
             var pn3 = $("input[name='prodnote3']");
 
             note1.autocomplete({
+                // reverse flipping direction to drop up.
                 position: { my: "left bottom", at: "left top", collision: "flip" },
+                // starting search while contain x characters.
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": note1.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": note1.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -75,7 +77,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": note2.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": note2.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -90,7 +92,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": note3.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": note3.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -105,7 +107,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": qc1.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": qc1.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -120,7 +122,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": qc2.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": qc2.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -135,7 +137,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": qc3.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": qc3.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -150,7 +152,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": pn1.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": pn1.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -165,7 +167,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": pn2.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": pn2.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -180,7 +182,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 position: { my: "left bottom", at: "left top", collision: "flip" },
                 minLength: 1,
                 source: function (request, response) {
-                    ajax.jsonRpc("/serial_search", "call", {"serial": pn3.val()})
+                    ajax.jsonRpc("/note_search", "call", {"txt": pn3.val()})
                         .then(function (data) {
                             response(data);
                         });
@@ -192,15 +194,21 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 },
             });
         },
-
+        note_rpc: function(){
+            rpc.query({
+                model: 'yc.setpurchasenote',
+                method: 'name_search',
+                args:[],
+            })
+        },
     });
 
     // Init a new bgdrawer when the web client is ready
     /*core.bus.on('web_client_ready', null, function () {new bgdrawer();});
     return {'bgdrawer': bgdrawer,};*/
 
-    var my_widget = new bgdrawer(this);
-    my_widget.appendTo($(".o_form_sheet"));
+    var _widget = new custom_widget(this);
+    _widget.appendTo($(".o_form_sheet"));
 });
 
 

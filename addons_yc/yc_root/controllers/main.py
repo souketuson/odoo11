@@ -5,23 +5,22 @@ from odoo import http
 
 class GetMatchingRecords(http.Controller):
 
-    @http.route("/serial_search", type="json",auth="public", website=True)
-    def serial_search(self, serial):
+    @http.route("/note_search", type="json",auth="public", website=True)
+    def note_search(self, txt):
         """
-        Starting from a serial number (portal user input),
-        serach for the corresponding lot and then search
-        for product id/name and brand id/name.
-        Return them to the website form.
+        Remote Procedure Call:
+        Seraching for the corresponding lot and then search for note id/name.
+        Return them to the website form through ajax.
         """
-        serial_domain = [("name", "ilike", serial)]
-        serial_objs = request.env["yc.setpurchasenote"].sudo().search(serial_domain)
+        domain = [("name", "ilike", txt)]
+        records = request.env["yc.setpurchasenote"].sudo().search(domain)
 
-        if not serial_objs:
+        if not records:
             return {"fail": True}
 
         suggestions = []
-        for serial_obj in serial_objs:
-            serial_vals = {}
-            serial_vals['value'] = serial_obj.name
-            suggestions.append(serial_vals)
+        for record in records:
+            vals = {}
+            vals['value'] = record.name
+            suggestions.append(vals)
         return suggestions

@@ -24,14 +24,14 @@
 
                         <group col="8">
                             <field name="day"/>
-                            <field name="customer_code" string=""/>
-                            <field name="customer_id"/>
+                            <field name="customer_code" string="" placeholder="輸入客戶代號"/>
+                            <field name="customer_id" options="{'no_open': True,'no_create': True}"/>
                             <field name="ardebitday"/>
                             <!---->
-                            <field name="purchase_id"/>
+                            <field name="purchase_id" options="{'no_open': True,'no_create': True}"/>
                             <field name="name"/>
-                            <field name="driver_id"/>
-                            <field name="company_id"/>
+                            <field name="driver_id" options="{'no_open': True,'no_create': True}"/>
+                            <field name="company_id" options="{'no_open': True,'no_create': True}" readonly="1"/>
                         </group>
                         <group>
 
@@ -39,15 +39,61 @@
                         </group>
                         <table border="1" class="tb">
                             <tr>
-                                <td></td>
                                 <td>工令號碼</td>
+                                <td>品名</td>
+                                <td>規格</td>
+                                <td>材質</td>
+                                <td>磅後桶數</td>
+                                <td>單位</td>
+                                <td>磅後總重</td>
+                                <td>電鍍別</td>
+                                <td>客戶工令</td>
+                                <td>牙分類</td>
+                                <td>進貨日期</td>
+                                <td>線材爐號</td>
+                                <td>加工方式</td>
+                                <td>備註</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <field name="product_id"/>
+                                    <field name="order_id" readonly="1"/>
                                 </td>
                                 <td>
-                                    <field name="order_id"/>
+                                    <field name="product_id" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="norm_code" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="txtur_code" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="weighbuckets" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="unit1" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="tweight" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="elecpl_code" readonly="1"/>
+                                </td>
+                                <td>客戶工令</td>
+                                <td>
+                                    <field name="fullorhalf" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="purchase_day" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="wire_furn" readonly="1"/>
+                                </td>
+                                <td>
+                                    <field name="proces_code" readonly="1"/>
+                                </td>
+                                <td>
+                                    備註
                                 </td>
                             </tr>
                         </table>

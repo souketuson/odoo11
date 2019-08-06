@@ -43,11 +43,15 @@
                             }
                         });
                     </script>
-                    <div style="width:100%;border-top:1px #f2f2f2 solid;border-bottom:1px #f2f2f2 solid;padding: 3px;background-color: white">
+                    <div style="width:100%;border-top:1px #f2f2f2 solid;border-bottom:1px #f2f2f2 solid;padding: 3px;background-color: #c9c9c9">
                         <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
                                rel='open_the_door' id="open_the_door"/>
                         <button type="object" name="itself_update" string="確定帶出" style="display:none;"/>
                         <field name="wizard_btn" style="display:none;"/>
+                        <field name="remainder" readonly="1"
+                               style="position: fixed;left: 40%;font-size: 21px;color: white;
+                                      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;"
+                            attrs="{'invisible':[('wizard_btn','=', True)]}"/>
                     </div>
                     <div style="height:10px;"/>
                     <div id="toggle_elf" style="display:none;background:#e6e6ff;">
@@ -87,7 +91,7 @@
                             <label string="線材爐號" style="font-weight:bold"/>
                             <field name="wire_furn" style="width:100px" options="{'no_open': True,'no_create': True}"/>
                             <span style="display:inline-block; width: 40px;"/>
-                            <field name="remainder" readonly="1"/>
+
                         </div>
                         <field name="itself_ids" widget="many2many">
                             <tree create="false" delete="false"
@@ -241,9 +245,8 @@
                             <field name="qc" style="width:100px" readonly="1"
                                    options="{'no_open': True,'no_create': True}"/>
                             <br/>
-                        </div>
-
-                        <div>
+                        <!--</div>-->
+                        <!--<div>-->
                             <label string="　　流量" style="font-weight:bold"/>
                             <field name="flow" style="width: 80px"/>
                             <span style="display:inline-block; width: 20px;"/>

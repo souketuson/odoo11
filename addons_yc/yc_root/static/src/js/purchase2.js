@@ -28,6 +28,7 @@ $(document).on('click', "label.btn", function(event){
 $(this).keypress(function(e) {
     var da = document.activeElement;
     if (e.which== 13){
+        console.log(e.which);
         var _time = $('input[name="time"]');
         var _day =  $('div[name="day"] input');
         var carn = $('div[name="car_no"] input');

@@ -679,6 +679,7 @@ class YcPurchase(models.Model):
                     records = purchase.search([d for d in domain], limit=6, order='create_date desc')
                     if len (records) > 0:
                         self.itself_ids = [(6, 0, records.ids)]
+                        self.remainder = "共 %s 筆" % len(records)
                     else:
                         self.itself_ids = None
                         self.remainder = "找不到資料"
@@ -1098,6 +1099,14 @@ class YcPurchase(models.Model):
                 self.checkstate = '檢驗不合格'
             elif rec.wholeck == '合格' and rec.faceck == '合格':
                 self.checkstate = '檢驗合格'
+
+    ### 退回作業搜尋 ###
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = [('name', operator, name)]
+        records = self.search(domain + args, limit=limit, order='day desc')
+        return records.name_get()
 
 
 class YcProduceDetails(models.Model):
