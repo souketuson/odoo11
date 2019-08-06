@@ -50,6 +50,8 @@
                                         icon="" string="長度新增"/>
                                 <button name="%(setpurchasenote_action)d" type="action" class="create_btn"
                                         icon="" string="備註搜尋"/>
+                                <button name="comfirm_return" type="object" class="comfirm_return oe_highlight"
+                                        icon="" string="拉出退回"/>
                             </header>
                             <div class="block1">
                                 <group col="8">
@@ -180,7 +182,8 @@
                                         <field name="num4" style="width:50px" nolabel="1"/>
                                         <field name="unit4" nolabel="1" style="width:50px"
                                                options="{'no_open': True,'no_create': True}"/>　
-                                        <field name="storeplace_id" style="width: 50px;"/>
+                                        <field name="storeplace_id" style="width: 50px;"
+                                               options="{'no_open': True, 'no_create': True}"/>
                                         <field name="totalpack" readonly="1"/>
 
                                     </group>

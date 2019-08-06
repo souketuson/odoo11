@@ -7,6 +7,7 @@ import base64
 class YcQualityWizard(models.TransientModel):
     _name = "yc.quality.wizard"
     searchname = fields.Char("工令查詢", help="搜尋工令欄位")
+    name = fields.Char()
     order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
     order_name = fields.Char("工令號碼")
     checked = fields.Many2one("yc.purchase", string="已檢驗")
@@ -374,9 +375,9 @@ class YcQualityWizard(models.TransientModel):
         # setattr() 設置物件屬性
         functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname']
         for fn in self._proper_fields._map.keys():
-            if fn == 'id':
+            if fn in ['id', 'file']:
                 pass
-            elif fn in ['order_name', 'hidden_name']:
+            elif fn in ['order_name', 'name']:
                 setattr(self, fn, record.name)
             elif fn in functional_group:
                 setattr(self, fn, None)

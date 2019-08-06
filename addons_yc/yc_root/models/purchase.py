@@ -462,7 +462,7 @@ class YcPurchase(models.Model):
         if self.condition:
             # 要先建好出貨退回檔
             # OT_list = [(name) for name in self.env['轉廠單項目檔'].search([]).name ]
-            if self.condition == 'OT':
+            if self.condition == 'OT': #廠外退回
                 records = self.env['yc.return'].search([])
                 self.return_ids = [(6, _, records.ids)]
             elif self.condition == 'IT':
@@ -470,6 +470,49 @@ class YcPurchase(models.Model):
                 # IT 只要找出前工令號有值 and 等於工令號的紀錄
                 has_preorder = self.env['yc.purchase'].search([("pre_order", '!=', '')])
                 self.return_in_fac_ids = [(6, _, has_preorder.ids)]
+
+    def comfirm_return(self):
+        '''
+        1. 確認勾選紀錄有幾筆，超過1筆警告
+        2. 解掉勾勾
+        3. 1筆，找到該紀錄拉出資料
+        :return:
+        '''
+        checked = self.return_ids.filtered(lambda r: r.wizard_check)
+        if len(checked) > 1:
+            raise ValidationError(_('只能選一筆'))
+        elif len(checked) == 0:
+            return 1
+        checked.write({'wizard_check': False})
+        purchase = self.env['yc.purchase']
+        record = purchase.search([('name', '=', checked.name)])
+        #TODO: 待確認 ('norcls') 這個從頭到尾沒看過哪一個地方 key-in
+        wanted = ['len_code', 'product_code', 'piece', 'customer_no', 'batch', 'len_descript',
+                  'norm_code', 'strength_level', 'norcls', 'clsf_code', 'proces_code', 'txtur_code',
+                  'surface_code', 'elecpl_code', 'process1', 'process2', 'num1', 'unit1', 'num2',
+                  'unit2', 'num3', 'unit3', 'num4', 'unit4', 'order_furn', 'totalpack', 'net',
+                  'wire_furn', 'standard', 'surfhrd', 'corehrd', 'tensihrd', 'carburlayer', 'torsion',
+                  'wxr_txtur', 'wxr_txtur', 'storeplace_id', 'tempturing2', 'pre_furn',  'notices1',
+                  'notices2', 'notices3', 'notices4', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1',
+                  'prodnote2', 'prodnote3', 'flow',  'cp', 'nh31', 'nh32', 'nh33', 'nh34', 'heat1',
+                  'heat2', 'heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8', 'heattemp', 'heatsped',
+                  'tempturing1', 'tempturing2', 'tempturing3', 'tempturing4', 'tempturing5',
+                  'tempturing6', 'tempturisped', 'fullorhalf'
+                  ]
+        for _field in wanted:
+            _val = getattr(record, _field)
+            setattr(self, _field, _val)
+
+    # TODO: If 前工令號碼.Text <> "" Then
+    #             strSSQL = "update 出貨退回主檔"
+    #             strSSQL &= "  set  新工令號碼 = '" & 工令號碼.Text & "'"
+    #             strSSQL &= " where 出貨退回編號 = '" & 前工令號碼.Text & "'"
+    #             blnCheck = dbExecute(DNS, strSSQL)
+    #         End If
+    # 如果前工令號碼有值 把新工令號更新到退回主檔
+
+
+
 
     #########################
     ### views共用或部分共用 ###
@@ -492,7 +535,8 @@ class YcPurchase(models.Model):
     def _count_bag(self):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
 
-    # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料
+
+    # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料 TODO: 確定不用後可以刪掉了
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
@@ -568,6 +612,7 @@ class YcPurchase(models.Model):
     # 6.過濾桶號工令
     @api.onchange("order_furn")
     def _chech_order(self):
+        # TODO: should modified value by given number directly.
         if self._context.get('params')['action'] == 111:
             return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
                                "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}

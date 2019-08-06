@@ -2,9 +2,11 @@
 $(document).on('click', "label.btn", function(event){
     var div = $('div #toggle_return');
     var btn = $("div[name='return_btn'] input");
+    var comfirm = $('button.comfirm_return');
     var wizard = $('.mummy_return');
     if (btn.prop('checked')==true){
         div.css('display','unset');
+        comfirm.attr("disabled", false);
         wizard.removeClass("glyphicon glyphicon-random");
         wizard.addClass('glyphicon glyphicon-remove');
         wizard.css("background-color","#80b1b3");
@@ -14,7 +16,7 @@ $(document).on('click', "label.btn", function(event){
     }
     else if (btn.prop('checked')==false){
         div.css('display','none');
-
+        comfirm.attr("disabled", true);
         wizard.removeClass("glyphicon glyphicon-remove");
         wizard.addClass('glyphicon glyphicon-random');
 
@@ -270,8 +272,10 @@ $(this).keypress(function(e) {
     }
 });
 
-
-
+// 先disable 退回btn
+$(document).ready(function(){
+   $('button.comfirm_return').attr("disabled",true);
+});
 
 
 

@@ -9,7 +9,7 @@ class YcReturn(models.Model):
     neworder = fields.Char("新工令號碼")
     day = fields.Date("退回日期", default=fields.Date.today)
     ardebitday = fields.Date("應收帳款扣款日期", default=fields.Date.today)
-    followup = fields.Char("處理方式")
+    followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
     byear = fields.Char("所屬帳款年")
     bmonth = fields.Char("所屬帳款月")
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
@@ -21,13 +21,12 @@ class YcReturn(models.Model):
     weight = fields.Integer("退回重量")
     money = fields.Integer("退回金額")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
-    company_id = fields.Many2one("res.company", default= lambda self: self.env.user.company_id)
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.user.company_id)
     wizard_check = fields.Boolean("是否帶出", default=False, help='checkbox TorF判斷要帶出哪筆資料')
     # 一個退回 對應 一個工令
     # 一個工令 對應 一個退回
 
     purchase_id = fields.Many2one('yc.purchase')
-
     product_id = fields.Char(related='purchase_id.product_code.name')
     order_id = fields.Char(related='purchase_id.name')
     norm_code = fields.Char(related='purchase_id.norm_code.name')
