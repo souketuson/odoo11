@@ -55,14 +55,14 @@
                             </header>
                             <div class="block1">
                                 <group col="8">
-                                    <field name="day" style="width: 110px;"/>
+                                    <field name="day" style="width: 110px; font-size: smaller;"/>
                                     <field name="copy_createdate" attrs="{'readonly': True }"/>
-                                    <field name="time" default_focus="1"/>
+                                    <field name="time" default_focus="1" style=" font-size: smaller;"/>
                                     <field name="company_id" style="width: 80px;" readonly="1"
                                            options="{'no_open': True,'no_create': True}"/>
                                     <!---->
                                     <field name="car_no" attrs="{'readonly': [('id', '!=',False)]}"
-                                           options="{'no_open': True,'no_create': True}"/>
+                                           options="{'no_open': True,'no_create': True}" style="width: 110px;" />
                                     <field name="processing_attache" attrs="{'readonly': [('id', '!=',False)]}"
                                            options="{'no_open': True,'no_create': True}"/>
                                     <field name="customer_id" readonly="1"
@@ -70,12 +70,12 @@
                                     <field name="driver_id" attrs="{'readonly': True }"
                                            options="{'no_open': True,'no_create': True}"/>
                                     <!---->
-                                    <field name="combo_process" readonly="1"/>
+                                    <field name="combo_process" readonly="1" style="width: 110px;"/>
                                     <field name="combo_customer" readonly="1"/>
                                     <field name="name" readonly="1"/>
                                     <field name="batch"/>
                                     <!---->
-                                    <field name="customer_no"/>
+                                    <field name="customer_no" style="width: 110px;"/>
                                     <field name="list_man" readonly="1" options="{'no_open': True,'no_create': True}"/>
 
                                     <label for="return_btn" string=""

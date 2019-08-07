@@ -33,6 +33,7 @@
         'wizard/purchase_wizard.xml',
         'wizard/purchase_preorder.xml',
         'wizard/shipment_wizard.xml',
+        'wizard/quality_invalid.xml',
         'views/business/maintain/setprocessingareatype.xml',
         'views/business/maintain/setprocessingplanttype.xml',
         'views/business/maintain/setcurrency.xml',

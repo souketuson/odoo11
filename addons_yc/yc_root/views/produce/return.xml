@@ -19,7 +19,9 @@
                 <form string="Book">
                     <sheet>
                         <style>
-                            .tb{ width:100%;}
+                            .tb{ width:100%;border:3px double;}
+                            td{ padding: 8px;text-align: center; vertical-align: middle;}
+                            .bold{ font-weight: bold;}
                         </style>
                         <div style="width:1000px; overflow-x: auto;" class="">
                             <group col="8">
@@ -38,7 +40,7 @@
 
                             </group>
                             <table border="1" class="tb">
-                                <tr>
+                                <tr class="bold">
                                     <td>工令號碼</td>
                                     <td>品名</td>
                                     <td>規格</td>
@@ -107,7 +109,7 @@
                                 <field name="followup"/>
                             </group>
                             <table border="1" class="tb">
-                                <tr>
+                                <tr class="bold">
                                     <td>新工令號碼</td>
                                     <td>品名</td>
                                     <td>規格</td>
@@ -125,41 +127,41 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <field name="neworder" readonly="1"/>
+                                        <field name="neworder" readonly="1" options="{'no_open': True,'no_create': True}"/>
                                     </td>
                                     <td>
-                                        <field name="product_id" readonly="1"/>
+                                        <field name="new_product_id" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="norm_code" readonly="1"/>
+                                        <field name="new_norm_code" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="txtur_code" readonly="1"/>
+                                        <field name="new_txtur_code" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="weighbuckets" readonly="1"/>
+                                        <field name="new_weighbuckets" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="unit1" readonly="1"/>
+                                        <field name="new_unit1" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="tweight" readonly="1"/>
+                                        <field name="new_tweight" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="elecpl_code" readonly="1"/>
+                                        <field name="new_elecpl_code" readonly="1"/>
                                     </td>
                                     <td>客戶工令</td>
                                     <td>
-                                        <field name="fullorhalf" readonly="1"/>
+                                        <field name="new_fullorhalf" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="purchase_day" readonly="1"/>
+                                        <field name="new_purchase_day" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="wire_furn" readonly="1"/>
+                                        <field name="new_wire_furn" readonly="1"/>
                                     </td>
                                     <td>
-                                        <field name="proces_code" readonly="1"/>
+                                        <field name="new_proces_code" readonly="1"/>
                                     </td>
                                     <td>
                                         備註

@@ -147,6 +147,7 @@ class YcPurchaseWizard(models.TransientModel):
 
 
 class YcYcPurchasePreorder(models.TransientModel):
+    # TODO: 改用radio 帶出退回後這邊應該可以刪掉
     _name = 'yc.purchase.preorder'
 
     condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')],

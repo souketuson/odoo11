@@ -131,7 +131,8 @@ class YcPurchaseDisplay(models.TransientModel):
     def save_entry_data(self):
         vals = {}
         if self.hidden_name:
-            purchase = self.env['yc.purchase'].search([('name', '=', self.hidden_name)])
+            domain = [('name', '=', self.hidden_name)]
+            purchase = self.env['yc.purchase'].search(domain)
             # 儲存會異動的就好
             vals.update({'product_code': self.product_code.id, 'batch': self.batch,
                          'norm_code': self.norm_code.id, 'fullorhalf': self.fullorhalf,
@@ -185,11 +186,14 @@ class YcPurchaseDisplay(models.TransientModel):
         _name = self.hidden_name
         # _company = self.env.user.company_id.id
         to_clear_id = db.search([('name', '=', _name)]).id
+        vals = {}
         for field in to_clear_field:
-            db.search([('id', '=', to_clear_id)]).write({field: None})
+            vals.update({field: None})
+        db.search([('id', '=', to_clear_id)]).write({vals})
         self._display_record(to_clear_id)
 
     def _display_record(self, record_id):
+        # TODO: getattrs and setattrs method to overwrite this.
         purchase = self.env["yc.purchase"]
         self.order_furn = None
         self.notweighted_order = None

@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <form string="Shipment Wizard">
                 <sheet>
+                    <style>
+                        .text-danger{color: #b9444 !important; background-color: #f2dede !important;}
+                    </style>
                     <div>
                         <button name="form_refresh" string="重排" type="object"/>
                         <!--<button name="yc_root.purchase2_action" string="離開" type="action" class="btn btn-sm btn-primary" style="width: 80px; margin: 0 3%;"/>-->

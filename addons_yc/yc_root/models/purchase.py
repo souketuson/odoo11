@@ -329,7 +329,7 @@ class YcPurchase(models.Model):
     faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格')], '外觀判定')
     ck_person = fields.Many2one("yc.hr", string="檢驗人員")
     singleton = fields.Float("單支重")
-    uqbuckets = fields.Integer("不合格桶數")
+
     uqemtreat = fields.Char("不合格特急處理動作")
     produceday1 = fields.Date("製造日期1")
     shift1 = fields.Many2one("yc.setshift", string="班別1")
@@ -346,13 +346,8 @@ class YcPurchase(models.Model):
     op3 = fields.Many2one("yc.hr", string="操作人員3")
     buckets3 = fields.Integer("桶數3")
     teamlead3 = fields.Many2one("yc.hr", string="組長3")
-    weighbuckets = fields.Integer("磅後桶數")
-    bdiff = fields.Integer("桶數差")
-    pweight = fields.Integer("進貨重量")
-    tweight = fields.Integer("磅後總重")
-    wdiff = fields.Integer("重量差")
 
-    serial = fields.Float("序號", default=99.9)
+    serial = fields.Float("序號", default=99.9) # TODO: 應該是order_wizard才用的到
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
     ptime2 = fields.Char("製造時間2")
@@ -387,8 +382,7 @@ class YcPurchase(models.Model):
     ffday = fields.Date("完爐日期")
     fftime = fields.Char("完爐時間")
     ckclv = fields.Boolean("CK滲碳層")
-    feedbucket = fields.Integer("入料桶數")
-    feedweight = fields.Integer("入料總重")
+
 
     contrast = fields.Float("對照")
     shipbucket = fields.Integer("出貨桶數")
@@ -411,8 +405,18 @@ class YcPurchase(models.Model):
     whrd2v6 = fields.Float("華司硬度2值6")
     whrd2v7 = fields.Float("華司硬度2值7")
     whrd2v8 = fields.Float("華司硬度2值8")
-    uqtreat = fields.Char("不合格品處理")
+    uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
+                                ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
+
+    pweight = fields.Integer("進貨重量")
+    tweight = fields.Integer("磅後總重")
+    feedbucket = fields.Integer("入料桶數")
+    feedweight = fields.Integer("入料總重")
+    weighbuckets = fields.Integer("磅後桶數")
+    bdiff = fields.Integer("桶數差")
+    wdiff = fields.Integer("重量差")
     uqweight = fields.Integer("不合格重量")
+    uqbuckets = fields.Integer("不合格桶數")
     followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
 
     clnorm = fields.Char("滲碳層規格")
@@ -429,6 +433,9 @@ class YcPurchase(models.Model):
     mgchecker = fields.Many2one("yc.hr", string="金相檢驗人員")
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
+
+
+
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
     wizard_check = fields.Boolean("是否帶出", default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
@@ -446,7 +453,6 @@ class YcPurchase(models.Model):
         help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
 
     # 以下為查詢欄位
-    look_up = fields.Boolean(store=False)
     searchname = fields.Char("工令查詢", help="搜尋工令欄位")
     furn_in = fields.Many2one("yc.purchase", string="已進爐")
     furn_notin = fields.Many2one("yc.purchase", string="未進爐")
@@ -461,7 +467,7 @@ class YcPurchase(models.Model):
     @api.onchange('condition')
     def search_purchase(self):
         if self.condition:
-            # 處理方式為"轉入進貨單"者現身
+            # 處理方式('followup')為 "轉入進貨單"('migrate')者現身
             domain = [('followup', '=', 'migrate')]
             if self.condition == 'OT': #廠外退回
                 records = self.env['yc.return'].search(domain)
@@ -490,7 +496,7 @@ class YcPurchase(models.Model):
             elif len(checked) == 0:
                 return 1
             purchase = self.env['yc.purchase']
-            # TODO: 待確認 ('norcls') 這個從頭到尾沒看過哪一個地方 key-in
+            # TODO: 待確認 'norcls'(規範分類) 這個從頭到尾沒看過哪一個地方 key-in
             wanted = ['len_code', 'product_code', 'piece', 'customer_no', 'batch', 'len_descript',
                       'norm_code', 'strength_level', 'norcls', 'clsf_code', 'proces_code', 'txtur_code',
                       'surface_code', 'elecpl_code', 'process1', 'process2', 'num1', 'unit1', 'num2',
@@ -509,7 +515,9 @@ class YcPurchase(models.Model):
                 _val = getattr(record, _field)
                 setattr(self, _field, _val)
             # 按下拉出退回btn 會先create() 再經過這裡 所以可以一律用write
-            checked.write({"neworder": self.name})
+            # 生成新的單號 並更新 退回主檔 資料
+            _id = purchase.search([('name', '=', self.name)]).id
+            checked.write({"neworder": _id})
         elif self.condition == 'IT':
             checked = self.return_in_fac_ids.filtered(lambda r: r.return_in_fac_check)
             if len(checked) > 1:
@@ -541,7 +549,8 @@ class YcPurchase(models.Model):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
 
 
-    # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料 TODO: 確定不用後可以刪掉了
+    # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料
+    # TODO: 確定不用後可以刪掉了
     def yc_purchase_search_name(self):
         # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
         if self._context.get('params')['action'] == 111:
@@ -597,18 +606,6 @@ class YcPurchase(models.Model):
                 'target': 'inline',
             }
 
-    @api.onchange('look_up')
-    def _call_redirect(self):
-        if self.searchname:
-            self._redirect('process_data_entry')
-
-    def _redirect(self, _view):
-        detail = self.env['yc.produce.details']
-        if _view == 'process_data_entry':
-            vals = {}
-            for i in range(1, 7):
-                vals.update({'name': id, 'bucket_no': i})
-            detail.create({vals})
 
     # 5.各查詢表單後更新資料
     def save_entry_data(self):
@@ -1139,20 +1136,6 @@ class YcPurchase(models.Model):
             self.sskvste = t1.sectionshrink
             self.safeload = t1.safeload
 
-    ################
-    ### 品質主檔用 ###
-    ################
-    # 1.檢驗狀態
-    @api.onchange("wholeck", "faceck")
-    def _set_checkstate(self):
-        for rec in self:
-            if rec.wholeck == '待處理':
-                self.checkstate = '待處理'
-            elif rec.wholeck == '不合格' or rec.faceck == '不合格':
-                self.checkstate = '檢驗不合格'
-            elif rec.wholeck == '合格' and rec.faceck == '合格':
-                self.checkstate = '檢驗合格'
-
     ### 退回作業搜尋 ###
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
@@ -1183,17 +1166,17 @@ class YcProduceDetails(models.Model):
     # status = fields.Char("狀態")
     note = fields.Text("備註")
 
-    @api.multi
-    @api.onchange("bucket_no")
-    def _get_row_number(self):
-        # condition1 新增: details檔 無關連record count不用檢查
-        # condition2 修改: details檔 有關連record 可以重置count
-
-        p = self.env['yc.purchase']
-        self.bucket_no = p.search(
-            [('name', '=', self.name.name), ('company_id', '=', self.env.user.company_id.id)]).count
-        sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
-        p._cr.execute(sql)
+    # @api.multi
+    # @api.onchange("bucket_no")
+    # def _get_row_number(self):
+    #     # condition1 新增: details檔 無關連record count不用檢查
+    #     # condition2 修改: details檔 有關連record 可以重置count
+    #
+    #     p = self.env['yc.purchase']
+    #     self.bucket_no = p.search(
+    #         [('name', '=', self.name.name), ('company_id', '=', self.env.user.company_id.id)]).count
+    #     sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
+    #     p._cr.execute(sql)
 
     @api.onchange("rawweight", "emptybucket", "tweight")
     def _get_rawnetweight(self):

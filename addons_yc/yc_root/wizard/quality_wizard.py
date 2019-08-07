@@ -12,6 +12,8 @@ class YcQualityWizard(models.TransientModel):
     order_name = fields.Char("工令號碼")
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
+    invalid = fields.Many2one("yc.purchase", string="不合格")
+
     day = fields.Date("進貨日期")
     checkstate = fields.Char("檢驗狀態")
     company_id = fields.Many2one("res.company", string='所屬工廠')
@@ -263,7 +265,7 @@ class YcQualityWizard(models.TransientModel):
     faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格')], '外觀判定')
     ck_person = fields.Many2one("yc.hr", string="檢驗人員")
     singleton = fields.Float("單支重")
-    uqbuckets = fields.Integer("不合格桶數")
+
     uqemtreat = fields.Char("不合格特急處理動作")
     produceday = fields.Date("製造日期")
     produceday1 = fields.Date("製造日期1")
@@ -329,9 +331,7 @@ class YcQualityWizard(models.TransientModel):
     whrd2v6 = fields.Float("華司硬度2值6")
     whrd2v7 = fields.Float("華司硬度2值7")
     whrd2v8 = fields.Float("華司硬度2值8")
-    uqtreat = fields.Char("不合格品處理")
-    uqweight = fields.Integer("不合格重量")
-    followup = fields.Char("處理方式")
+
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")
     amp1 = fields.Float("圖倍率1")
@@ -347,6 +347,21 @@ class YcQualityWizard(models.TransientModel):
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
     file = fields.Binary("檔案")
+
+    produce_details_ids = fields.Many2many("yc.produce.details")
+    uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
+                                ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
+    followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
+    pweight = fields.Integer("進貨重量")
+    tweight = fields.Integer("磅後總重")
+    totalpack = fields.Char("裝袋合計")
+    feedbucket = fields.Integer("入料桶數")
+    feedweight = fields.Integer("入料總重")
+    weighbuckets = fields.Integer("磅後桶數")
+    bdiff = fields.Integer("桶數差")
+    wdiff = fields.Integer("重量差")
+    uqweight = fields.Integer("不合格重量")
+    uqbuckets = fields.Integer("不合格桶數")
 
     # since <img> attr scr can direct get img from directory, this method cloud be abandoned
     # def _default_image(self):
@@ -372,20 +387,75 @@ class YcQualityWizard(models.TransientModel):
         record = purchase.search([('id', '=', record_id)])
         # 蒐集attr_name list
         # getattr() 返回物件屬性值
-        # setattr() 設置物件屬性
-        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname']
-        for fn in self._proper_fields._map.keys():
-            if fn in ['id', 'file']:
-                pass
-            elif fn in ['order_name', 'name']:
-                setattr(self, fn, record.name)
-            elif fn in functional_group:
-                setattr(self, fn, None)
-            else:
-                _value = getattr(record, fn)
-                setattr(self, fn, _value)
+        # setattr() 設置物件屬性值
+        # TODO: 整理進貨主檔，在各資料表那些欄位有需要把資料寫出
+        #  oder: yc.purchase > yc.purchase.process > yc.purchase.quantity >
+        #        yc.quality.wizard > yc.quality.invalid
+        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
+                            'invalid', 'followup', 'invalid_followup']
+        invalid_group = ['pweight', 'tweight', 'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
+                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat']
+
+        _action = self.env['ir.actions.act_window']
+        Q1 = _action.search([('name', '=', '品質數據主檔_wizard')]).id
+        Q2 = _action.search([('name', '=', '不合格品處理作業')]).id
+        if self._context['params'].get('action') == Q1:
+            for fn in self._proper_fields._map.keys():
+                if fn in ['id', 'file'] or fn in invalid_group:
+                    pass
+                elif fn in ['order_name', 'name']:
+                    setattr(self, fn, record.name)
+                elif fn in functional_group:
+                    setattr(self, fn, None)
+                else:
+                    _value = getattr(record, fn)
+                    setattr(self, fn, _value)
+        elif self._context['params'].get('action') == Q2:
+            for fn in self._proper_fields._map.keys():
+                if fn in ['id', 'file']:
+                    pass
+                elif fn in ['order_name', 'name']:
+                    setattr(self, fn, record.name)
+                elif fn in functional_group:
+                    setattr(self, fn, None)
+                else:
+                    _value = getattr(record, fn)
+                    setattr(self, fn, _value)
 
     @api.onchange("order_furn")
     def _chech_order(self):
         return {"domain": {"notchecked": [("order_furn", "=", self.order_furn.id), ("checkstate", "=", False)],
-                           "checked": [("order_furn", "=", self.order_furn.id), ("checkstate", "!=", False)]}}
+                           "checked": [("order_furn", "=", self.order_furn.id), ("checkstate", "!=", False)],
+                           "invalid":[(("order_furn", "=", self.order_furn.id), ("checkstate", "=", "檢驗不合格"))]
+                           }}
+
+    def save_quality(self):
+        _action = self.env['ir.actions.act_window']
+        Q1 = _action.search([('name', '=', '品質數據主檔_wizard')]).id
+        Q2 = _action.search([('name', '=', '不合格品處理作業')]).id
+        purchase = self.env['yc.purchase']
+        domain = [('name', '=', self.name)]
+        record = purchase.search(domain)
+        if self._context['params'].get('action') == Q1:
+            if self.wholeck == '合格' and self.faceck == '合格':
+                self.checkstate = '檢驗合格'
+            elif self.wholeck == '待處理':
+                self.checkstate = '待處理'
+            else:
+                self.checkstate = '檢驗不合格'
+            vals = {}
+            for fn in self._proper_fields._map.keys():
+                functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
+                                    'invalid', 'followup', 'invalid_followup']
+                _val = getattr(self, fn)
+                # TODO: 找出需要更動的欄位 再寫入
+                if fn not in functional_group:
+                    if hasattr(_val, 'id'):
+                        vals.update({fn: _val.id})
+                    else:
+                        vals.update({fn: _val})
+            record.write({vals})
+        elif self._context['params'].get('action') == Q2:
+            # TO BE CONTINUE
+            pass
+        return

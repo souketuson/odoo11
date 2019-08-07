@@ -3,9 +3,10 @@
 from odoo.http import request
 from odoo import http
 
+
 class GetMatchingRecords(http.Controller):
 
-    @http.route("/note_search", type="json",auth="public", website=True)
+    @http.route("/note_search", type="json", auth="public", website=True)
     def note_search(self, txt):
         """
         Remote Procedure Call:
