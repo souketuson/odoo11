@@ -2,3 +2,5 @@
 - python3.5
 - PostgreSQL9.6
 - odoo11
+# 額外lib
+- pyodbc
