@@ -20,7 +20,5 @@ odoo11 ┬─ \.git        -- git control file
        └─ description -- configuration
 
 sorce code edit records:
-1. odoo11(root directory)>odoo-11.0>addons>web>static>lib>bootstrap>css>bootstrap.css L#2285                  -- list 下框線改成黑色(目前沒作用)
-2. odoo11(root directory)>odoo-11.0>odoo>http.py L#1095                                                                                         -- 動態過濾廠別
-3. odoo11(root directory)>odoo-11.0>addons>web>static>src>js>views>list>list_editable_renderer.js L#518   -- xmany 新增項目前面添加 + 號
-4. odoo11(root directory)>odoo-11.0>addons>web>static>src>js>fields>relational_fields.js L#113            -- o2m 增加下拉值
+(暫時拿掉)2. odoo11(root directory)>odoo-11.0>odoo>http.py L#1095                                                                                   -- 動態過濾廠別
+

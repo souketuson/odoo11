@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- load before document updated and can implement all page in the module-->
-        <template id="assets_backend_purchase2" name="static_resources assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <!--<script src="/yc_root/static/src/js/purchase_rpc.js" type="text/javascript"/>-->
-            </xpath>
-        </template>
         <!-- view of purchase tree  -->
         <record model="ir.ui.view" id="purchase2_tree">
             <field name="name">purchase.tree</field>
@@ -33,13 +27,17 @@
             <field name="arch" type="xml">
 
                 <form string="Purchase form">
-                    <div style="background: ghostwhite; width:1000px; overflow-x: auto;" class="purchase2_for_js">
+                    <div style="background: ghostwhite;width:1200px; overflow-x: auto;" class="purchase2_for_js">
                         <sheet>
                             <style>
                                 .block1{background-color: #ffcc99; padding-left: 8px;}
                             </style>
-                            <script type="text/javascript" src="/yc_root/static/src/js/purchase2.js">
-                                // 從 static/src/js 調用 jsfile
+                            <script type="text/javascript">
+                                // 防止重複載入該js檔
+                                if (thisResourceLoaded === undefined){
+                                    $.getScript('/yc_root/static/src/js/purchase2.js');
+                                    var thisResourceLoaded = true;
+                                }
                             </script>
                             <header>
                                 <button string="搜尋舊檔" type="action" class="search_btn"
@@ -52,6 +50,8 @@
                                         icon="" string="備註搜尋"/>
                                 <button name="comfirm_return" type="object" class="comfirm_return oe_highlight"
                                         icon="" string="拉出退回"/>
+                                <button name="%(action_purchase_display)d" type="action" class="oe_highlight"
+                                        icon="" string="前往排程"/>
                             </header>
                             <div class="block1">
                                 <group col="8">

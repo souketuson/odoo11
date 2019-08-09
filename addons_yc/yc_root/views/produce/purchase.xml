@@ -366,9 +366,9 @@
                                                         <field name="prodnote3" style="width:200px"/>
                                                     </div>
                                                     <div style="float:left;padding:3px;">
-                                                        <button name="%(action_qcnote_wizard)d" type="action"
-                                                                class="oe_highlight" icon="fa-plus"
-                                                                style="top: 50px;position: relative;left: 15px;"/>
+                                                        <!--<button name="" type="action"-->
+                                                                <!--class="oe_highlight" icon="fa-plus"-->
+                                                                <!--style="top: 50px;position: relative;left: 15px;"/>-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -453,7 +453,7 @@
             <field name="res_model">yc.purchase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[("company_id","=",[context.get('company_id')])]</field>
+            <field name="domain">[("company_id","in",[context.get('company_id')])]</field>
             <field name="context">{"view":"purchase1"}</field> <!--this line only be got on readonly form-->
 
         </record>

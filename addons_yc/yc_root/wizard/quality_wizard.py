@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import ValidationError
-import base64
+import base64,paramiko
 
 
 class YcQualityWizard(models.TransientModel):
@@ -14,26 +14,20 @@ class YcQualityWizard(models.TransientModel):
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     invalid = fields.Many2one("yc.purchase", string="不合格")
 
+
     day = fields.Date("進貨日期")
     checkstate = fields.Char("檢驗狀態")
     company_id = fields.Many2one("res.company", string='所屬工廠')
     customer_id = fields.Many2one("yc.customer", "客戶名稱")
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
-    ck4 = fields.Boolean("品名分類check", help="在搜尋舊檔wizard自動代入篩選")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
-    ck7 = fields.Boolean("強度級數check", help="在搜尋舊檔wizard自動代入篩選")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
-    ck2 = fields.Boolean("規格check", help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
-    ck1 = fields.Boolean("品名check", help="在搜尋舊檔wizard自動代入篩選")
     product_code = fields.Many2one("yc.setproduct", string="品名")
-    ck6 = fields.Boolean("材質check", help="在搜尋舊檔wizard自動代入篩選")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
-    ck3 = fields.Boolean("長度check", help="在搜尋舊檔wizard自動代入篩選")
     len_code = fields.Many2one("yc.setlength", string="長度")
     len_descript = fields.Char("長度說明")
-    ck5 = fields.Boolean("加工方式check", help="在搜尋舊檔wizard自動代入篩選")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     num1 = fields.Integer("數量1")
@@ -46,7 +40,6 @@ class YcQualityWizard(models.TransientModel):
     unit4 = fields.Many2one("yc.setunit", string="單位代號4")
     net = fields.Integer("淨重")
     standard = fields.Char("依據標準")
-    ck8 = fields.Boolean("線材爐號check", help="在搜尋舊檔wizard自動代入篩選")
     wire_furn = fields.Char("線材爐號")
     headsign = fields.Binary('頭部記號')
     surfhrd = fields.Char("表面硬度")
@@ -291,6 +284,16 @@ class YcQualityWizard(models.TransientModel):
     teamlead1 = fields.Many2one("yc.hr", string="組長1")
     teamlead2 = fields.Many2one("yc.hr", string="組長2")
     teamlead3 = fields.Many2one("yc.hr", string="組長3")
+
+
+    # ck1 = fields.Boolean("品名check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck2 = fields.Boolean("規格check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck3 = fields.Boolean("長度check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck4 = fields.Boolean("品名分類check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck5 = fields.Boolean("加工方式check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck6 = fields.Boolean("材質check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck7 = fields.Boolean("強度級數check", help="在搜尋舊檔wizard自動代入篩選")
+    # ck8 = fields.Boolean("線材爐號check", help="在搜尋舊檔wizard自動代入篩選")
     ckresist = fields.Boolean("CK抗拉強度")
     cksurfhrd = fields.Boolean("CK表面硬度")
     ckcorehrd = fields.Boolean("CK心部硬度")
@@ -307,22 +310,24 @@ class YcQualityWizard(models.TransientModel):
     ckysvste = fields.Boolean("CK降伏點值起迄")
     ckmlste = fields.Boolean("CK最大負荷值起迄")
     cksskste = fields.Boolean("CK斷面積值起迄")
-    qcnote = fields.Many2one("yc.setqcnote", string="品管備註")
+    ckclv = fields.Boolean("CK滲碳層")
     ckecl = fields.Boolean("CK脫碳層")
     ckecl2v = fields.Boolean("CK滲碳層2值")
     ckwhrd = fields.Boolean("CK華司硬度")
-    ckhf = fields.Many2one("yc.sethardness", string="華司硬度規格")
-    ckclv = fields.Boolean("CK滲碳層")
-    sskvste = fields.Char("斷面收縮率值起迄")
-    slste = fields.Char("安全負荷值起迄")
     ckhs = fields.Boolean("CK頭部敲擊")
     ckcurv = fields.Boolean("CK彎曲度")
     ckmxl = fields.Boolean("CK最大負荷")
-    mxload = fields.Char("最大負荷")
     cktorsion = fields.Boolean("CK扭力強度")
-    tlevel = fields.Float("扭力強度")
     ckwhrd1v = fields.Boolean("CK華司硬度1值")
     ckwhrd2v = fields.Boolean("CK華司硬度2值")
+
+
+    qcnote = fields.Many2one("yc.setqcnote", string="品管備註")
+    ckhf = fields.Many2one("yc.sethardness", string="華司硬度規格")
+    sskvste = fields.Char("斷面收縮率值起迄")
+    slste = fields.Char("安全負荷值起迄")
+    mxload = fields.Char("最大負荷")
+    tlevel = fields.Float("扭力強度")
     whrd2v1 = fields.Float("華司硬度2值1")
     whrd2v2 = fields.Float("華司硬度2值2")
     whrd2v3 = fields.Float("華司硬度2值3")
@@ -331,7 +336,6 @@ class YcQualityWizard(models.TransientModel):
     whrd2v6 = fields.Float("華司硬度2值6")
     whrd2v7 = fields.Float("華司硬度2值7")
     whrd2v8 = fields.Float("華司硬度2值8")
-
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")
     amp1 = fields.Float("圖倍率1")
@@ -348,7 +352,7 @@ class YcQualityWizard(models.TransientModel):
     mgresult = fields.Char("狀態備份")
     file = fields.Binary("檔案")
 
-    produce_details_ids = fields.Many2many("yc.produce.details")
+
     uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
                                 ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
     followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
@@ -362,6 +366,8 @@ class YcQualityWizard(models.TransientModel):
     wdiff = fields.Integer("重量差")
     uqweight = fields.Integer("不合格重量")
     uqbuckets = fields.Integer("不合格桶數")
+    produce_details_ids = fields.Many2many("yc.produce.details")
+
 
     # since <img> attr scr can direct get img from directory, this method cloud be abandoned
     # def _default_image(self):
@@ -392,7 +398,8 @@ class YcQualityWizard(models.TransientModel):
         #  oder: yc.purchase > yc.purchase.process > yc.purchase.quantity >
         #        yc.quality.wizard > yc.quality.invalid
         functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
-                            'invalid', 'followup', 'invalid_followup']
+                            'invalid', 'followup', 'invalid_followup', 'checked', 'notchecked',
+                            'furn_in', 'furn_notin', 'count', 'produce_details_ids']
         invalid_group = ['pweight', 'tweight', 'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
                          'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat']
 
@@ -446,11 +453,13 @@ class YcQualityWizard(models.TransientModel):
             vals = {}
             for fn in self._proper_fields._map.keys():
                 functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
-                                    'invalid', 'followup', 'invalid_followup']
+                                    'invalid', 'followup', 'invalid_followup', 'produce_details_ids', 'file']
                 _val = getattr(self, fn)
-                # TODO: 找出需要更動的欄位 再寫入
+                # TODO: 找出需要更動的欄位再寫入
                 if fn not in functional_group:
-                    if hasattr(_val, 'id'):
+                    if fn == 'produce_details_ids':
+                        pass
+                    elif hasattr(_val, 'id'):
                         vals.update({fn: _val.id})
                     else:
                         vals.update({fn: _val})
@@ -459,3 +468,16 @@ class YcQualityWizard(models.TransientModel):
             # TO BE CONTINUE
             pass
         return
+
+    def read_data_in_server(self):
+        hostname = '172.31.39.149'
+        username = 'admin'
+        password = 'admin'
+        client = paramiko.SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key = paramiko.RSAKey.from_private_key_file('/tmp/sshppk/openssh_yc_root', password='yc_root')
+        client.connect(hostname, pkey=key)
+        stdin, stdout, stderr = client.exec_command('cat /tmp/yc_data/90106001.50t')
+        net_dump = stdout.readlines()
+        print(net_dump)

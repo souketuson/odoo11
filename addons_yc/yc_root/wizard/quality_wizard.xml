@@ -10,21 +10,21 @@
                         <script>
                             // 報時
                             $('input').click(function() {
-                                var today=new Date();
-                                var _t = String(today.getHours()) + ':'+ String(today.getMinutes()) + ':' +
-                                String(today.getSeconds());
-                                var isFocus = document.activeElement.getAttribute('name');
-                                switch(isFocus){
-                                    case 'fftime':
-                                    $('input[name="fftime"]').val(_t);
-                                    break;
-                                };
+                            var today=new Date();
+                            var _t = String(today.getHours()) + ':'+ String(today.getMinutes()) + ':' +
+                            String(today.getSeconds());
+                            var isFocus = document.activeElement.getAttribute('name');
+                            switch(isFocus){
+                            case 'fftime':
+                            $('input[name="fftime"]').val(_t);
+                            break;
+                            };
                             });
                         </script>
                         <header>
                             <button name="yc_root.quality_wizard_action" string="查看下一筆" type="action"
                                     class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"/>
-                            <button name="" string="拉力資料" type="object" class="oe_highlight"/>
+                            <button name="read_data_in_server" string="拉力資料" type="object" class="oe_highlight"/>
                             <button name="" string="樣品識別單" type="object" class="oe_highlight"/>
                             <button name="" string="檢驗報告書" type="object" class="oe_highlight"/>
                             <button name="" string="不合格處理單" type="object" class="oe_highlight"/>
@@ -32,73 +32,71 @@
                             <button name="" string="金相報告書" type="object" class="oe_highlight"/>
                             <button string="資料查詢" type="object" class="oe_highlight" name="quality_review_search_name"/>
                         </header>
-                        <div style="width:1400px; overflow-x: auto;" class="">
+                        <div style="width:1000px; overflow-x: auto;" class="">
                             <div>
 
-                                    <label string="　　爐號" class="custom_label"/>
-                                    <field name="order_furn" string="爐號"
-                                           style="width: 100px;height: 30px;"
-                                           options="{'no_open': True,'no_create': True}"/>
-                                    <span style="display:inline-block; width: 30px;"/>
-                                    <label string="未檢驗" class="custom_label"/>
-                                    <field name="notchecked"
-                                           style="width: 100px;height: 30px;"
-                                           options="{'no_open': True,'no_create': True}"/>
-                                    <span style="display:inline-block; width: 30px;"/>
-                                    <label string="已檢驗" class="custom_label"/>
-                                    <field name="checked"
-                                           style="width: 100px;height: 30px;"
-                                           options="{'no_open': True,'no_create': True}"/>
-                                    <span style="display:inline-block; width: 30px;"/>
-                                    <label string="工令查詢" class="custom_label"/>
-                                    <field name="searchname" style="width: 100px;height: 30px;"/>
-
+                                <label string="　　爐號" class="custom_label"/>
+                                <field name="order_furn" string="爐號"
+                                       style="width: 100px;height: 30px;"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <span style="display:inline-block; width: 30px;"/>
+                                <label string="未檢驗" class="custom_label"/>
+                                <field name="notchecked"
+                                       style="width: 100px;height: 30px;"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <span style="display:inline-block; width: 30px;"/>
+                                <label string="已檢驗" class="custom_label"/>
+                                <field name="checked"
+                                       style="width: 100px;height: 30px;"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <span style="display:inline-block; width: 30px;"/>
+                                <label string="工令查詢" class="custom_label"/>
+                                <field name="searchname" style="width: 100px;height: 30px;"/>
+                                <br/>
+                                <label string="進貨日期" class="custom_label"/>
+                                <field name="day"
+                                       attrs="{'readonly': [('name', '!=',False)]}"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="客戶名稱" class="custom_label"/>
+                                <field name="customer_id" style="width: 100px;"
+                                       options="{'no_open': True,'no_create': True}"
+                                       attrs="{'readonly': [('name', '!=',False)]}"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="批號" class="custom_label"/>
+                                <field name="batch" style="width:100px"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="線材爐號" class="custom_label"/>
+                                <field name="wire_furn" style="width: 60px;"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="以前爐號" class="custom_label"/>
+                                <field name="pre_furn" style="width: 40px;"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="現在爐號" class="custom_label"/>
+                                <field name="currnt_furno" style="width: 40px;"
+                                       options="{'no_open': True,'no_create': True}"/>
                                 <br/>
 
-                                    <label string="進貨日期" class="custom_label"/>
-                                    <field name="day"
-                                           attrs="{'readonly': [('name', '!=',False)]}"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="客戶名稱" class="custom_label"/>
-                                    <field name="customer_id"
-                                           options="{'no_open': True,'no_create': True}"
-                                           attrs="{'readonly': [('name', '!=',False)]}"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="批號" class="custom_label"/>
-                                    <field name="batch" style="width:100px"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="線材爐號" class="custom_label"/>
-                                    <field name="wire_furn" style="width: 60px;"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="以前爐號" class="custom_label"/>
-                                    <field name="pre_furn" style="width: 40px;"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="現在爐號" class="custom_label"/>
-                                    <field name="currnt_furno" style="width: 40px;"
-                                           options="{'no_open': True,'no_create': True}"/>
-                                    <br/>
-
-                                    <label string="　　品名" class="custom_label"/>
-                                    <field name="product_code"
-                                           options="{'no_open': True,'no_create': True}"
-                                           attrs="{'readonly': [('name', '!=',False)]}"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="牙分類" class="custom_label"/>
-                                    <field name="fullorhalf" style="width:100px"
-                                           attrs="{'readonly': [('name', '!=',False)]}"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="材質" class="custom_label"/>
-                                    <field name="txtur_code"
-                                           options="{'no_open': True,'no_create': True}"
-                                           attrs="{'readonly': [('name', '!=',False)]}"/>
-                                    <span style="display:inline-block; width: 10px;"/>
-                                    <label string="工令號碼" style="font-weight:bold"/>
-                                    <field name="name" readonly="1"/>
-                                    <span style="display:inline-block; width: 50px;"/>
-                                    <label string="頭部記號" style="font-weight:bold"/>
-                                    <field name="headsign" readonly="1"/>
-                                    <button string="儲存" type="object" class="oe_highlight" name="save_quality"/>
-                                    <!---->
+                                <label string="　　品名" class="custom_label"/>
+                                <field name="product_code"
+                                       options="{'no_open': True,'no_create': True}"
+                                       attrs="{'readonly': [('name', '!=',False)]}"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="牙分類" class="custom_label"/>
+                                <field name="fullorhalf" style="width:100px"
+                                       attrs="{'readonly': [('name', '!=',False)]}"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="材質" class="custom_label"/>
+                                <field name="txtur_code"
+                                       options="{'no_open': True,'no_create': True}"
+                                       attrs="{'readonly': [('name', '!=',False)]}"/>
+                                <span style="display:inline-block; width: 10px;"/>
+                                <label string="工令號碼" style="font-weight:bold"/>
+                                <field name="name" readonly="1"/>
+                                <span style="display:inline-block; width: 50px;"/>
+                                <label string="頭部記號" style="font-weight:bold"/>
+                                <field name="headsign" readonly="1"/>
+                                <button string="儲存" type="object" class="oe_highlight" name="save_quality"/>
+                                <!---->
 
                                 <br/>
                                 <label string="　　規格" class="custom_label"/>
@@ -119,6 +117,8 @@
                                        options="{'no_open': True,'no_create': True}"
                                        attrs="{'readonly': [('name', '!=',False)]}"/>
                                 <br/>
+
+
                                 <label string="表面處理" class="custom_label"/>
                                 <field name="surface_code" style="width: 150px"
                                        options="{'no_open': True,'no_create': True}"
@@ -132,6 +132,7 @@
                                 <label string="淨重" style="font-weight:bold"/>
                                 <field name="net" style="width:60px"/>
                                 <span style="display:inline-block; width: 10px;"/>
+                                <field name="cktorsion"/>
                                 <label string="扭力強度" class="custom_label"/>
                                 <field name="tlevel" style="width:90px"/>
 
@@ -150,18 +151,23 @@
                                 <field name="unit4" nolabel="1" options="{'no_open': True,'no_create': True}"
                                        style="width:50px"/>
                                 <span style="display:inline-block; width: 50px;"/>
+                                <field name="ckresist"/>
                                 <label string="抗拉強度" class="custom_label"/>
                                 <field name="tensihrd" style="width: 100px"/>
                                 <br/>
+                                <field name="cksurfhrd"/>
                                 <label string="表面硬度" class="custom_label"/>
                                 <field name="surfhrd" style="width: 100px"/>
                                 <span style="display:inline-block; width: 20px;"/>
+                                <field name="ckcorehrd"/>
                                 <label string="心部硬度" class="custom_label"/>
                                 <field name="corehrd" style="width: 100px"/>
                                 <span style="display:inline-block; width: 20px;"/>
+                                <field name="ckcl"/>
                                 <label string="滲碳層" class="custom_label"/>
                                 <field name="carburlayer" style="width: 87px"/>
                                 <span style="display:inline-block; width: 20px;"/>
+                                <field name="ckmxl"/>
                                 <label string="最大負荷" class="custom_label"/>
                                 <field name="mxload" style="width: 100px"/>
                             </div>
@@ -628,6 +634,7 @@
                                         <field name="decarb7" style="width:100px"/>
                                         <field name="decarb8" style="width:100px"/>
                                         <br/>
+                                        <field name="ckwhrd1v" style="width: 100px"/>
                                         <label string="華司硬度" style="font-weight:bold"/>
                                         <field name="wxrhrd1" style="width:100px"/>
                                         <field name="wxrhrd2" style="width:100px"/>
@@ -638,6 +645,7 @@
                                         <field name="wxrhrd7" style="width:100px"/>
                                         <field name="wxrhrd8" style="width:100px"/>
                                         <br/>
+                                        <field name="ckwhrd2v" style="width: 100px"/>
                                         <label string="　　　　" style="font-weight:bold"/>
                                         <field name="whrd2v1" style="width:100px"/>
                                         <field name="whrd2v2" style="width:100px"/>

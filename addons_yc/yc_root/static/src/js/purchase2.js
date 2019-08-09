@@ -26,8 +26,9 @@ $(document).on('click', "label.btn", function(event){
         });
     }
 });
-// 鍵盤導航
-$(this).keypress(function(e) {
+// 鍵盤導航 重複載入頁面 keypress會重複執行
+// 在前端頁面用getScript() 及 變數 防止重複抓取腳本
+$(this).keypress(function(e){
     var da = document.activeElement;
     if (e.which== 13){
         console.log(e.which);

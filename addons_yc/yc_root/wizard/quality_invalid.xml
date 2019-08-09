@@ -24,11 +24,8 @@
                         <header>
                             <button name="yc_root.quality_invalid_action" string="查看下一筆" type="action"
                                     class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"/>
-                            <button name="" string="拉力資料" type="object" class="oe_highlight"/>
-                            <button name="" string="樣品識別單" type="object" class="oe_highlight"/>
-                            <button name="" string="檢驗報告書" type="object" class="oe_highlight"/>
                             <button name="" string="不合格處理單" type="object" class="oe_highlight"/>
-                            <button name="" string="熱處理成品檢查紀錄" type="object" class="oe_highlight"/>
+                            <button name="" string="檢驗報告書" type="object" class="oe_highlight"/>
                             <button string="資料查詢" type="object" class="oe_highlight" name="quality_review_search_name"/>
                         </header>
                         <div style="width:1400px; overflow-x: auto;" class="">
@@ -167,7 +164,6 @@
                                             <label string="拉力機編號" style="font-weight:bold"/>
                                             <field name="tensile_no" widget="radio" style="width:150px"
                                                    options="{'horizontal': True}"/>
-                                            <button name="" string="清空拉力機" type="object" class="oe_highlight"/>
                                             <br/>
                                             <!-- -->
                                             <field name="cksfhv" widget="checkbox" nolabel="1"/>

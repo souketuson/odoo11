@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- load before document updated and can implement all page in the module-->
-        <template id="assets_backend_weight" name="static_resources_demo assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <!--<link href="/yc_root/static/src/css/weight.css" rel="stylesheet"/>-->
-                <script type="text/javascript" src="/yc_root/static/src/js/my_js.js"></script>
-            </xpath>
-
-        </template>
         <!-- tree view -->
         <record model="ir.ui.view" id="weight_tree">
             <field name="name">weight.tree</field>

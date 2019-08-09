@@ -24,45 +24,27 @@ class YcPurchase(models.Model):
     processing_attache = fields.Many2one("yc.weight.details", "加工廠名稱")
     processing_phone = fields.Char("加工廠電話")
     processing_contact = fields.Char("負責人")
-    combo_process = fields.Char("加工廠聯絡資訊", compute='_compute_process')
+
     pre_order = fields.Char("前工令號碼")
     car_no = fields.Many2one("yc.weight", string="車次序號")
     customer_id = fields.Many2one("yc.customer", "客戶名稱", related="processing_attache.customer_id")
-    customer_phone = fields.Char("客戶電話")
-    customer_contact = fields.Char("客戶聯絡人")
-    combo_customer = fields.Char("客戶聯絡資訊", compute='_compute_process')
-    combine_abbrev = fields.Char('客戶', compute='_combine')
-
-    @api.depends('processing_attache')
-    def _combine(self):
-            for rec in self:
-                if rec.processing_attache:
-                    _c = rec.processing_attache.customer_id.abbrev
-                    _p = rec.processing_attache.processing_id.name
-                    rec.combine_abbrev = _p + '-' + _c
-
+    # customer_phone = fields.Char("客戶電話")
+    # customer_contact = fields.Char("客戶聯絡人")
 
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("yc.hr", string="開單人員")
     list_man = fields.Many2one("res.users", string="開單人員", default=lambda self: self.env.user.id)
-    ck4 = fields.Boolean("品名分類check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
-    ck7 = fields.Boolean("強度級數check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
-    ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
-    ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     product_code = fields.Many2one("yc.setproduct", string="品名")
     # 和上面重複
     # productname = fields.Many2one("yc.setproduct", string="產品名稱")
-    ck6 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
-    ck3 = fields.Boolean("長度check", default=False, help="在搜尋舊檔wizard自動代入篩選")
     len_code = fields.Many2one("yc.setlength", string="長度")
-    # 待確定
     len_descript = fields.Char("長度說明")
-    ck5 = fields.Boolean("加工方式check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     elecplswitch = fields.Char("表面處理開關", compute="_switcher", help="當表面處理選定'電鍍'時，turn on，否則off")
@@ -83,7 +65,7 @@ class YcPurchase(models.Model):
     process2 = fields.Many2one("yc.processing", "二次加工")
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
-    ck8 = fields.Boolean("線材爐號check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+
     wire_furn = fields.Char("線材爐號")
     headsign = fields.Binary('頭部記號')
     surfhrd = fields.Char("表面硬度")
@@ -94,9 +76,10 @@ class YcPurchase(models.Model):
     retempt = fields.Integer("回火溫度")
     pre_furn = fields.Char("以前爐號")
     # 0517設成Many2one 轉檔要抓id 不能直接匯入
+    # 可考慮用autocomplete 就可改用Char
     order_furn = fields.Many2one("yc.setfurnace", string="預排爐號")
     currnt_furno = fields.Many2one("yc.setfurnace", string="現在爐號")
-
+    # 好像都沒用到?
     norcls = fields.Char("規範分類")
     wxr_txtur = fields.Char("華司材質")
     wxrhard = fields.Char("華司硬度")
@@ -346,8 +329,8 @@ class YcPurchase(models.Model):
     op3 = fields.Many2one("yc.hr", string="操作人員3")
     buckets3 = fields.Integer("桶數3")
     teamlead3 = fields.Many2one("yc.hr", string="組長3")
-
-    serial = fields.Float("序號", default=99.9) # TODO: 應該是order_wizard才用的到
+    # TODO: 應該是order_wizard才用的到 可考慮刪除
+    serial = fields.Float("序號", default=99.9)
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
     ptime2 = fields.Char("製造時間2")
@@ -355,6 +338,20 @@ class YcPurchase(models.Model):
     p_op = fields.Many2one("yc.hr", string="產量操作人員")
     p_weight = fields.Many2one("yc.hr", string="產量過磅人員")
     pnote = fields.Char("產量備註")
+    condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')], string="退回來源")
+
+    # 再列印模式中確認是否要印出
+    # TODO: 可以再列印中開的一個wizard, 把check 放在該model，可減少進貨主檔資料
+    #  計: 33個
+    ck1 = fields.Boolean("品名check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    ck2 = fields.Boolean("規格check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    ck3 = fields.Boolean("長度check", default=False, help="在搜尋舊檔wizard自動代入篩選")
+    ck4 = fields.Boolean("品名分類check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    ck5 = fields.Boolean("加工方式check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    ck6 = fields.Boolean("材質check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    ck7 = fields.Boolean("強度級數check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    ck8 = fields.Boolean("線材爐號check", default=True, help="在搜尋舊檔wizard自動代入篩選")
+    # 以上如果確認用purchase2 這個template 就可以刪掉
     ckresist = fields.Boolean("CK抗拉強度")
     cksurfhrd = fields.Boolean("CK表面硬度")
     ckcorehrd = fields.Boolean("CK心部硬度")
@@ -371,32 +368,32 @@ class YcPurchase(models.Model):
     ckysvste = fields.Boolean("CK降伏點值起迄")
     ckmlste = fields.Boolean("CK最大負荷值起迄")
     cksskste = fields.Boolean("CK斷面積值起迄")
+    ckclv = fields.Boolean("CK滲碳層")
+    ckecl = fields.Boolean("CK脫碳層")
+    ckecl2v = fields.Boolean("CK滲碳層2值")
+    ckwhrd = fields.Boolean("CK華司硬度")
+    ckhs = fields.Boolean("CK頭部敲擊")
+    ckcurv = fields.Boolean("CK彎曲度")
+    ckmxl = fields.Boolean("CK最大負荷")
+    cktorsion = fields.Boolean("CK扭力強度")
+    ckwhrd1v = fields.Boolean("CK華司硬度1值")
+    ckwhrd2v = fields.Boolean("CK華司硬度2值")
+
+
     qcnote = fields.Many2one("yc.setqcnote", string="品管備註")
     pw1 = fields.Integer("製造重量1")
     pw2 = fields.Integer("製造重量2")
     pw3 = fields.Integer("製造重量3")
-    ckecl = fields.Boolean("CK脫碳層")
-    ckecl2v = fields.Boolean("CK滲碳層2值")
-    ckwhrd = fields.Boolean("CK華司硬度")
     ckhf = fields.Many2one("yc.sethardness", string="華司硬度規格")
     ffday = fields.Date("完爐日期")
     fftime = fields.Char("完爐時間")
-    ckclv = fields.Boolean("CK滲碳層")
-
-
     contrast = fields.Float("對照")
     shipbucket = fields.Integer("出貨桶數")
     shipweight = fields.Integer("出貨重量")
     sskvste = fields.Char("斷面收縮率值起迄")
     slste = fields.Char("安全負荷值起迄")
-    ckhs = fields.Boolean("CK頭部敲擊")
-    ckcurv = fields.Boolean("CK彎曲度")
-    ckmxl = fields.Boolean("CK最大負荷")
     mxload = fields.Char("最大負荷")
-    cktorsion = fields.Boolean("CK扭力強度")
     tlevel = fields.Float("扭力強度")
-    ckwhrd1v = fields.Boolean("CK華司硬度1值")
-    ckwhrd2v = fields.Boolean("CK華司硬度2值")
     whrd2v1 = fields.Float("華司硬度2值1")
     whrd2v2 = fields.Float("華司硬度2值2")
     whrd2v3 = fields.Float("華司硬度2值3")
@@ -435,34 +432,50 @@ class YcPurchase(models.Model):
     mgresult = fields.Char("狀態備份")
 
 
-
+    # 製造明細檔
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
+
+    # functional group: 功能性欄位，無須從舊資料匯入
     wizard_check = fields.Boolean("是否帶出", default=False, help='purchase_wizard中，checkbox TorF判斷要帶出哪幾筆資料')
     ckimportdate = fields.Char("進貨距今", compute="_ten_days_check", help="判斷進貨時間是否超過十天，是則返色提醒")
+    return_in_fac_check = fields.Boolean(default=False, help="確認要帶出哪筆廠內退回紀錄, refer template: purchase2")
+    return_btn = fields.Boolean(default=False, help="觸發display")
+    wizard_btn = fields.Boolean(default=False, help="判斷要帶出哪筆")
+    action_id_main = fields.Integer(
+        default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
+        help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
+    product_code_searchbox = fields.Char("搜尋品名編號")
+
+    # ['searchname','furn_in','furn_notin','weighted_order','notweighted_order','checked', 'notchecked','count' ]
+    # searchname = fields.Char("工令查詢", help="搜尋工令欄位")
+    # furn_in = fields.Many2one("yc.purchase", string="已進爐")
+    # furn_notin = fields.Many2one("yc.purchase", string="未進爐")
+    # weighted_order = fields.Many2one("yc.purchase", string="已過磅")
+    # notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
+    # checked = fields.Many2one("yc.purchase", string="已檢驗")
+    # notchecked = fields.Many2one("yc.purchase", string="未檢驗")
+    # count = fields.Integer("數桶數", default=1)
+
+    # ['itself_ids','return_in_fac_ids','return_ids','combo_customer','combine_abbrev','combo_process','remainder']
+    # display group: 在頁面上展示紀錄，無須從舊資料匯入
     itself_ids = fields.Many2many(comodel_name="yc.purchase", relation='yc_purchase_yc_purchase_rel3',
                                   column1='col_name', column2='col_name_2')
     return_in_fac_ids = fields.Many2many(comodel_name="yc.purchase", relation='yc_purchase_yc_purchase_rel4',
                                          column1='col_name_3', column2='col_name_4')
-    return_in_fac_check = fields.Boolean(default=False)
-    return_ids = fields.Many2many("yc.return", string="purchase search", help="查詢列表")
-    condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')], string="退回來源")
-    return_btn = fields.Boolean(default=False)
-    wizard_btn = fields.Boolean(default=False)
-    action_id_main = fields.Integer(
-        default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
-        help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
+    return_ids = fields.Many2many("yc.return", string="purchase search", help="廠外退回查詢")
+    combo_customer = fields.Char("客戶聯絡資訊", compute='_compute_process')
+    combine_abbrev = fields.Char('客戶', compute='_combine')
+    combo_process = fields.Char("加工廠聯絡資訊", compute='_compute_process')
+    remainder = fields.Char(help="爐內進貨 明細頁提示欄")
 
-    # 以下為查詢欄位
-    searchname = fields.Char("工令查詢", help="搜尋工令欄位")
-    furn_in = fields.Many2one("yc.purchase", string="已進爐")
-    furn_notin = fields.Many2one("yc.purchase", string="未進爐")
-    weighted_order = fields.Many2one("yc.purchase", string="已過磅")
-    notweighted_order = fields.Many2one("yc.purchase", string="未過磅")
-    count = fields.Integer("數桶數", default=1)
-    checked = fields.Many2one("yc.purchase", string="已檢驗")
-    notchecked = fields.Many2one("yc.purchase", string="未檢驗")
-    product_code_searchbox = fields.Char("搜尋品名或編號")
-    remainder = fields.Char()
+    # 加工廠簡稱-客戶簡稱
+    @api.depends('processing_attache')
+    def _combine(self):
+        for rec in self:
+            if rec.processing_attache:
+                _c = rec.processing_attache.customer_id.abbrev
+                _p = rec.processing_attache.processing_id.name
+                rec.combine_abbrev = _p + '-' + _c
 
     @api.onchange('condition')
     def search_purchase(self):
@@ -1018,21 +1031,21 @@ class YcPurchase(models.Model):
     #     for row in notin_list:
     #         notin_list.search([("id", "=", row.id)]).write({'status': 4})
 
-    # 3.爐內進貨導向form view
-    def review_purchase(self):
-        return {
-            'name': self.name,
-            'res_model': 'yc.purchase',
-            'type': 'ir.actions.act_window',
-            'res_id': self.id,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': self.env.ref('yc_root.furna_import_form').id,
-            'target': 'current',
-            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
-        }
+    # 3.爐內進貨導向form view 應該用不到了
+    # def review_purchase(self):
+    #     return {
+    #         'name': self.name,
+    #         'res_model': 'yc.purchase',
+    #         'type': 'ir.actions.act_window',
+    #         'res_id': self.id,
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'view_id': self.env.ref('yc_root.furna_import_form').id,
+    #         'target': 'current',
+    #         'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+    #     }
 
-    # 4.
+    # 4. 爐內進貨 檢視該紀錄明細(fa-search)
     def action_purchase_display_wizard(self):
         return {
             'name': self.name,

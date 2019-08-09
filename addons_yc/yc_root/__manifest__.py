@@ -6,7 +6,7 @@
     """,
 
     'description': """
-        YC_ROOT v.14 (190620)
+        YC_ROOT v.15 (190809)
     """,
     'author': "ArJhe",
     'website': "",
@@ -18,14 +18,19 @@
 
     ],
     'data': [
-        'views/quantity_data_entry.xml',
+        # 'abandon/quantity_data_entry.xml',
+        # 'abandon/process_data_entry.xml',
+        # 'abandon/plan_furna.xml',
+        # 'abandon/furna_import.xml',
+        # 'abandon/qcnote_wizard.xml',
+        # 'abandon/quality.xml',
+        'views/general_view.xml',
         'report/purchase_report.xml',
         'report/weight_order1.xml',
         'report/weight_order_test.xml',
         'report/cargo.xml',
         'report/cargo_report.xml',
         'wizard/process_review.xml',
-        'wizard/qcnote_wizard.xml',
         'wizard/quantity_review.xml',
         'wizard/quality_wizard.xml',
         'wizard/order_display.xml',
@@ -45,9 +50,6 @@
         'views/business/process1.xml',
         'views/business/process2.xml',
         'views/shipment.xml',
-        'views/process_data_entry.xml',
-        'views/produce/plan_furna.xml',
-        'views/produce/furna_import.xml',
         'views/produce/purchase.xml',
         'views/produce/purchase2.xml',
         'views/produce/weight.xml',
@@ -72,7 +74,7 @@
 
         'views/driver.xml',
         'views/hr_main.xml',
-        'views/quality.xml',
+
         'views/fake.xml',
         'menuitem/root_core.xml',
     ],
