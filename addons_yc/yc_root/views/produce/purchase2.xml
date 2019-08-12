@@ -301,6 +301,6 @@
             <field name="view_id" ref="purchase2_tree"/>
         </record>
 
-        <menuitem id="purchase2_menu" name="進貨單2作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
+
     </data>
 </odoo>

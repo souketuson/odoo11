@@ -3,8 +3,9 @@
 /.idea
 /odoo-11.0
 /module_backup
+/addons
 /addons_topc
-/addons_yc/yc_data_import
+/addons_yc/
 .idea
 .vscode
 *.zip

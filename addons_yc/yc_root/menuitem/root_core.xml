@@ -55,6 +55,7 @@
                     <!-- purchase sub menu -->
                     <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="20" action="weight_list_action"/>
                     <menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase_list_action"/>
+                    <menuitem id="purchase2_menu" name="進貨單2作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
                     <!--<menuitem id="purchase_report" name="進貨單報表" parent="purchase_menu" sequence="22" action="action_purchase_report"/>-->
                     <menuitem id="purchasestore_menu" name="客戶進貨查詢作業" parent="purchase_menu" sequence="23" action="fake_action"/>
                     <menuitem id="purchasereport_menu" name="客戶進貨統計表" parent="purchase_menu" sequence="24" action="fake_action"/>
