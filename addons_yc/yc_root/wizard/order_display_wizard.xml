@@ -223,12 +223,7 @@
                             />
                             <field name="wire_furn" style="width:100px" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>
-                            <!--<button string="搜尋舊檔" type="action" class="oe_highlight"-->
-                            <!--style=""-->
-                            <!--name="%(action_purchase_wizard)d" context="{'wizard':True}"/>-->
-                            <!--<button string="搜尋舊檔(測試版)" type="object" class="oe_highlight"-->
-                            <!--name="open_wizard"-->
-                            <!--/>-->
+
                             <br/>
                             <label string="製造日期" style="font-weight:bold"/>
                             <field name="produceday1" style="width: 120px" readonly="1"/>
