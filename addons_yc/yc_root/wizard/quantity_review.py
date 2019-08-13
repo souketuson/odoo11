@@ -72,7 +72,9 @@ class YcPurchaseDisplay(models.TransientModel):
 
     # @api.onchange('searchname')
     def quantity_review_search_name(self):
-        if self._context.get('params')['action'] == 188 and bool(
+        _action = self.env['ir.actions.act_window']
+        action_id = _action.search([('name', '=', '產量登錄作業')], limit=1).id
+        if self._context.get('params')['action'] == action_id and bool(
                 self.searchname or self.weighted_order or self.notweighted_order) == True:
             # S05N0200 產量登錄作業
             purchase = self.env["yc.purchase"]
@@ -121,7 +123,8 @@ class YcPurchaseDisplay(models.TransientModel):
         # 蒐集attr_name list
         # getattr() 返回物件屬性值
         # setattr() 設置物件屬性
-        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname']
+        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
+                            'checked', 'notchecked']
         for fn in self._proper_fields._map.keys():
             if fn == 'id':
                 pass

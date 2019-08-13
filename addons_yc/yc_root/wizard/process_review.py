@@ -107,7 +107,9 @@ class YcPurchaseDisplay(models.TransientModel):
 
     # @api.onchange('searchname')
     def process_review_search_name(self):
-        if self._context.get('params')['action'] == 189 and bool(
+        _action = self.env['ir.actions.act_window']
+        action_id = _action.search([('name', '=', '製程登錄作業')], limit=1).id
+        if self._context.get('params')['action'] == action_id and bool(
                 self.searchname or self.furn_in or self.furn_notin) == True:
             # S05N0100 製程登錄作業
             purchase = self.env["yc.purchase"]

@@ -54,7 +54,7 @@
                 <menuitem id="purchase_menu" name="進貨作業" parent="main_produce_menu" sequence="11"/>
                     <!-- purchase sub menu -->
                     <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="20" action="weight_list_action"/>
-                    <menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase_list_action"/>
+                    <!--<menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase_list_action"/>-->
                     <menuitem id="purchase2_menu" name="進貨單2作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
                     <!--<menuitem id="purchase_report" name="進貨單報表" parent="purchase_menu" sequence="22" action="action_purchase_report"/>-->
                     <menuitem id="purchasestore_menu" name="客戶進貨查詢作業" parent="purchase_menu" sequence="23" action="fake_action"/>
@@ -102,8 +102,8 @@
                 <!-- quality category menu -->
                 <menuitem id="quality_menu" name="品質" parent="main_quality_menu" sequence="10"/>
                     <!-- quality sub menu -->
-                    <menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_wizard_action"/>
-                    <menuitem id="quality_invalid_menu" name="不合格品處理作業" parent="quality_menu" sequence="21" action="quality_invalid_action"/>
+                    <!--<menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_wizard_action"/>-->
+                    <!--<menuitem id="quality_invalid_menu" name="不合格品處理作業" parent="quality_menu" sequence="21" action="quality_invalid_action"/>-->
                     <menuitem id="mechanicalproperty_menu" name="產品機械性質主檔" parent="quality_menu" sequence="22" action="mechanicalproperty_action"/>
                 <!-- quality_maintain category menu -->
                 <menuitem id="quality_maintain_menu" name="品質管理基本對照檔維護" parent="main_quality_menu" sequence="101"/>
