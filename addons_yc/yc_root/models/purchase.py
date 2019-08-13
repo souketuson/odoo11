@@ -624,7 +624,7 @@ class YcPurchase(models.Model):
     def save_entry_data(self):
         return True
 
-    # 6.過濾桶號工令
+    # 6.過濾桶號工令 (改wizard 應該用不到了)
     @api.onchange("order_furn")
     def _chech_order(self):
         # TODO: should modified value by given number directly.
@@ -869,14 +869,18 @@ class YcPurchase(models.Model):
     @api.onchange("surface_code")
     def _switcher(self):
         for rec in self:
-            if rec.surface_code.id == 4:
+            elecp = self.env['setelectroplating']
+            white = elecp.search([('name', '=', '白皮')])
+            ele = elecp.search([('name', '=', '電鍍')])
+            black = elecp.search([('name', '=', '黑化')])
+            if rec.surface_code.name == '電鍍':
                 self.elecplswitch = 'ON'
-                self.elecpl_code = 538
-            elif rec.surface_code.id == 2:
-                self.elecpl_code = 385
+                self.elecpl_code = ele
+            elif rec.surface_code.name == '黑化':
+                self.elecpl_code = black
                 self.elecplswitch = 'OFF'
-            elif rec.surface_code.id == 1:
-                self.elecpl_code = 590
+            elif rec.surface_code.name == '白皮':
+                self.elecpl_code = white
                 self.elecplswitch = 'OFF'
             else:
                 # 避免非電鍍類別存入資料

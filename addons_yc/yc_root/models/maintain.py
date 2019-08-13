@@ -126,7 +126,7 @@ class YcSetproduct(models.Model):
 
 
 class YcSetstrength(models.Model):
-    # 強度級數 S03N0002
+    # 強度級數 S04N0002
     _name = "yc.setstrength"
     name = fields.Char("強度名稱")
     code = fields.Char("強度代碼")
@@ -177,8 +177,8 @@ class YcSetlength(models.Model):
     name = fields.Char("長度名稱")
     code = fields.Char("長度代碼")
     parameter1 = fields.Char("參數1")
-    parmeter2 = fields.Char("參數2")
-    parmeter3 = fields.Char("參數3")
+    parameter2 = fields.Char("參數2")
+    parameter3 = fields.Char("參數3")
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
