@@ -24,6 +24,7 @@
         # 'abandon/furna_import.xml',
         # 'abandon/qcnote_wizard.xml',
         # 'abandon/quality.xml',
+        # 'abandon/factory.xml',
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',
@@ -33,7 +34,7 @@
         'views/quality/maintain/setproducenote.xml',
         'views/quality/maintain/sethardness.xml',
         'views/quality/maintain/setqcnote.xml',
-        'views/maintain/factory.xml',
+
         'views/maintain/department.xml',
         'views/maintain/setjobtitle.xml',
         'views/maintain/setsalaryitem.xml',

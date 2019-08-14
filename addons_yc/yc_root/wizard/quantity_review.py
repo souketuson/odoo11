@@ -48,9 +48,9 @@ class YcPurchaseDisplay(models.TransientModel):
     tweight = fields.Integer("磅後總重")
     bdiff = fields.Integer("桶數差")
     wdiff = fields.Integer("重量差")
-    op1 = fields.Many2one("yc.hr", string="操作人員1")
-    op2 = fields.Many2one("yc.hr", string="操作人員2")
-    op3 = fields.Many2one("yc.hr", string="操作人員3")
+    op1 = fields.Many2one("res.users", string="操作人員1")
+    op2 = fields.Many2one("res.users", string="操作人員2")
+    op3 = fields.Many2one("res.users", string="操作人員3")
     notices1 = fields.Char("注意事項1")
     notices2 = fields.Char("注意事項2")
     notices3 = fields.Char("注意事項3")
@@ -66,9 +66,17 @@ class YcPurchaseDisplay(models.TransientModel):
 
     @api.onchange("order_furn")
     def _chech_order(self):
-        if self._context.get('params')['action'] == 188:
-            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn.id)],
-                               "notweighted_order": [("order_furn", "=", self.order_furn.id)]}}
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '產量登錄作業')]).id
+        if self._context.get('params')['action'] == page:
+            return {"domain": {"weighted_order":
+                                   [("order_furn", "=", self.order_furn.id),
+                                    ('weighstate', '=', '已過磅')],
+                               "notweighted_order":
+                                   [("order_furn", "=", self.order_furn.id),
+                                    ('weighstate', '=', '未過磅')]
+                               }
+                    }
 
     # @api.onchange('searchname')
     def quantity_review_search_name(self):
@@ -114,7 +122,23 @@ class YcPurchaseDisplay(models.TransientModel):
                          'prodnote2': self.prodnote2, 'prodnote3': self.prodnote3,
                          # 'produce_details_ids': self.produce_details_ids,
                          })
+            lists = self.produce_details_ids
+            details = self.env['yc.produce.details'].search([('id', '=', purchase.id)])
+            check_box = []
+            for _id in lists.ids:
+                _this = details.browse(_id)
+                if _this.tnetweight > 0:
+                    check_box.append(1)
+                else:
+                    check_box.append(0)
+            if sum(check_box) == 0:
+                vals.update({"weighstate": "未過磅"})
+            else:
+                vals.update({"weighstate": "已過磅"})
+            # 更新項目檔
+            purchase.produce_details_ids = self.produce_details_ids
             purchase.write(vals)
+
             self._display_record(purchase.id)
 
     def _display_record(self, record_id):

@@ -18,7 +18,7 @@
                 <!-- hr category menu -->
                 <menuitem id="hr_maintain_menu" name="人事薪資基本對照檔維護" parent="main_hr_menu" sequence="101"/>
                     <!-- hr_maintain sub menu -->
-                    <menuitem id="factory_menu" name="廠別" parent="hr_maintain_menu" sequence="27" action="factory_action"/>
+                    <!--<menuitem id="factory_menu" name="廠別" parent="hr_maintain_menu" sequence="27" action="factory_action"/>-->
                     <menuitem id="department_menu" name="部門" parent="hr_maintain_menu" sequence="28" action="department_action"/>
                     <menuitem id="fake30_menu" name="雇用性質" parent="hr_maintain_menu" sequence="29" action="fake_action"/>
                     <menuitem id="jobtitle_menu" name="職稱" parent="hr_maintain_menu" sequence="30" action="setjobtitle_action"/>
@@ -55,7 +55,7 @@
                     <!-- purchase sub menu -->
                     <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="20" action="weight_list_action"/>
                     <!--<menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase_list_action"/>-->
-                    <menuitem id="purchase2_menu" name="進貨單2作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
+                    <menuitem id="purchase2_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
                     <!--<menuitem id="purchase_report" name="進貨單報表" parent="purchase_menu" sequence="22" action="action_purchase_report"/>-->
                     <menuitem id="purchasestore_menu" name="客戶進貨查詢作業" parent="purchase_menu" sequence="23" action="fake_action"/>
                     <menuitem id="purchasereport_menu" name="客戶進貨統計表" parent="purchase_menu" sequence="24" action="fake_action"/>

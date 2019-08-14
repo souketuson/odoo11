@@ -31,24 +31,24 @@ class YcPurchaseDisplay(models.TransientModel):
     produceday1 = fields.Date("製造日期1")
     ptime1 = fields.Char("製造時間1")
     shift1 = fields.Many2one("yc.setshift", string="班別1")
-    op1 = fields.Many2one("yc.hr", string="操作人員1")
+    op1 = fields.Many2one("res.users", string="操作人員1")
     buckets1 = fields.Integer("桶數1")
     pw1 = fields.Integer("製造重量1")
-    teamlead1 = fields.Many2one("yc.hr", string="組長1")
+    teamlead1 = fields.Many2one("res.users", string="組長1")
     produceday2 = fields.Date("製造日期2")
     ptime2 = fields.Char("製造時間2")
     shift2 = fields.Many2one("yc.setshift", string="班別2")
-    op2 = fields.Many2one("yc.hr", string="操作人員2")
+    op2 = fields.Many2one("res.users", string="操作人員2")
     buckets2 = fields.Integer("桶數2")
     pw2 = fields.Integer("製造重量2")
-    teamlead2 = fields.Many2one("yc.hr", string="組長2")
+    teamlead2 = fields.Many2one("res.users", string="組長2")
     produceday3 = fields.Date("製造日期3")
     ptime3 = fields.Char("製造時間3")
     shift3 = fields.Many2one("yc.setshift", string="班別3")
-    op3 = fields.Many2one("yc.hr", string="操作人員3")
+    op3 = fields.Many2one("res.users", string="操作人員3")
     buckets3 = fields.Integer("桶數3")
     pw3 = fields.Integer("製造重量3")
-    teamlead3 = fields.Many2one("yc.hr", string="組長3")
+    teamlead3 = fields.Many2one("res.users", string="組長3")
     ffday = fields.Date("完爐日期")
     fftime = fields.Char("完爐時間")
     num1 = fields.Integer("數量1")
@@ -101,9 +101,14 @@ class YcPurchaseDisplay(models.TransientModel):
 
     @api.onchange("order_furn")
     def _chech_order(self):
-        if self._context.get('params')['action'] == 189:
-            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
-                               "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}
+        _action = self.env['ir.actions.act_window']
+        p1 = _action.search([('name', '=', '製程登錄作業')]).id
+        if self._context.get('params')['action'] == p1:
+            status = self.env['yc.setstatus']
+            in_furn = status.search([('name', '=', '己進爐')]).id
+            out_of_furn = status.search([('name', '=', '未進爐')]).id
+            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", in_furn)],
+                               "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", out_of_furn)]}}
 
     # @api.onchange('searchname')
     def process_review_search_name(self):
@@ -172,6 +177,9 @@ class YcPurchaseDisplay(models.TransientModel):
             if vals.get('ptime1') != '':
                 infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
                 vals.update({'status': infurn_code})
+            else:
+                not_infurn_code = self.env['yc.setstatus'].search([('name', '=', '未進爐')]).id
+                vals.update({'status': not_infurn_code})
             purchase.write(vals)
             self._display_record(purchase.id)
 
@@ -248,7 +256,7 @@ class YcPurchaseDisplay(models.TransientModel):
         self.shift1 = record.shift1
         self.buckets1 = record.buckets1
         self.pw1 = record.pw1
-        self.teamlead1 = self.teamlead1
+        self.teamlead1 = record.teamlead1
         self.produceday2 = record.produceday2
         self.ptime2 = record.ptime2
         self.shift2 = record.shift2

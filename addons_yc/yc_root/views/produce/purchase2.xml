@@ -155,7 +155,7 @@
                                                options="{'no_open': True,'no_create': True}"
                                                style="width: 80px;font-size: smaller;"/>　
                                     </group>
-                                    <field name="action_id_main" invisible="1"/>
+
                                     <field name="elecplswitch" invisible="1"/>
                                     <group col="14">
                                         <field name="num1" style="width:50px" string="數量"/>　
@@ -271,7 +271,7 @@
         </record>
         <!-- action -->
         <record model="ir.actions.act_window" id="purchase2_action">
-            <field name="name">進貨單2作業</field>
+            <field name="name">進貨單作業</field>
             <field name="res_model">yc.purchase</field>
             <field name="view_mode">tree,form</field>
         </record>

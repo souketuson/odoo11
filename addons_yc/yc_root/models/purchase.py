@@ -15,8 +15,9 @@ class YcPurchase(models.Model):
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
     time = fields.Char("時間", default=lambda self: self._get_time())
     copy_createdate = fields.Char("製表日期", compute="_fetch_create_date")
-    status = fields.Many2one("yc.setstatus", string="狀態", default=2)
-    weighstate = fields.Char("過磅狀態")
+    status = fields.Many2one("yc.setstatus", string="狀態",
+                             default=lambda self: self.env['yc.setstatus'].search([('name', '=', '未排程')]))
+    weighstate = fields.Char("過磅狀態", default="未過磅")
     checkstate = fields.Char("檢驗狀態")
     driver_id = fields.Many2one("yc.driver", string="司機名稱", related="car_no.driver_id")
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
@@ -33,7 +34,7 @@ class YcPurchase(models.Model):
 
     batch = fields.Char("客戶批號")
     customer_no = fields.Char("客戶單號")
-    person = fields.Many2one("yc.hr", string="開單人員")
+    person = fields.Many2one("res.users", string="開單人員")
     list_man = fields.Many2one("res.users", string="開單人員", default=lambda self: self.env.user.id)
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
@@ -123,8 +124,8 @@ class YcPurchase(models.Model):
     furnstat = fields.Char("進爐狀態")
     produceday = fields.Date("製造日期")
     ptime = fields.Char("製造時間")
-    op = fields.Many2one("yc.hr", string="操作人員")
-    qc = fields.Many2one("yc.hr", string="品管人員")
+    op = fields.Many2one("res.users", string="操作人員")
+    qc = fields.Many2one("res.users", string="品管人員")
     shift = fields.Many2one("yc.setshift", string="班別")
     ssk = fields.Float("斷面積")
     mxload1 = fields.Float("最大負荷1")
@@ -310,33 +311,33 @@ class YcPurchase(models.Model):
     curv30 = fields.Boolean("彎曲度30")
     wholeck = fields.Selection([('合格', '合格'), ('不合格', '不合格'), ('待處理', '待處理')], '整體判定')
     faceck = fields.Selection([('合格', '合格'), ('不合格', '不合格')], '外觀判定')
-    ck_person = fields.Many2one("yc.hr", string="檢驗人員")
+    ck_person = fields.Many2one("res.users", string="檢驗人員")
     singleton = fields.Float("單支重")
 
     uqemtreat = fields.Char("不合格特急處理動作")
     produceday1 = fields.Date("製造日期1")
     shift1 = fields.Many2one("yc.setshift", string="班別1")
-    op1 = fields.Many2one("yc.hr", string="操作人員1")
+    op1 = fields.Many2one("res.users", string="操作人員1")
     buckets1 = fields.Integer("桶數1")
-    teamlead1 = fields.Many2one("yc.hr", string="組長1")
+    teamlead1 = fields.Many2one("res.users", string="組長1")
     produceday2 = fields.Date("製造日期2")
     shift2 = fields.Many2one("yc.setshift", string="班別2")
-    op2 = fields.Many2one("yc.hr", string="操作人員2")
+    op2 = fields.Many2one("res.users", string="操作人員2")
     buckets2 = fields.Integer("桶數2")
-    teamlead2 = fields.Many2one("yc.hr", string="組長2")
+    teamlead2 = fields.Many2one("res.users", string="組長2")
     produceday3 = fields.Date("製造日期3")
     shift3 = fields.Many2one("yc.setshift", string="班別3")
-    op3 = fields.Many2one("yc.hr", string="操作人員3")
+    op3 = fields.Many2one("res.users", string="操作人員3")
     buckets3 = fields.Integer("桶數3")
-    teamlead3 = fields.Many2one("yc.hr", string="組長3")
+    teamlead3 = fields.Many2one("res.users", string="組長3")
     # TODO: 應該是order_wizard才用的到 可考慮刪除
     serial = fields.Float("序號", default=99.9)
     giveday = fields.Char("應對交期")
     ptime1 = fields.Char("製造時間1")
     ptime2 = fields.Char("製造時間2")
     ptime3 = fields.Char("製造時間3")
-    p_op = fields.Many2one("yc.hr", string="產量操作人員")
-    p_weight = fields.Many2one("yc.hr", string="產量過磅人員")
+    p_op = fields.Many2one("res.users", string="產量操作人員")
+    p_weight = fields.Many2one("res.users", string="產量過磅人員")
     pnote = fields.Char("產量備註")
     condition = fields.Selection([('IT', '廠內退回'), ('OT', '廠外退回')], string="退回來源")
 
@@ -426,8 +427,8 @@ class YcPurchase(models.Model):
     amp6 = fields.Float("圖倍率6")
     mgreviewday = fields.Date("金相審核日期")
     mgcheckday = fields.Date("金相檢驗日期")
-    mgreviewer = fields.Many2one("yc.hr", string="金相審核人員")
-    mgchecker = fields.Many2one("yc.hr", string="金相檢驗人員")
+    mgreviewer = fields.Many2one("res.users", string="金相審核人員")
+    mgchecker = fields.Many2one("res.users", string="金相檢驗人員")
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
 
@@ -441,9 +442,9 @@ class YcPurchase(models.Model):
     return_in_fac_check = fields.Boolean(default=False, help="確認要帶出哪筆廠內退回紀錄, refer template: purchase2")
     return_btn = fields.Boolean(default=False, help="觸發display")
     wizard_btn = fields.Boolean(default=False, help="判斷要帶出哪筆")
-    action_id_main = fields.Integer(
-        default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
-        help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
+    # action_id_main = fields.Integer(
+    #     default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
+    #     help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
     product_code_searchbox = fields.Char("搜尋品名編號")
 
     # ['searchname','furn_in','furn_notin','weighted_order','notweighted_order','checked', 'notchecked','count' ]
@@ -709,12 +710,14 @@ class YcPurchase(models.Model):
         _bool = bool(self.product_code or self.clsf_code or self.norm_code or self.proces_code or
                      self.len_code or self.txtur_code or self.strength_level or self.wire_furn)
         if _bool:
-            action = self.env['ir.actions.act_window']
-            action_id = action.search([('name', '=', '分爐排程')], limit=1).id
+            _action = self.env['ir.actions.act_window']
+            action_1 = _action.search([('name', '=', '分爐排程')], limit=1).id
+            action_2 = _action.search([('name', '=', '進貨單作業')], limit=1).id
             # itself更新
             purchase = self.env['yc.purchase']
             # 先更新itself
-            if self._context['params'].get('action') == action_id or self.action_id_main or 187:
+
+            if self._context['params'].get('action') == action_1 or action_2:
                 domain = ()
                 if self.product_code and self.ck1:
                     domain += ('product_code', '=', self.product_code.id),
@@ -744,7 +747,7 @@ class YcPurchase(models.Model):
                         self.itself_ids = None
                         self.remainder = "找不到資料"
             # 再看進貨單
-            if self._context['params'].get('actions') == self.action_id_main:
+            if self._context['params'].get('actions') == action_2:
                 domain = ()
                 if self.wire_furn:
                     domain += ('wire_furn', '=', self.wire_furn),
@@ -793,10 +796,11 @@ class YcPurchase(models.Model):
         if len(checked) > 1:
             raise ValidationError(_("只能選一筆資料帶出"))
         elif len(checked) == 1:
-            action = self.env['ir.actions.act_window']
-            action_id = action.search([('name', '=', '分爐排程')], limit=1).id
+            _action = self.env['ir.actions.act_window']
+            action_1 = _action.search([('name', '=', '分爐排程')], limit=1).id
+            action_2 = _action.search([('name', '=', '進貨單作業')], limit=1).id
             # 分爐排程 只拉參數? 還有拉什麼?
-            if self._context['params'].get('action') == action_id:
+            if self._context['params'].get('action') == action_1:
                 self.flow = checked.flow
                 self.cp = checked.cp
                 self.nh31 = checked.nh31
@@ -821,7 +825,7 @@ class YcPurchase(models.Model):
                 self.tempturing6 = checked.tempturing6
                 self.tempturisped = checked.tempturisped
             # 進貨作業只拉 設定?
-            elif self._context['params'].get('action') == self.action_id_main:
+            elif self._context['params'].get('action') == action_2:
                 self.surfhrd = checked.surfhrd
                 self.corehrd = checked.corehrd
                 self.piece = checked.piece
@@ -869,7 +873,7 @@ class YcPurchase(models.Model):
     @api.onchange("surface_code")
     def _switcher(self):
         for rec in self:
-            elecp = self.env['setelectroplating']
+            elecp = self.env['yc.setelectroplating']
             white = elecp.search([('name', '=', '白皮')])
             ele = elecp.search([('name', '=', '電鍍')])
             black = elecp.search([('name', '=', '黑化')])
@@ -925,9 +929,9 @@ class YcPurchase(models.Model):
     # 5.進貨單產生工令號
     @api.model
     def create(self, vals):
-
-        p2 = self.env['ir.actions.act_window'].search([('name', '=', '進貨單2作業')]).id
-        if self._context.get('params')['action'] in (self.action_id_main, p2) and vals['car_no']:
+        _action = self.env['ir.actions.act_window']
+        p1 = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context.get('params')['action'] == p1 and vals['car_no']:
             # 儲存時給工令號
             cn = vals["car_no"]
             weight_item = self.env['yc.weight']
@@ -939,7 +943,7 @@ class YcPurchase(models.Model):
             number = len(search) + 1
             name = str(weight_cn) + str('%02d') % number
             vals.update({"name": name, 'wizard_btn': False})
-        elif self._context.get('params')['action'] in (self.action_id_main, p2) and vals['condition'] == 'IT':
+        elif self._context.get('params')['action'] == p1 and vals['condition'] == 'IT':
             # TODO: 車次序號用轉廠的車次，待修正
             vals.update({"name": 'TEMP1234', 'wizard_btn': False})
         return super(YcPurchase, self).create(vals)
@@ -949,8 +953,7 @@ class YcPurchase(models.Model):
         # 剛載入create 頁面 default不會存值進入field要手動抓action_id
         action = self.env['ir.actions.act_window']
         p1 = action.search([('name', '=', '進貨單作業')]).id
-        p2 = action.search([('name', '=', '進貨單2作業')]).id
-        if self._context.get('params')['action'] in (p1, p2):
+        if self._context.get('params')['action'] == p1:
             return dt.today()
 
     # 7. 空值警告
@@ -1095,15 +1098,9 @@ class YcPurchase(models.Model):
     @api.multi
     def write(self, vals):
         # 製程登錄作業 S03N0200
-        k = []
-        if self._context.get('params')['action'] == 111:
-            infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
-            not_infurn_code = self.env['yc.setstatus'].search([('name', '=', '未進爐')]).id
-            if vals.get('ptime1') == False or vals.get('ptime1') == None:
-                vals.update({'status': not_infurn_code})
-            else:
-                vals.update({'status': infurn_code})
-        if self._context.get('params')['action'] == self.action_id_main:
+        _action = self.env['ir.actions.act_window']
+        p1 = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context.get('params')['action'] == p1:
             vals.update({'wizard_btn': False})
         return super(YcPurchase, self).write(vals)
 
@@ -1173,12 +1170,12 @@ class YcProduceDetails(models.Model):
     unit = fields.Many2one("yc.setunit", string="單位")
     rawweight = fields.Integer("生料重")
     rawnetweight = fields.Integer("生料淨重")
-    feed_man = fields.Many2one("yc.hr", string="入料人員")
+    feed_man = fields.Many2one("res.users", string="入料人員")
     tweight = fields.Integer("磅後重")
     recevieemptybucket = fields.Integer("收料空桶重")
     recevietunit = fields.Many2one("yc.setunit", string="收料單位")
     tnetweight = fields.Integer("磅後淨重")
-    recevie_man = fields.Many2one("yc.hr", string="收料人員")
+    recevie_man = fields.Many2one("res.users", string="收料人員")
     weightdiff = fields.Integer("重量差")
     # status = fields.Char("狀態")
     note = fields.Text("備註")

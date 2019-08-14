@@ -5,12 +5,12 @@ from odoo import models, fields, api
 
 
 # S01
-class YcSetFactory(models.Model):
-    # 廠別 S01N0001
-    _name = "yc.setfactory"
-    name = fields.Char("廠別名稱")
-    code = fields.Char("廠別代碼")
-    params1 = fields.Char("參數1")
+# class YcSetFactory(models.Model):
+#     # 廠別 S01N0001
+#     _name = "yc.setfactory"
+#     name = fields.Char("廠別名稱")
+#     code = fields.Char("廠別代碼")
+#     params1 = fields.Char("參數1")
 
 
 class YcSetDepartment(models.Model):
