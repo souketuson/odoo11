@@ -201,6 +201,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                 args:[],
             })
         },
+
     });
 
     // Init a new bgdrawer when the web client is ready

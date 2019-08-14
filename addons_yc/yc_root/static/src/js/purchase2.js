@@ -1,3 +1,5 @@
+// 載入這個script後 到其他頁面功能還會一直存在要記得關掉
+
 // 開啟退回列表
 $(document).on('click', "label.btn", function(event){
     var div = $('div #toggle_return');

@@ -30,29 +30,29 @@
                             let bg = $('.bg')
                             // change background-color while document has updated.
                             if ($("span[name='in_out']")[0]){
-                                let io = $("span[name='in_out']")[0].innerHTML;
-                                $(document).ready(function(){
-                                    if (io == "出貨") {
-                                        bg.css("background-color","#adff2f");
-                                    }
-                                    else if(io == "進貨") {
-                                        bg.css("background-color","#ffc0cb");
-                                    }
-                                });
+                            let io = $("span[name='in_out']")[0].innerHTML;
+                            $(document).ready(function(){
+                            if (io == "出貨") {
+                            bg.css("background-color","#adff2f");
+                            }
+                            else if(io == "進貨") {
+                            bg.css("background-color","#ffc0cb");
+                            }
+                            });
                             };
                             // check-box value decide background-color.
                             $(document).on('click', "div[name='in_out']", function(event){
-                                let v = $("div[name='in_out'] div input:checked").attr('data-value');
-                                if (v =='O') {
-                                    bg.css("background-color","#adff2f");
-                                }
-                                else if(v =='I') {
-                                    bg.css("background-color","#ffc0cb");
-                                }
+                            let v = $("div[name='in_out'] div input:checked").attr('data-value');
+                            if (v =='O') {
+                            bg.css("background-color","#adff2f");
+                            }
+                            else if(v =='I') {
+                            bg.css("background-color","#ffc0cb");
+                            }
                             });
                         </script>
                         <style>
-                            .bg{ overflow-x: auto; width: 1000px; padding: 8px; }
+                            .bg{ overflow-x: auto; width: 1200px; padding: 8px; }
                         </style>
                         <div class='bg'>
                             <group col="8">
@@ -171,9 +171,12 @@
                                             <tree string="Customer Details" editable="bottom">
                                                 <field name="name" invisible="1"/>
                                                 <field name="customer_code"/>
-                                                <field name="customer_id" options="{'no_open': True,'no_create': True}"/>
-                                                <field name="processing_id" options="{'no_open': True,'no_create': True}"/>
-                                                <field name="storeplace_id" options="{'no_open': True,'no_create': True}"/>
+                                                <field name="customer_id"
+                                                       options="{'no_open': True,'no_create': True}"/>
+                                                <field name="processing_id"
+                                                       options="{'no_open': True,'no_create': True}"/>
+                                                <field name="storeplace_id"
+                                                       options="{'no_open': True,'no_create': True}"/>
                                                 <field name="note"/>
                                             </tree>
                                         </field>
@@ -210,9 +213,9 @@
             <field name="res_model">yc.weight</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[("company_id","in",[context.get('company_id')])]</field>
+            <field name="domain"></field>
             <field name="context">{}</field>
-            <!---->
+            <!--[("company_id","in",[context.get('company_id')])]-->
         </record>
         <record model="ir.actions.act_window.view" id="weight_list_action_form">
             <field name="act_window_id" ref="weight_list_action"/>
@@ -227,6 +230,18 @@
             <field name="view_id" ref="weight_tree"/>
         </record>
 
+        <!--rule-->
+        <record id="yc_weight_multi_company_rule" model="ir.rule">
+            <field name="name">yc.weihgt multi-company</field>
+            <field name="model_id" ref="model_yc_weight"/>
+            <field name="global" eval="True"/>
+            <field name="active" eval="False"/>
+            <field name="domain_force">
+                ['|', '|',
+                ('company_id', '=', False),
+                ('company_id','child_of',[user.company_id.id]),
+                ('company_id','in',[c.id for c in user.company_ids])]</field>
+        </record>
         <!-- getcontext -->
         <!-- 目前以修改odoo11.0>odoo>http.py L#1095 讓頁面抓到context 取代這一段功能 -->
         <!--<record id="weight_filter_act" model="ir.actions.server">-->

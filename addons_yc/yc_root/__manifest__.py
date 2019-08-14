@@ -6,12 +6,12 @@
     """,
 
     'description': """
-        YC_ROOT v.15 (190809)
+        last update: 20190814
     """,
     'author': "ArJhe",
     'website': "",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '1.6',
     'depends': ['base'],
     'css': [
         'static/src/css/generalcss.css',

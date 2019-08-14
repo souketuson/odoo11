@@ -998,13 +998,13 @@ class YcPurchase(models.Model):
     ################################
     # 1. 分爐排程進貨日期距現在日期超過十天返色提醒
     def _ten_days_check(self):
-        if self._context.get('params')['action'] == 187:
-            for rec in self:
-                if rec.day:
-                    rec_day = dt.strptime(rec.day.replace("-", ""), "%Y%m%d").date()
-                    elapse = (dt.today().date() - rec_day).days
-                    if elapse > 10:
-                        rec.ckimportdate = 'over'
+        for rec in self:
+            if rec.day:
+                rec_day = dt.strptime(rec.day.replace("-", ""), "%Y%m%d").date()
+                elapse = (dt.today().date() - rec_day).days
+                if elapse > 10:
+                    rec.ckimportdate = 'over'
+
 
     ##################################
     ### 爐類進貨 furna_import.xml 用 ###
