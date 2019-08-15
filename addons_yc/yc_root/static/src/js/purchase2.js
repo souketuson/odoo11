@@ -4,7 +4,7 @@
 // 開啟退回列表
 $(document).on('click', "label.btn", function(event){
     var keeper =$('div.purchase2_for_js');
-    if (keeper){
+    if (keeper.length==1){
         var div = $('div #toggle_return');
         var btn = $("div[name='return_btn'] input");
         var comfirm = $('button.comfirm_return');
@@ -36,7 +36,7 @@ $(document).on('click', "label.btn", function(event){
 // 在前端頁面用getScript() 及 變數 防止重複抓取腳本
 $(this).keypress(function(e){
     var keeper =$('div.purchase2_for_js');
-    if (keeper){
+    if (keeper.length==1){
         var da = document.activeElement;
         if (e.which== 13){
             console.log(e.which);
