@@ -1,0 +1,25 @@
+
+/*
+各頁list table格線
+*/
+.o_list_view, .o_data_cell,.o_list_record_selector,.o_column_sortable{
+    border: 1px solid black; }
+
+/*btn type: 1. search wizard
+            2. maintain form
+            3. functional btn(widget)
+            4. redirect
+*/
+.search_btn{ background-color: #00aaff; color: white; }
+.search_btn:hover{ background-color: #0088cc; color: white;}
+.create_btn{ background-color: #d62929; color: white;}
+.create_btn:hover{ background-color: #b22222; color: white;}
+.widget_btn{ background-color: #7c7bad; color: white;}
+.widget_btn:hover{ background-color: #5f5e97; color: black;}
+
+.pulse{ background-color: #ccccff;}
+.custom_label{ font-weight: bold;}
+.hide{ display: none;}
+.ui-autocomplete { max-height: 300px; overflow-y: scroll; overflow-x: hidden;}
+.buttom-autocomplete { }
+

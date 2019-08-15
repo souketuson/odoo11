@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="mechanicalproperty_tree">
+            <field name="name">mechanicalproperty.tree</field>
+            <field name="model">yc.mechanicalproperty</field>
+            <field name="arch" type="xml">
+                <tree string="mechanicalproperty Tree">
+                    <field name="name"/>
+                    <field name="standard"/>
+                    <field name="clsf_code"/>
+                    <field name="strength_level"/>
+                    <field name="stdreviewinit"/>
+                    <field name="stdreviewend"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="mechanicalproperty_form">
+            <field name="name">mechanicalproperty.form</field>
+            <field name="model">yc.mechanicalproperty</field>
+            <field name="arch" type="xml">
+                <form string="Book">
+                    <group>
+                        <field name="name"/>
+                        <field name="standard"/>
+                        <field name="clsf_code"/>
+                        <field name="stdcodeinit"/>
+                        <field name="stdcodeend"/>
+                        <field name="stdreviewinit"/>
+                        <field name="stdreviewend"/>
+                        <field name="strength_level"/>
+                        <field name="surfaceform"/>
+                        <field name="surfhrd"/>
+                        <field name="coreform"/>
+                        <field name="corehrd"/>
+                        <field name="tensihrd"/>
+                        <field name="commitstrenth"/>
+                        <field name="elongation"/>
+                        <field name="sectionshrink"/>
+                        <field name="ystrength"/>
+                        <field name="carburlayer"/>
+                        <field name="safeload"/>
+                        <field name="headshot"/>
+                        <field name="innertensihrd"/>
+                        <field name="innercarburlayer"/>
+                        <field name="innersurfhrd"/>
+                        <field name="innercorehrd"/>
+                        <field name="note"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="mechanicalproperty_search_view">
+            <field name="name">mechanicalproperty.search</field>
+            <field name="model">yc.mechanicalproperty</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="mechanicalproperty_action">
+            <field name="name">產品機械性質主檔</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.mechanicalproperty</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="mechanicalproperty">
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="mechanicalproperty_action_form">
+            <field name="act_window_id" ref="mechanicalproperty_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mechanicalproperty_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="mechanicalproperty_action_tree">
+            <field name="act_window_id" ref="mechanicalproperty_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="mechanicalproperty_tree"/>
+        </record>
+    </data>
+</odoo>

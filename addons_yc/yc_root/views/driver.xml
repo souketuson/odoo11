@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_driver_tree">
+            <field name="name">driver.tree</field>
+            <field name="model">yc.driver</field>
+            <field name="arch" type="xml">
+                <tree string="Driver Tree">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="plate_no"/>
+                    <field name="phone"/>
+                    <field name="mobile"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_driver_form">
+            <field name="name">driver.form</field>
+            <field name="model">yc.driver</field>
+
+            <field name="arch" type="xml">
+                <form string="Driver form">
+                    <sheet>
+
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="plate_no"/>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="idcard"/>
+                            <field name="birthday"/>
+                            <field name="gender"/>
+                            <field name="birthplace"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="address2"/>
+                            <field name="address1"/>
+                            <field name="refine_price"/>
+                            <field name="carburize_price"/>
+                            <field name="note"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="driver_list_action">
+            <field name="name">司機主檔</field>
+            <field name="res_model">yc.driver</field>
+
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--<menuitem id="hr_menu" name="人事薪資主檔" parent="main_hr_menu"/>-->
+        <!--<menuitem id="driver_main" name="司機主檔" parent="hr_menu" action="driver_list_action"/>-->
+    </data>
+</odoo>

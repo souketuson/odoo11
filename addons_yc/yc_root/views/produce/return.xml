@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="return_tree">
+            <field name="name">return.tree</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <tree string="return Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="return_form">
+            <field name="name">return.form</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <form string="Book">
+                    <sheet>
+                        <style>
+                            .tb{ width:100%;border:3px double;}
+                            td{ padding: 8px;text-align: center; vertical-align: middle;}
+                            .bold{ font-weight: bold;}
+                        </style>
+                        <div style="width:1000px; overflow-x: auto;" class="">
+                            <group col="8">
+                                <field name="day"/>
+                                <field name="customer_code" string="" placeholder="輸入客戶代號" default_focus="1"/>
+                                <field name="customer_id" options="{'no_open': True,'no_create': True}"/>
+                                <field name="ardebitday"/>
+                                <!---->
+                                <field name="purchase_id" options="{'no_open': True,'no_create': True}"/>
+                                <field name="name"/>
+                                <field name="driver_id" options="{'no_open': True,'no_create': True}"/>
+                                <field name="company_id" options="{'no_open': True,'no_create': True}" readonly="1" string="所屬工廠"/>
+                            </group>
+                            <group>
+
+
+                            </group>
+                            <table border="1" class="tb">
+                                <tr class="bold">
+                                    <td>工令號碼</td>
+                                    <td>品名</td>
+                                    <td>規格</td>
+                                    <td>材質</td>
+                                    <td>磅後桶數</td>
+                                    <td>單位</td>
+                                    <td>磅後總重</td>
+                                    <td>電鍍別</td>
+                                    <td>客戶工令</td>
+                                    <td>牙分類</td>
+                                    <td>進貨日期</td>
+                                    <td>線材爐號</td>
+                                    <td>加工方式</td>
+                                    <td>備註</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <field name="order_id" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="product_id" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="norm_code" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="txtur_code" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="weighbuckets" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="unit1" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="tweight" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="elecpl_code" readonly="1"/>
+                                    </td>
+                                    <td>客戶工令</td>
+                                    <td>
+                                        <field name="fullorhalf" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="purchase_day" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="wire_furn" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="proces_code" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        備註
+                                    </td>
+                                </tr>
+                            </table>
+                            <group>
+                                <field name="note"/>
+                            </group>
+                            <group col="8">
+                                <field name="bukets"/>
+                                <field name="weight"/>
+                                <field name="money"/>
+                                <field name="followup"/>
+                            </group>
+                            <table border="1" class="tb">
+                                <tr class="bold">
+                                    <td>新工令號碼</td>
+                                    <td>品名</td>
+                                    <td>規格</td>
+                                    <td>材質</td>
+                                    <td>磅後桶數</td>
+                                    <td>單位</td>
+                                    <td>磅後總重</td>
+                                    <td>電鍍別</td>
+                                    <td>客戶工令</td>
+                                    <td>牙分類</td>
+                                    <td>進貨日期</td>
+                                    <td>線材爐號</td>
+                                    <td>加工方式</td>
+                                    <td>備註</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <field name="neworder" readonly="1" options="{'no_open': True,'no_create': True}"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_product_id" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_norm_code" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_txtur_code" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_weighbuckets" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_unit1" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_tweight" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_elecpl_code" readonly="1"/>
+                                    </td>
+                                    <td>客戶工令</td>
+                                    <td>
+                                        <field name="new_fullorhalf" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_purchase_day" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_wire_furn" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        <field name="new_proces_code" readonly="1"/>
+                                    </td>
+                                    <td>
+                                        備註
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="return_search_view">
+            <field name="name">return.search</field>
+            <field name="model">yc.return</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="return_action">
+            <field name="name">退回主檔</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.return</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="return_action_form">
+            <field name="act_window_id" ref="return_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="return_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="return_action_tree">
+            <field name="act_window_id" ref="return_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="return_tree"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="yc_purchase_display_wizard">
+        <field name="name">Purchase Wizard</field>
+        <field name="model">yc.purchase</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Report">
+                <sheet>
+                    <style>
+                        .o_form_sheet{ background-color: ghostwhite; }
+                    </style>
+                    <script>
+                        $(document).on('click', "label.btn", function(event){
+                            var div = $('div #toggle_elf');
+                            var btn = $("div[name='wizard_btn'] input");
+                            var wizard = $('.open_the_door')
+                            var comfirm = $("button[name='itself_update']");
+                            if (btn.prop('checked')==true){
+                                div.css('display','unset');
+                                $('button[name="wizard_comfirm"]').attr("disabled", true);
+                                $('div .hidden_on_bush').addClass('hide', 0);
+                                comfirm.css({'display':'unset','color':'white','background-color':'#7c7bad'});
+                                wizard[0].innerText = "關閉舊檔搜尋";
+                                wizard.css("background-color","#568e8f");
+                                wizard.hover(function(e) {
+                                    $(this).css("background-color",e.type === "mouseenter"?"#568e8f":"#80b1b3")
+                                });
+                                comfirm.hover(function(e) {
+                                    $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad");
+                                });
+                            }
+                            else if (btn.prop('checked')==false){
+                                div.css('display','none');
+                                $('button[name="wizard_comfirm"]').attr("disabled", false);
+                                $('div .hidden_on_bush').removeClass('hide', 0);
+                                comfirm.css('display','none');
+                                wizard[0].innerText = "開啟舊檔搜尋";
+                                wizard.css("background-color","#5f5e97");
+                                wizard.hover(function(e) {
+                                    $(this).css("background-color",e.type === "mouseenter"?"#5f5e97":"#7c7bad")
+                                });
+                            }
+                        });
+                    </script>
+                    <div style="width:100%;border-top:1px #f2f2f2 solid;border-bottom:1px #f2f2f2 solid;padding: 3px;background-color: #c9c9c9">
+                        <label for="wizard_btn" string="開啟舊檔搜尋" class="btn btn-primary btn-sm open_the_door"
+                               rel='open_the_door' id="open_the_door"/>
+                        <button type="object" name="itself_update" string="確定帶出" style="display:none;"/>
+                        <field name="wizard_btn" style="display:none;"/>
+                        <field name="remainder" readonly="1"
+                               style="position: fixed;left: 40%;font-size: 21px;color: white;
+                                      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;"
+                            attrs="{'invisible':[('wizard_btn','=', True)]}"/>
+                    </div>
+                    <div style="height:10px;"/>
+                    <div id="toggle_elf" style="display:none;background:#e6e6ff;">
+                        <div style="background:#e6e6ff;">
+                            <field name="ck1"/>
+                            <label string="　　品名" style="font-weight:bold"/>
+                            <field name="product_code" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 40px;"/>
+                            <field name="ck2"/>
+                            <label string="　　規格" style="font-weight:bold"/>
+                            <field name="norm_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 40px;"/>
+                            <field name="ck3"/>
+                            <label string="　　長度" style="font-weight:bold"/>
+                            <field name="len_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                            <br/>
+                            <field name="ck7"/>
+                            <label string="強度級數" style="font-weight:bold"/>
+                            <field name="strength_level" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 40px;"/>
+                            <field name="ck4"/>
+                            <label string="品名分類" style="font-weight:bold"/>
+                            <field name="clsf_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 40px;"/>
+                            <field name="ck5"/>
+                            <label string="加工方式" style="font-weight:bold"/>
+                            <field name="proces_code" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <br/>
+                            <field name="ck6"/>
+                            <label string="　　材質" style="font-weight:bold"/>
+                            <field name="txtur_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 40px;"/>
+                            <field name="ck8"/>
+                            <label string="線材爐號" style="font-weight:bold"/>
+                            <field name="wire_furn" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 40px;"/>
+
+                        </div>
+                        <field name="itself_ids" widget="many2many">
+                            <tree create="false" delete="false"
+                                  string="Purchase Details" editable="top">
+                                <!--<button name="itself_update" type="object" icon="fa fa-check-square-o"/>-->
+                                <field name="wizard_check" string=' '
+                                       widget="checkbox"/>
+                                <field name="name" string="工令" readonly="1"/>
+                                <field name="customer_id" string="客戶" readonly="1"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <field name="norm_code" readonly="1"
+                                       options="{'no_open': True,'no_create': True}"/>
+                                <field name="surfhrd" string="表面" readonly="1"/>
+                                <field name="corehrd" string="心部" readonly="1"/>
+                                <field name="tensihrd" string="抗拉" readonly="1"/>
+                                <field name="carburlayer" string="滲碳" readonly="1"/>
+                                <field name="torsion" readonly="1"/>
+                                <field name="tempturing2" string="回火" readonly="1"/>
+                                <field name="order_furn" string="預排爐" readonly="1"
+                                       options="{'no_open': True,'no_create': True}"/>
+                            </tree>
+                        </field>
+
+                    </div>
+                    <div style="">
+                        <div class="hidden_on_bush">
+                            <label string="工令號碼" style="font-weight:bold"/>
+                            <field name="name" style="width:100px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="進貨日期" style="font-weight:bold"/>
+                            <field name="day" style="width:120px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="客戶" style="font-weight:bold"/>
+                            <field name="customer_id" style="width:100px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="客戶批號" style="font-weight:bold"/>
+                            <field name="batch" style="width:100px" readonly="1"/>
+                            <br/>
+                            <span style="display:inline-block; width: 27px;"/>
+                            <!--<field name="ck1"/>-->
+                            <label string="品名" style="font-weight:bold"/>
+                            <field name="product_code" style="width:180px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <!--<field name="ck2"/>-->
+                            <label string="規格" style="font-weight:bold" options="{'no_open': True,'no_create': True}"/>
+                            <field name="norm_code" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <!--<field name="ck3"/>-->
+                            <field name="len_code" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <field name="len_descript" style="width:100px" readonly="1"/>
+                            <br/>
+                            <!--<field name="ck4"/>-->
+                            <label string="品名分類" style="font-weight:bold"/>
+                            <field name="clsf_code" style="width:150px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <span style="display:inline-block; width: 10px;"/>
+                            <!--<field name="ck6"/>-->
+                            <label string="材質" style="font-weight:bold"/>
+                            <field name="txtur_code" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <span style="display:inline-block; width: 10px;"/>　
+                            <label string="表面處理" style="font-weight:bold"/>
+                            <field name="surface_code" style="width:80px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 10px;"/>
+                            <!--<field name="ck7"/>-->
+                            <label string="強度級數" style="font-weight:bold"/>
+                            <field name="strength_level" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <span style="display:inline-block; width: 10px;"/>　
+                            <label string="牙分類" style="font-weight:bold"/>
+                            <field name="fullorhalf" style="width:80px" readonly="1"/>
+                            <br/>
+                            <!--<field name="ck5"/>-->
+                            <label string="加工方式" style="font-weight:bold"/>
+                            <field name="proces_code" style="width:100px"
+                                   options="{'no_open': True,'no_create': True}"
+                                   readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="數量　" style="font-weight:bold" class="oe_inline"/>
+                            <field name="num1" style="width:70px" readonly="1"/>　
+                            <field name="unit1" nolabel="1" style="width:50px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="num2" style="width:70px" readonly="1"/>
+                            <field name="unit2" nolabel="1" style="width:50px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="num3" style="width:70px" readonly="1"/>
+                            <field name="unit3" nolabel="1" style="width:50px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <field name="num4" style="width:70px" readonly="1"/>
+                            <field name="unit4" nolabel="1" style="width:50px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>　
+                            <br/>
+                            <span style="display:inline-block; width: 27px;"/>
+                            <label string="淨重" style="font-weight:bold"/>
+                            <field name="net" style="width:60px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="表面硬度" style="font-weight:bold"/>
+                            <field name="surfhrd" style="width:90px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="心部硬度" style="font-weight:bold"/>
+                            <field name="corehrd" style="width:90px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="存放地點" style="font-weight:bold"/>
+                            <field name="storeplace" style="width:100px" readonly="1"/>
+                            <br/>
+                            <label string="抗拉強度" style="font-weight:bold"/>
+                            <field name="tensihrd" style="width:90px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="　滲碳層" style="font-weight:bold"/>
+                            <field name="carburlayer" style="width:90px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <label string="預排爐號" style="font-weight:bold"/>
+                            <field name="order_furn" style="width:60px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 20px;"/>　
+                            <!--<field name="ck8"/>-->
+                            <label string="線材爐號" style="font-weight:bold"
+                            />
+                            <field name="wire_furn" style="width:100px" readonly="1"/>
+                            <span style="display:inline-block; width: 20px;"/>
+
+                            <br/>
+                            <label string="製造日期" style="font-weight:bold"/>
+                            <field name="produceday1" style="width: 120px" readonly="1"/>
+                            <field name="ptime1" nolabel="1" style="width: 50px" readonly="1"/>
+                            <span style="display:inline-block; width: 10px;"></span>
+                            <label string="班別" style="font-weight:bold"/>
+                            <field name="shift1" style="width: 80px;" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <span style="display:inline-block; width: 30px;"></span>
+                            <label string="操作人員" style="font-weight:bold"/>
+                            <field name="op1" style="width: 100px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <label string="品管人員" style="font-weight:bold"/>
+                            <field name="qc" style="width:100px" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
+                            <br/>
+                        <!--</div>-->
+                        <!--<div>-->
+                            <label string="　　流量" style="font-weight:bold"/>
+                            <field name="flow" style="width: 80px"/>
+                            <span style="display:inline-block; width: 20px;"/>
+                            <label string="CP值" style="font-weight:bold"/>
+                            <field name="cp" style="width: 90px"/>
+                            <span style="display:inline-block; width: 20px;"/>
+                            <label string="氨值" style="font-weight:bold"/>
+                            <field name="nh31" style="width: 70px"/>
+                            <span style="display:inline-block; width: 20px;"/>
+                            <label string="支" style="font-weight:bold"/>
+                            <field name="nh32" style="width: 70px"/>
+                            <span style="display:inline-block; width: 20px;"/>
+                            <label string="第" style="font-weight:bold"/>
+                            <field name="nh33" style="width: 70px"/>
+                            <span style="display:inline-block; width: 20px;"/>
+                            <label string="支" style="font-weight:bold"/>
+                            <field name="nh34" style="width: 70px"/>
+                            <br/>
+                            <label string="　加熱爐" style="font-weight:bold"/>
+                            <field name="heat2" style="width: 80px;position: relative;left: 80px;" default_focus="1"/>
+                            <field name="heat1" style="width: 80px;position: relative;left: -80px;"/>
+
+                            <field name="heat3" style="width: 80px"/>
+                            <field name="heat4" style="width: 80px"/>
+                            <field name="heat5" style="width: 80px"/>
+                            <field name="heat6" style="width: 80px"/>
+                            <field name="heat7" style="width: 80px"/>
+                            <field name="heat8" style="width: 80px"/>
+                            <br/>
+                            <label string="　　油溫" style="font-weight:bold"/>
+                            <field name="heattemp" style="width: 80px"/>
+                            <span style="display:inline-block; width: 10px;"></span>
+                            <label string="速度" style="font-weight:bold"/>
+                            <field name="heatsped" style="width: 80px"/>
+                            <br/>
+                            <label string="　回火爐" style="font-weight:bold"/>
+                            <field name="tempturing2" style="width: 80px;position: relative;left: 80px;"/>
+                            <field name="tempturing1" style="width: 80px;position: relative;left: -80px;"/>
+
+                            <field name="tempturing3" style="width: 80px"/>
+                            <field name="tempturing4" style="width: 80px"/>
+                            <field name="tempturing5" style="width: 80px"/>
+                            <field name="tempturing6" style="width: 80px"/>
+                            <span style="display:inline-block; width: 10px;"></span>
+                            <label string="速度" style="font-weight:bold"/>
+                            <field name="tempturisped" style="width: 80px"/>
+                            <br/>
+                            <label string="注意事項" style="font-weight:bold"/>
+                            <field name="notices1" style="width:200px"/>
+                            <field name="notices2" style="width:200px"/>
+                            <field name="notices3" style="width:200px"/>
+                            <br/>
+                            <label string="品管備註" style="font-weight:bold"/>
+                            <field name="qcnote1" style="width:200px"/>
+                            <field name="qcnote2" style="width:200px"/>
+                            <field name="qcnote3" style="width:200px"/>
+                            <br/>
+                            <label string="製造備註" style="font-weight:bold"/>
+                            <field name="prodnote1" style="width:200px"/>
+                            <field name="prodnote2" style="width:200px"/>
+                            <field name="prodnote3" style="width:200px"/>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+            <footer>
+                <!--attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"-->
+                <button name="wizard_comfirm" string="修改完畢" type="object" class="oe_highlight"/>
+                <button string="取消" special="cancel"/>
+            </footer>
+        </field>
+    </record>
+    <record id="action_purchase_display_wizard" model="ir.actions.act_window">
+        <field name="name">wizard_furna_import</field>
+        <field name="res_model">yc.purchase</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- form -->
+    <record model="ir.ui.view" id="purchase_dispaly_form">
+        <field name="name">Shipment Wizard</field>
+        <field name="model">yc.purchase.display</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Shipment Wizard">
+                <sheet>
+                    <style>
+                        .text-danger{color: #b9444 !important; background-color: #f2dede !important;}
+                    </style>
+                    <div>
+                        <button name="form_refresh" string="重排" type="object"/>
+                        <!--<button name="yc_root.purchase2_action" string="離開" type="action" class="btn btn-sm btn-primary" style="width: 80px; margin: 0 3%;"/>-->
+                        <!--<button name="clear_records" string="清除" type="object"/>-->
+                        <label string="筆數" style="font-weight:bold;position:absolute;right:90px;"/>
+                        <field name="record_limit" style="width:40px;position:absolute;right:50px;"/>
+                    </div>
+                    <notebook>
+                        <page string="分爐排程">
+                            <group>
+                                <div>
+                                    <label string="爐號" style="font-weight:bold"/>
+                                    <field name="order_furn" style="width:60px" options="{'no_open': True,'no_create': True}"/>
+                                    <span style="display:inline-block; width:45px;"/>
+                                    <label string="客戶" style="font-weight:bold"/>
+                                    <field name="customer_id" style="width:220px" options="{'no_open': True,'no_create': True}"
+                                           context="{'type': 'display'}"/>
+                                    <br/>
+                                    <!--style="width: 950px;overflow-x: auto;"-->
+                                    <field name="purchase_ids" widget="many2many">
+                                        <tree create="false" edit="true" delete="false" string="分爐排程"
+                                              editable="top" decoration-danger="ckimportdate == 'over'"
+                                              default_order='day'>
+                                            <!--<field name="factory_id" readonly="1"/>-->
+                                            <field name="ckimportdate" invisible="1"/>
+                                            <field name="combine_abbrev" string="客戶" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="order_furn" string="爐號"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="day" string="進貨日" readonly="1"/>
+                                            <field name="name" string="工令號碼" readonly="1"/>
+                                            <field name="product_code" string="品名" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="norm_code" string="規格" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="txtur_code" string="材質" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="surface_code" string="表面" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="tempturing2" string="回溫" readonly="1"/>
+                                            <field name="totalpack" string="袋(桶數)" readonly="1"/>
+                                            <field name="net" string="淨重" sum="總重" readonly="1"/>
+                                            <field name="status" string="狀態" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="surfhrd" string="表面硬度" readonly="1"/>
+                                            <field name="corehrd" string="心部硬度" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                    <span style="display:inline-block; width:100%%;">
+                                        <field name="records_number" readonly="1"
+                                               style="position: absolute;left: 50px;"/>
+                                    </span>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="爐內進貨">
+                            <group>
+                                <div>
+                                    <label string="爐號" style="font-weight:bold"/>
+                                    <field name="order_furn2" style="width:60px" options="{'no_open': True,'no_create': True}"/>
+                                    <br/>
+                                    <field name="purchase_ids2" widget="many2many">
+                                        <tree create="false" edit="true" delete="false" string="爐內進貨"
+                                              editable="top" default_order='serial'>
+                                            <field name="ckimportdate" invisible="1"/>
+                                            <button type="object" name="action_purchase_display_wizard" icon="fa-search"
+                                                    class="btn btn-secondary btn-lg"/>
+                                            <field name="order_furn" string="爐號" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <!--<field name="factory_id" readonly="1"/>-->
+                                            <field name="serial"/>
+                                            <field name="customer_id" string="客戶" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="name" string="工令" readonly="1"/>
+                                            <field name="day" string="進貨日" readonly="1"/>
+                                            <field name="product_code" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="norm_code" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="txtur_code" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="surface_code" string="表面" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                            <field name="tempturing2" string="回火"/>
+                                            <field name="giveday" string="交期"/>
+                                            <field name="wire_furn" string="線材爐" readonly="1"/>
+                                            <field name="surfhrd" readonly="1"/>
+                                            <field name="corehrd" readonly="1"/>
+                                            <field name="net" sum="總重" readonly="1"/>
+                                            <field name="weighbuckets" readonly="1"/>
+                                            <field name="process1" readonly="1"
+                                                   options="{'no_open': True,'no_create': True}"/>
+                                        </tree>
+                                    </field>
+
+                                    <span style="display:inline-block; width:100%%;">
+                                        <field name="records_number2" readonly="1"
+                                               style="position: absolute;left: 50px;"/>
+                                    </span>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- action -->
+    <record id="action_purchase_display" model="ir.actions.act_window">
+        <field name="name">分爐排程</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">yc.purchase.display</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_purchase_display_form">
+        <field name="act_window_id" ref="action_purchase_display"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="purchase_dispaly_form"/>
+    </record>
+</odoo>

@@ -5,7 +5,7 @@
 /module_backup
 /addons
 /addons_topc
-/addons_yc/
+/addons_yc/yc_import
 .idea
 .vscode
 *.zip

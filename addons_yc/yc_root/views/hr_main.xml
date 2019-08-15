@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="users_tree">
+            <field name="name">users.tree</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <tree string="users Tree">
+                    <field name="login"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="users_form">
+            <field name="name">users.form</field>
+            <field name="model">res.users</field>
+            <!--<field name="priority">1</field>-->
+            <field name="arch" type="xml">
+                <form string="Book">
+                    <group>
+                        <field name="login"/>
+                        <field name="company_id"/>
+
+                        <field name="name"/>
+                        <field name="employee_type"/>
+                        <field name="title1"/>
+                        <field name="title2"/>
+                        <field name="title3"/>
+                        <field name="gender"/>
+                        <field name="idcard"/>
+                        <field name="birthday"/>
+                        <field name="birthplace"/>
+                        <field name="marrige"/>
+                        <field name="kids"/>
+                        <field name="phone"/>
+                        <field name="mobile"/>
+                        <field name="email"/>
+                        <field name="addr_mail"/>
+                        <field name="addr_born"/>
+                        <field name="ecp"/>
+                        <field name="rel_ecp"/>
+                        <field name="em_phone"/>
+                        <field name="em_mobile"/>
+                        <field name="date_duty"/>
+                        <field name="date_leave"/>
+                        <field name="note"/>
+                        <field name="last_log"/>
+                        <field name="log_state"/>
+                        <field name="pay"/>
+                        <field name="raise_no"/>
+                        <field name="whitd"/>
+                        <field name="whit"/>
+                        <field name="liid"/>
+                        <field name="liis"/>
+                        <field name="lic"/>
+                        <field name="hiid"/>
+                        <field name="hiis"/>
+                        <field name="hic"/>
+                        <field name="post_office"/>
+                        <field name="post_no"/>
+                        <field name="post_ac"/>
+                        <field name="ac_name"/>
+                        <field name="seniority"/>
+                        <field name="user_class" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="users_search_view">
+            <field name="name">users.search</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="users_action">
+            <field name="name">員工主檔</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('user_class','=',None)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="users">
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="users_action_form">
+            <field name="act_window_id" ref="users_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="users_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="users_action_tree">
+            <field name="act_window_id" ref="users_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="users_tree"/>
+        </record>
+        <!--<record id="user_rule" model="ir.rule">-->
+            <!--<field name="name">User can see its own records</field>-->
+            <!--<field name="model_id" ref="model_res_users"/>-->
+            <!--<field name="domain_force">[('user_id','=',user.id)]</field>-->
+            <!--<field name='perm_create' eval='True'/>-->
+            <!--<field name='perm_read' eval='True'/>-->
+            <!--<field name='perm_unlink' eval='True'/>-->
+            <!--<field name='perm_write' eval='True'/>-->
+        <!--</record>-->
+    </data>
+</odoo>

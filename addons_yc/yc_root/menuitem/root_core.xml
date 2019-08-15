@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- root -->
+        <menuitem id="main_root_menu" name="重盈陽成 ERP" web_icon="yc_root,static/description/icon.png"/>
+            <!-- bar menu -->
+            <menuitem id="main_hr_menu" name="人事" sequence="1" parent="main_root_menu"/>
+                <!-- hr category menu -->
+                <menuitem id="hr_menu" name="人事薪資" parent="main_hr_menu" sequence="10"/>
+                    <!-- hr sub menu -->
+                    <menuitem id="hr_main" name="員工主檔" parent="hr_menu" sequence="20" action="users_action"/>
+                    <menuitem id="driver_main" name="司機主檔" parent="hr_menu" sequence="21" action="driver_list_action"/>
+                    <menuitem id="fake23_menu" name="運費單價設定" parent="hr_menu" sequence="22" action="fake_action"/>
+                    <menuitem id="fake24_menu" name="排班作業" parent="hr_menu" sequence="23" action="fake_action"/>
+                    <menuitem id="fake25_menu" name="獎金作業" parent="hr_menu" sequence="24" action="fake_action"/>
+                    <menuitem id="fake26_menu" name="曠職作業" parent="hr_menu" sequence="25" action="fake_action"/>
+                    <menuitem id="fake27_menu" name="薪資預支作業" parent="hr_menu" sequence="26" action="fake_action"/>
+                <!-- hr category menu -->
+                <menuitem id="hr_maintain_menu" name="人事薪資基本對照檔維護" parent="main_hr_menu" sequence="101"/>
+                    <!-- hr_maintain sub menu -->
+                    <!--<menuitem id="factory_menu" name="廠別" parent="hr_maintain_menu" sequence="27" action="factory_action"/>-->
+                    <menuitem id="department_menu" name="部門" parent="hr_maintain_menu" sequence="28" action="department_action"/>
+                    <menuitem id="fake30_menu" name="雇用性質" parent="hr_maintain_menu" sequence="29" action="fake_action"/>
+                    <menuitem id="jobtitle_menu" name="職稱" parent="hr_maintain_menu" sequence="30" action="setjobtitle_action"/>
+                    <menuitem id="setsalaryitem_menu" name="薪資項目" parent="hr_maintain_menu" sequence="31" action="setsalaryitem_action"/>
+                    <menuitem id="setshift_menu" name="班制" parent="hr_maintain_menu" sequence="32" action="setshift_action"/>
+                    <menuitem id="setleave_menu" name="假別" parent="hr_maintain_menu" sequence="33" action="setleave_action"/>
+                    <menuitem id="setbonus_menu" name="獎金項目" parent="hr_maintain_menu" sequence="34" action="setbonus_action"/>
+            <!-- bar menu -->
+            <menuitem id="main_business_menu" name="業務" sequence="2" parent="main_root_menu"/>
+                <!-- business category menu -->
+                <menuitem id="business_menu" name="業務" parent="main_business_menu" sequence="10"/>
+                    <!-- business sub menu -->
+                    <menuitem id="customer_menu" name="客戶主檔" parent="business_menu" sequence="22" action="customer_action"/>
+                    <menuitem id="process1_menu" name="前加工廠主檔" parent="business_menu" sequence="23" action="process1_action"/>
+                    <menuitem id="process2_menu" name="次加工廠主檔" parent="business_menu" sequence="24" action="process2_action"/>
+                    <menuitem id="fake39_menu" name="客戶/次加工廠對應修正" parent="business_menu" sequence="25" action="fake_action"/>
+                    <menuitem id="supplier_menu" name="廠商主檔" parent="business_menu" sequence="26" action="supplier_action"/>
+                    <menuitem id="fake41_menu" name="報價作業" parent="business_menu" sequence="27" action="fake_action"/>
+                <!-- business category menu -->
+                <menuitem id="business_maintain_menu" name="業務基本對照檔維護" parent="main_business_menu" sequence="101"/>
+                    <!-- business_maintian sub menu -->
+                    <menuitem id="setcustomertype_menu" name="客戶種類" parent="business_maintain_menu" sequence="28" action="setcustomertype_action"/>
+                    <menuitem id="setsuppliertype_menu" name="廠商種類" parent="business_maintain_menu" sequence="29" action="setsuppliertype_action"/>
+                    <menuitem id="setpayment_menu" name="付款方式" parent="business_maintain_menu" sequence="30" action="setpayment_action"/>
+                    <menuitem id="setcurrency_menu" name="貨幣" parent="business_maintain_menu" sequence="31" action="setcurrency_action"/>
+                    <menuitem id="setprocessingplanttype_menu" name="加工廠種類" parent="business_maintain_menu" sequence="32" action="setprocessingplanttype_action"/>
+                    <menuitem id="setprocessingareatype_menu" name="加工廠區域" parent="business_maintain_menu" sequence="33" action="setprocessingareatype_action"/>
+                    <menuitem id="fake47_menu" name="距離計價" parent="business_maintain_menu" sequence="34" action="fake_action"/>
+                    <menuitem id="fake48_menu" name="規格計價" parent="business_maintain_menu" sequence="35" action="fake_action"/>
+            <!-- bar menu -->
+            <menuitem id="main_produce_menu" name="生產" sequence="3" parent="main_root_menu"/>
+                <!-- produce categorty menu-->
+                <menuitem id="purchase_menu" name="進貨作業" parent="main_produce_menu" sequence="11"/>
+                    <!-- purchase sub menu -->
+                    <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="20" action="weight_list_action"/>
+                    <!--<menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase_list_action"/>-->
+                    <menuitem id="purchase2_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
+                    <!--<menuitem id="purchase_report" name="進貨單報表" parent="purchase_menu" sequence="22" action="action_purchase_report"/>-->
+                    <menuitem id="purchasestore_menu" name="客戶進貨查詢作業" parent="purchase_menu" sequence="23" action="fake_action"/>
+                    <menuitem id="purchasereport_menu" name="客戶進貨統計表" parent="purchase_menu" sequence="24" action="fake_action"/>
+
+                <menuitem id="furnace_menu" name="分爐排程作業" parent="main_produce_menu" sequence="12"/>
+                    <!-- furnace sub menu -->
+                    <menuitem id="plan_furna_menu" name="分爐排程作業" parent="furnace_menu" sequence="20" action="action_purchase_display"/>
+                    <!--<menuitem id="furna_import_menu" name="爐內進貨" parent="furnace_menu" sequence="21" action="furna_import_action"/>-->
+                <menuitem id="ship_menu" name="出貨管理作業" parent="main_produce_menu" sequence="13"/>
+                    <!-- ship sub menu -->
+                    <menuitem id="fake2_menu" name="轉待出貨作業" parent="ship_menu" sequence="20" action="fake_action"/>
+                    <menuitem id="shipment_menu" name="出貨作業" parent="ship_menu" sequence="21" action="shipment_action"/>
+                    <menuitem id="return_menu" name="退回作業" parent="ship_menu" sequence="22" action="return_action"/>
+                <menuitem id="turn_menu" name="轉廠出貨作業" parent="main_produce_menu" sequence="14"/>
+                    <!-- turn sub menu -->
+                    <menuitem id="fake5_menu" name="轉廠出貨作業" parent="turn_menu" sequence="20" action="fake_action"/>
+                <menuitem id="out_ship_menu" name="委外出貨作業" parent="main_produce_menu" sequence="15"/>
+                    <!-- out_ship sub menu -->
+                    <menuitem id="fake6_menu" name="委外出貨作業" parent="out_ship_menu" sequence="20" action="fake_action"/>
+                <menuitem id="produce_report_menu" name="生產管理相關報表" parent="main_produce_menu" sequence="16"/>
+                    <!-- produce_report sub menu -->
+                    <menuitem id="fake7_menu" name="司機載貨明細表" parent="produce_report_menu" sequence="20" action="fake_action"/>
+                    <menuitem id="fake8_menu" name="出貨統計表" parent="produce_report_menu" sequence="21" action="fake_action"/>
+                    <menuitem id="fake9_menu" name="熱處理成品重量明細記錄表" parent="produce_report_menu" sequence="22" action="fake_action"/>
+                    <menuitem id="fake10_menu" name="空桶欠缺明細表" parent="produce_report_menu" sequence="23" action="fake_action"/>
+                <menuitem id="produce_maintain_menu" name="生產管理基本對照檔維護" parent="main_produce_menu" sequence="17"/>
+                    <!-- produce_maintain sub menu -->
+                    <menuitem id="setproduct_menu" name="產品資料" parent="produce_maintain_menu" sequence="20" action="setproduct_action"/>
+                    <menuitem id="setstrength_menu" name="強度級數" parent="produce_maintain_menu" sequence="21" action="setstrength_action"/>
+                    <menuitem id="fake13_menu" name="產品分類" parent="produce_maintain_menu" sequence="22" action="fake_action"/>
+                    <menuitem id="setnorm_menu" name="規格對照" parent="produce_maintain_menu" sequence="23" action="setnorm_action"/>
+                    <menuitem id="setlength_menu" name="長度對照" parent="produce_maintain_menu" sequence="24" action="setlength_action"/>
+                    <menuitem id="fake16_menu" name="加工方式" parent="produce_maintain_menu" sequence="25" action="fake_action"/>
+                    <menuitem id="fake17_menu" name="材質" parent="produce_maintain_menu" sequence="26" action="fake_action"/>
+                    <menuitem id="fake18_menu" name="表面處理" parent="produce_maintain_menu" sequence="27" action="fake_action"/>
+                    <menuitem id="fake19_menu" name="電鍍別" parent="produce_maintain_menu" sequence="28" action="fake_action"/>
+                    <menuitem id="fake20_menu" name="單位(桶別稱)" parent="produce_maintain_menu" sequence="29" action="fake_action"/>
+                    <menuitem id="fake21_menu" name="各爐產能設定" parent="produce_maintain_menu" sequence="30" action="fake_action"/>
+                    <menuitem id="setpurchasenote_menu" name="進貨備註" parent="produce_maintain_menu" sequence="31" action="setpurchasenote_action"/>
+                    <menuitem id="setstoreplace_menu" name="儲存位置" parent="produce_maintain_menu" sequence="24" action="setstoreplace_action"/>
+
+            <!-- bar menu -->
+            <menuitem id="main_quality_menu" name="品質" sequence="4" parent="main_root_menu"/>
+                <!-- quality category menu -->
+                <menuitem id="quality_menu" name="品質" parent="main_quality_menu" sequence="10"/>
+                    <!-- quality sub menu -->
+                    <!--<menuitem id="qualitydata_menu" name="品管數據主檔" parent="quality_menu" sequence="20" action="quality_wizard_action"/>-->
+                    <!--<menuitem id="quality_invalid_menu" name="不合格品處理作業" parent="quality_menu" sequence="21" action="quality_invalid_action"/>-->
+                    <menuitem id="mechanicalproperty_menu" name="產品機械性質主檔" parent="quality_menu" sequence="22" action="mechanicalproperty_action"/>
+                <!-- quality_maintain category menu -->
+                <menuitem id="quality_maintain_menu" name="品質管理基本對照檔維護" parent="main_quality_menu" sequence="101"/>
+                    <!-- quality_maintain sub menu -->
+                    <menuitem id="setproducenote_menu" name="製造備註主檔" parent="quality_maintain_menu" sequence="23" action="setproducenote_action"/>
+                    <menuitem id="qcsetstrength_menu" name="強度等級主檔" parent="quality_maintain_menu" sequence="24" action="setstrength_action"/>
+                    <menuitem id="sethardness_menu" name="硬度規格主檔" parent="quality_maintain_menu" sequence="25" action="sethardness_action"/>
+                    <menuitem id="setqcnote_menu" name="品管備註主檔" parent="quality_maintain_menu" sequence="26" action="setqcnote_action"/>
+                    <menuitem id="fake56_menu" name="扭力規格建檔" parent="quality_maintain_menu" sequence="27" action="fake_action"/>
+            <!-- bar menu -->
+            <menuitem id="main_manufacture_menu" name="製造" sequence="5" parent="main_root_menu"/>
+                <!-- manufacture category menu -->
+                <menuitem id="manufacture_menu" name="製造" parent="main_manufacture_menu" sequence="10"/>
+                    <!-- manufacture sub menu -->
+                    <menuitem id="process_data_entry_menu" name="製造過程登錄作業" parent="manufacture_menu" sequence="20" action="process_review_action"/>
+                    <menuitem id="quantity_data_entry_menu" name="產量數據登錄作業" parent="manufacture_menu" sequence="21" action="quantity_review_action"/>
+                <!-- manufacture_maintain category menu -->
+                <menuitem id="manufacture_maintain_menu" name="製程管理基本對照檔維護" parent="main_manufacture_menu" sequence="101"/>
+                    <!-- manufacture sub menu -->
+                    <menuitem id="fake83_menu" name="製程管理基本對照檔" parent="manufacture_maintain_menu" sequence="20" action="fake_action"/>
+
+            <!-- bar menu -->
+            <menuitem id="main_finance_menu" name="財務" sequence="6" parent="main_root_menu"/>
+                <!-- finance category menu -->
+                <menuitem id="finance_menu" name="財務" parent="main_finance_menu" sequence="10"/>
+                    <!-- finance sub menu -->
+                    <menuitem id="fake59_menu" name="出貨單價設定" parent="finance_menu" sequence="20" action="fake_action"/>
+                    <menuitem id="fake60_menu" name="應收帳款統計" parent="finance_menu" sequence="21" action="fake_action"/>
+                    <menuitem id="fake61_menu" name="匯入工廠資料" parent="finance_menu" sequence="22" action="fake_action"/>
+                    <menuitem id="fake62_menu" name="票據管理" parent="finance_menu" sequence="23" action="fake_action"/>
+                    <menuitem id="fake63_menu" name="總帳會計" parent="finance_menu" sequence="24" action="fake_action"/>
+                    <menuitem id="fake64_menu" name="資金管理" parent="finance_menu" sequence="25" action="fake_action"/>
+                    <menuitem id="fake65_menu" name="發票管理" parent="finance_menu" sequence="26" action="fake_action"/>
+                <!-- finance_maintain category menu -->
+                <menuitem id="finance_maintain_menu" name="財務管理基本對照檔維護" parent="main_finance_menu" sequence="101"/>
+                    <!-- finance_maintain sub menu -->
+                    <menuitem id="fake66_menu" name="應收帳款總表" parent="finance_maintain_menu" sequence="27" action="fake_action"/>
+                    <menuitem id="fake67_menu" name="應收帳款排行前30大" parent="finance_maintain_menu" sequence="28" action="fake_action"/>
+                    <menuitem id="fake68_menu" name="客戶應收帳款及產量明細" parent="finance_maintain_menu" sequence="29" action="fake_action"/>
+                    <menuitem id="fake69_menu" name="應收帳款銷帳明細" parent="finance_maintain_menu" sequence="30" action="fake_action"/>
+                    <menuitem id="fake70_menu" name="應收帳款沖銷明細簡表" parent="finance_maintain_menu" sequence="31" action="fake_action"/>
+                    <menuitem id="fake71_menu" name="應收帳款標籤" parent="finance_maintain_menu" sequence="32" action="fake_action"/>
+                    <menuitem id="fake72_menu" name="客戶每月出貨統計" parent="finance_maintain_menu" sequence="33" action="fake_action"/>
+            <!-- bar menu -->
+            <menuitem id="main_statistics_menu" name="產量統計" sequence="7" parent="main_root_menu"/>
+                    <menuitem id="fake73_menu" name="司機載貨明細" parent="main_statistics_menu" sequence="20" action="yc_cargo_action"/>
+                    <menuitem id="fake74_menu" name="操作員生產量明細" parent="main_statistics_menu" sequence="21" action="fake_action"/>
+                    <menuitem id="fake75_menu" name="各爐生產量明細" parent="main_statistics_menu" sequence="22" action="fake_action"/>
+                    <menuitem id="fake76_menu" name="各爐產量統計" parent="main_statistics_menu" sequence="23" action="fake_action"/>
+                    <menuitem id="fake77_menu" name="廠務組長產量統計" parent="main_statistics_menu" sequence="24" action="fake_action"/>
+                    <menuitem id="fake78_menu" name="操作員產量統計" parent="main_statistics_menu" sequence="25" action="fake_action"/>
+                    <menuitem id="fake79_menu" name="客戶產量統計" parent="main_statistics_menu" sequence="26" action="fake_action"/>
+                    <menuitem id="fake80_menu" name="產量明細" parent="main_statistics_menu" sequence="27" action="fake_action"/>
+                    <menuitem id="fake81_menu" name="產量表" parent="main_statistics_menu" sequence="28" action="fake_action"/>
+                    <menuitem id="fake82_menu" name="總產量曲線圖" parent="main_statistics_menu" sequence="29" action="fake_action"/>
+
+    </data>
+</odoo>

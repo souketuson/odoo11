@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="setprocessingareatype_tree">
+            <field name="name">setprocessingareatype.tree</field>
+            <field name="model">yc.setprocessingareatype</field>
+            <field name="arch" type="xml">
+                <tree string="setprocessingareatype Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="setprocessingareatype_form">
+            <field name="name">setprocessingareatype.form</field>
+            <field name="model">yc.setprocessingareatype</field>
+            <field name="arch" type="xml">
+                <form string="setprocessingareatype">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="setprocessingareatype_search_view">
+            <field name="name">setprocessingareatype.search</field>
+            <field name="model">yc.setprocessingareatype</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="code"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="setprocessingareatype_action">
+            <field name="name">加工廠區域設定</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.setprocessingareatype</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="setprocessingareatype">
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="setprocessingareatype_action_form">
+            <field name="act_window_id" ref="setprocessingareatype_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="setprocessingareatype_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="setprocessingareatype_action_tree">
+            <field name="act_window_id" ref="setprocessingareatype_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="setprocessingareatype_tree"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="yc_purchase_wizard">
+        <field name="name">Purchase Wizard</field>
+        <field name="model">yc.purchase.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+
+            <form string="Purchase Report">
+                <group>
+                    <div>
+
+                        <field name="initial" invisible="1"/>
+                        <field name="ck1"/>
+                        <label string="　　品名" style="font-weight:bold"/>
+                        <field name="product_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck2"/>
+                        <label string="　　規格" style="font-weight:bold"/>
+                        <field name="norm_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck3"/>
+                        <label string="　　長度" style="font-weight:bold"/>
+                        <field name="len_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <br/>
+                        <field name="ck7"/>
+                        <label string="強度級數" style="font-weight:bold"/>
+                        <field name="strength_level" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck4"/>
+                        <label string="品名分類" style="font-weight:bold"/>
+                        <field name="clsf_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck5"/>
+                        <label string="加工方式" style="font-weight:bold"/>
+                        <field name="proces_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <br/>
+                        <field name="ck6"/>
+                        <label string="　　材質" style="font-weight:bold"/>
+                        <field name="txtur_code" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <span style="display:inline-block; width: 40px;"/>
+                        <field name="ck8"/>
+                        <label string="線材爐號" style="font-weight:bold"/>
+                        <field name="wire_furn" style="width:100px" options="{'no_open': True,'no_create': True}"/>
+                        <!--<span style="display:inline-block; width: 40px;"/>-->
+                        <!--<label string="產品名稱" style="font-weight:bold"/>-->
+                        <!--<field name="productname" style="width:100px"/>-->
+                        <br/>
+                        <!-- 用button object 呼叫method 會跳掉 -->
+                        <!--<button type="object" name="search_purchase" string="搜尋" style="margin-left: 470px;margin-top: 8px;"/>-->
+                        <!--<br/>-->
+                        <br/>
+                        <field name="purchase_ids" widget="many2many">
+                            <tree create="false" delete="false" string="Purchase Details" editable="top">
+                                <field name="wizard_check" string=' ' widget="checkbox"/>
+                                <field name="name" string="工令" readonly="1"/>
+                                <field name="customer_id" string="客戶" readonly="1" options="{'no_open': True,'no_create': True}"/>
+                                <field name="norm_code" readonly="1" options="{'no_open': True,'no_create': True}"/>
+                                <field name="surfhrd" string="表面" readonly="1"/>
+                                <field name="corehrd" string="心部" readonly="1"/>
+                                <field name="tensihrd" string="抗拉" readonly="1"/>
+                                <field name="carburlayer" string="滲碳" readonly="1"/>
+                                <field name="torsion" readonly="1"/>
+                                <field name="tempturing2" string="回火" readonly="1"/>
+                                <field name="order_furn" string="預排爐" readonly="1" options="{'no_open': True,'no_create': True}"/>
+                            </tree>
+                        </field>
+                        <field name="rec_number"/>
+                    </div>
+                </group>
+                <footer>
+                    <button name="comfirm" string="帶出資料" type="object" class="oe_highlight"/>
+                    <button string="取消" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_purchase_wizard" model="ir.actions.act_window">
+        <field name="name">設定搜尋條件</field>
+        <field name="res_model">yc.purchase.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

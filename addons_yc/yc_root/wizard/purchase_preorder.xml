@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="yc_purchase_preorder">
+        <field name="name">Purchase Preorder</field>
+        <field name="model">yc.purchase.preorder</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Preorder Report">
+                <group>
+                    <div>
+                        <label string="退回來源" style="font-weight:bold"/>
+                        <field name="condition" style="width:100px" widget="radio" options="{'horizontal': True}"/>
+                        <br/>
+                        <field name="return_ids" widget="many2many" attrs="{'invisible': [('condition', '!=', 'OT')]}">
+                            <tree create="false" delete="false" string="Purchase Details" editable='top'>
+                                <field name="wizard_check"/>
+                                <field name="name" readonly="1"/>
+                                <field name="order" readonly="1"/>
+                                <field name="note" readonly="1"/>
+                            </tree>
+                        </field>
+                        <field name="purchase_ids" widget="many2many" attrs="{'invisible': [('condition', '!=', 'IT')]}">
+                            <tree create="false" delete="false" string="Purchase Details" editable="top">
+                                <field name="wizard_check"/>
+                                <field name="name" readonly="1"/>
+                                <field name="pre_order" readonly="1"/>
+                                <field name="notices3" readonly="1"/>
+                            </tree>
+                        </field>
+                    </div>
+                </group>
+                <footer>
+                    <button name="comfirm" string="確定" type="object" class="oe_highlight"/>
+                    <button string="取消" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_purchase_preorder" model="ir.actions.act_window">
+        <field name="name">設定搜尋條件</field>
+        <field name="res_model">yc.purchase.preorder</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
