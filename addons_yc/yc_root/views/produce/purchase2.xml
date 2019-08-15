@@ -31,6 +31,15 @@
                         <sheet>
                             <style>
                                 .block1{background-color: #ffcc99; padding-left: 8px;}
+                                    .disabled
+                                    {
+                                        cursor: not-allowed;
+                                        background-color: rgb(229, 229, 229) !important;
+                                    }
+                                    .disabled > *
+                                    {
+                                        pointer-events:none;
+                                    }
                             </style>
                             <script type="text/javascript">
                                 // 防止重複載入該js檔
@@ -48,7 +57,7 @@
                                         icon="" string="長度新增"/>
                                 <button name="%(setpurchasenote_action)d" type="action" class="create_btn"
                                         icon="" string="備註搜尋"/>
-                                <button name="comfirm_return" type="object" class="comfirm_return oe_highlight"
+                                <button name="comfirm_return" type="object" class="comfirm_return oe_highlight disabled"
                                         icon="" string="拉出退回"/>
                                 <button name="%(action_purchase_display)d" type="action" class="oe_highlight"
                                         icon="" string="前往排程"/>
