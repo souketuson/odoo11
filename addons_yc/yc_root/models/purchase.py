@@ -259,6 +259,7 @@ class YcPurchase(models.Model):
     carb1v2 = fields.Float("滲碳層1值2")
     carb1v3 = fields.Float("滲碳層1值3")
     carb1v4 = fields.Float("滲碳層1值4")
+    
     carb1v5 = fields.Float("滲碳層1值5")
     carb1v6 = fields.Float("滲碳層1值6")
     carb1v7 = fields.Float("滲碳層1值7")
