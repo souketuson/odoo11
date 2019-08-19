@@ -11,6 +11,8 @@ class YcPurchase(models.Model):
     _name = "yc.purchase"
     _order = 'day desc,time desc'
 
+
+
     name = fields.Char("工令號碼")
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
     time = fields.Char("時間", default=lambda self: self._get_time())
@@ -36,17 +38,125 @@ class YcPurchase(models.Model):
     customer_no = fields.Char("客戶單號")
     person = fields.Many2one("res.users", string="開單人員")
     list_man = fields.Many2one("res.users", string="開單人員", default=lambda self: self.env.user.id)
+
+    # TODO: 之後用"用Wizard開Wizard"帶出資料的方式取代 複製欄位的方式
+    clsf_code_cp = fields.Many2one("yc.setproductclassify")
     clsf_code = fields.Many2one("yc.setproductclassify", string="品名分類")
+    strength_level_cp = fields.Many2one("yc.setstrength")
     strength_level = fields.Many2one("yc.setstrength", string="強度級數")
+    norm_code_cp = fields.Many2one("yc.setnorm")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
+    product_code_cp = fields.Many2one("yc.setproduct")
     product_code = fields.Many2one("yc.setproduct", string="品名")
-    # 和上面重複
-    # productname = fields.Many2one("yc.setproduct", string="產品名稱")
+    txtur_code_cp = fields.Many2one("yc.settexture")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
+    len_code_cp = fields.Many2one("yc.setlength")
     len_code = fields.Many2one("yc.setlength", string="長度")
     len_descript = fields.Char("長度說明")
-
+    proces_code_cp = fields.Many2one("yc.setprocess")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
+    wire_furn_cp = fields.Char()
+    wire_furn = fields.Char("線材爐號")
+
+    @api.onchange('product_code_cp', 'clsf_code_cp', 'norm_code_cp', 'proces_code_cp', 'len_code_cp', 'txtur_code_cp',
+                  'strength_level_cp', 'wire_furn_cp')
+    def _search_wizard(self):
+        _bool = any((self.product_code_cp, self.clsf_code_cp, self.norm_code_cp, self.proces_code_cp,
+                     self.len_code_cp, self.txtur_code_cp, self.strength_level_cp, self.wire_furn_cp))
+        if _bool:
+            _action = self.env['ir.actions.act_window']
+            page = _action.search([('name', '=', '分爐排程')], limit=1).id
+            purchase = self.env['yc.purchase']
+            domain = ()
+            if self._context['params'].get('action') == page:
+                if self.product_code_cp and self.ck1:
+                    domain += ('product_code', '=', self.product_code_cp.id),
+                if self.clsf_code_cp and self.ck4:
+                    domain += ('clsf_code', '=', self.clsf_code_cp.id),
+                if self.norm_code_cp and self.ck2:
+                    domain += ('norm_code', '=', self.norm_code_cp.id),
+                if self.proces_code_cp and self.ck5:
+                    domain += ('proces_code', '=', self.proces_code_cp.id),
+                if self.len_code_cp and self.ck3:
+                    domain += ('len_code', '=', self.len_code_cp.id),
+                if self.txtur_code_cp and self.ck6:
+                    domain += ('txtur_code', '=', self.txtur_code_cp.id),
+                if self.strength_level_cp and self.ck7:
+                    domain += ('strength_level', '=', self.strength_level_cp.id),
+                if self.wire_furn_cp and self.ck8:
+                    domain += ('wire_furn', '=', self.wire_furn_cp),
+                if len(domain) > 0:
+                    # 搜尋出來的list要排除掉自己
+                    domain += ('name', '!=', self.name),
+                    # 要限制最多六筆 並且時間排序
+                    records = purchase.search([d for d in domain], limit=6, order='create_date desc')
+                    if len(records) > 0:
+                        self.itself_ids = [(6, 0, records.ids)]
+                        self.remainder = "共 %s 筆" % len(records)
+                    else:
+                        self.itself_ids = None
+                        self.remainder = "找不到資料"
+
+
+    # 進貨作業: 自動帶出相似資料
+    # 爐內進貨: itself m2m更新
+    @api.onchange('product_code', 'clsf_code', 'norm_code', 'proces_code', 'len_code', 'txtur_code',
+                  'strength_level', 'wire_furn', 'wizard_btn')
+    def _toggle_wizard(self):
+        # _bool = bool(self.product_code or self.clsf_code or self.norm_code or self.proces_code or
+        # self.len_code or self.txtur_code or self.strength_level or self.wire_furn)
+        _bool = any((self.product_code, self.clsf_code, self.norm_code, self.proces_code,
+                     self.len_code, self.txtur_code, self.strength_level, self.wire_furn))
+        if _bool:
+            _action = self.env['ir.actions.act_window']
+            page2 = _action.search([('name', '=', '進貨單作業')], limit=1).id
+            # itself更新
+            purchase = self.env['yc.purchase']
+            # 先更新itself
+            if self._context['params'].get('action') == page2:
+                self.product_code_cp = self.product_code
+                self.clsf_code_cp = self.clsf_code
+                self.norm_code_cp = self.norm_code
+                self.proces_code_cp = self.proces_code
+                self.len_code_cp = self.len_code
+                self.txtur_code_cp = self.txtur_code
+                self.strength_level_cp = self.strength_level
+                self.wire_furn_cp = self.wire_furn
+                domain = ()
+                if self.wire_furn:
+                    domain += ('wire_furn', '=', self.wire_furn),
+                if self.clsf_code:
+                    domain += ("clsf_code", "=", self.clsf_code.id),
+                if self.product_code:
+                    domain += ("product_code", "=", self.product_code.id),
+                if self.strength_level:
+                    domain += ("strength_level", "=", self.strength_level.id),
+                if self.txtur_code:
+                    domain += ("txtur_code", "=", self.txtur_code.id),
+                if self.norm_code:
+                    domain += ("norm_code", "=", self.norm_code.id),
+                if self.proces_code:
+                    domain += ("proces_code", "=", self.proces_code.id),
+                if len(domain) > 0:
+                    # 防止搜尋到自己
+                    if isinstance(self.id, int):
+                        domain += ('id', '!=', self.id),
+                    domain += ('company_id', '=', self.env.user.company_id.id),
+                    r = purchase.search([d for d in domain], limit=1, order="day desc,time desc")
+                    self.flow, self.cp = r.flow, r.cp
+                    self.nh31, self.nh32, self.nh33, self.nh34 = r.nh31, r.nh32, r.nh33, r.nh34
+                    self.heat1, self.heat2, self.heat3, self.heat4 = r.heat1, r.heat2, r.heat3, r.heat4
+                    self.heat5, self.heat6, self.heat7, self.heat8 = r.heat5, r.heat6, r.heat7, r.heat8
+                    self.heattemp = r.heattemp
+                    self.heatsped = r.heatsped
+                    self.tempturing1 = r.tempturing1
+                    self.tempturing2 = r.tempturing2
+                    self.tempturing3 = r.tempturing3
+                    self.tempturing4 = r.tempturing4
+                    self.tempturing5 = r.tempturing5
+                    self.tempturing6 = r.tempturing6
+                    self.tempturisped = r.tempturisped
+
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     elecplswitch = fields.Char("表面處理開關", compute="_switcher", help="當表面處理選定'電鍍'時，turn on，否則off")
     elecpl_code = fields.Many2one("yc.setelectroplating", string="電鍍別")
@@ -67,7 +177,7 @@ class YcPurchase(models.Model):
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
 
-    wire_furn = fields.Char("線材爐號")
+
     headsign = fields.Binary('頭部記號')
     surfhrd = fields.Char("表面硬度")
     corehrd = fields.Char("心部硬度")
@@ -565,60 +675,60 @@ class YcPurchase(models.Model):
 
     # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料
     # TODO: 確定不用後可以刪掉了
-    def yc_purchase_search_name(self):
-        # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
-        if self._context.get('params')['action'] == 111:
-            # S05N0100 製程登錄作業
-            purchase = self.env["yc.purchase"]
-            repeated_name_record = purchase.search(
-                [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])
-            empty_name_record = purchase.search([('name', '=', None), ('company_id', '=', self.env.user.company_id.id)])
-            # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
-            if len(repeated_name_record) > 1:
-                to_delete_id = purchase.search(
-                    [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
-                    limit=1).id
-                sql = "delete from yc_purchase where id=%d" % to_delete_id
-                self._cr.execute(sql)
-            if len(empty_name_record) >= 1:
-                sql = "delete from yc_purchase where name is NULL"
-                self._cr.execute(sql)
-            id = self.env['yc.purchase'].search(
-                [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
-            to_create_order = purchase.search([('id', '=', id)])
-            if len(to_create_order.produce_details_ids) == 0:
-                for i in range(1, 7):
-                    to_create_order.produce_details_ids = [(0, 0, {'name': id, 'bucket_no': i})]
-            return {
-                'name': self.searchname,
-                'res_model': 'yc.purchase',
-                'type': 'ir.actions.act_window',
-                'res_id': id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': self.env.ref('yc_root.process_data_entry_form').id,
-                'target': 'inline', }
-        elif self._context.get('params')['action'] == 124:
-            # S04N0200
-            to_delete_id = self.env["yc.purchase"].search(
-                [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
-                limit=1).id
-            sql = "delete from yc_purchase where id=%d" % to_delete_id
-            if len(self.env["yc.purchase"].search(
-                    [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])) > 1:
-                self._cr.execute(sql)
-            id = self.env['yc.purchase'].search(
-                [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)]).id
-            return {
-                'name': self.searchname,
-                'res_model': 'yc.purchase',
-                'type': 'ir.actions.act_window',
-                'res_id': id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': self.env.ref('yc_root.quality_form').id,
-                'target': 'inline',
-            }
+    # def yc_purchase_search_name(self):
+    #     # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
+    #     if self._context.get('params')['action'] == 111:
+    #         # S05N0100 製程登錄作業
+    #         purchase = self.env["yc.purchase"]
+    #         repeated_name_record = purchase.search(
+    #             [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])
+    #         empty_name_record = purchase.search([('name', '=', None), ('company_id', '=', self.env.user.company_id.id)])
+    #         # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
+    #         if len(repeated_name_record) > 1:
+    #             to_delete_id = purchase.search(
+    #                 [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
+    #                 limit=1).id
+    #             sql = "delete from yc_purchase where id=%d" % to_delete_id
+    #             self._cr.execute(sql)
+    #         if len(empty_name_record) >= 1:
+    #             sql = "delete from yc_purchase where name is NULL"
+    #             self._cr.execute(sql)
+    #         id = self.env['yc.purchase'].search(
+    #             [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
+    #         to_create_order = purchase.search([('id', '=', id)])
+    #         if len(to_create_order.produce_details_ids) == 0:
+    #             for i in range(1, 7):
+    #                 to_create_order.produce_details_ids = [(0, 0, {'name': id, 'bucket_no': i})]
+    #         return {
+    #             'name': self.searchname,
+    #             'res_model': 'yc.purchase',
+    #             'type': 'ir.actions.act_window',
+    #             'res_id': id,
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'view_id': self.env.ref('yc_root.process_data_entry_form').id,
+    #             'target': 'inline', }
+    #     elif self._context.get('params')['action'] == 124:
+    #         # S04N0200
+    #         to_delete_id = self.env["yc.purchase"].search(
+    #             [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
+    #             limit=1).id
+    #         sql = "delete from yc_purchase where id=%d" % to_delete_id
+    #         if len(self.env["yc.purchase"].search(
+    #                 [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])) > 1:
+    #             self._cr.execute(sql)
+    #         id = self.env['yc.purchase'].search(
+    #             [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)]).id
+    #         return {
+    #             'name': self.searchname,
+    #             'res_model': 'yc.purchase',
+    #             'type': 'ir.actions.act_window',
+    #             'res_id': id,
+    #             'view_type': 'form',
+    #             'view_mode': 'form',
+    #             'view_id': self.env.ref('yc_root.quality_form').id,
+    #             'target': 'inline',
+    #         }
 
 
     # 5.各查詢表單後更新資料
@@ -626,15 +736,15 @@ class YcPurchase(models.Model):
         return True
 
     # 6.過濾桶號工令 (改wizard 應該用不到了)
-    @api.onchange("order_furn")
-    def _chech_order(self):
-        # TODO: should modified value by given number directly.
-        if self._context.get('params')['action'] == 111:
-            return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
-                               "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}
-        elif self._context.get('params')['action'] == 112:
-            return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn.id)],
-                               "notweighted_order": [("order_furn", "=", self.order_furn.id)]}}
+    # TODO: 確認用不到可以刪掉.
+    # @api.onchange("order_furn")
+    # def _chech_order(self):
+    #     if self._context.get('params')['action'] == 111:
+    #         return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
+    #                            "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}
+    #     elif self._context.get('params')['action'] == 112:
+    #         return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn.id)],
+    #                            "notweighted_order": [("order_furn", "=", self.order_furn.id)]}}
 
     # 7.濾出只有和使用者同樣廠別的紀錄
     # 目前以修改odoo11.0 > odoo > http.py L# 1095 讓頁面抓到context 取代這一段功能
@@ -661,6 +771,7 @@ class YcPurchase(models.Model):
     @api.constrains("wizard_check")
     def _check_bringout(self):
         # 出貨作業會拉多筆資料進出貨項目檔，跳過這段提醒
+        # TODO: should modified value by given number directly.
         if self._context.get('params')['action'] != 158:
             wizard_checked = self.env["yc.purchase"].search(
                 [('wizard_check', '=', True), ('company_id', '=', self.env.user.company_id.id)])
@@ -685,106 +796,24 @@ class YcPurchase(models.Model):
     @api.onchange('ck1', 'ck2', 'ck3', 'ck4', 'ck5', 'ck6', 'ck7', 'ck8')
     def _check_out(self):
         if not self.ck1:
-            self.product_code = None
+            self.product_code_cp = None
         if not self.ck2:
-            self.norm_code = None
+            self.norm_code_cp = None
         if not self.ck3:
-            self.len_code = None
+            self.len_code_cp = None
         if not self.ck4:
-            self.clsf_code = None
+            self.clsf_code_cp = None
         if not self.ck5:
-            self.proces_code = None
+            self.proces_code_cp = None
         if not self.ck6:
-            self.txtur_code = None
+            self.txtur_code_cp = None
         if not self.ck7:
-            self.strength_level = None
+            self.strength_level_cp = None
         if not self.ck8:
-            self.wire_furn = None
-        self._toggle_wizard()
+            self.wire_furn_cp = None
+        self._search_wizard()
 
-    # 進貨單作業:itself m2m更新、自動帶入參數
-    # 爐內進貨  :itself m2m更新
-    @api.onchange('product_code', 'clsf_code', 'norm_code', 'proces_code', 'len_code', 'txtur_code',
-                  'strength_level', 'wire_furn', 'wizard_btn')
-    def _toggle_wizard(self):
-        _bool = bool(self.product_code or self.clsf_code or self.norm_code or self.proces_code or
-                     self.len_code or self.txtur_code or self.strength_level or self.wire_furn)
-        if _bool:
-            _action = self.env['ir.actions.act_window']
-            action_1 = _action.search([('name', '=', '分爐排程')], limit=1).id
-            action_2 = _action.search([('name', '=', '進貨單作業')], limit=1).id
-            # itself更新
-            purchase = self.env['yc.purchase']
-            # 先更新itself
 
-            if self._context['params'].get('action') == action_1 or action_2:
-                domain = ()
-                if self.product_code and self.ck1:
-                    domain += ('product_code', '=', self.product_code.id),
-                if self.clsf_code and self.ck4:
-                    domain += ('clsf_code', '=', self.clsf_code.id),
-                if self.norm_code and self.ck2:
-                    domain += ('norm_code', '=', self.norm_code.id),
-                if self.proces_code and self.ck5:
-                    domain += ('proces_code', '=', self.proces_code.id),
-                if self.len_code and self.ck3:
-                    domain += ('len_code', '=', self.len_code.id),
-                if self.txtur_code and self.ck6:
-                    domain += ('txtur_code', '=', self.txtur_code.id),
-                if self.strength_level and self.ck7:
-                    domain += ('strength_level', '=', self.strength_level.id),
-                if self.wire_furn and self.ck8:
-                    domain += ('wire_furn', '=', self.wire_furn),
-                if len(domain) > 0:
-                    # 搜尋出來的list要排除掉自己
-                    domain += ('name', '!=', self.name),
-                    # 要限制最多六筆 並且時間排序
-                    records = purchase.search([d for d in domain], limit=6, order='create_date desc')
-                    if len (records) > 0:
-                        self.itself_ids = [(6, 0, records.ids)]
-                        self.remainder = "共 %s 筆" % len(records)
-                    else:
-                        self.itself_ids = None
-                        self.remainder = "找不到資料"
-            # 再看進貨單
-            if self._context['params'].get('actions') == action_2:
-                domain = ()
-                if self.wire_furn:
-                    domain += ('wire_furn', '=', self.wire_furn),
-                if self.clsf_code:
-                    domain += ("clsf_code", "=", self.clsf_code.id),
-                if self.product_code:
-                    domain += ("product_code", "=", self.product_code.id),
-                if self.strength_level:
-                    domain += ("strength_level", "=", self.strength_level.id),
-                if self.txtur_code:
-                    domain += ("txtur_code", "=", self.txtur_code.id),
-                if self.norm_code:
-                    domain += ("norm_code", "=", self.norm_code.id),
-                if self.proces_code:
-                    domain += ("proces_code", "=", self.proces_code.id),
-                if len(domain) > 0:
-                    # 防止搜尋到自己
-                    if isinstance(self.id, int):
-                        domain += ('id', '!=', self.id),
-                    domain += ('company_id', '=', self.env.user.company_id.id),
-                    r = purchase.search([d for d in domain], limit=1, order="day desc,time desc")
-                    self.flow, self.cp = r.flow, r.cp
-                    self.nh31, self.nh32, self.nh33, self.nh34 = r.nh31, r.nh32, r.nh33, r.nh34
-                    self.heat1, self.heat2, self.heat3, self.heat4 = r.heat1, r.heat2, r.heat3, r.heat4
-                    self.heat5, self.heat6, self.heat7, self.heat8 = r.heat5, r.heat6, r.heat7, r.heat8
-                    self.heattemp = r.heattemp
-                    self.heatsped = r.heatsped
-                    self.tempturing1 = r.tempturing1
-                    self.tempturing2 = r.tempturing2
-                    self.tempturing3 = r.tempturing3
-                    self.tempturing4 = r.tempturing4
-                    self.tempturing5 = r.tempturing5
-                    self.tempturing6 = r.tempturing6
-                    self.tempturisped = r.tempturisped
-        else:
-            self.itself_ids = None
-            self.remainder = "請勾選並依查詢下拉選擇品項"
 
     # 要拉出itself checked要先寫進資料庫才能判定哪一筆要拉出
     # 用button先進create 再跑這個程式

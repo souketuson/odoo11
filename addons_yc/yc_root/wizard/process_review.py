@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from datetime import datetime as dt
 
 class YcPurchaseDisplay(models.TransientModel):
     _name = 'yc.purchase.process'
@@ -319,3 +320,19 @@ class YcPurchaseDisplay(models.TransientModel):
                 self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
             else:
                 raise ValidationError(_('不要再刪了'))
+
+    @api.onchange('ptime1', 'ptime2', 'ptime3')
+    def cokoo(self):
+        _bool = any((self.ptime1, self.ptime2, self.ptime3))
+        if _bool:
+            t = dt.today()
+            _time = str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
+            if self.ptime1:
+                self.ptime1 = _time
+            if self.ptime2:
+                self.ptime2 = _time
+            if self.ptime3:
+                self.ptime3 = _time
+
+
+

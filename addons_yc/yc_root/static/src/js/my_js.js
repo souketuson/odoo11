@@ -17,7 +17,6 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
              */
             core.bus.on('click', this, this.return_Click); //版面1退回
             core.bus.on('DOM_updated', this, this.note_auto_complete); // 備註autocomplete
-
         },
         return_Click: function() {
             if ($('div .purchase1_for_js').length ==1){
@@ -65,10 +64,12 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
                     ajax.jsonRpc("/note_search", "call", {"txt": note1.val()})
                         .then(function (data) {
                             response(data);
+
                         });
                 },
                 response: function (event, ui) {
                     if (ui.content.length === 1) {
+                        console.log(ui);
                         ui.item = ui.content[0];
                     }
                 },

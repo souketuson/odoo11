@@ -10,15 +10,14 @@
                         <script>
                             // 報時
                             $('input').click(function() {
-                            var today=new Date();
-                            var _t = String(today.getHours()) + ':'+ String(today.getMinutes()) + ':' +
-                            String(today.getSeconds());
-                            var isFocus = document.activeElement.getAttribute('name');
-                            switch(isFocus){
-                            case 'fftime':
-                            $('input[name="fftime"]').val(_t);
-                            break;
-                            };
+                                var today=new Date();
+                                var _t = String(today.getHours()) + ':'+ String(today.getMinutes()) + ':' + String(today.getSeconds());
+                                var isFocus = document.activeElement.getAttribute('name');
+                                switch(isFocus){
+                                    case 'fftime':
+                                        $('input[name="fftime"]').val(_t);
+                                        break;
+                                };
                             });
                         </script>
                         <header>
