@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="wizard_weight">
+        <field name="name">Weight Wizard</field>
+        <field name="model">yc.weight.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Weight Wizard">
+                <group>
+                    <div>
+                        <span style="display:inline-block; width:90px;"/>
+                        <label string="起始日" style="font-weight:bold"/>
+                        <field name="start_date" style="width:120px"/>
+                        <label string="結束日" style="font-weight:bold"/>
+                        <field name="end_date" style="width:120px"/>
+                        <br/>
+                        <label string="司機" style="font-weight:bold"/>
+                        <field name="driver_id" style="width:120px"/>
+                        <br/>
+                        <button name="search_driver" string="搜尋" type="object" class="oe_highlight"/>
+                        <field name="weight_ids" widget="many2many">
+                            <tree create="false" edit="false" delete="false" string="Purchase Details" editable="top">
+                                <field name="name"/>
+                                <field name="day"/>
+                                <field name="weightime"/>
+                                <field name="driver_id"/>
+                                <field name="person_id"/>
+                                <field name="carno"/>
+                                <field name="in_out"/>
+                                <field name="company_id"/>
+                            </tree>
+                        </field>
+                    </div>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_weight_wizard" model="ir.actions.act_window">
+        <field name="name">過磅單司機搜尋</field>
+        <field name="res_model">yc.weight.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

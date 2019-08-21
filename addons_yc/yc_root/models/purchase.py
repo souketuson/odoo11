@@ -772,7 +772,9 @@ class YcPurchase(models.Model):
     def _check_bringout(self):
         # 出貨作業會拉多筆資料進出貨項目檔，跳過這段提醒
         # TODO: should modified value by given number directly.
-        if self._context.get('params')['action'] != 158:
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '出貨作業')], limit=1).id
+        if self._context.get('params')['action'] != page:
             wizard_checked = self.env["yc.purchase"].search(
                 [('wizard_check', '=', True), ('company_id', '=', self.env.user.company_id.id)])
             if len(wizard_checked) > 1:

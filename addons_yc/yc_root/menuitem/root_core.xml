@@ -59,7 +59,7 @@
                     <!--<menuitem id="purchase_report" name="進貨單報表" parent="purchase_menu" sequence="22" action="action_purchase_report"/>-->
                     <menuitem id="purchasestore_menu" name="客戶進貨查詢作業" parent="purchase_menu" sequence="23" action="fake_action"/>
                     <menuitem id="purchasereport_menu" name="客戶進貨統計表" parent="purchase_menu" sequence="24" action="fake_action"/>
-
+                    <menuitem id="weight_wizard" name="過磅作業司機搜尋" parent="purchase_menu" sequence="25" action="action_weight_wizard"/>
                 <menuitem id="furnace_menu" name="分爐排程作業" parent="main_produce_menu" sequence="12"/>
                     <!-- furnace sub menu -->
                     <menuitem id="plan_furna_menu" name="分爐排程作業" parent="furnace_menu" sequence="20" action="action_purchase_display"/>
