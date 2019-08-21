@@ -235,6 +235,19 @@ class YcWeight(models.Model):
                 result.append((record.id, name))
         return result
 
+    def action_weight_display_wizard(self):
+        return {
+            'name': self.name,
+            'res_model': 'yc.weight',
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('yc_root.weight_fom').id,
+            'target': 'new',
+            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+        }
+
     # @api.model
     # def factory_filter(self):
     #     ctx = self.env.context.copy()

@@ -8,7 +8,7 @@
             <form string="Weight Wizard">
                 <group>
                     <div>
-                        <span style="display:inline-block; width:90px;"/>
+
                         <label string="起始日" style="font-weight:bold"/>
                         <field name="start_date" style="width:120px"/>
                         <label string="結束日" style="font-weight:bold"/>
@@ -20,6 +20,7 @@
                         <button name="search_driver" string="搜尋" type="object" class="oe_highlight"/>
                         <field name="weight_ids" widget="many2many">
                             <tree create="false" edit="false" delete="false" string="Purchase Details" editable="top">
+                                <button type="object" name="action_weight_display_wizard" class="btn btn-secondary btn-lg" icon="fa-search"/>
                                 <field name="name"/>
                                 <field name="day"/>
                                 <field name="weightime"/>
@@ -42,5 +43,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_weight_wizard_form">
+        <field name="act_window_id" ref="action_weight_wizard"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_weight"/>
     </record>
 </odoo>

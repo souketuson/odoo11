@@ -13,13 +13,13 @@ class YcWeightWizard(models.TransientModel):
     def search_driver(self):
         weight = self.env['yc.weight']
         domain = ()
-        if self.start_date and self.end_date:
+        if self.start_date:
             domain += ('day', '>=', self.start_date),
+        if self.end_date:
             domain += ('day', '<=', self.end_date),
         if self.driver_id:
-            domain += ('driver_id', '=', self.driver_id)
+            domain += ('driver_id', '=', self.driver_id.id),
         if len(domain) > 0:
             records = weight.search([d for d in domain])
-            self.weight_ids = [(4, record.id) for record in records]
-
+            self.weight_ids = [(6, 0, records.ids)]
         return {"type": "set_scrollTop"}
