@@ -15,7 +15,7 @@
                         <field name="end_date" style="width:120px"/>
                         <br/>
                         <label string="司機" style="font-weight:bold"/>
-                        <field name="driver_id" style="width:120px"/>
+                        <field name="driver_id" style="width:120px" options="{'no_open': True,'no_create': True}"/>
                         <br/>
                         <button name="search_driver" string="搜尋" type="object" class="oe_highlight"/>
                         <field name="weight_ids" widget="many2many">

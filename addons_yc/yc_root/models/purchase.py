@@ -11,8 +11,6 @@ class YcPurchase(models.Model):
     _name = "yc.purchase"
     _order = 'day desc,time desc'
 
-
-
     name = fields.Char("工令號碼")
     day = fields.Date("進貨日期", default=lambda self: self._default_date())
     time = fields.Char("時間", default=lambda self: self._get_time())
@@ -97,7 +95,6 @@ class YcPurchase(models.Model):
                         self.itself_ids = None
                         self.remainder = "找不到資料"
 
-
     # 進貨作業: 自動帶出相似資料
     # 爐內進貨: itself m2m更新
     @api.onchange('product_code', 'clsf_code', 'norm_code', 'proces_code', 'len_code', 'txtur_code',
@@ -176,7 +173,6 @@ class YcPurchase(models.Model):
     process2 = fields.Many2one("yc.processing", "二次加工")
     totalpack = fields.Char("裝袋合計")
     standard = fields.Char("依據標準")
-
 
     headsign = fields.Binary('頭部記號')
     surfhrd = fields.Char("表面硬度")
@@ -490,7 +486,6 @@ class YcPurchase(models.Model):
     ckwhrd1v = fields.Boolean("CK華司硬度1值")
     ckwhrd2v = fields.Boolean("CK華司硬度2值")
 
-
     qcnote = fields.Many2one("yc.setqcnote", string="品管備註")
     pw1 = fields.Integer("製造重量1")
     pw2 = fields.Integer("製造重量2")
@@ -542,7 +537,6 @@ class YcPurchase(models.Model):
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
 
-
     # 製造明細檔
     produce_details_ids = fields.One2many("yc.produce.details", "name", "製造明細")
 
@@ -593,10 +587,10 @@ class YcPurchase(models.Model):
         if self.condition:
             # 處理方式('followup')為 "轉入進貨單"('migrate')者現身
             domain = [('followup', '=', 'migrate')]
-            if self.condition == 'OT': #廠外退回
+            if self.condition == 'OT':  # 廠外退回
                 records = self.env['yc.return'].search(domain)
                 self.return_ids = [(6, _, records.ids)]
-            elif self.condition == 'IT': #廠內退回
+            elif self.condition == 'IT':  # 廠內退回
                 #  "SELECT 工令號碼 as 出貨退回編號,工令號碼,不合格品處理 as 退回備註,b.前工令號碼"
                 #   from 進貨單主檔 a"
                 #   left join (select 前工令號碼 from 進貨單主檔) b on a.工令號碼=b.前工令號碼"
@@ -650,7 +644,6 @@ class YcPurchase(models.Model):
                 return 1
             checked.write({'return_in_fac_check': False})
 
-
     #########################
     ### views共用或部分共用 ###
     #########################
@@ -671,7 +664,6 @@ class YcPurchase(models.Model):
     @api.onchange("num1", "num2", "num3", "num4")
     def _count_bag(self):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
-
 
     # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料
     # TODO: 確定不用後可以刪掉了
@@ -729,7 +721,6 @@ class YcPurchase(models.Model):
     #             'view_id': self.env.ref('yc_root.quality_form').id,
     #             'target': 'inline',
     #         }
-
 
     # 5.各查詢表單後更新資料
     def save_entry_data(self):
@@ -815,8 +806,6 @@ class YcPurchase(models.Model):
             self.wire_furn_cp = None
         self._search_wizard()
 
-
-
     # 要拉出itself checked要先寫進資料庫才能判定哪一筆要拉出
     # 用button先進create 再跑這個程式
     def itself_update(self):
@@ -895,7 +884,8 @@ class YcPurchase(models.Model):
         if self.processing_attache:
             for rec in self:
                 self.combo_process = "電話:  %s    聯絡人:%s" % (
-                    self.processing_attache.processing_id.phone1 or '', self.processing_attache.processing_id.contact or '')
+                    self.processing_attache.processing_id.phone1 or '',
+                    self.processing_attache.processing_id.contact or '')
                 self.combo_customer = "電話:  %s    聯絡人:%s" % (
                     self.processing_attache.customer_id.phone1 or '', self.processing_attache.customer_id.contact or '')
                 self.customer_id = self.processing_attache.customer_id.id
@@ -996,22 +986,27 @@ class YcPurchase(models.Model):
     # 8. 加熱爐和回火爐自動填值
     @api.onchange('heat2', 'tempturing2')
     def _auto_fill_in(self):
-        if self.heat2:
+        heating = ['heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8']
+        tempturing = ['tempturing3', 'tempturing4', 'tempturing5', 'tempturing6']
+        h_pool = {'K': 5, 'P': 5, 'A': 4, 'B': 4, 'L': 4, 'M': 4, 'C': 3, 'G': 3, 'D': 2, 'E': 2, 'F': 2}
+        t_pool = {'K': 4, 'P': 4, 'A': 2, 'B': 2, 'G': 2, 'H': 2, 'L': 2, 'M': 2, 'C': 1, 'D': 1, 'E': 1, 'F': 1}
+        order_no = self.order_furn.name
+        if self.heat2 and self.heat2 != 0:
             init = int(self.heat2)
             self.heat1 = init - 30
-            self.heat3 = init
-            self.heat4 = init
-            self.heat5 = init
-            self.heat6 = init
-            self.heat7 = init
-            self.heat8 = init
-        if self.tempturing2:
+            for i in range(6):
+                if i < h_pool[order_no]:
+                    setattr(self, heating[i], init)
+                else:
+                    setattr(self, heating[i], None)
+        if self.tempturing2 and self.tempturing2 != 0:
             init = int(self.tempturing2)
             self.tempturing1 = init - 30
-            self.tempturing3 = init
-            self.tempturing4 = init
-            self.tempturing5 = init
-            self.tempturing6 = init
+            for j in range(4):
+                if j < t_pool[order_no]:
+                    setattr(self, tempturing[j], init)
+                else:
+                    setattr(self, tempturing[j], None)
 
     # 8.1 如果其他檢視頁面動到加熱爐2 其他加熱爐需要跟著動
     # Computational fields 不能手動改值
@@ -1035,7 +1030,6 @@ class YcPurchase(models.Model):
                 elapse = (dt.today().date() - rec_day).days
                 if elapse > 10:
                     rec.ckimportdate = 'over'
-
 
     ##################################
     ### 爐類進貨 furna_import.xml 用 ###
