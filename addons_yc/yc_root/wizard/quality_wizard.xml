@@ -24,9 +24,9 @@
                             <button name="yc_root.quality_wizard_action" string="查看下一筆" type="action"
                                     class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"/>
                             <button name="read_data_in_server" string="拉力資料" type="object" class="oe_highlight"/>
-                            <button name="" string="樣品識別單" type="object" class="oe_highlight"/>
-                            <button name="" string="檢驗報告書" type="object" class="oe_highlight"/>
-                            <button name="" string="不合格處理單" type="object" class="oe_highlight"/>
+                            <button name="call_quality_sample" string="樣品識別單" type="object" class="oe_highlight"/>
+                            <button name="call_quality_examine_reoort" string="檢驗報告書" type="object" class="oe_highlight"/>
+                            <button name="call_quality_unqualified_treatment" string="不合格處理單" type="object" class="oe_highlight"/>
                             <button name="" string="熱處理成品檢查紀錄" type="object" class="oe_highlight"/>
                             <button name="" string="金相報告書" type="object" class="oe_highlight"/>
                             <button string="資料查詢" type="object" class="oe_highlight" name="quality_review_search_name"/>

@@ -481,3 +481,189 @@ class YcQualityWizard(models.TransientModel):
         stdin, stdout, stderr = client.exec_command('cat /tmp/yc_data/90106001.50t')
         net_dump = stdout.readlines()
         print(net_dump)
+
+    def call_quality_sample(self):
+        if self.order_name:
+            purchase = self.env['yc.purchase']
+            record = purchase.search([('name', '=', self.order_name)])
+            data = {
+                'id': self.id,
+                'model': self._name,
+                'form': {
+                    'order_id': record.id,
+                },
+            }
+            # use `module_name.report_id` as reference.
+            # `report_action()` will call `get_report_values()` and pass `data` automatically.
+            return self.env.ref('yc_root.action_quality_sample').report_action(self, data=data)
+
+    def call_quality_examine_reoort(self):
+        if self.order_name:
+            purchase = self.env['yc.purchase']
+            record = purchase.search([('name', '=', self.order_name)])
+            data = {
+                'id': self.id,
+                'model': self._name,
+                'form': {
+                    'order_id': record.id,
+                },
+            }
+            # use `module_name.report_id` as reference.
+            # `report_action()` will call `get_report_values()` and pass `data` automatically.
+            return self.env.ref('yc_root.action_quality_examine_report').report_action(self, data=data)
+
+
+    def call_quality_unqualified_treatment(self):
+        if self.order_name:
+            purchase = self.env['yc.purchase']
+            record = purchase.search([('name', '=', self.order_name)])
+            data = {
+                'id': self.id,
+                'model': self._name,
+                'form': {
+                    'order_id': record.id,
+                },
+            }
+            # use `module_name.report_id` as reference.
+            # `report_action()` will call `get_report_values()` and pass `data` automatically.
+            return self.env.ref('yc_root.action_quality_unqualified_treatment').report_action(self, data=data)
+
+class YcQualityReport(models.AbstractModel):
+    '''restrict form "report.module_name.template_id"'''
+    _name = 'report.yc_root.report_quality_sample'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        _id = data['form']['order_id']
+        # 客戶、品名、製造日期
+        # 規格、長度
+        # 材質、線材爐
+        # 數量1、單位1
+        # 加工、表面處理、電鍍別
+        # 單號 barcode
+        # 客戶批號
+        # 表面、心部硬度，滲碳層，拉力，扭力
+        # 進貨日期、檢驗員
+        purchase = self.env['yc.purchase']
+        r = purchase.search([('id', '=', _id)])
+        docs = []
+        docs.append({
+            'customer_id': r.customer_id.name,
+            'product_code':r.product_code.name,
+            'produceday': r.produceday,
+            'norm_code':r.norm_code.name,
+            'len_code':r.len_code.name,
+            'txtur_code':r.txtur_code.name,
+            'wire_furn':r.wire_furn,
+            'num1':r.num1,
+            'unit1':r.unit1.name,
+            'proces_code':r.proces_code.name,
+            'surface_code':r.surface_code.name,
+            'elecpl_code':r.elecpl_code.name,
+            'name':r.name,
+            'batch':r.batch,
+            'surfhrd':r.surfhrd,
+            'corehrd':r.corehrd,
+            'carburlayer':r.carburlayer,
+            'tensihrd':r.tensihrd,
+            'torsion':r.torsion,
+            'day':r.day,
+            'ck_person':r.ck_person.name,
+        })
+        return {'doc_id': _id,
+                'doc_model': 'yc.purchase',
+                'docs': docs}
+
+class YcQualityExamineReport(models.AbstractModel):
+    '''restrict form "report.module_name.template_id"'''
+    _name = 'report.yc_root.report_quality_examine'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        _id = data['form']['order_id']
+        # 客戶、品名、製造日期
+        # 規格、長度
+        # 材質、線材爐
+        # 數量1、單位1
+        # 加工、表面處理、電鍍別
+        # 單號 barcode
+        # 客戶批號
+        # 表面、心部硬度，滲碳層，拉力，扭力
+        # 進貨日期、檢驗員
+        purchase = self.env['yc.purchase']
+        r = purchase.search([('id', '=', _id)])
+        docs = []
+        docs.append({
+            'customer_id': r.customer_id.name,
+            'product_code':r.product_code.name,
+            'produceday': r.produceday,
+            'norm_code':r.norm_code.name,
+            'len_code':r.len_code.name,
+            'len_descript': r.len_descript,
+            'txtur_code':r.txtur_code.name,
+            'wire_furn':r.wire_furn,
+            'num1':r.num1,
+            'unit1':r.unit1.name,
+            'proces_code':r.proces_code.name,
+            'surface_code':r.surface_code.name,
+            'elecpl_code':r.elecpl_code.name,
+            'name':r.name,
+            'batch':r.batch,
+            'surfhrd':r.surfhrd,
+            'corehrd':r.corehrd,
+            'carburlayer':r.carburlayer,
+            'tensihrd':r.tensihrd,
+            'torsion':r.torsion,
+            'day':r.day,
+            'ck_person':r.ck_person.name,
+        })
+        return {'doc_id': _id,
+                'doc_model': 'yc.purchase',
+                'docs': docs}
+
+class YcQualityUnqualifiedTreatment(models.AbstractModel):
+    '''restrict form "report.module_name.template_id"'''
+    _name = 'report.yc_root.report_quality_unqualified_treatment'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        _id = data['form']['order_id']
+        # 客戶、品名、製造日期
+        # 規格、長度
+        # 材質、線材爐
+        # 數量1、單位1
+        # 加工、表面處理、電鍍別
+        # 單號 barcode
+        # 客戶批號
+        # 表面、心部硬度，滲碳層，拉力，扭力
+        # 進貨日期、檢驗員
+        purchase = self.env['yc.purchase']
+        r = purchase.search([('id', '=', _id)])
+        docs = []
+        docs.append({
+            'customer_id': r.customer_id.name,
+            'product_code':r.product_code.name,
+            'produceday': r.produceday,
+            'norm_code':r.norm_code.name,
+            'len_code':r.len_code.name,
+            'len_descript': r.len_descript,
+            'txtur_code':r.txtur_code.name,
+            'wire_furn':r.wire_furn,
+            'num1':r.num1,
+            'unit1':r.unit1.name,
+            'proces_code':r.proces_code.name,
+            'surface_code':r.surface_code.name,
+            'elecpl_code':r.elecpl_code.name,
+            'name':r.name,
+            'batch':r.batch,
+            'surfhrd':r.surfhrd,
+            'corehrd':r.corehrd,
+            'carburlayer':r.carburlayer,
+            'tensihrd':r.tensihrd,
+            'torsion':r.torsion,
+            'day':r.day,
+            'ck_person':r.ck_person.name,
+        })
+        return {'doc_id': _id,
+                'doc_model': 'yc.purchase',
+                'docs': docs}

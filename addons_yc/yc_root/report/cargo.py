@@ -29,7 +29,7 @@ class YcCargoReport(models.AbstractModel):
 
     @api.model
     def get_report_values(self, docids,data=None):
-        driver =  data['form']['driver_id']
+        driver = data['form']['driver_id']
         driver_name = data['form']['driver_name']
         date_start = data['form']['date_start']
         date_end = data['form']['date_end']

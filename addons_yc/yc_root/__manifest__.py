@@ -50,14 +50,17 @@
 
         'views/general_view.xml',
         'report/purchase_report.xml',
+        'report/quality_sample.xml',
+        'report/quality_examine_report.xml',
+        'report/quality_unqualified_treatment.xml',
         'report/weight_order1.xml',
         'report/weight_order_test.xml',
         'report/cargo.xml',
         'report/cargo_report.xml',
+
         'wizard/process_review.xml',
         'wizard/quantity_review.xml',
         'wizard/weight_wizard.xml',
-
         'wizard/order_display.xml',
         'wizard/order_display_wizard.xml',
         'wizard/purchase_wizard.xml',

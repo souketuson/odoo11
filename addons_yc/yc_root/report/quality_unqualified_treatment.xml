@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="report.paperformat" id="paperformat_quality_unqualified_treatment">
+        <field name="name">paperformat.quality.unqualified.treatment</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_width">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">30</field>
+        <field name="margin_right">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report id="action_quality_unqualified_treatment"
+            string="樣品檢驗單"
+            model="yc.purchase"
+            report_type="qweb-pdf"
+            name="yc_root.report_quality_unqualified_treatment"/>
+    <!--name 属性中需要添加模块前缀，我们必须使用完整的引用名称<module_name>.<identifier_name>-->
+    <!--paperformat="paperformat_euro_landscape" -->
+
+    <template id="report_quality_unqualified_treatment">
+        <t t-call="web.html_container">
+            <!-- ↓ t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
+            external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
+            然后相关内容在Business Documents > Document Template版块：-->
+            <t t-call="web.internal_layout">
+                <div class="container">
+                    <div class="page">
+                        <!-- Report header content -->
+                        <div class="">
+                            <t t-foreach="docs" t-as="o">
+                            </t>
+                        </div>
+
+                        <!-- Report footer content -->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

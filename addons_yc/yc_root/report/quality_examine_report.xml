@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="report.paperformat" id="paperformat_quality_examine_report">
+        <field name="name">paperformat.quality.sample</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_width">11</field>
+        <field name="page_width">15</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">30</field>
+        <field name="margin_right">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report id="action_quality_examine_report"
+            string="檢驗報告單"
+            model="yc.purchase"
+            report_type="qweb-pdf"
+            name="yc_root.report_quality_examine"/>
+    <!--name 属性中需要添加模块前缀，我们必须使用完整的引用名称<module_name>.<identifier_name>-->
+    <!--paperformat="paperformat_euro_landscape" -->
+
+    <template id="report_quality_examine">
+        <style>
+            .col1{width: 150px;}
+            table tr td{padding: 5px;}
+        </style>
+        <t t-call="web.html_container">
+            <!-- ↓ t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
+            external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
+            然后相关内容在Business Documents > Document Template版块：-->
+            <t t-call="web.internal_layout">
+                <div class="container">
+                    <div class="page">
+                        <!-- Report header content -->
+                        <div class="">
+
+                            <t t-foreach="docs" t-as="o">
+                                <table border="0" style="width:100%;margin-left: 100px;">
+                                    <tr>
+                                        <td><span  t-esc="o['customer_id']"/></td>
+                                        <td><span  t-esc="o['day']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span  t-esc="o['name']"/></td>
+                                        <td><span  t-esc="o['proces_code']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span  t-esc="o['batch']"/></td>
+                                        <td><span  t-esc="o['surface_code']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span  t-esc="o['product_code']"/></td>
+                                        <td><span  t-esc="o['elecpl_code']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o['norm_code']"/>
+                                            X
+                                            <span t-esc="o['len_code']"/>
+                                            X
+                                            <span t-esc="o['len_descript']"/>
+                                        </td>
+                                        <td/>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="o['num1']"/>
+                                            KG
+                                            <span t-esc="o['unit1']"/>
+                                        </td>
+                                        <td/>
+                                    </tr>
+                                </table>
+                                <table border="0">
+                                    <tr t-if="o['surfhrd']">
+                                        <td class="col1">表面硬度(HV0.3)<br/>
+                                        Surface Hardness
+                                        </td>
+                                        <td t-esc="o['surfhrd']"/>
+                                    </tr>
+                                    <tr t-if="o['corehrd']">
+                                        <td class="col1">心部硬度</td>
+                                        <td t-esc="o['corehrd']"/>
+                                    </tr>
+                                    <tr t-if="o['carburlayer']">
+                                        <td class="col1">滲碳層(m/m)<br/>
+                                        Case Depth</td>
+                                        <td t-esc="o['carburlayer']"/>
+                                    </tr>
+                                </table>
+                            </t>
+                        </div>
+
+                        <!-- Report footer content -->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
