@@ -57,12 +57,13 @@
         'wizard/process_review.xml',
         'wizard/quantity_review.xml',
         'wizard/weight_wizard.xml',
-        # 'wizard/quality_wizard.xml',
+
         'wizard/order_display.xml',
         'wizard/order_display_wizard.xml',
         'wizard/purchase_wizard.xml',
         'wizard/purchase_preorder.xml',
         'wizard/shipment_wizard.xml',
+        'wizard/quality_wizard.xml',
         # 'wizard/quality_invalid.xml',
 
         'views/business/supplier.xml',
