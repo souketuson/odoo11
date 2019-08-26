@@ -251,7 +251,7 @@
                                             <field name="heat8" nolabel="1" style="width: 60px"/>
                                             <!---->
                                             <field name="heattemp" string="油溫" style="width: 60px"/>
-                                            <field name="heatsped" string="油溫" style="width: 60px"/>
+                                            <field name="heatsped" string="速度" style="width: 60px"/>
                                             <newline/>
                                             <!---->
                                             <field name="tempturing1" string="回火爐" style="width: 60px"/>

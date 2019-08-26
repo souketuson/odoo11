@@ -50,6 +50,7 @@
 
         'views/general_view.xml',
         'report/purchase_report.xml',
+        'report/furna_order.xml',
         'report/quality_sample.xml',
         'report/quality_examine_report.xml',
         'report/quality_unqualified_treatment.xml',
