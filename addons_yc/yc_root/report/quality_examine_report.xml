@@ -38,7 +38,6 @@
                     <div class="page">
                         <!-- Report header content -->
                         <div class="">
-
                             <t t-foreach="docs" t-as="o">
                                 <table border="0" style="width:100%;margin-left: 100px;">
                                     <tr>

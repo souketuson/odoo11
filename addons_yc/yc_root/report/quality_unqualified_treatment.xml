@@ -25,6 +25,9 @@
     <!--paperformat="paperformat_euro_landscape" -->
 
     <template id="report_quality_unqualified_treatment">
+        <style>
+            .r1{width: 50px;}
+        </style>
         <t t-call="web.html_container">
             <!-- ↓ t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
             external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
@@ -35,9 +38,165 @@
                         <!-- Report header content -->
                         <div class="">
                             <t t-foreach="docs" t-as="o">
+                                <table border="1">
+                                    <tr>
+                                        <td rowspan="2" style="width:50px" colspan="2">責任歸屬<br/>(單位,廠商)
+                                        </td>
+                                        <td rowspan="2" style="width:50px"/>
+                                        <td rowspan="2">品名<br/>規格
+                                        </td>
+                                        <td rowspan="2" colspan="4"></td>
+                                        <td rowspan="2">頭部<br/>記號
+                                        </td>
+                                        <td rowspan="2" style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"/>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="width:50px">工令號碼</td>
+                                        <td style="width:50px" colspan="2">1</td>
+                                        <td style="width:50px">客戶批號</td>
+                                        <td style="width:50px" colspan="2"></td>
+                                        <td style="width:50px">A爐</td>
+                                        <td style="width:50px" colspan="2">桶數重量</td>
+                                        <td style="width:50px" colspan="3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">製造日期時間：加工方式及條件：
+                                            <br/>
+                                            班別： 組長：操作員：
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">不良品發生時間：☐接受標準☐製程成品檢驗☐客戶退回☐其他</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">不良品情形敘述：</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px" colspan="2">標準值</td>
+                                        <td style="width:50px" colspan="2">實測值</td>
+                                        <td style="width:50px">1</td>
+                                        <td style="width:50px">2</td>
+                                        <td style="width:50px">3</td>
+                                        <td style="width:50px">4</td>
+                                        <td style="width:50px">5</td>
+                                        <td style="width:50px">6</td>
+                                        <td style="width:50px">7</td>
+                                        <td style="width:50px">8</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px" colspan="">表面硬度</td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px" colspan="2">表面硬度</td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px" colspan="">心部硬度</td>
+                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="2">心部硬度</td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px" colspan="">扭力</td>
+                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="2">扭力</td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px" colspan="">抗拉強度</td>
+                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="2">抗拉強度</td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px" colspan="">滲碳層 m/m</td>
+                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="2">滲碳層 m/m</td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                        <td style="width:50px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">不良品補充：</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">處理裁示：<br/>重新加工條件：
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">追蹤：
+                                            <br/>
+                                            <br/>
+                                            <div style="text-align:right;">品保部經理：______</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px">生管部</td>
+                                        <td colspan="11">
+                                            <div style="text-align:right;"><br/>生產部經理：______
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px">管理部</td>
+                                        <td colspan="11">
+                                            <div style="text-align:right;"><br/>管理部經理：______
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:50px">總經理核准</td>
+                                        <td colspan="11">
+                                            <div style="text-align:right;"><br/>總經理：______
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">備註</td>
+                                    </tr>
+
+                                </table>
                             </t>
                         </div>
-
                         <!-- Report footer content -->
                     </div>
                 </div>
