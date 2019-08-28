@@ -182,6 +182,21 @@
                                         </field>
                                     </div>
                                 </page>
+                                <page string="預處理">
+                                    <button type="object" name="comfirm_pretreat" string="帶出" class="oe_highlight"/>
+                                    <div>
+                                        <field name="pretreat_ids" widget="many2many">
+                                            <tree string="pretreat" create="false" editable="top" delete="false">
+                                                <field name="ck"/>
+                                                <field name="name" readonly="1"/>
+                                                <field name="day" readonly="1"/>
+                                                <field name="customer_id" readonly="1"/>
+                                                <field name="processing_id" readonly="1"/>
+                                                <field name="product_code" readonly="1"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </page>
                             </notebook>
                         </div>
                     </sheet>

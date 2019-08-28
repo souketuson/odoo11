@@ -16,3 +16,4 @@ class YcPretreat(models.Model):
     product_code = fields.Many2one("yc.setproduct", string="品名")
     nums = fields.Integer()
     unit = fields.Many2one('yc.setunit')
+    ck = fields.Boolean()

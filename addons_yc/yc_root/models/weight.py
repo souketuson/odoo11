@@ -38,6 +38,7 @@ class YcWeight(models.Model):
     # count = fields.Integer("貨重(應等於淨重)", compute="_check_weight")
     # 一張過磅單 上面的貨物可能含有多家客戶
     customer_detail_ids = fields.One2many("yc.weight.details", "name", "客戶明細")
+    pretreat_ids = fields.Many2many('yc.pretreat')
 
     # 要改成自動編號 & 上鎖
     # @api.multi
@@ -266,6 +267,35 @@ class YcWeight(models.Model):
     #         'view_id': self.env.ref('yc_root.weight_list_action_tree').id,
     #         'context': dict(ctx),
     #     }
+    @api.onchange('day')
+    def _pretreatment(self):
+        if self.day:
+            pretreat = self.env['yc.pretreat']
+            domain = ()
+            domain += ('day', '=', self.day),
+            records = pretreat.search([d for d in domain])
+            self.pretreat_ids = [(6, 0, records.ids)]
+
+    # 進貨自動抓資料
+    def comfirm_pretreat(self):
+        # 能否連同進貨單一起新增完成?
+        if self.pretreat_ids and self.id:
+            pretreat = self.env['yc.pretreat']
+            domain = ()
+            domain += ('ck', '=', True),
+            records = pretreat.search([d for d in domain])
+            # 必須有表頭id才能新增項目檔
+            _id = self.id
+            detail = self.env['yc.weight.details']
+            # customer_id, processing_id
+            for rec in records:
+                detail.create({'name': _id,
+                               'customer_id': rec.customer_id.id,
+                               'processing_id': rec.processing_id.id})
+
+            records.write({'ck': False})
+
+
 
 
 class YcWeightDetails(models.Model):
