@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="report.paperformat" id="paperformat_furna_quality">
+        <field name="name">paperformat.quality.sample</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_width">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">30</field>
+        <field name="margin_right">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report id="action_furna_quality"
+            string="品質列印"
+            model="yc.purchase"
+            report_type="qweb-pdf"
+            name="yc_root.report_furna_quality"/>
+    <!--name 属性中需要添加模块前缀，我们必须使用完整的引用名称<module_name>.<identifier_name>-->
+    <!--paperformat="paperformat_euro_landscape" -->
+
+    <template id="report_furna_quality">
+        <style>
+            .b1{border: solid 1px;width:35px;}
+            table{border-collapse:collapse;}
+        </style>
+        <t t-call="web.html_container">
+            <!-- ↓ t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
+            external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
+            然后相关内容在Business Documents > Document Template版块：-->
+
+            <div class="container">
+                <div class="header">
+
+                </div>
+                <div class="page">
+
+                    <!-- Report header content -->
+                    <div class="">
+                    <div>
+                    <div style="float: left;width:15%;font-weight:bold;font-size: large;">爐號:<span t-esc="doc_furn"/></div>
+                        <div style="float: left;width:25%;font-size: large;">重盈陽成工業股份有限公司</div>
+                        <div style="float: left;width:45%;font-size: large;text-decoration: underline;">熱處理成品重量明細紀錄表</div>
+                        <div style="float: left;">
+                            列印日期:<span t-esc="doc_day"/>
+                            <br/>
+                            頁數:<span class="page"/>
+                        </div>
+                    </div>
+
+                        <table border="1" style="width:100%;text-align: center;">
+                            <tr>
+                                <td>工令號碼
+                                </td>
+                                <td>品名
+                                </td>
+                                <td rowspan="2">頭部記號
+                                </td>
+                                <td>加工方式
+                                </td>
+                                <td>進貨日期
+                                </td>
+                                <td>重量KG
+                                </td>
+                                <td rowspan="2">製造日期
+                                </td>
+                                <td colspan="6" rowspan="2">每桶個別淨重
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>客戶
+                                </td>
+                                <td>規格
+                                </td>
+
+                                <td>表面處理
+                                </td>
+                                <td colspan="2">桶數明細
+                                </td>
+                            </tr>
+                            <t t-foreach="docs" t-as="o">
+                                <tr style="text-align: center;">
+                                    <td><span t-esc="o['name']"/>
+                                    </td>
+                                    <td><span t-esc="o['product_code']"/>
+                                    </td>
+                                    <td rowspan="2">
+                                    </td>
+                                    <td><span t-esc="o['proces_code']"/>
+                                    </td>
+                                    <td><span t-esc="o['day']"/>
+                                    </td>
+                                    <td><span t-esc="o['net']"/>
+                                    </td>
+                                    <td rowspan="2">
+                                    </td>
+
+
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <td><span t-esc="o['customer_id']"/>
+                                    </td>
+                                    <td><span t-esc="o['norm_code']"/>
+                                    </td>
+
+                                    <td><span t-esc="o['surface_code']"/>
+                                    </td>
+                                    <td colspan="2"><span t-esc="o['num1']"/><span t-esc="o['unit1']"/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                    <!-- Report footer content -->
+                </div>
+            </div>
+        </t>
+
+    </template>
+</odoo>

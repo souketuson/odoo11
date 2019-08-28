@@ -27,210 +27,226 @@
     <template id="report_furna_order">
         <style>
             .b1{border: solid 1px;width:35px;}
+            table{border-collapse:collapse;}
         </style>
         <t t-call="web.html_container">
             <!-- ↓ t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
             external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
             然后相关内容在Business Documents > Document Template版块：-->
-            <t t-call="web.internal_layout">
-                <div class="container">
-                    <div class="page">
-                        <!-- Report header content -->
-                        <div class="">
-                            列印日期:
-                            <span t-esc="doc_day"/>
-                            <br/>
-                            <t t-foreach="docs" t-as="o">
-                                <table border='0' style="border-top:solid 2px;width:1000px;">
-                                    <tr>
-                                        <td style="width: 70px;">
-                                            <span t-esc="o['name']"/>
-                                        </td>
-                                        <td style="width: 180px;">
-                                            <span t-esc="o['customer_id']"/>
-                                        </td>
-                                        <td style="width: 90px;">
-                                            <span t-esc="o['day']"/>
-                                        </td>
-                                        <td style="width: 180px;">
-                                            <span t-esc="o['product_code']"/>
-                                        </td>
-                                        <td style="width: 200px;">
-                                            <span t-esc="o['norm_code']"/>X
-                                            <span t-esc="o['len_code']"/>
-                                            <span t-esc="o['len_descript']"/>
-                                        </td>
-                                        <td style="width: 70px;">
-                                            <span t-esc="o['txtur_code']"/>
-                                        </td>
-                                        <td style="width: 70px;">
-                                            <span t-esc="o['proces_code']"/>
-                                        </td>
-                                        <td style="width: 70px;">
-                                            <span t-esc="o['elecpl_code']"/>
-                                        </td>
-                                        <td style="width: 70px;">
-                                            <span t-esc="o['process1']"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table border='0' style="border-bottom:solid 1px;width:1000px;">
-                                    <tr>
-                                        <td colspan='4'>
-                                            <span t-esc="o['batch']"/>
-                                        </td>
-                                        <td colspan='2'>
-                                            <span t-esc="o['surfhrd']"/>
-                                        </td>
-                                        <td colspan='2'>
-                                            <span t-esc="o['corehrd']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="o['storeplace_id']"/>
-                                        </td>
-                                        <td  colspan='11'>
-                                        </td>
-                                        <td colspan='3' rowspan='3'>
-                                            <table border='1'>
-                                                <tr>
-                                                    <td colspan='2' rowspan='2'>
-                                                        入料前目視檢查
-                                                    </td>
-                                                    <td>
-                                                        入爐時間
-                                                    </td>
-                                                </tr>
-                                                <tr>
 
-                                                    <td>
-                                                        123
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        OK
-                                                    </td>
-                                                    <td>
-                                                        NG
-                                                    </td>
-                                                    <td>
-                                                        操作員
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        2
-                                                    </td>
-                                                    <td>
-                                                        3
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span t-esc="o['notices1']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="o['notices2']"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="o['notices3']"/>
-                                        </td>
-                                        <td colspan='7'>
+            <div class="container">
+                <div class="header">
 
-                                        </td>
-                                        <td>
-                                            <span t-esc="o['num1']"/><span t-esc="o['unit1']"/>
-                                        </td>
-                                        <td colspan='3'>
-
-                                        </td>
-                                        <td colspan='3'>
-                                            <span t-esc="o['net']"/>kg
-                                        </td>
-                                        <td colspan='3'>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:80px;">
-                                            流量
-                                            <span t-esc="o['flow']"/>
-                                        </td>
-                                        <td>
-
-                                        </td>
-                                        <td style="width:80px;">
-                                            速度
-                                            <span t-esc="o['heatsped']"/>
-                                        </td>
-                                        <td style="width:40px;">
-                                            CP值
-                                            <span t-esc="o['cp']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat1']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat2']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat3']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat4']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat5']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat6']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat7']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['heat8']"/>
-                                        </td>
-                                        <td style="width:80px;">
-                                            油溫
-                                            <span t-esc="o['heattemp']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['tempturing1']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['tempturing2']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['tempturing3']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['tempturing4']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['tempturing5']"/>
-                                        </td>
-                                        <td class="b1">
-                                            <span t-esc="o['tempturing6']"/>
-                                        </td>
-                                        <td style="width:80px;">
-                                            速度
-                                            <span t-esc="o['tempturisped']"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </t>
-                        </div>
-
-                        <!-- Report footer content -->
-                    </div>
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:150px">爐號:<span t-esc="doc_furn"/></td>
+                                <td style="width:150px">製表: </td>
+                                <td style="width:150px">生管經理:</td>
+                                <td style="width:150px">廠長:</td>
+                                <td style="width:150px">頁數:</td>
+                            </tr>
+                        </table>
+                    <span class="page"/>
                 </div>
-            </t>
+                <div class="page">
+
+                    <!-- Report header content -->
+                    <div class="">
+                        列印日期:
+                        <span t-esc="doc_day"/>
+                        <br/>
+                        <t t-foreach="docs" t-as="o">
+                            <table border='0' style="border-top:solid 2px;width:1000px;">
+                                <tr>
+                                    <td style="width: 70px;">
+                                        <span t-esc="o['name']"/>
+                                    </td>
+                                    <td style="width: 180px;">
+                                        <span t-esc="o['customer_id']"/>
+                                    </td>
+                                    <td style="width: 90px;">
+                                        <span t-esc="o['day']"/>
+                                    </td>
+                                    <td style="width: 180px;">
+                                        <span t-esc="o['product_code']"/>
+                                    </td>
+                                    <td style="width: 200px;">
+                                        <span t-esc="o['norm_code']"/>X
+                                        <span t-esc="o['len_code']"/>
+                                        <span t-esc="o['len_descript']"/>
+                                    </td>
+                                    <td style="width: 70px;">
+                                        <span t-esc="o['txtur_code']"/>
+                                    </td>
+                                    <td style="width: 70px;">
+                                        <span t-esc="o['proces_code']"/>
+                                    </td>
+                                    <td style="width: 70px;">
+                                        <span t-esc="o['elecpl_code']"/>
+                                    </td>
+                                    <td style="width: 70px;">
+                                        <span t-esc="o['process1']"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table border='0' style="border-bottom:solid 1px;width:1000px;">
+                                <tr>
+                                    <td colspan='4'>
+                                        <span t-esc="o['batch']"/>
+                                    </td>
+                                    <td colspan='2'>
+                                        <span t-esc="o['surfhrd']"/>
+                                    </td>
+                                    <td colspan='2'>
+                                        <span t-esc="o['corehrd']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o['storeplace_id']"/>
+                                    </td>
+                                    <td colspan='11'>
+                                    </td>
+                                    <td colspan='3' rowspan='3'>
+                                        <table border='1'>
+                                            <tr>
+                                                <td colspan='2' rowspan='2'>
+                                                    入料前目視檢查
+                                                </td>
+                                                <td>
+                                                    入爐時間
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>
+                                                    123
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    OK
+                                                </td>
+                                                <td>
+                                                    NG
+                                                </td>
+                                                <td>
+                                                    操作員
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    1
+                                                </td>
+                                                <td>
+                                                    2
+                                                </td>
+                                                <td>
+                                                    3
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="o['notices1']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o['notices2']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="o['notices3']"/>
+                                    </td>
+                                    <td colspan='7'>
+
+                                    </td>
+                                    <td>
+                                        <span t-esc="o['num1']"/>
+                                        <span t-esc="o['unit1']"/>
+                                    </td>
+                                    <td colspan='3'>
+
+                                    </td>
+                                    <td colspan='3'>
+                                        <span t-esc="o['net']"/>kg
+                                    </td>
+                                    <td colspan='3'>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:80px;">
+                                        流量
+                                        <span t-esc="o['flow']"/>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td style="width:80px;">
+                                        速度
+                                        <span t-esc="o['heatsped']"/>
+                                    </td>
+                                    <td style="width:40px;">
+                                        CP值
+                                        <span t-esc="o['cp']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat1']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat2']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat3']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat4']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat5']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat6']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat7']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['heat8']"/>
+                                    </td>
+                                    <td style="width:80px;">
+                                        油溫
+                                        <span t-esc="o['heattemp']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['tempturing1']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['tempturing2']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['tempturing3']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['tempturing4']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['tempturing5']"/>
+                                    </td>
+                                    <td class="b1">
+                                        <span t-esc="o['tempturing6']"/>
+                                    </td>
+                                    <td style="width:80px;">
+                                        速度
+                                        <span t-esc="o['tempturisped']"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+
+                    <!-- Report footer content -->
+                </div>
+            </div>
         </t>
+
     </template>
 </odoo>

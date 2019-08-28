@@ -53,6 +53,7 @@
                 <!-- produce categorty menu-->
                 <menuitem id="purchase_menu" name="進貨作業" parent="main_produce_menu" sequence="11"/>
                     <!-- purchase sub menu -->
+                    <menuitem id="pretreat_menu" name="自動前處理" parent="purchase_menu" sequence="19" action="pretreat_action"/>
                     <menuitem id="weight_cargo" name="過磅單作業" parent="purchase_menu" sequence="20" action="weight_list_action"/>
                     <!--<menuitem id="purchase_list_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase_list_action"/>-->
                     <menuitem id="purchase2_menu" name="進貨單作業" parent="purchase_menu" sequence="21" action="purchase2_action"/>
@@ -95,7 +96,8 @@
                     <menuitem id="fake20_menu" name="單位(桶別稱)" parent="produce_maintain_menu" sequence="29" action="fake_action"/>
                     <menuitem id="fake21_menu" name="各爐產能設定" parent="produce_maintain_menu" sequence="30" action="fake_action"/>
                     <menuitem id="setpurchasenote_menu" name="進貨備註" parent="produce_maintain_menu" sequence="31" action="setpurchasenote_action"/>
-                    <menuitem id="setstoreplace_menu" name="儲存位置" parent="produce_maintain_menu" sequence="24" action="setstoreplace_action"/>
+                    <menuitem id="setstoreplace_menu" name="儲存位置" parent="produce_maintain_menu" sequence="32" action="setstoreplace_action"/>
+
 
             <!-- bar menu -->
             <menuitem id="main_quality_menu" name="品質" sequence="4" parent="main_root_menu"/>

@@ -136,6 +136,22 @@ class YcPurchaseDisplay(models.TransientModel):
             # `report_action()` will call `get_report_values()` and pass `data` automatically.
             return self.env.ref('yc_root.action_furna_order').report_action(self, data=data)
 
+    def call_furna_quality(self):
+        if self.purchase_ids2:
+            records = self.purchase_ids2
+
+            data = {
+                'ids': records.ids,
+                'model': self._name,
+                'furn': self.order_furn2.name,
+                'form': {
+
+                },
+            }
+            # use `module_name.report_id` as reference.
+            # `report_action()` will call `get_report_values()` and pass `data` automatically.
+            return self.env.ref('yc_root.action_furna_quality').report_action(self, data=data)
+
 class YcFurnaOrderReport(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
     _name = 'report.yc_root.report_furna_order'
@@ -196,6 +212,73 @@ class YcFurnaOrderReport(models.AbstractModel):
                 'tempturing5': r.tempturing5,
                 'tempturing6': r.tempturing6,
                 'tempturisped': r.tempturisped,
+            })
+        return {'doc_ids': _ids,
+                'doc_model': 'yc.purchase',
+                'doc_furn': data['furn'],
+                'doc_day': dt.today().strftime('%Y/%m/%d'),
+                'docs': docs}
+
+class YcFurnaQualityReport(models.AbstractModel):
+    '''restrict form "report.module_name.template_id"'''
+    _name = 'report.yc_root.report_furna_quality'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        _ids = data['ids']
+
+        purchase = self.env['yc.purchase']
+        docs = []
+        for i in _ids:
+            r = purchase.browse(i)
+            docs.append({
+                'name': r.name,
+                'customer_id': r.customer_id.name,
+                'product_code':r.product_code.name,
+                # 'produceday': r.produceday,
+                'norm_code':r.norm_code.name,
+                # 'len_code':r.len_code.name,
+                # 'len_descript': r.len_descript,
+                # 'txtur_code':r.txtur_code.name,
+                # 'wire_furn':r.wire_furn,
+                'num1':r.num1,
+                'unit1':r.unit1.name,
+                'proces_code':r.proces_code.name,
+                'surface_code':r.surface_code.name,
+                # 'elecpl_code':r.elecpl_code.name,
+                # 'batch':r.batch,
+                # 'surfhrd':r.surfhrd,
+                # 'corehrd':r.corehrd,
+                # 'carburlayer':r.carburlayer,
+                # 'tensihrd':r.tensihrd,
+                # 'torsion':r.torsion,
+                'day':r.day,
+                # 'ck_person':r.ck_person.name,
+                # 'process1': r.process1.abbrev,
+                # 'storeplace_id': r.storeplace_id.name,
+                # 'notices1': r.notices1,
+                # 'notices2': r.notices2,
+                # 'notices3': r.notices3,
+                'net': r.net,
+                # 'cp': r.cp,
+                # 'flow': r.flow,
+                # 'heatsped': r.heatsped,
+                # 'heattemp': r.heattemp,
+                # 'heat1': r.heat1,
+                # 'heat2': r.heat2,
+                # 'heat3': r.heat3,
+                # 'heat4': r.heat4,
+                # 'heat5': r.heat5,
+                # 'heat6': r.heat6,
+                # 'heat7': r.heat7,
+                # 'heat8': r.heat8,
+                # 'tempturing1': r.tempturing1,
+                # 'tempturing2': r.tempturing2,
+                # 'tempturing3': r.tempturing3,
+                # 'tempturing4': r.tempturing4,
+                # 'tempturing5': r.tempturing5,
+                # 'tempturing6': r.tempturing6,
+                # 'tempturisped': r.tempturisped,
             })
         return {'doc_ids': _ids,
                 'doc_model': 'yc.purchase',

@@ -176,7 +176,7 @@ class YcWeight(models.Model):
         vals.update({"net": _net,
                      "display_purchase": vals['purchase_times'],
                      "display_shipment": vals['ship_times']})
-        # 檢查項目檔至少有一筆
+        # 出貨時，檢查項目檔至少有一筆
         if vals.get('in_out') == 'O':
             if not vals.get('customer_detail_ids'):
                 raise ValidationError(_('進貨項目不能是空的'))
