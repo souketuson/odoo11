@@ -535,20 +535,11 @@ class YcQualityReport(models.AbstractModel):
     @api.model
     def get_report_values(self, docids, data=None):
         _id = data['form']['order_id']
-        # 客戶、品名、製造日期
-        # 規格、長度
-        # 材質、線材爐
-        # 數量1、單位1
-        # 加工、表面處理、電鍍別
-        # 單號 barcode
-        # 客戶批號
-        # 表面、心部硬度，滲碳層，拉力，扭力
-        # 進貨日期、檢驗員
         purchase = self.env['yc.purchase']
         r = purchase.search([('id', '=', _id)])
         docs = []
         docs.append({
-            'customer_id': r.customer_id.name,
+            'customer_id': r.customer_id.abbrev,
             'product_code':r.product_code.name,
             'produceday': r.produceday,
             'norm_code':r.norm_code.name,
@@ -569,6 +560,16 @@ class YcQualityReport(models.AbstractModel):
             'torsion':r.torsion,
             'day':r.day,
             'ck_person':r.ck_person.name,
+            'prodnote1': r.prodnote1,
+            'prodnote2': r.prodnote2,
+            'prodnote3': r.prodnote3,
+            'notices1': r.notices1,
+            'notices2': r.notices2,
+            'notices3': r.notices3,
+            'storeplace_id': r.storeplace_id.name,
+            'net': r.net,
+            'len_descript': r.len_descript,
+            'process1': r.process1,
         })
         return {'doc_id': _id,
                 'doc_model': 'yc.purchase',
@@ -594,7 +595,7 @@ class YcQualityExamineReport(models.AbstractModel):
         r = purchase.search([('id', '=', _id)])
         docs = []
         docs.append({
-            'customer_id': r.customer_id.name,
+            'customer_id': r.customer_id.abbrev,
             'product_code':r.product_code.name,
             'produceday': r.produceday,
             'norm_code':r.norm_code.name,
@@ -641,7 +642,7 @@ class YcQualityUnqualifiedTreatment(models.AbstractModel):
         r = purchase.search([('id', '=', _id)])
         docs = []
         docs.append({
-            'customer_id': r.customer_id.name,
+            'customer_id': r.customer_id.abbrev,
             'product_code':r.product_code.name,
             'produceday': r.produceday,
             'norm_code':r.norm_code.name,
