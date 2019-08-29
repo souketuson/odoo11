@@ -88,6 +88,7 @@
         'views/hr_main.xml',
 
         'views/fake.xml',
+        'security/rule.xml',
         'menuitem/root_core.xml',
     ],
 

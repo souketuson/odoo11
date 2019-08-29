@@ -292,7 +292,7 @@ class YcWeight(models.Model):
                 detail.create({'name': _id,
                                'customer_id': rec.customer_id.id,
                                'processing_id': rec.processing_id.id})
-
+            # TODO:之後改為刪除
             records.write({'ck': False})
 
 

@@ -245,18 +245,7 @@
             <field name="view_id" ref="weight_tree"/>
         </record>
 
-        <!--rule-->
-        <record id="yc_weight_multi_company_rule" model="ir.rule">
-            <field name="name">yc.weihgt multi-company</field>
-            <field name="model_id" ref="model_yc_weight"/>
-            <field name="global" eval="True"/>
-            <field name="active" eval="False"/>
-            <field name="domain_force">
-                ['|', '|',
-                ('company_id', '=', False),
-                ('company_id','child_of',[user.company_id.id]),
-                ('company_id','in',[c.id for c in user.company_ids])]</field>
-        </record>
+
         <!-- getcontext -->
         <!-- 目前以修改odoo11.0>odoo>http.py L#1095 讓頁面抓到context 取代這一段功能 -->
         <!--<record id="weight_filter_act" model="ir.actions.server">-->
