@@ -3,7 +3,7 @@
     <record model="report.paperformat" id="paperformat_quality_unqualified_treatment">
         <field name="name">paperformat.quality.unqualified.treatment</field>
         <field name="default" eval="True"/>
-        <field name="format">A4</field>
+        <field name="format">A5</field>
         <field name="page_width">0</field>
         <field name="page_width">0</field>
         <field name="orientation">Landscape</field>
@@ -21,17 +21,12 @@
             model="yc.purchase"
             report_type="qweb-pdf"
             name="yc_root.report_quality_unqualified_treatment"/>
-    <!--name 属性中需要添加模块前缀，我们必须使用完整的引用名称<module_name>.<identifier_name>-->
-    <!--paperformat="paperformat_euro_landscape" -->
-
     <template id="report_quality_unqualified_treatment">
         <style>
             .r1{width: 50px;}
+            table{width:100%;}
         </style>
         <t t-call="web.html_container">
-            <!-- ↓ t-call="web._" _ : internal_layout or external_layout 這邊是report頁整體型式的套裝外觀
-            external_layout模板可由用户自定义，Odoo 11引入了这一选项，在Settings > General Settings菜单中，
-            然后相关内容在Business Documents > Document Template版块：-->
             <t t-call="web.internal_layout">
                 <div class="container">
                     <div class="page">
@@ -45,38 +40,85 @@
                                         <td rowspan="2" style="width:50px"/>
                                         <td rowspan="2">品名<br/>規格
                                         </td>
-                                        <td rowspan="2" colspan="4"></td>
+                                        <td rowspan="2" colspan="4">
+                                            <span t-esc="o['product_code']"/>
+                                            <br/>
+                                            <span t-esc="o['norm_code']"/>X
+                                            <span t-esc="o['len_code']"/>
+                                            <span t-esc="o['len_descript']"/>
+                                        </td>
                                         <td rowspan="2">頭部<br/>記號
                                         </td>
                                         <td rowspan="2" style="width:50px"></td>
-                                        <td style="width:50px"></td>
-                                        <td style="width:50px"></td>
+                                        <td style="width:50px">表面處理</td>
+                                        <td style="width:50px">
+                                            <span t-esc="o['surface_code']"/>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td style="width:50px"></td>
-                                        <td style="width:50px"/>
+                                        <td style="width:50px">材質</td>
+                                        <td style="width:50px">
+                                            <span t-esc="o['txtur_code']"/>
+                                        </td>
                                     </tr>
 
                                     <tr>
                                         <td style="width:50px">工令號碼</td>
-                                        <td style="width:50px" colspan="2">1</td>
+                                        <td style="width:50px" colspan="2">
+                                            <span t-esc="o['name']"/>
+                                        </td>
                                         <td style="width:50px">客戶批號</td>
-                                        <td style="width:50px" colspan="2"></td>
-                                        <td style="width:50px">A爐</td>
+                                        <td style="width:50px" colspan="2">
+                                            <span t-esc="o['batch']"/>
+                                        </td>
+                                        <td style="width:50px"><span t-esc="o['order_furn']"/>爐
+                                        </td>
                                         <td style="width:50px" colspan="2">桶數重量</td>
-                                        <td style="width:50px" colspan="3"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="12">製造日期時間：加工方式及條件：
-                                            <br/>
-                                            班別： 組長：操作員：
+                                        <td style="width:50px" colspan="3">
+                                            <span t-esc="o['num1']"/>
+                                            <span t-esc="o['unit1']"/>
+                                            <span style="float:right ;"><span t-esc="o['net']"/>KG
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12">不良品發生時間：☐接受標準☐製程成品檢驗☐客戶退回☐其他</td>
+                                        <td colspan="12">製造日期時間：
+                                            <span t-esc="o['produceday1']"/>
+                                            <span t-esc="o['ptime1']"/>
+                                            <span style="float:right ;">加工方式及條件： CP值:
+                                                <span t-esc="o['cp']"/>
+                                                淬火:<span t-esc="o['heat2']"/>°C 回火<span t-esc="o['tempturing2']"/>°C
+                                            </span>
+                                            <br/>
+                                            <span>班別：
+                                                <span t-esc="o['shift1']"/>
+                                            </span>
+                                            <span>組長：
+                                                <span t-esc="o['teamlead1']"/>
+                                            </span>
+                                            <span>操作員：
+                                                <span t-esc="o['op1']"/>
+                                            </span>
+                                            <span style="float:right ;">調值
+                                                <span/>
+                                                流量
+                                                <span t-esc="o['flow']"/>
+                                                淬火速度
+                                                <span t-esc="o['heatsped']"/>
+                                                回火速度
+                                                <span t-esc="o['tempturisped']"/>
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12">不良品情形敘述：</td>
+                                        <td colspan="12">不良品發生時間：☐接受標準<span style="width:50px;"/>☐製程成品檢驗<span
+                                                style="width:50px;"/>☐客戶退回<span style="width:50px;"/>☐其他
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="12">不良品情形敘述： （需寫出標準值'實測值）　編號 NO. 檢 驗 項 目　拉力機編號：
+                                            <span t-esc="o['tensile_no']"/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td style="width:50px" colspan="2">標準值</td>
@@ -92,7 +134,9 @@
                                     </tr>
                                     <tr>
                                         <td style="width:50px" colspan="">表面硬度</td>
-                                        <td style="width:50px"></td>
+                                        <td style="width:50px">
+                                            <span t-esc="o['surfhrd']"/>
+                                        </td>
                                         <td style="width:50px" colspan="2">表面硬度</td>
                                         <td style="width:50px"></td>
                                         <td style="width:50px"></td>
@@ -105,7 +149,9 @@
                                     </tr>
                                     <tr>
                                         <td style="width:50px" colspan="">心部硬度</td>
-                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="">
+                                            <span t-esc="o['corehrd']"/>
+                                        </td>
                                         <td style="width:50px" colspan="2">心部硬度</td>
                                         <td style="width:50px"></td>
                                         <td style="width:50px"></td>
@@ -118,7 +164,9 @@
                                     </tr>
                                     <tr>
                                         <td style="width:50px" colspan="">扭力</td>
-                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="">
+                                            <span t-esc="o['torsion']"/>
+                                        </td>
                                         <td style="width:50px" colspan="2">扭力</td>
                                         <td style="width:50px"></td>
                                         <td style="width:50px"></td>
@@ -131,7 +179,9 @@
                                     </tr>
                                     <tr>
                                         <td style="width:50px" colspan="">抗拉強度</td>
-                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="">
+                                            <span t-esc="o['tensihrd']"/>
+                                        </td>
                                         <td style="width:50px" colspan="2">抗拉強度</td>
                                         <td style="width:50px"></td>
                                         <td style="width:50px"></td>
@@ -144,7 +194,9 @@
                                     </tr>
                                     <tr>
                                         <td style="width:50px" colspan="">滲碳層 m/m</td>
-                                        <td style="width:50px" colspan=""></td>
+                                        <td style="width:50px" colspan="">
+                                            <span t-esc="o['carburlayer']"/>
+                                        </td>
                                         <td style="width:50px" colspan="2">滲碳層 m/m</td>
                                         <td style="width:50px"></td>
                                         <td style="width:50px"></td>
@@ -156,10 +208,22 @@
                                         <td style="width:50px"></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12">不良品補充：</td>
+                                        <td colspan="12">不良品補充：
+                                            <span style="float:right;">抗拉強度:　　　　　　　Kg/mm2</span>
+                                            <br/>
+                                            <span style="float:right;">線材爐號:
+                                                <span t-esc="o['wire_furn']"/>
+                                            </span>
+                                            <br/>
+                                            <span style="float:right;">品管部主管: _______ 填表人:
+                                                <span t-esc="o['ck_person']"/>
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12">處理裁示：<br/>重新加工條件：
+                                        <td colspan="12">處理裁示:　　　□重新加工　　　□挑選　　　□批退　　　□報廢　　　□特採
+                                            <br/>
+                                            重新加工條件:　爐號　　CP值　　　　淬火　　　。C/　　　分　　　回火　　　。C/　　　分
                                         </td>
                                     </tr>
                                     <tr>
@@ -191,10 +255,14 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12">備註</td>
+                                        <td colspan="12">備註: 1.如裁示為特採,則需總經理核准。
+                                            <br/>
+                                            2.處理後之產品由品保部加以追蹤,如重新加工及挑選後應再作品質檢驗並作記錄。
+                                        </td>
                                     </tr>
 
                                 </table>
+                                表單編號:QC2A
                             </t>
                         </div>
                         <!-- Report footer content -->

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-import base64, paramiko
+
 
 
 class YcQualityWizard(models.TransientModel):
@@ -469,19 +469,20 @@ class YcQualityWizard(models.TransientModel):
             pass
         return
 
-    def read_data_in_server(self):
-        hostname = '172.31.39.149'
-        username = 'admin'
-        password = 'admin'
-        client = paramiko.SSHClient()
-        client.load_system_host_keys()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        key = paramiko.RSAKey.from_private_key_file('/tmp/sshppk/openssh_yc_root', password='yc_root')
-        client.connect(hostname, pkey=key)
-        stdin, stdout, stderr = client.exec_command('cat /tmp/yc_data/90106001.50t')
-        net_dump = stdout.readlines()
-        print(net_dump)
+    # def read_data_in_server(self):
+    #     hostname = '172.31.39.149'
+    #     username = 'admin'
+    #     password = 'admin'
+    #     client = paramiko.SSHClient()
+    #     client.load_system_host_keys()
+    #     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    #     key = paramiko.RSAKey.from_private_key_file('/tmp/sshppk/openssh_yc_root', password='yc_root')
+    #     client.connect(hostname, pkey=key)
+    #     stdin, stdout, stderr = client.exec_command('cat /tmp/yc_data/90106001.50t')
+    #     net_dump = stdout.readlines()
+    #     print(net_dump)
 
+    # 樣品檢驗單
     def call_quality_sample(self):
         if self.order_name:
             purchase = self.env['yc.purchase']
@@ -497,6 +498,7 @@ class YcQualityWizard(models.TransientModel):
             # `report_action()` will call `get_report_values()` and pass `data` automatically.
             return self.env.ref('yc_root.action_quality_sample').report_action(self, data=data)
 
+    # 品質檢驗
     def call_quality_examine_reoort(self):
         if self.order_name:
             purchase = self.env['yc.purchase']
@@ -664,6 +666,22 @@ class YcQualityUnqualifiedTreatment(models.AbstractModel):
             'torsion':r.torsion,
             'day':r.day,
             'ck_person':r.ck_person.name,
+            'order_furn':r.order_furn.name,
+            'net': r.net,
+            'produceday1': r.produceday1,
+            'ptime1': r.ptime1,
+            'cp': r.cp,
+            'heat2': r.heat2,
+            'tempturing2': r.tempturing2,
+            'shift1': r.shift1.name,
+            'teamlead1': r.teamlead1.name,
+            'op1': r.op1.name,
+            'flow': r.flow,
+            'heatsped': r.heatsped,
+            'tempturisped': r.tempturisped,
+            'tensile_no': r.tensile_no,
+
+
         })
         return {'doc_id': _id,
                 'doc_model': 'yc.purchase',

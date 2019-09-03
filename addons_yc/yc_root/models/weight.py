@@ -309,6 +309,7 @@ class YcWeightDetails(models.Model):
 
     @api.multi
     def name_get(self):
+        # 如果有其他模組要拉明細檔名字 要加入action_window 分類
         result = []
         for record in self:
             processing = record.env['yc.processing'].search([('code', '=', record.processing_id.code)])
