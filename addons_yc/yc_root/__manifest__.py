@@ -12,7 +12,7 @@
     'website': "",
     'category': 'Uncategorized',
     'version': '1.6',
-    'depends': ['base'],
+    'depends': ['base', 'base_setup'],
     'css': [
         'static/src/css/generalcss.css',
 
@@ -25,6 +25,7 @@
         # 'abandon/qcnote_wizard.xml',
         # 'abandon/quality.xml',
         # 'abandon/factory.xml',
+        'base/initial.xml',
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
         'views/produce/maintain/setnorm.xml',
