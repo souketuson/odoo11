@@ -23,7 +23,7 @@
                         </script>
                         <header>
                             <button name="yc_root.quality_invalid_action" string="查看下一筆" type="action"
-                                    class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"/>
+                                    class="btn btn-sm btn-primary glyphicon glyphicon-share-alt oe_highlight"/>
                             <button name="" string="不合格處理單" type="object" class="oe_highlight"/>
                             <button name="" string="檢驗報告書" type="object" class="oe_highlight"/>
                             <button string="資料查詢" type="object" class="oe_highlight" name="quality_review_search_name"/>
@@ -37,7 +37,8 @@
                                        options="{'no_open': True,'no_create': True}"/>
                                 <span style="display:inline-block; width: 30px;"/>
                                 <label string="不合格工令" class="custom_label"/>
-                                <field name="invalid" style="width: 100px;height: 30px;"/>
+                                <field name="invalid" style="width: 100px;height: 30px;"
+                                       options="{'no_open': True,'no_create': True}"/>
                                 <span style="display:inline-block; width: 30px;"/>
                                 <label string="工令查詢" class="custom_label"/>
                                 <field name="searchname" style="width: 100px;height: 30px;"/>
@@ -659,17 +660,23 @@
                                         </field>
                                     </div>
                                     <div style="float:left;">
-                                        <field name="uqtreat"/>
-                                        <field name="followup"/>
-                                        <!--<field name="totalpack"/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
-                                        <!--<field name=""/>-->
+                                        <label string="不合格品處理" style="font-weight:bold"/>
+                                        <field name="uqtreat" style="width:100px;"/>
+                                        <br/>
+                                        <label string="處理方式" style="font-weight:bold"/>
+                                        <field name="followup" style="width:100px;"/>
+                                        <group col="4">
+                                            <field name="totalpack" style="width:100px;"/>
+                                            <field name="pweight" style="width:100px;"/>
+                                            <field name="feedbucket" style="width:100px;"/>
+                                            <field name="feedweight" style="width:100px;"/>
+                                            <field name="weighbuckets" style="width:100px;"/>
+                                            <field name="tweight" style="width:100px;"/>
+                                            <field name="bdiff" style="width:100px;"/>
+                                            <field name="wdiff" style="width:100px;"/>
+                                            <field name="uqbuckets" style="width:100px;"/>
+                                            <field name="uqweight" style="width:100px;"/>
+                                        </group>
                                     </div>
                                 </page>
                             </notebook>

@@ -22,7 +22,7 @@
                         </script>
                         <header>
                             <button name="yc_root.quality_wizard_action" string="查看下一筆" type="action"
-                                    class="btn btn-sm btn-primary glyphicon glyphicon-share-alt widget_btn"/>
+                                    class="btn btn-sm btn-primary glyphicon glyphicon-share-alt oe_highlight"/>
                             <button name="read_data_in_server" string="拉力資料" type="object" class="oe_highlight"/>
                             <button name="call_quality_sample" string="樣品識別單" type="object" class="oe_highlight"/>
                             <button name="call_quality_examine_reoort" string="檢驗報告書" type="object" class="oe_highlight"/>

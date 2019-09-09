@@ -379,9 +379,9 @@ class YcQualityWizard(models.TransientModel):
     #                       help="background img.")
 
     def quality_review_search_name(self):
-        if bool(self.searchname or self.checked or self.notchecked) == True:
+        if bool(self.searchname or self.checked or self.notchecked or self.invalid) == True:
             purchase = self.env["yc.purchase"]
-            _name = self.searchname or self.checked.name or self.notchecked.name
+            _name = self.searchname or self.checked.name or self.notchecked.name or self.invalid.name
             # _company  = self.env.user.company_id.id
             _id = purchase.search([('name', '=', _name)]).id
             if _id:
@@ -434,8 +434,9 @@ class YcQualityWizard(models.TransientModel):
     def _chech_order(self):
         return {"domain": {"notchecked": [("order_furn", "=", self.order_furn.id), ("checkstate", "=", False)],
                            "checked": [("order_furn", "=", self.order_furn.id), ("checkstate", "!=", False)],
-                           "invalid":[(("order_furn", "=", self.order_furn.id), ("checkstate", "=", "檢驗不合格"))]
+                           "invalid": [("order_furn", "=", self.order_furn.id), ("checkstate", "=", "檢驗不合格")]
                            }}
+
 
     def save_quality(self):
         _action = self.env['ir.actions.act_window']
@@ -457,14 +458,16 @@ class YcQualityWizard(models.TransientModel):
                                     'invalid', 'followup', 'invalid_followup', 'produce_details_ids', 'file']
                 _val = getattr(self, fn)
                 # TODO: 找出需要更動的欄位再寫入
-                if fn not in functional_group:
+                if fn in functional_group:
+                    pass
+                else:
                     if fn == 'produce_details_ids':
                         pass
                     elif hasattr(_val, 'id'):
                         vals.update({fn: _val.id})
                     else:
                         vals.update({fn: _val})
-            record.write({vals})
+            record.write(vals)
         elif self._context['params'].get('action') == Q2:
             # TO BE CONTINUE
             pass
