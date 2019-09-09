@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+import paramiko
 
 
 
@@ -469,18 +470,23 @@ class YcQualityWizard(models.TransientModel):
             pass
         return
 
-    # def read_data_in_server(self):
-    #     hostname = '172.31.39.149'
-    #     username = 'admin'
-    #     password = 'admin'
-    #     client = paramiko.SSHClient()
-    #     client.load_system_host_keys()
-    #     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #     key = paramiko.RSAKey.from_private_key_file('/tmp/sshppk/openssh_yc_root', password='yc_root')
-    #     client.connect(hostname, pkey=key)
-    #     stdin, stdout, stderr = client.exec_command('cat /tmp/yc_data/90106001.50t')
-    #     net_dump = stdout.readlines()
-    #     print(net_dump)
+    def read_data_in_server(self):
+        # 172.31.44.77
+        hostname = '172.31.44.77'
+        client = paramiko.SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key = paramiko.RSAKey.from_private_key_file('/tmp/sshppk/openssh_yc_root', password='yc_root')
+        client.connect(hostname, username='ubuntu', pkey=key)
+        # TODO: 怎麼上傳檔案到server?
+        # file_name: 工令號碼+.50t or 工令號碼+.100 net_dump[0].splite()
+        # 檢查上面其中一個是否有檔?
+        # cat 沒有檔不會回傳False 會回傳[]
+        stdin, stdout, stderr = client.exec_command('cat /tmp/yc_data/90106001.50t')
+        net_dump = stdout.readlines()
+        # 固定都是14個?
+        arry = net_dump[0].splite()
+        self.maxload = net_dump
 
     # 樣品檢驗單
     def call_quality_sample(self):

@@ -4,7 +4,7 @@
     if we delete a demo record and update the module,
     the deleted data not will be imported again.
     With noupdate="0", instead, the record will be reimported again if it doesn't exist in the db.-->
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- res.config.settings -->
         <!--<record id="yc_multi_company" model="res.config.settings">-->
             <!--<field name="group_multi_company" eval="True"/>-->
@@ -13,19 +13,22 @@
         <!-- res.company -->
         <record id="yc_company1" model="res.company">
             <field name="name">重盈陽成工業股份有限公司</field>
+            <field name="sequence">1</field>
         </record>
         <record id="yc_company2" model="res.company">
             <field name="name">岡山廠</field>
             <field name="parent_id">3</field>
+            <field name="sequence">10</field>
         </record>
         <record id="yc_company3" model="res.company">
             <field name="name">楠梓廠</field>
             <field name="parent_id">3</field>
+            <field name="sequence">10</field>
         </record>
         <record id="yc_company4" model="res.company">
             <field name="name">仁武廠</field>
             <field name="parent_id">3</field>
+            <field name="sequence">10</field>
         </record>
-
     </data>
 </odoo>

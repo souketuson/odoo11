@@ -70,7 +70,7 @@
         'wizard/purchase_preorder.xml',
         'wizard/shipment_wizard.xml',
         'wizard/quality_wizard.xml',
-        # 'wizard/quality_invalid.xml',
+        'wizard/quality_invalid.xml',
 
         'views/business/supplier.xml',
         'views/business/customer.xml',
