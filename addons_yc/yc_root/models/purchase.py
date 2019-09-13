@@ -157,7 +157,6 @@ class YcPurchase(models.Model):
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     elecplswitch = fields.Char("表面處理開關", compute="_switcher", help="當表面處理選定'電鍍'時，turn on，否則off")
     elecpl_code = fields.Many2one("yc.setelectroplating", string="電鍍別")
-    portage = fields.Selection([('C', '含運費'), ('U', '運費自付')], '運費種類')
     num1 = fields.Integer("數量1")
     unit1 = fields.Many2one("yc.setunit", string="單位代號1")
     num2 = fields.Integer("數量2")
@@ -326,7 +325,7 @@ class YcPurchase(models.Model):
     def _get_tensihrd_data(self):
         pass
 
-    ysv = fields.Float("降伏強度值")
+    ysv = fields.Char("降伏強度值")
     ysvste = fields.Char("降伏強度值起迄", default=lambda self: self._get_ysvste())
     ystrength1 = fields.Float("降伏強度值1")
     ystrength2 = fields.Float("降伏強度值2")
@@ -345,12 +344,14 @@ class YcPurchase(models.Model):
                 ysv_arr.sort()
                 rec.ysvste = str(ysv_arr[0]) + '~' + str(ysv_arr[len(ysv_arr) - 1])
 
-    elohv = fields.Float("伸長率值")
+    # 舊資料庫數值皆為float 可是資料庫設str
+    elohv = fields.Char("伸長率值")
     elohvste = fields.Char("伸長率值起迄")
     yste = fields.Char("降伏點值起迄")
     mxloadste = fields.Char("最大負荷值起迄")
     sskste = fields.Float("斷面積值起迄")
-    torshv = fields.Float("扭力強度值")
+    # 舊資料庫數值皆為float 可是資料庫設str
+    torshv = fields.Char("扭力強度值")
     torshv1 = fields.Float("扭力強度值1")
     torshv2 = fields.Float("扭力強度值2")
     torshv3 = fields.Float("扭力強度值3")
@@ -378,8 +379,8 @@ class YcPurchase(models.Model):
     carb2v6 = fields.Float("滲碳層2值6")
     carb2v7 = fields.Float("滲碳層2值7")
     carb2v8 = fields.Float("滲碳層2值8")
-
-    sskv = fields.Float("斷面收縮率值")
+    # 舊資料庫數值皆為float 可是資料庫設str
+    sskv = fields.Char("斷面收縮率值")
     sskv1 = fields.Float("斷面收縮率值1")
     sskv2 = fields.Float("斷面收縮率值2")
     sskv3 = fields.Float("斷面收縮率值3")
@@ -388,8 +389,8 @@ class YcPurchase(models.Model):
     sskv6 = fields.Float("斷面收縮率值6")
     sskv7 = fields.Float("斷面收縮率值7")
     sskv8 = fields.Float("斷面收縮率值8")
-
-    safeload = fields.Float("安全負荷值")
+    # 舊資料庫數值皆為float 可是資料庫設str
+    safeload = fields.Char("安全負荷值")
     safeload1 = fields.Float("安全負荷值1")
     safeload2 = fields.Float("安全負荷值2")
     safeload3 = fields.Float("安全負荷值3")
@@ -401,9 +402,9 @@ class YcPurchase(models.Model):
     HV1 = fields.Integer("HV1")
     HV2 = fields.Integer("HV2")
     HV3 = fields.Integer("HV3")
-    HV12 = fields.Integer("HV12")
+    HV12 = fields.Char("HV12")
     HV12OK = fields.Char("HV12OK")
-    HV13 = fields.Integer("HV13")
+    HV13 = fields.Char("HV13")
     HV13OK = fields.Char("HV13OK")
 
     hs5 = fields.Boolean("頭部敲擊5")
@@ -499,7 +500,7 @@ class YcPurchase(models.Model):
     sskvste = fields.Char("斷面收縮率值起迄")
     slste = fields.Char("安全負荷值起迄")
     mxload = fields.Char("最大負荷")
-    tlevel = fields.Float("扭力強度")
+    tlevel = fields.Char("扭力強度")
     whrd2v1 = fields.Float("華司硬度2值1")
     whrd2v2 = fields.Float("華司硬度2值2")
     whrd2v3 = fields.Float("華司硬度2值3")
@@ -508,8 +509,8 @@ class YcPurchase(models.Model):
     whrd2v6 = fields.Float("華司硬度2值6")
     whrd2v7 = fields.Float("華司硬度2值7")
     whrd2v8 = fields.Float("華司硬度2值8")
-    uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
-                                ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
+    uqtreat = fields.Selection([('重回染', '重回火或重染黑'), ('重做', '重做'),
+                                ('報廢', '報廢'), ('無', '無'), ('部份出貨', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
 
     pweight = fields.Integer("進貨重量")
     tweight = fields.Integer("磅後總重")
@@ -520,7 +521,7 @@ class YcPurchase(models.Model):
     wdiff = fields.Integer("重量差")
     uqweight = fields.Integer("不合格重量")
     uqbuckets = fields.Integer("不合格桶數")
-    followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
+    followup = fields.Selection([("轉入進貨單", "轉入進貨單"), ("不轉入進貨單", "不轉入進貨單")], "處理方式")
 
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")

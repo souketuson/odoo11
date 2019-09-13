@@ -70,6 +70,7 @@ class YcWeight(models.Model):
     @api.multi
     @api.onchange("driver_id")
     def _generate_carno(self):
+        # 唯一值重複: 舊資料單號:EA14028662、EA14028663 車次序號重複
         for rec in self:
             if rec.driver_id:
                 year = str(dt.now().year)
