@@ -20,9 +20,9 @@ class YcMechanicalproperty(models.Model):
     tensihrd = fields.Char("抗拉強度")
     commitstrenth = fields.Char("保證強度")
 
-    elongation = fields.Float("伸長率")
-    sectionshrink = fields.Float("斷面收縮")
-    ystrength = fields.Float("降伏點強度")
+    elongation = fields.Char("伸長率")
+    sectionshrink = fields.Char("斷面收縮")
+    ystrength = fields.Char("降伏點強度")
     carburlayer = fields.Char("滲碳層")
     safeload = fields.Char("安全負荷")
     headshot = fields.Integer("頭部敲擊")

@@ -916,7 +916,9 @@ class YcPurchase(models.Model):
     # 3.以品名分類、強度級數、規格，搜尋機械性質主檔並帶出 依據標準、表面硬度、心部硬度、試片、抗拉強度、扭力
     @api.onchange("clsf_code", "strength_level", "norm_code")
     def _fetch_norm_code_info(self):
-        if self.norm_code and self.clsf_code and self._context.get('params')['action'] == 81:
+        _action = self.env['ir.actions.act_window']
+        p1 = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self.norm_code and self.clsf_code and self._context.get('params')['action'] == p1:
             norm = self.env["yc.setnorm"]
             # 規格找出參數值
             norm_para = norm.search([('id', '=', self.norm_code.id)]).parameter1
