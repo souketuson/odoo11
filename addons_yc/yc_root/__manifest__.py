@@ -12,7 +12,7 @@
     'website': "",
     'category': 'Uncategorized',
     'version': '1.6',
-    'depends': ['base', 'base_setup'],
+    'depends': ['base', 'base_setup', 'web_responsive', 'web_m2x_options'],
     'css': [
         'static/src/css/generalcss.css',
 
@@ -32,6 +32,12 @@
         'views/produce/maintain/setlength.xml',
         'views/produce/maintain/setstoreplace.xml',
         'views/produce/maintain/setpurchasenote.xml',
+        'views/produce/maintain/setunit.xml',
+        'views/produce/maintain/setelectroplating.xml',
+        'views/produce/maintain/setsurface.xml',
+        'views/produce/maintain/settexture.xml',
+        'views/produce/maintain/setprocess.xml',
+
         'views/quality/maintain/setproducenote.xml',
         'views/quality/maintain/sethardness.xml',
         'views/quality/maintain/setqcnote.xml',
@@ -91,10 +97,5 @@
         'views/fake.xml',
         'security/rule.xml',
         'menuitem/root_core.xml',
-    ],
-
-    # only loaded in demonstration mode
-    'demo': [
-
     ],
 }

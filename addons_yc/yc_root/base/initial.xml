@@ -30,5 +30,11 @@
             <field name="parent_id">3</field>
             <field name="sequence">10</field>
         </record>
+
+        <!--ir.config_parameter-->
+        <record id="config_parameter0" model="ir.config_parameter">
+            <field name="key">web_m2x_options.limit</field>
+            <field name="value">500</field>
+        </record>
     </data>
 </odoo>

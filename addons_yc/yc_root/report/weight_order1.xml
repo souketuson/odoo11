@@ -27,7 +27,6 @@
                                 "Duplex": 0,
                                 "Tables":[]
                     };
-
                     // define type, size, name ... of report data structure
                     var _tableOrder = {
                         "Name": "Order",
@@ -104,7 +103,6 @@
                             });
                     </t>
                     /* if you have detail lines combine data after define it.*/
-
                     _data["Tables"].push(_tableOrder);
                     var _reportData = JSON.stringify(_data); //use json
                     console.log(_reportData);

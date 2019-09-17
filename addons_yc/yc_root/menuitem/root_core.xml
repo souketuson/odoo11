@@ -89,11 +89,11 @@
                     <menuitem id="fake13_menu" name="產品分類" parent="produce_maintain_menu" sequence="22" action="fake_action"/>
                     <menuitem id="setnorm_menu" name="規格對照" parent="produce_maintain_menu" sequence="23" action="setnorm_action"/>
                     <menuitem id="setlength_menu" name="長度對照" parent="produce_maintain_menu" sequence="24" action="setlength_action"/>
-                    <menuitem id="fake16_menu" name="加工方式" parent="produce_maintain_menu" sequence="25" action="fake_action"/>
-                    <menuitem id="fake17_menu" name="材質" parent="produce_maintain_menu" sequence="26" action="fake_action"/>
-                    <menuitem id="fake18_menu" name="表面處理" parent="produce_maintain_menu" sequence="27" action="fake_action"/>
-                    <menuitem id="fake19_menu" name="電鍍別" parent="produce_maintain_menu" sequence="28" action="fake_action"/>
-                    <menuitem id="fake20_menu" name="單位(桶別稱)" parent="produce_maintain_menu" sequence="29" action="fake_action"/>
+                    <menuitem id="setprocess_menu" name="加工方式" parent="produce_maintain_menu" sequence="25" action="setprocess_action"/>
+                    <menuitem id="settexture_menu" name="材質" parent="produce_maintain_menu" sequence="26" action="settexture_action"/>
+                    <menuitem id="setsurface_menu" name="表面處理" parent="produce_maintain_menu" sequence="27" action="setsurface_action"/>
+                    <menuitem id="setelectroplating_menu" name="電鍍別" parent="produce_maintain_menu" sequence="28" action="setelectroplating_action"/>
+                    <menuitem id="setunit_menu" name="單位(桶別稱)" parent="produce_maintain_menu" sequence="29" action="setunit_action"/>
                     <menuitem id="fake21_menu" name="各爐產能設定" parent="produce_maintain_menu" sequence="30" action="fake_action"/>
                     <menuitem id="setpurchasenote_menu" name="進貨備註" parent="produce_maintain_menu" sequence="31" action="setpurchasenote_action"/>
                     <menuitem id="setstoreplace_menu" name="儲存位置" parent="produce_maintain_menu" sequence="32" action="setstoreplace_action"/>

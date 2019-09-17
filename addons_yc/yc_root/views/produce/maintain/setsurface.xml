@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- tree view -->
+        <record model="ir.ui.view" id="setsurface_tree">
+            <field name="name">setsurface.tree</field>
+            <field name="model">yc.setsurface</field>
+            <field name="arch" type="xml">
+                <tree string="setsurface Tree">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        <!-- form view -->
+        <record model="ir.ui.view" id="setsurface_form">
+            <field name="name">setsurface.form</field>
+            <field name="model">yc.setsurface</field>
+            <field name="arch" type="xml">
+                <form string="setsurface form">
+                    <sheet>
+                        <group string="">
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- search -->
+        <record model="ir.ui.view" id="setsurface_search_view">
+            <field name="name">setsurface.search</field>
+            <field name="model">yc.setsurface</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <!-- action -->
+        <record model="ir.actions.act_window" id="setsurface_action">
+            <field name="name">單位設定</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yc.setsurface</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="setsurface_action_form">
+            <field name="act_window_id" ref="setsurface_action"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="setsurface_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="setsurface_action_tree">
+            <field name="act_window_id" ref="setsurface_action"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="setsurface_tree"/>
+        </record>
+    </data>
+</odoo>
