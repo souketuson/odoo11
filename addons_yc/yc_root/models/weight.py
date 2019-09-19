@@ -13,7 +13,7 @@ class YcWeight(models.Model):
 
     driver_id = fields.Many2one("yc.driver", string="司機名稱")
     name = fields.Char("過磅單號", default=lambda self: self.env["ir.sequence"].next_by_code("WeightList.sequence"))
-    day = fields.Date("過磅日期", default=dt.today())
+    day = fields.Date("過磅日期", default=fields.Date.today)
     weightime = fields.Char("過磅時間", default=lambda self: self._get_time())
     person_id = fields.Many2one("res.users", string="過磅員")
     weighbridge = fields.Char("地磅序號")

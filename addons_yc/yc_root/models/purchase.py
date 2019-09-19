@@ -989,27 +989,28 @@ class YcPurchase(models.Model):
     # 8. 加熱爐和回火爐自動填值
     @api.onchange('heat2', 'tempturing2')
     def _auto_fill_in(self):
-        heating = ['heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8']
-        tempturing = ['tempturing3', 'tempturing4', 'tempturing5', 'tempturing6']
-        h_pool = {'K': 5, 'P': 5, 'A': 4, 'B': 4, 'L': 4, 'M': 4, 'C': 3, 'G': 3, 'D': 2, 'E': 2, 'F': 2}
-        t_pool = {'K': 4, 'P': 4, 'A': 2, 'B': 2, 'G': 2, 'H': 2, 'L': 2, 'M': 2, 'C': 1, 'D': 1, 'E': 1, 'F': 1}
-        order_no = self.order_furn.name
-        if self.heat2 and self.heat2 != 0:
-            init = int(self.heat2)
-            self.heat1 = init - 30
-            for i in range(6):
-                if i < h_pool[order_no]:
-                    setattr(self, heating[i], init)
-                else:
-                    setattr(self, heating[i], None)
-        if self.tempturing2 and self.tempturing2 != 0:
-            init = int(self.tempturing2)
-            self.tempturing1 = init - 30
-            for j in range(4):
-                if j < t_pool[order_no]:
-                    setattr(self, tempturing[j], init)
-                else:
-                    setattr(self, tempturing[j], None)
+        if self.order_furn:
+            heating = ['heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8']
+            tempturing = ['tempturing3', 'tempturing4', 'tempturing5', 'tempturing6']
+            h_pool = {'K': 5, 'P': 5, 'A': 4, 'B': 4, 'L': 4, 'M': 4, 'C': 3, 'G': 3, 'D': 2, 'E': 2, 'F': 2}
+            t_pool = {'K': 4, 'P': 4, 'A': 2, 'B': 2, 'G': 2, 'H': 2, 'L': 2, 'M': 2, 'C': 1, 'D': 1, 'E': 1, 'F': 1}
+            order_no = self.order_furn.name
+            if self.heat2 and self.heat2 != 0:
+                init = int(self.heat2)
+                self.heat1 = init - 30
+                for i in range(6):
+                    if i < h_pool[order_no]:
+                        setattr(self, heating[i], init)
+                    else:
+                        setattr(self, heating[i], None)
+            if self.tempturing2 and self.tempturing2 != 0:
+                init = int(self.tempturing2)
+                self.tempturing1 = init - 30
+                for j in range(4):
+                    if j < t_pool[order_no]:
+                        setattr(self, tempturing[j], init)
+                    else:
+                        setattr(self, tempturing[j], None)
 
     # 8.1 如果其他檢視頁面動到加熱爐2 其他加熱爐需要跟著動
     # Computational fields 不能手動改值
