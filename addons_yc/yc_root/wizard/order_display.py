@@ -78,12 +78,13 @@ class YcPurchaseDisplay(models.TransientModel):
             vals = {}
             purchase = self.env['yc.purchase']
             for record in self.purchase_ids2:
-                init = int(record.tempturing2)
-                vals.update({'tempturing1': init - 30, 'tempturing3': init,
-                             'tempturing4': init, 'tempturing5': init,
-                             'tempturing6': init, 'tempturing7': init,
-                             'tempturing8': init})
-                purchase.search([('id', '=', record.id)]).write(vals)
+                if any(record.tempturing2):
+                    init = int(record.tempturing2)
+                    vals.update({'tempturing1': init - 30, 'tempturing3': init,
+                                 'tempturing4': init, 'tempturing5': init,
+                                 'tempturing6': init, 'tempturing7': init,
+                                 'tempturing8': init})
+                    purchase.search([('id', '=', record.id)]).write(vals)
 
     def form_refresh(self):
         if self.purchase_ids2:
