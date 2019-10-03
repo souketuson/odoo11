@@ -38,6 +38,7 @@
                     "Name": "Order",
                     "Cols":[
                     { "type": "str", "size": 10, "name": "種類", "required": false },
+                    { "type": "str", "size": 4, "name": "分類", "required": false },
                     { "type": "str", "size": 10, "name": "單號", "required": false },
                     { "type": "str", "size": 10, "name": "id", "required": false },
                     { "type": "str", "size": 10, "name": "日期", "required": false },
@@ -51,6 +52,12 @@
                     { "type": "str", "size": 30, "name": "長度描述", "required": false },
                     { "type": "str", "size": 3, "name": "數量1", "required": false },
                     { "type": "str", "size": 5, "name": "單位1", "required": false },
+                    { "type": "str", "size": 3, "name": "數量2", "required": false },
+                    { "type": "str", "size": 5, "name": "單位2", "required": false },
+                    { "type": "str", "size": 3, "name": "數量3", "required": false },
+                    { "type": "str", "size": 5, "name": "單位3", "required": false },
+                    { "type": "str", "size": 3, "name": "數量4", "required": false },
+                    { "type": "str", "size": 5, "name": "單位4", "required": false },
                     { "type": "str", "size": 8, "name": "淨重", "required": false },
                     { "type": "str", "size": 10, "name": "加工方式", "required": false },
                     { "type": "str", "size": 10, "name": "表面處理", "required": false },
@@ -76,11 +83,12 @@
                     <t t-foreach="docs" t-as="doc">
                         // if 數量等於0 跑加工單就好
                         // else 數量N 跑N張過磅單
-                        var t=<t t-esc="doc.num1"/>;
+                        var t=<t t-esc="doc.num1"/>+<t t-esc="doc.num2"/>+<t t-esc="doc.num3"/>+<t t-esc="doc.num4"/>;
 
                         if(t==0){
                             _tableOrder.Data.push({
                                 "種類": "客戶加工單",
+                                "分類": "進貨",
                                 "id": "<t t-esc="doc.id"/>",
                                 "單號": "<t t-esc="doc.name"/>",
                                 "日期": "<t t-esc="doc.day"/>",
@@ -94,16 +102,22 @@
                                 "長度描述": "<t t-esc="doc.len_descript"/>",
                                 "數量1": "<t t-esc="doc.num1"/>",
                                 "單位1": "<t t-esc="doc['unit1'].name"/>",
+                                "數量2": "<t t-esc="doc.num2"/>",
+                                "單位2": "<t t-esc="doc['unit2'].name"/>",
+                                "數量3": "<t t-esc="doc.num3"/>",
+                                "單位3": "<t t-esc="doc['unit3'].name"/>",
+                                "數量4": "<t t-esc="doc.num4"/>",
+                                "單位4": "<t t-esc="doc['unit4'].name"/>",
                                 "淨重": "<t t-esc="doc.net"/>",
                                 "加工方式": "<t t-esc="doc['proces_code'].name"/>",
                                 "表面處理": "<t t-esc="doc['surface_code'].name"/>",
                                 "電鍍別": "<t t-esc="doc['elecpl_code'].name"/>",
                                 "批號": "<t t-esc="doc.batch"/>",
-                                "表面硬度": "<t t-esc="doc.surfhrd"/>",
-                                "心部硬度": "<t t-esc="doc.corehrd"/>",
-                                "滲碳層": "<t t-esc="doc.carburlayer"/>",
-                                "拉力": "<t t-esc="doc.tensihrd"/>",
-                                "扭力": "<t t-esc="doc.torsion"/>",
+                                "表面硬度": "<t t-raw="doc.surfhrd"/>",
+                                "心部硬度": "<t t-raw="doc.corehrd"/>",
+                                "滲碳層": "<t t-raw="doc.carburlayer"/>",
+                                "拉力": "<t t-raw="doc.tensihrd"/>",
+                                "扭力": "<t t-raw="doc.torsion"/>",
                                 "存放位置": "<t t-esc="doc.storeplace"/>",
                                 "注意事項1": "<t t-esc="doc.notices1"/>",
                                 "注意事項2": "<t t-esc="doc.notices2"/>",
@@ -112,14 +126,15 @@
                                 "製造備註2": "<t t-esc="doc.prodnote2"/>",
                                 "製造備註3": "<t t-esc="doc.prodnote3"/>",
                                 "開單人員": "<t t-esc="doc['person'].name"/>",
-                                "Copies": i,
+                                "Copies": 0,
                             });
 
                         }
                         else{
-                            for(i=0;i&lt;=t;i++){
+                            for(i=0;i&lt;t;i++){
                                 _tableOrder.Data.push({
                                     "種類": "客戶加工單",
+                                    "分類": "進貨",
                                     "id": "<t t-esc="doc.id"/>",
                                     "單號": "<t t-esc="doc.name"/>",
                                     "日期": "<t t-esc="doc.day"/>",
@@ -133,16 +148,22 @@
                                     "長度描述": "<t t-esc="doc.len_descript"/>",
                                     "數量1": "<t t-esc="doc.num1"/>",
                                     "單位1": "<t t-esc="doc['unit1'].name"/>",
+                                    "數量2": "<t t-esc="doc.num2"/>",
+                                    "單位2": "<t t-esc="doc['unit2'].name"/>",
+                                    "數量3": "<t t-esc="doc.num3"/>",
+                                    "單位3": "<t t-esc="doc['unit3'].name"/>",
+                                    "數量4": "<t t-esc="doc.num4"/>",
+                                    "單位4": "<t t-esc="doc['unit4'].name"/>",
                                     "淨重": "<t t-esc="doc.net"/>",
                                     "加工方式": "<t t-esc="doc['proces_code'].name"/>",
                                     "表面處理": "<t t-esc="doc['surface_code'].name"/>",
                                     "電鍍別": "<t t-esc="doc['elecpl_code'].name"/>",
                                     "批號": "<t t-esc="doc.batch"/>",
-                                    "表面硬度": "<t t-esc="doc.surfhrd"/>",
-                                    "心部硬度": "<t t-esc="doc.corehrd"/>",
-                                    "滲碳層": "<t t-esc="doc.carburlayer"/>",
-                                    "拉力": "<t t-esc="doc.tensihrd"/>",
-                                    "扭力": "<t t-esc="doc.torsion"/>",
+                                    "表面硬度": "<t t-raw="doc.surfhrd"/>",
+                                    "心部硬度": "<t t-raw="doc.corehrd"/>",
+                                    "滲碳層": "<t t-raw="doc.carburlayer"/>",
+                                    "拉力": "<t t-raw="doc.tensihrd"/>",
+                                    "扭力": "<t t-raw="doc.torsion"/>",
                                     "存放位置": "<t t-esc="doc.storeplace"/>",
                                     "注意事項1": "<t t-esc="doc.notices1"/>",
                                     "注意事項2": "<t t-esc="doc.notices2"/>",
@@ -151,10 +172,11 @@
                                     "製造備註2": "<t t-esc="doc.prodnote2"/>",
                                     "製造備註3": "<t t-esc="doc.prodnote3"/>",
                                     "開單人員": "<t t-esc="doc['person'].name"/>",
-                                    "Copies": i,
+                                    "Copies": i+1,
                                 });
                                 _tableOrder.Data.push({
                                     "種類": "磅單",
+                                    "分類": "製造",
                                     "id": "<t t-esc="doc.id"/>",
                                     "單號": "<t t-esc="doc.name"/>",
                                     "日期": "<t t-esc="doc.day"/>",
@@ -168,16 +190,18 @@
                                     "長度描述": "<t t-esc="doc.len_descript"/>",
                                     "數量1": "<t t-esc="doc.num1"/>",
                                     "單位1": "<t t-esc="doc['unit1'].name"/>",
+                                    "數量2": "<t t-esc="doc.num2"/>",
+                                    "單位2": "<t t-esc="doc['unit2'].name"/>",
+                                    "數量3": "<t t-esc="doc.num3"/>",
+                                    "單位3": "<t t-esc="doc['unit3'].name"/>",
+                                    "數量4": "<t t-esc="doc.num4"/>",
+                                    "單位4": "<t t-esc="doc['unit4'].name"/>",
                                     "淨重": "<t t-esc="doc.net"/>",
                                     "加工方式": "<t t-esc="doc['proces_code'].name"/>",
                                     "表面處理": "<t t-esc="doc['surface_code'].name"/>",
                                     "電鍍別": "<t t-esc="doc['elecpl_code'].name"/>",
                                     "批號": "<t t-esc="doc.batch"/>",
-                                    "表面硬度": "<t t-esc="doc.surfhrd"/>",
-                                    "心部硬度": "<t t-esc="doc.corehrd"/>",
-                                    "滲碳層": "<t t-esc="doc.carburlayer"/>",
-                                    "拉力": "<t t-esc="doc.tensihrd"/>",
-                                    "扭力": "<t t-esc="doc.torsion"/>",
+
                                     "存放位置": "<t t-esc="doc.storeplace"/>",
                                     "注意事項1": "<t t-esc="doc.notices1"/>",
                                     "注意事項2": "<t t-esc="doc.notices2"/>",
@@ -186,7 +210,7 @@
                                     "製造備註2": "<t t-esc="doc.prodnote2"/>",
                                     "製造備註3": "<t t-esc="doc.prodnote3"/>",
                                     "開單人員": "<t t-esc="doc['person'].name"/>",
-                                    "Copies": i,
+                                    "Copies": i+1,
                                 });
                             }
                         }
