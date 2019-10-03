@@ -111,7 +111,7 @@ class YcPurchaseDisplay(models.TransientModel):
             return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", in_furn)],
                                "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", out_of_furn)]}}
 
-    # @api.onchange('searchname')
+    @api.onchange('searchname', 'furn_in', 'furn_notin')
     def process_review_search_name(self):
         _action = self.env['ir.actions.act_window']
         action_id = _action.search([('name', '=', '製程登錄作業')], limit=1).id
@@ -126,11 +126,11 @@ class YcPurchaseDisplay(models.TransientModel):
             if _id:
                 self._display_record(_id)
                 # 建好六個空項目檔
-                to_create_order = purchase.search([('id', '=', _id)])
-                if len(to_create_order.produce_details_ids) == 0:
-                    for i in range(1, 7):
-                        # issue: 如果用onchage call只能第六筆，用button才可以完整新增
-                        to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
+                # to_create_order = purchase.search([('id', '=', _id)])
+                # if len(to_create_order.produce_details_ids) == 0:
+                #     for i in range(1, 7):
+                #         # issue: 如果用onchage call只能第六筆，用button才可以完整新增
+                #         to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
                 self.produce_details_ids = [(6, _, details.ids)]
             else:
@@ -210,6 +210,8 @@ class YcPurchaseDisplay(models.TransientModel):
         self.notweighted_order = None
         self.weighted_order = None
         self.searchname = None
+        self.furn_in = None
+        self.furn_notin = None
         record = purchase.search([('id', '=', record_id)])
         self.order_name = record.name
         self.hidden_name = record.name
@@ -298,18 +300,22 @@ class YcPurchaseDisplay(models.TransientModel):
         self.tempturing6 = record.tempturing6
 
     def plus_one_line(self):
-        if self.order_name:
-            _no = len(self.produce_details_ids)
-            _id = self.produce_details_ids[0].name.id
+        if self.hidden_name:
             purchase = self.env['yc.purchase']
+            _no = len(self.produce_details_ids)
+            # to_create_order = purchase.search([('id', '=', _id)])
+            # to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
+            _id = purchase.search([('name', '=', self.hidden_name)]).id
             record = purchase.search([('id', '=', _id)])
             record.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': _no+1})]
             self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
 
     def delete_last_line(self):
-        if self.order_name:
+        if self.hidden_name:
             _no = len(self.produce_details_ids)
-            if _no > 6:
+            if _no ==0:
+                raise ValidationError(_('沒東西刪了'))
+            else:
                 _id = self.produce_details_ids[0].name.id
                 purchase = self.env['yc.purchase']
                 detail = self.env['yc.produce.details']
@@ -318,8 +324,6 @@ class YcPurchaseDisplay(models.TransientModel):
                 # 再create狀態無法使用
                 _delete_id.unlink()
                 self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
-            else:
-                raise ValidationError(_('不要再刪了'))
 
     @api.onchange('ptime1', 'ptime2', 'ptime3')
     def cokoo(self):

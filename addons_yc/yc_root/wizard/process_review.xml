@@ -57,7 +57,7 @@
                                     <!--<field name="saveorread"/>-->
                                     <span style="display:inline-block; width: 20px;"></span>
                                     <button string="資料查詢" type="object" class="oe_highlight"
-                                    name="process_review_search_name" style="position: initial;"/>
+                                    name="process_review_search_name" style="position: initial;display:none;"/>
                                     <br/>
                                     <label string="頭部記號" style="position: absolute;left: 750px;"/>
                                     <br/>
