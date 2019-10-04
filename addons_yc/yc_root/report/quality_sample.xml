@@ -17,7 +17,7 @@
     </record>
 
     <report id="action_quality_sample"
-            string="樣品檢驗單"
+            string="樣品識別單"
             model="yc.purchase"
             report_type="qweb-pdf"
             name="yc_root.report_quality_sample"/>

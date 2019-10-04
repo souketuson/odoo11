@@ -17,7 +17,7 @@
     </record>
 
     <report id="action_quality_unqualified_treatment"
-            string="樣品檢驗單"
+            string="不合格處理單"
             model="yc.purchase"
             report_type="qweb-pdf"
             name="yc_root.report_quality_unqualified_treatment"/>

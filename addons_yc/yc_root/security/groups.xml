@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+         <record id="category_iso_supervisor" model="ir.module.category">
+            <field name="name">supervisor</field>
+            <field name="description">上級</field>
+            <field name="sequence">1</field>
+        </record>
+        <!-- 限定群組能看到的模組 -->
+        <record id="group_iso_supervisor" model="res.groups">
+            <field name="name">管理者</field>
+            <!-- 加這行才能在"應用程序訪問"組裡，否則在額外的權利 -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <!--在既有的員工群組內(module: base)再開一個分類-->
+            <field name="category_id" ref="base.module_category_human_resources" />
+        </record>
+    </data>
+</odoo>
