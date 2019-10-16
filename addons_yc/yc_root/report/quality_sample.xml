@@ -19,7 +19,7 @@
     <report id="action_quality_sample"
             string="樣品識別單"
             model="yc.purchase"
-            report_type="qweb-pdf"
+            report_type="qweb-html"
             name="yc_root.report_quality_sample"/>
     <!--name 属性中需要添加模块前缀，我们必须使用完整的引用名称<module_name>.<identifier_name>-->
     <!--paperformat="paperformat_euro_landscape" -->
