@@ -234,7 +234,6 @@ class YcSetPurchasenote(models.Model):
     name = fields.Char()
 
 
-
 class YcSetStatus(models.Model):
     # 狀態
     _name = "yc.setstatus"

@@ -191,16 +191,16 @@ class YcPurchase(models.Model):
     wxrhard = fields.Char("華司硬度")
     fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
 
-    notices1 = fields.Char("注意事項1")
-    notices2 = fields.Char("注意事項2")
-    notices3 = fields.Char("注意事項3")
+    notices1 = fields.Char("注意事項1", default=lambda self: self._n1deault())
+    notices2 = fields.Char("注意事項2", default=lambda self: self._n2deault())
+    notices3 = fields.Char("注意事項3", default=lambda self: self._n3deault())
     notices4 = fields.Char("注意事項4")
-    qcnote1 = fields.Char("品管備註1")
-    qcnote2 = fields.Char("品管備註2")
-    qcnote3 = fields.Char("品管備註3")
-    prodnote1 = fields.Char("製造備註1")
-    prodnote2 = fields.Char("製造備註2")
-    prodnote3 = fields.Char("製造備註3")
+    qcnote1 = fields.Char("品管備註1", default=lambda self: self._qcn1deault())
+    qcnote2 = fields.Char("品管備註2", default=lambda self: self._qcn2deault())
+    qcnote3 = fields.Char("品管備註3", default=lambda self: self._qcn3deault())
+    prodnote1 = fields.Char("製造備註1", default=lambda self: self._pn1deault())
+    prodnote2 = fields.Char("製造備註2", default=lambda self: self._pn2deault())
+    prodnote3 = fields.Char("製造備註3", default=lambda self: self._pn3deault())
 
     # 作業條件page
     flow = fields.Char("流量")
@@ -970,6 +970,28 @@ class YcPurchase(models.Model):
         elif self._context.get('params')['action'] == p1 and vals['condition'] == 'IT':
             # TODO: 車次序號用轉廠的車次，待修正
             vals.update({"name": 'TEMP1234', 'wizard_btn': False})
+
+        reminder = {}
+        db = self.env['yc.setnotereminder']
+        rec = db.search([('user', '=', self.env.user.id)])
+        note = ['notices1', 'notices2', 'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2',
+                'prodnote3', ]
+        note_dictionary = self.env['yc.setpurchasenote']
+        for n in note:
+            if vals.get(n):
+                # 確認這個note是否有在資料庫
+                vocabulary = note_dictionary.search([('name', '=', vals[n])])
+                if vocabulary:
+                    reminder.update({n: vocabulary.id})
+                else:
+                    pass
+            else:
+                reminder.update({n: None})
+        if rec:
+            rec.write(reminder)
+        else:
+            reminder.update({'user': self.env.user.id})
+            rec.create(reminder)
         return super(YcPurchase, self).create(vals)
 
     # 6.預設時間
@@ -1022,6 +1044,115 @@ class YcPurchase(models.Model):
     #     self.tempturing4 = init
     #     self.tempturing5 = init
     #     self.tempturing6 = init
+
+    # 9. 備註自動抓取上一次使用的值
+    def _n1deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.notices1.name
+            else:
+                return None
+
+    def _n2deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.notices2.name
+            else:
+                return None
+
+    def _n3deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.notices3.name
+            else:
+                return None
+
+    def _qcn1deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.qcnote1.name
+            else:
+                return None
+
+    def _qcn2deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.qcnote2.name
+            else:
+                return None
+
+    def _qcn3deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.qcnote3.name
+            else:
+                return None
+
+    def _pn1deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.prodnote1.name
+            else:
+                return None
+
+    def _pn2deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.prodnote2.name
+            else:
+                return None
+
+    def _pn3deault(self):
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        if self._context['params'].get('action') == page:
+            user = self.env.user.id
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', user)])
+            if rec:
+                return rec.prodnote3.name
+            else:
+                return None
 
     ################################
     ### 分爐排程 plan_furna.xml 用 ###
@@ -1253,6 +1384,20 @@ class YcPurchaseStore(models.Model):
     name = fields.Char("進貨庫存單號")
 
 
-class YcPurchaseStore(models.Model):
+class YcPurchasereport(models.Model):
     _name = "yc.purchasereport"
     name = fields.Char("客戶進貨統計表")
+
+
+class YcSetnotereminder(models.Model):
+    _name = "yc.setnotereminder"
+    user = fields.Many2one("res.users", string="開單人員")
+    notices1 = fields.Many2one('yc.setpurchasenote')
+    notices2 = fields.Many2one('yc.setpurchasenote')
+    notices3 = fields.Many2one('yc.setpurchasenote')
+    prodnote1 = fields.Many2one('yc.setpurchasenote')
+    prodnote2 = fields.Many2one('yc.setpurchasenote')
+    prodnote3 = fields.Many2one('yc.setpurchasenote')
+    qcnote1 = fields.Many2one('yc.setpurchasenote')
+    qcnote2 = fields.Many2one('yc.setpurchasenote')
+    qcnote3 = fields.Many2one('yc.setpurchasenote')
