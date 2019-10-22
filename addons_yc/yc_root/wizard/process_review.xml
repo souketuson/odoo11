@@ -8,23 +8,23 @@
                 <form string="ProcessReview form">
                     <sheet>
                         <script>
-                            // 報時
-                            $('input').click(function() {
-                                var today=new Date();
-                                var _t = String(today.getHours()) + ':'+ String(today.getMinutes());
-                                var isFocus = document.activeElement.getAttribute('name');
-                                switch(isFocus){
-                                    case 'ptime1':
-                                        $('input[name="ptime1"]').val(_t);
-                                        break;
-                                    case 'ptime2':
-                                        $('input[name="ptime2"]').val(_t);
-                                        break;
-                                    case 'ptime3':
-                                        $('input[name="ptime3"]').val(_t);
-                                        break;
-                                };
-                            });
+                            // 報時 被button fuction取代
+                            <!--$('input').click(function() {-->
+                                <!--var today=new Date();-->
+                                <!--var _t = String(today.getHours()) + ':'+ String(today.getMinutes());-->
+                                <!--var isFocus = document.activeElement.getAttribute('name');-->
+                                <!--switch(isFocus){-->
+                                    <!--case 'ptime1':-->
+                                        <!--$('input[name="ptime1"]').val(_t);-->
+                                        <!--break;-->
+                                    <!--case 'ptime2':-->
+                                        <!--$('input[name="ptime2"]').val(_t);-->
+                                        <!--break;-->
+                                    <!--case 'ptime3':-->
+                                        <!--$('input[name="ptime3"]').val(_t);-->
+                                        <!--break;-->
+                                <!--};-->
+                            <!--});-->
                         </script>
                         <header>
                             <button name="yc_root.process_review_action" string="開新查詢" type="action"
@@ -162,11 +162,15 @@
                                 <page string="製造條件">
                                     <group>
                                         <div>
-                                            <div style="background-color:#00e0ff;padding-left: 10px;border: 1px black solid;width:800px;">
+                                            <div style="background-color:#00e0ff;padding-left: 10px;border: 1px black solid;width:850px;">
                                                 <label string="製造日期" style="font-weight:bold"/>
                                                 <field name="produceday1" style="width: 120px"/>
                                                 <field name="ptime1" nolabel="1" style="width: 50px"/>
-                                                <span style="display:inline-block; width: 10px;"></span>
+                                                <span style="display:inline-block; width: 40px;">
+                                                    <label for="p1" string="" class="btn btn-sm btn-primary oe_highlight glyphicon glyphicon-time" style="height: 25px;"/>
+                                                    <field name="p1" invisible="1"/>
+                                                    <!--<button type="object" class="oe_highlight" name="cokoo1" icon="fa-clock-o" style="height: 25px;"/>-->
+                                                </span>
                                                 <label string="班別" style="font-weight:bold"/>
                                                 <field name="shift1" style="width: 80px;"
                                                        options="{'no_open': True,'no_create': True}"/>
@@ -187,7 +191,11 @@
                                                 <label string="製造日期" style="font-weight:bold"/>
                                                 <field name="produceday2" style="width: 120px"/>
                                                 <field name="ptime2" nolabel="1" style="width: 50px"/>
-                                                <span style="display:inline-block; width: 10px;"></span>
+                                                <span style="display:inline-block; width: 40px;">
+                                                    <label for="p2" string="" class="btn btn-sm btn-primary oe_highlight glyphicon glyphicon-time" style="height: 25px;"/>
+                                                    <field name="p2" invisible="1"/>
+                                                    <!--<button type="object" class="oe_highlight" name="cokoo2" icon="fa-clock-o" style="height: 25px;"/>-->
+                                                </span>
                                                 <label string="班別" style="font-weight:bold"/>
                                                 <field name="shift2" style="width: 80px;"
                                                        options="{'no_open': True,'no_create': True}"/>
@@ -208,7 +216,11 @@
                                                 <label string="製造日期" style="font-weight:bold"/>
                                                 <field name="produceday3" style="width: 120px"/>
                                                 <field name="ptime3" nolabel="1" style="width: 50px"/>
-                                                <span style="display:inline-block; width: 10px;"></span>
+                                                <span style="display:inline-block; width: 40px;">
+                                                    <label for="p3" string="" class="btn btn-sm btn-primary oe_highlight glyphicon glyphicon-time" style="height: 25px;"/>
+                                                    <field name="p3" invisible="1"/>
+                                                    <!--<button type="object" class="oe_highlight" name="cokoo3" icon="fa-clock-o" style="height: 25px;"/>-->
+                                                </span>
                                                 <label string="班別" style="font-weight:bold"/>
                                                 <field name="shift3" style="width: 80px;"
                                                        options="{'no_open': True,'no_create': True}"/>

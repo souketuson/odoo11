@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import datetime as dt
+import pytz
 
 class YcPurchaseDisplay(models.TransientModel):
     _name = 'yc.purchase.process'
@@ -125,6 +126,17 @@ class YcPurchaseDisplay(models.TransientModel):
 
             if _id:
                 self._display_record(_id)
+                user_tz = self.env.user.tz
+                now = dt.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d")
+                if not self.produceday1:
+                    self.produceday1 = now
+                if not self.produceday2:
+                    self.produceday2 = now
+                if not self.produceday3:
+                    self.produceday3 = now
+                if not self.ffday:
+                    self.ffday = now
+
                 # 建好六個空項目檔
                 # to_create_order = purchase.search([('id', '=', _id)])
                 # if len(to_create_order.produce_details_ids) == 0:
@@ -325,18 +337,35 @@ class YcPurchaseDisplay(models.TransientModel):
                 _delete_id.unlink()
                 self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
 
-    @api.onchange('ptime1', 'ptime2', 'ptime3')
-    def cokoo(self):
-        _bool = any((self.ptime1, self.ptime2, self.ptime3))
-        if _bool:
-            t = dt.today()
-            _time = str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
-            if self.ptime1:
-                self.ptime1 = _time
-            if self.ptime2:
-                self.ptime2 = _time
-            if self.ptime3:
-                self.ptime3 = _time
 
+    p1 = fields.Boolean()
+    p2 = fields.Boolean()
+    p3 = fields.Boolean()
+    @api.onchange('p1')
+    def cokoo1(self):
+        if self.hidden_name: # 避免空畫面自動load
+            user_tz = self.env.user.tz
+            now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+            time = '%s:%s' % (now[8:10], now[10:12])
+            self.ptime1 = time
+            self.save_entry_data()
+
+    @api.onchange('p2')
+    def cokoo2(self):
+        if self.hidden_name:
+            user_tz = self.env.user.tz
+            now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+            time = '%s:%s' % (now[8:10], now[10:12])
+            self.ptime2 = time
+            self.save_entry_data()
+
+    @api.onchange('p3')
+    def cokoo3(self):
+        if self.hidden_name:
+            user_tz = self.env.user.tz
+            now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+            time = '%s:%s' % (now[8:10], now[10:12])
+            self.ptime3 = time
+            self.save_entry_data()
 
 

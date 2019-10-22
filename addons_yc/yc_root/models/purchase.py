@@ -914,6 +914,7 @@ class YcPurchase(models.Model):
                 rec.elecpl_code = None
 
     # 3.以品名分類、強度級數、規格，搜尋機械性質主檔並帶出 依據標準、表面硬度、心部硬度、試片、抗拉強度、扭力
+    # TODO: 加入1. 有做過 but 沒有規範在機械性質主檔裡的也要自動帶 2. 沒做過 and 沒有規範在機械性質主檔裡的跳試片提醒
     @api.onchange("clsf_code", "strength_level", "norm_code")
     def _fetch_norm_code_info(self):
         _action = self.env['ir.actions.act_window']
