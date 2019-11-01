@@ -19,7 +19,8 @@
                         <label string="不含已出貨" style="font-weight:bold"/>
                         <br/>
                         <field name="purchase_ids" widget="many2many">
-                            <tree create="false" edit="false" delete="false" string="Purchase Details" editable="top">
+                            <tree create="false" edit="false" delete="false" string="Purchase Details" editable="top"
+                                  decoration-danger="checkstate == '檢驗不合格'">
                                 <field name="wizard_check" />
                                 <field name="name" string="工令" readonly="1"/>
                                 <field name="status" string="狀態" readonly="1"/>

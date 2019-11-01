@@ -35,7 +35,7 @@
                                     <field name="day" style="width: 120px"/>
                                     <span style="display:inline-block; width:40px;"/>
                                     <label string="客戶名稱" style="font-weight:bold"/>
-                                    <field name="customer_id" style="width: 120px"/>
+                                    <field name="customer_id" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
                                     <br/>
                                     <label string="生管人員" style="font-weight:bold"/>
                                     <field name="pc" style="width: 120px" readonly="1"/>

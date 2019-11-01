@@ -92,15 +92,16 @@ class YcShipment(models.Model):
         # 先看一筆狀況如何
         order = self.env['yc.purchase']
         shipped = self.env['yc.setstatus'].search([('name', '=', '已出貨')])
-        for list in vals['ship_details_ids']:
-            # list 可能是又一層可迭代容器 list[0] = 0 表示項目檔有資料新增
-            if hasattr(list, '__iter__') and list[0]==0:
-                for k in list:
-                    if hasattr(k, '__iter__') and hasattr(k, 'get'):
-                        name = k.get('order')
-                        record = order.search([('name','=',name)])
-                        # 轉已出貨 & m2o 對應 id
-                        record.status = shipped.id
+        if vals.get('ship_details_ids'):
+            for list in vals['ship_details_ids']:
+                # list 可能是又一層可迭代容器 list[0] = 0 表示項目檔有資料新增
+                if hasattr(list, '__iter__') and list[0]==0:
+                    for k in list:
+                        if hasattr(k, '__iter__') and hasattr(k, 'get'):
+                            name = k.get('order')
+                            record = order.search([('name','=',name)])
+                            # 轉已出貨 & m2o 對應 id
+                            record.status = shipped.id
             # 如果刪掉項目檔的東西 狀態轉回已進爐
             # elif hasattr(list, '__iter__') and list[0]==2:
         return super(YcShipment, self).write(vals)

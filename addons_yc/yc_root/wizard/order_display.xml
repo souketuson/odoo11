@@ -9,7 +9,7 @@
             <form string="Shipment Wizard">
                 <sheet>
                     <style>
-                        .text-danger{color: #b9444 !important; background-color: #f2dede !important;}
+
                     </style>
                     <div>
                         <button name="form_refresh" string="重排" type="object"/>

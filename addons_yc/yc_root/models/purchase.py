@@ -552,7 +552,7 @@ class YcPurchase(models.Model):
     # action_id_main = fields.Integer(
     #     default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
     #     help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
-    product_code_searchbox = fields.Char("搜尋品名編號")
+    product_code_searchbox = fields.Char("搜尋品名編號", related='product_code.code')
 
     # ['searchname','furn_in','furn_notin','weighted_order','notweighted_order','checked', 'notchecked','count' ]
     # searchname = fields.Char("工令查詢", help="搜尋工令欄位")

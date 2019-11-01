@@ -23,3 +23,5 @@
 .ui-autocomplete { max-height: 300px; overflow-y: scroll; overflow-x: hidden;}
 .buttom-autocomplete { }
 
+.text-danger{color: #b9444 !important; background-color: #f2dede !important;}
+

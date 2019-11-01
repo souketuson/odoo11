@@ -14,9 +14,12 @@ class YcShipmentWizard(models.TransientModel):
 
     @api.onchange("infurn", "verified", "weighted", "noshiped")
     def _filter_order(self):
+        ship = self.env['yc.shipment']
+        customer = ship.browse(self._context['active_id']).customer_id
         infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
         domain = ()
-        domain += ('checkstate', '=', '檢驗合格'),
+        domain += ('checkstate', 'in', ['檢驗合格', '檢驗不合格']),
+        domain += ('customer_id', '=', customer.id),
         if self.infurn:
             domain += ('status', '=', infurn_code),
         if self.verified:
@@ -43,7 +46,7 @@ class YcShipmentWizard(models.TransientModel):
                         'unit': ref.unit1, 'tweight': ref.tweight, 'elecpl_code': ref.elecpl_code,
                         'process1': ref.process1, 'batch': ref.batch, 'fullorhalf': ref.fullorhalf,
                         'process2': ref.process2, 'day': ref.day, 'wire_furn': ref.wire_furn,
-                        'proces_code': ref.proces_code,}
+                        'proces_code': ref.proces_code, }
                  )]
             # 解掉被標註checked的工令
             ref.wizard_check = False
