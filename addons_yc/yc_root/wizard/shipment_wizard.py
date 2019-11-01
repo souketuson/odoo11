@@ -5,10 +5,10 @@ from odoo import models, fields, api
 class YcShipmentWizard(models.TransientModel):
     _name = 'yc.shipment.wizard'
 
-    infurn = fields.Boolean("包含已進爐", default=False)
-    verified = fields.Boolean("包含已檢驗", default=False)
-    weighted = fields.Boolean("包含已過磅", default=False)
-    noshiped = fields.Boolean("不含已出貨", default=False)
+    infurn = fields.Boolean("包含已進爐", default=True)
+    verified = fields.Boolean("包含已檢驗", default=True)
+    weighted = fields.Boolean("包含已過磅", default=True)
+    noshiped = fields.Boolean("不含已出貨", default=True)
 
     purchase_ids = fields.Many2many("yc.purchase", string="purchase search", help="查詢列表")
 
@@ -16,6 +16,7 @@ class YcShipmentWizard(models.TransientModel):
     def _filter_order(self):
         infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
         domain = ()
+        domain += ('checkstate', '=', '檢驗合格'),
         if self.infurn:
             domain += ('status', '=', infurn_code),
         if self.verified:
@@ -26,9 +27,8 @@ class YcShipmentWizard(models.TransientModel):
         #     domain += (),
         if len(domain) > 0:
             purchase = self.env["yc.purchase"]
-            records = purchase.search([(d) for d in domain])
-            for rec in self:
-                rec.purchase_ids = [(4, record.id) for record in records]
+            records = purchase.search([(d) for d in domain], limit=100, order='id DESC')
+            self.purchase_ids = [(6, 0, records.ids)]
 
     @api.multi
     def comfirm(self):

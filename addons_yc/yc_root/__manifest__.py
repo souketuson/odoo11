@@ -6,12 +6,12 @@
     """,
 
     'description': """
-        last update: 20190918
+        last update: 20191022
     """,
     'author': "ArJhe",
     'website': "",
     'category': 'Uncategorized',
-    'version': '1.6',
+    'version': '1.7',
     'depends': ['base', 'base_setup', 'web_responsive', 'web_m2x_options'],
     'css': [
         'static/src/css/generalcss.css',
@@ -25,6 +25,9 @@
         # 'abandon/qcnote_wizard.xml',
         # 'abandon/quality.xml',
         # 'abandon/factory.xml',
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+        'security/rule.xml',
         'base/initial.xml',
         'views/produce/maintain/setproduct.xml',
         'views/produce/maintain/setstrength.xml',
@@ -95,7 +98,7 @@
         'views/hr_main.xml',
 
         'views/fake.xml',
-        'security/rule.xml',
+
         'menuitem/root_core.xml',
     ],
 }

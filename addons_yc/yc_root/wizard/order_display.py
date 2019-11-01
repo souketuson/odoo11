@@ -78,7 +78,7 @@ class YcPurchaseDisplay(models.TransientModel):
             vals = {}
             purchase = self.env['yc.purchase']
             for record in self.purchase_ids2:
-                if any(record.tempturing2):
+                if bool(record.tempturing2):
                     init = int(record.tempturing2)
                     vals.update({'tempturing1': init - 30, 'tempturing3': init,
                                  'tempturing4': init, 'tempturing5': init,

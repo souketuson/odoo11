@@ -38,7 +38,7 @@ $(this).keypress(function(e){
     var keeper =$('div.purchase2_for_js');
     if (keeper.length==1){
         var da = document.activeElement;
-        if (e.which== 13){
+        if (e.which== 13 && da.parentNode.parentNode.nodeName != '#document'){
             console.log(e.which);
             var _time = $('input[name="time"]');
             var _day =  $('div[name="day"] input');

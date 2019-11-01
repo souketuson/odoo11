@@ -18,7 +18,7 @@ class YcWeight(models.Model):
     person_id = fields.Many2one("res.users", string="過磅員")
     weighbridge = fields.Char("地磅序號")
     carno = fields.Char("車次序號")
-    in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨')
+    in_out = fields.Selection([('I', '進貨'), ('O', '出貨')], '進出貨', required=True)
     factory_id = fields.Many2one("yc.factory", string="所屬工廠", default=lambda self: self.env.user.factory_id)
     company_id = fields.Many2one("res.company", string='所屬工廠', default=lambda self: self.env.user.company_id)
     purchase_times = fields.Integer("進貨次數")
@@ -187,6 +187,8 @@ class YcWeight(models.Model):
         action = self.env['ir.actions.act_window']
         _import = action.search([('name', '=', '匯入舊資料')]).id
         if self._context['params']['action'] != _import:
+            if not vals.get('in_out'):
+                raise ValidationError(_('請填進貨或出貨'))
             if vals.get('in_out') == 'O':
                 if not vals.get('customer_detail_ids'):
                     raise ValidationError(_('進貨項目不能是空的'))
