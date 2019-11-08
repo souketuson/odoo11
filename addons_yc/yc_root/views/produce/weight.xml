@@ -28,28 +28,30 @@
                         <!-- only implement on weight_fom page -->
                         <script>
                             let bg = $('.bg')
+
                             // change background-color while document has updated.
                             if ($("span[name='in_out']")[0]){
-                            let io = $("span[name='in_out']")[0].innerHTML;
-                            $(document).ready(function(){
-                            if (io == "出貨") {
-                            bg.css("background-color","#adff2f");
-                            }
-                            else if(io == "進貨") {
-                            bg.css("background-color","#ffc0cb");
-                            }
-                            });
-                            };
+                                let io = $("span[name='in_out']")[0].innerHTML;
+                                $(document).ready(function(){
+                                    if (io == "出貨") {
+                                        bg.css("background-color","#adff2f");
+                                    }
+                                    else if(io == "進貨") {
+                                        bg.css("background-color","#ffc0cb");
+                                        }
+                                    });
+                                    };
                             // check-box value decide background-color.
                             $(document).on('click', "div[name='in_out']", function(event){
-                            let v = $("div[name='in_out'] div input:checked").attr('data-value');
-                            if (v =='O') {
-                            bg.css("background-color","#adff2f");
-                            }
-                            else if(v =='I') {
-                            bg.css("background-color","#ffc0cb");
-                            }
+                                var v = $("div[name='in_out'] div input:checked").attr('data-value');
+                                if (v =='O') {
+                                    bg.css("background-color","#adff2f");
+                                }
+                                else if(v =='I') {
+                                    bg.css("background-color","#ffc0cb");
+                                }
                             });
+
                         </script>
                         <style>
                             .bg{ overflow-x: auto; width: 1200px; padding: 8px; }

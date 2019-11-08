@@ -283,6 +283,8 @@
             <field name="name">進貨單作業</field>
             <field name="res_model">yc.purchase</field>
             <field name="view_mode">tree,form</field>
+            <!-- 可見資料為進貨日期一年內資料 -->
+            <field name="domain">[('day','>=',(context_today()+relativedelta(months=-12)).strftime('%Y-%m-%d'))]</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="purchase2_action_form">
