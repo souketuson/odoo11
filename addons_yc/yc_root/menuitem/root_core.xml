@@ -82,7 +82,10 @@
                     <menuitem id="fake8_menu" name="出貨統計表" parent="produce_report_menu" sequence="21" action="fake_action"/>
                     <menuitem id="fake9_menu" name="熱處理成品重量明細記錄表" parent="produce_report_menu" sequence="22" action="fake_action"/>
                     <menuitem id="fake10_menu" name="空桶欠缺明細表" parent="produce_report_menu" sequence="23" action="fake_action"/>
-                <menuitem id="produce_maintain_menu" name="生產管理基本對照檔維護" parent="main_produce_menu" sequence="17"/>
+                <menuitem id="test_main_menu" name="試片相關資料" parent="main_produce_menu" sequence="17"/>
+                    <!--<menuitem id="test_menu" name="試片主檔" parent="test_main_menu" sequence="20" action="testpiece_action"/>-->
+                    <menuitem id="testdisplay_menu" name="試片查詢一覽" parent="test_main_menu" sequence="20" action="action_testdisplay"/>
+                <menuitem id="produce_maintain_menu" name="生產管理基本對照檔維護" parent="main_produce_menu" sequence="18"/>
                     <!-- produce_maintain sub menu -->
                     <menuitem id="setproduct_menu" name="產品資料" parent="produce_maintain_menu" sequence="20" action="setproduct_action"/>
                     <menuitem id="setstrength_menu" name="強度級數" parent="produce_maintain_menu" sequence="21" action="setstrength_action"/>

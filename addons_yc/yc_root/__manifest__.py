@@ -91,6 +91,8 @@
         'views/produce/purchase2.xml',
         'views/produce/weight.xml',
         'views/produce/return.xml',
+        # 'views/produce/test_piece.xml',
+        'views/produce/test_display.xml',
 
         'views/mechanicalproperty.xml',
 

@@ -11,8 +11,10 @@
                     <style>
 
                     </style>
-                    <div>
+                    <header>
                         <button name="form_refresh" string="重排" type="object"/>
+                    </header>
+                    <div>
                         <!--<button name="yc_root.purchase2_action" string="離開" type="action" class="btn btn-sm btn-primary" style="width: 80px; margin: 0 3%;"/>-->
                         <!--<button name="clear_records" string="清除" type="object"/>-->
                         <label string="筆數" style="font-weight:bold;position:absolute;right:90px;"/>
@@ -35,7 +37,7 @@
                                     <field name="purchase_ids" widget="many2many">
                                         <tree create="false" edit="true" delete="false" string="分爐排程"
                                               editable="top" decoration-danger="ckimportdate == 'over'"
-                                              default_order='day'>
+                                              default_order='day' limit="200">
                                             <!--<field name="factory_id" readonly="1"/>-->
                                             <field name="ckimportdate" invisible="1"/>
                                             <field name="combine_abbrev" string="客戶" readonly="1"
@@ -77,7 +79,7 @@
                                     <br/>
                                     <field name="purchase_ids2" widget="many2many">
                                         <tree create="false" edit="true" delete="false" string="爐內進貨"
-                                              editable="top" default_order='serial'>
+                                              editable="top" default_order='serial' limit="200">
                                             <field name="ckimportdate" invisible="1"/>
                                             <button type="object" name="action_purchase_display_wizard" icon="fa-search"
                                                     class="btn btn-secondary btn-lg"/>

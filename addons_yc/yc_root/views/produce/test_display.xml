@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- form -->
+    <record model="ir.ui.view" id="testdisplay_form">
+        <field name="name">Test Display Wizard</field>
+        <field name="model">yc.testdisplay</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="testdisplay Wizard">
+                <sheet>
+                    <style>
+
+                    </style>
+                    <div>
+                            <field name="name" class="oe_inline" readonly="1"
+                                   style="font-size: 26px !important;font-weight: bold;"/>
+                        </div>
+                    <group>
+                        <field name="month"/>
+                    </group>
+                    <notebook>
+                        <page string="需試片明細">
+                            <field name="order_ids">
+                            <tree create="false" edit="true" delete="false" string="爐內進貨"
+                                              editable="top">
+                                <field name="name"/>
+                                <field name="clsf_code"/>
+                                <field name="strength_level"/>
+                                <field name="norm_code"/>
+                                <field name="product_code"/>
+                                <field name="txtur_code"/>
+                                <field name="len_code"/>
+                                <field name="len_descript"/>
+                                <field name="proces_code"/>
+                            </tree>
+                        </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- action -->
+    <record id="action_testdisplay" model="ir.actions.act_window">
+        <field name="name">試片</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">yc.testdisplay</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_testdisplay_form">
+        <field name="act_window_id" ref="action_testdisplay"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="testdisplay_form"/>
+    </record>
+</odoo>

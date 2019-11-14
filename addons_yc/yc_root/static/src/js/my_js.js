@@ -4,6 +4,7 @@ odoo.define('yc_root.my_JS', function (require) {"use strict";
     var core = require('web.core');
     var rpc = require('web.rpc');
     var Widget = require('web.Widget');
+
     var custom_widget = Widget.extend({
         /* <init: construct before loading DOM completely.>*/
         init: function(parent, options, event) {

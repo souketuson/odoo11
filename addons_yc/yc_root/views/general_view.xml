@@ -6,6 +6,7 @@
             <xpath expr="." position="inside">
                 <link href="/yc_root/static/src/css/generalcss.css" rel="stylesheet"/>
                 <script type="text/javascript" src="/yc_root/static/src/js/my_js.js"/>
+                <script type="text/javascript" src="/yc_root/static/src/js/x2m_limit.js"/>
             </xpath>
         </template>
     </data>

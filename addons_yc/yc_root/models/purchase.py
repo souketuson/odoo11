@@ -669,98 +669,12 @@ class YcPurchase(models.Model):
     def _count_bag(self):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
 
-    # 4. 工令查詢 之後把這段移到wizard應不用再去刪除空資料
-    # TODO: 確定不用後可以刪掉了
-    # def yc_purchase_search_name(self):
-    #     # 如果是在製程登錄作業的form 查詢工令時將進行跳轉
-    #     if self._context.get('params')['action'] == 111:
-    #         # S05N0100 製程登錄作業
-    #         purchase = self.env["yc.purchase"]
-    #         repeated_name_record = purchase.search(
-    #             [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])
-    #         empty_name_record = purchase.search([('name', '=', None), ('company_id', '=', self.env.user.company_id.id)])
-    #         # 把odoo 自動儲存的複製record 或 ODOO產生的空資料刪除
-    #         if len(repeated_name_record) > 1:
-    #             to_delete_id = purchase.search(
-    #                 [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
-    #                 limit=1).id
-    #             sql = "delete from yc_purchase where id=%d" % to_delete_id
-    #             self._cr.execute(sql)
-    #         if len(empty_name_record) >= 1:
-    #             sql = "delete from yc_purchase where name is NULL"
-    #             self._cr.execute(sql)
-    #         id = self.env['yc.purchase'].search(
-    #             [('name', '=', self.searchname or self.furn_in.name or self.furn_notin.name)]).id
-    #         to_create_order = purchase.search([('id', '=', id)])
-    #         if len(to_create_order.produce_details_ids) == 0:
-    #             for i in range(1, 7):
-    #                 to_create_order.produce_details_ids = [(0, 0, {'name': id, 'bucket_no': i})]
-    #         return {
-    #             'name': self.searchname,
-    #             'res_model': 'yc.purchase',
-    #             'type': 'ir.actions.act_window',
-    #             'res_id': id,
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'view_id': self.env.ref('yc_root.process_data_entry_form').id,
-    #             'target': 'inline', }
-    #     elif self._context.get('params')['action'] == 124:
-    #         # S04N0200
-    #         to_delete_id = self.env["yc.purchase"].search(
-    #             [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)], order='id desc',
-    #             limit=1).id
-    #         sql = "delete from yc_purchase where id=%d" % to_delete_id
-    #         if len(self.env["yc.purchase"].search(
-    #                 [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)])) > 1:
-    #             self._cr.execute(sql)
-    #         id = self.env['yc.purchase'].search(
-    #             [('name', '=', self.searchname), ('company_id', '=', self.env.user.company_id.id)]).id
-    #         return {
-    #             'name': self.searchname,
-    #             'res_model': 'yc.purchase',
-    #             'type': 'ir.actions.act_window',
-    #             'res_id': id,
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'view_id': self.env.ref('yc_root.quality_form').id,
-    #             'target': 'inline',
-    #         }
+
 
     # 5.各查詢表單後更新資料
     def save_entry_data(self):
         return True
 
-    # 6.過濾桶號工令 (改wizard 應該用不到了)
-    # TODO: 確認用不到可以刪掉.
-    # @api.onchange("order_furn")
-    # def _chech_order(self):
-    #     if self._context.get('params')['action'] == 111:
-    #         return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", 6)],
-    #                            "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", 4)]}}
-    #     elif self._context.get('params')['action'] == 112:
-    #         return {"domain": {"weighted_order": [("order_furn", "=", self.order_furn.id)],
-    #                            "notweighted_order": [("order_furn", "=", self.order_furn.id)]}}
-
-    # 7.濾出只有和使用者同樣廠別的紀錄
-    # 目前以修改odoo11.0 > odoo > http.py L# 1095 讓頁面抓到context 取代這一段功能
-    # @api.model
-    # def company_filter_filter(self):
-    #     ctx = self.env.context.copy()
-    #     company_code = self.env.user.company_id.id
-    #     # 不知道為什麼上面這段沒作用
-    #     ctx.update({'company_id': [company_code]})
-    #     if self._context.get('params')['action'] == 81:
-    #         reference = self.env.ref('yc_root.purchase_list_action').id
-    #     return {
-    #         'name': '使用者廠別動態過濾',
-    #         'view_type': 'tree',
-    #         'view_mode': 'tree,form',
-    #         'res_model': 'yc.purchase',
-    #         'type': 'ir.actions.act_window',
-    #         # 'view_id': reference,
-    #         'context': dict(ctx),
-    #         'domain': [('company_id', '=', self.env.user.company_id)]
-    #     }
 
     # 8.進貨單wizard 只能帶出一筆資料，超過一筆提醒
     @api.constrains("wizard_check")
@@ -952,6 +866,7 @@ class YcPurchase(models.Model):
                 self.carburlayer = mp.innercarburlayer
                 self.torsion = tor.torsion1
             else:
+                self.piece = 'Y'
                 return {
                     'warning': {'title': _('提醒'), 'message': _("沒有這個機械性質")}}
 
@@ -960,6 +875,7 @@ class YcPurchase(models.Model):
     def create(self, vals):
         _action = self.env['ir.actions.act_window']
         p1 = _action.search([('name', '=', '進貨單作業')], limit=1).id
+        test = vals['piece'] if vals.get('piece') else None
         if self._context.get('params')['action'] == p1 and vals['car_no']:
             # 儲存時給工令號
             cn = vals["car_no"]
@@ -976,28 +892,30 @@ class YcPurchase(models.Model):
             # TODO: 車次序號用轉廠的車次，待修正
             vals.update({"name": 'TEMP1234', 'wizard_btn': False})
 
-        # 將這次備註的資料存進資料庫，下一次打單自動讀取
-        reminder = {}
-        db = self.env['yc.setnotereminder']
-        rec = db.search([('user', '=', self.env.user.id)])
-        note = ['notices1', 'notices2', 'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2',
-                'prodnote3', ]
-        note_dictionary = self.env['yc.setpurchasenote']
-        for n in note:
-            if vals.get(n):
-                # 確認這個note是否有在資料庫
-                vocabulary = note_dictionary.search([('name', '=', vals[n])])
-                if vocabulary:
-                    reminder.update({n: vocabulary.id})
+            # 將這次備註的資料存進資料庫，下一次打單自動讀取
+            reminder = {}
+            db = self.env['yc.setnotereminder']
+            rec = db.search([('user', '=', self.env.user.id)])
+            note = ['notices1', 'notices2', 'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2',
+                    'prodnote3', ]
+            note_dictionary = self.env['yc.setpurchasenote']
+            for n in note:
+                if vals.get(n):
+                    # 確認這個note是否有在資料庫
+                    vocabulary = note_dictionary.search([('name', '=', vals[n])])
+                    if vocabulary:
+                        reminder.update({n: vocabulary.id})
+                    else:
+                        pass
                 else:
-                    pass
+                    reminder.update({n: None})
+            if rec:
+                rec.write(reminder)
             else:
-                reminder.update({n: None})
-        if rec:
-            rec.write(reminder)
-        else:
-            reminder.update({'user': self.env.user.id})
-            rec.create(reminder)
+                reminder.update({'user': self.env.user.id})
+                rec.create(reminder)
+
+
         return super(YcPurchase, self).create(vals)
 
     # 6.預設時間
@@ -1420,3 +1338,19 @@ class YcSetnotereminder(models.Model):
     qcnote1 = fields.Many2one('yc.setpurchasenote')
     qcnote2 = fields.Many2one('yc.setpurchasenote')
     qcnote3 = fields.Many2one('yc.setpurchasenote')
+
+class YcTestdisplay(models.TransientModel):
+    _name = "yc.testdisplay"
+    name = fields.Char(default = '需試片單號')
+    year = fields.Char(string='年分', default=str(dt.now().year))
+    month = fields.Selection([(str(m), '%s月' % m) for m in range(1, 13)], '月份', default=str(dt.now().month))
+    order_ids = fields.Many2many('yc.purchase', relation='yc_testdisplay_yc_purchase_rel2')
+
+    @api.onchange('month')
+    def _default_diplay(self):
+        test = self.env['yc.purchase']
+        year = self.year if self.year else dt.now().year
+        month = self.month if self.month else dt.now().month
+        domain = [('day', 'ilike', '{0}-{1}-__'.format(year, month)),('piece', '=', "Y")]
+        records = test.search(domain)
+        self.order_ids = [(6, 0, records.ids)]
