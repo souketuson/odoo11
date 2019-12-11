@@ -51,6 +51,7 @@
         'views/maintain/setshift.xml',
         'views/maintain/setleave.xml',
         'views/maintain/setbonus.xml',
+        'views/maintain/settorsion.xml',
         'views/business/maintain/setprocessingareatype.xml',
         'views/business/maintain/setprocessingplanttype.xml',
         'views/business/maintain/setcurrency.xml',

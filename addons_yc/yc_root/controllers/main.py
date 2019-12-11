@@ -29,7 +29,6 @@ class GetMatchingRecords(http.Controller):
 
     @http.route("/cokoo", type="json", auth="public", website=True)
     def cokoo(self):
-        user_tz = self.env.user.tz
-        now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+        now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
         time = '%s:%s:%s' % (now[8:10], now[10:12], now[12:14])
         return time

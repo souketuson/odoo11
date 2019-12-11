@@ -402,7 +402,7 @@ class YcQualityWizard(models.TransientModel):
                             'invalid', 'followup', 'invalid_followup', 'checked', 'notchecked',
                             'furn_in', 'furn_notin', 'count', 'produce_details_ids']
         invalid_group = ['pweight', 'tweight', 'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
-                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat']
+                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat','notices4']
 
         _action = self.env['ir.actions.act_window']
         Q1 = _action.search([('name', '=', '品質數據主檔_wizard')]).id
@@ -420,7 +420,7 @@ class YcQualityWizard(models.TransientModel):
                     setattr(self, fn, _value)
         elif self._context['params'].get('action') == Q2:
             for fn in self._proper_fields._map.keys():
-                if fn in ['id', 'file']:
+                if fn in ['id', 'file'] or fn in invalid_group:
                     pass
                 elif fn in ['order_name', 'name']:
                     setattr(self, fn, record.name)

@@ -287,3 +287,14 @@ class YcSetqcnote(models.Model):
     parameter1 = fields.Char("參數1")
     parameter2 = fields.Char("參數2")
     parameter3 = fields.Char("參數3")
+
+class YcSettorsion(models.Model):
+    # 品質管理-扭力 S04N0005
+    _name = "yc.settorsion"
+    name = fields.Char()
+    clsf_id = fields.Many2one("yc.setproductclassify", string="品名分類")
+    strength_id = fields.Many2one("yc.setstrength", string="強度級數")
+    norm_id = fields.Many2one("yc.setnorm", string="直徑規格")
+    parameter1 = fields.Char("扭力值1")
+    parameter2 = fields.Char("扭力值2")
+

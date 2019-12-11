@@ -34,7 +34,14 @@
         <!--ir.config_parameter-->
         <record id="config_parameter0" model="ir.config_parameter">
             <field name="key">web_m2x_options.limit</field>
-            <field name="value">500</field>
+            <field name="value">40</field>
+        </record>
+
+        <!--ir.config.setting-->
+        多公司設定
+        <record id="config_settings0" model="res.config.settings">
+            <field name="group_multi_company">True</field>
+            <field name="company_share_partner">True</field>
         </record>
     </data>
 </odoo>

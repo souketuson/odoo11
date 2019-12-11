@@ -126,8 +126,7 @@ class YcPurchaseDisplay(models.TransientModel):
 
             if _id:
                 self._display_record(_id)
-                user_tz = self.env.user.tz
-                now = dt.now(pytz.timezone(user_tz)).strftime("%Y-%m-%d")
+                now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d")
                 if not self.produceday1:
                     self.produceday1 = now
                 if not self.produceday2:
@@ -344,8 +343,7 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange('p1')
     def cokoo1(self):
         if self.hidden_name: # 避免空畫面自動load
-            user_tz = self.env.user.tz
-            now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+            now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
             time = '%s:%s' % (now[8:10], now[10:12])
             self.ptime1 = time
             self.save_entry_data()
@@ -353,8 +351,7 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange('p2')
     def cokoo2(self):
         if self.hidden_name:
-            user_tz = self.env.user.tz
-            now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+            now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
             time = '%s:%s' % (now[8:10], now[10:12])
             self.ptime2 = time
             self.save_entry_data()
@@ -362,8 +359,7 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange('p3')
     def cokoo3(self):
         if self.hidden_name:
-            user_tz = self.env.user.tz
-            now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+            now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
             time = '%s:%s' % (now[8:10], now[10:12])
             self.ptime3 = time
             self.save_entry_data()

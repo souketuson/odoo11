@@ -550,9 +550,6 @@ class YcPurchase(models.Model):
     return_in_fac_check = fields.Boolean(default=False, help="確認要帶出哪筆廠內退回紀錄, refer template: purchase2")
     return_btn = fields.Boolean(default=False, help="觸發display")
     wizard_btn = fields.Boolean(default=False, help="判斷要帶出哪筆")
-    # action_id_main = fields.Integer(
-    #     default=lambda self: self.env['ir.actions.act_window'].search([('name', '=', '進貨單作業')], limit=1).id,
-    #     help="找出資料庫視窗動作ID，搜尋name值\n進貨單作業: 進貨單作業")
     product_code_searchbox = fields.Char("搜尋品名編號", related='product_code.code')
 
     # ['searchname','furn_in','furn_notin','weighted_order','notweighted_order','checked', 'notchecked','count' ]
@@ -655,8 +652,7 @@ class YcPurchase(models.Model):
     # 1.修正時間
     @api.model
     def _get_time(self):
-        user_tz = self.env.user.tz
-        now = dt.now(pytz.timezone(user_tz)).strftime("%Y%m%d%H%M%S")
+        now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
         time = '%s:%s:%s' % (now[8:10], now[10:12], now[12:14])
         return time
 
@@ -668,7 +664,6 @@ class YcPurchase(models.Model):
     @api.onchange("num1", "num2", "num3", "num4")
     def _count_bag(self):
         self.totalpack = (self.num1 or 0) + (self.num2 or 0) + (self.num3 or 0) + (self.num4 or 0)
-
 
 
     # 5.各查詢表單後更新資料

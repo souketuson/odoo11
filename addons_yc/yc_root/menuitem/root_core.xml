@@ -117,7 +117,7 @@
                     <menuitem id="qcsetstrength_menu" name="強度等級主檔" parent="quality_maintain_menu" sequence="24" action="setstrength_action"/>
                     <menuitem id="sethardness_menu" name="硬度規格主檔" parent="quality_maintain_menu" sequence="25" action="sethardness_action"/>
                     <menuitem id="setqcnote_menu" name="品管備註主檔" parent="quality_maintain_menu" sequence="26" action="setqcnote_action"/>
-                    <menuitem id="fake56_menu" name="扭力規格建檔" parent="quality_maintain_menu" sequence="27" action="fake_action"/>
+                    <menuitem id="settorsion_menu" name="扭力規格建檔" parent="quality_maintain_menu" sequence="27" action="settorsion_action"/>
             <!-- bar menu -->
             <menuitem id="main_manufacture_menu" name="製造" sequence="5" parent="main_root_menu"/>
                 <!-- manufacture category menu -->
