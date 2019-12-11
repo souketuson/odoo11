@@ -186,7 +186,9 @@ class YcPurchaseDisplay(models.TransientModel):
                          'tempturing5': self.tempturing5, 'tempturing6': self.tempturing6,
                          'tempturisped': self.tempturisped,
                          })
-            if vals.get('ptime1') != '':
+            p1t = '' if not vals.get('ptime1') else vals['ptime1']
+            fft = '' if not vals.get('fftime') else vals['fftime']
+            if p1t != '' or fft != '':
                 infurn_code = self.env['yc.setstatus'].search([('name', '=', '己進爐')]).id
                 vals.update({'status': infurn_code})
             else:
@@ -340,6 +342,8 @@ class YcPurchaseDisplay(models.TransientModel):
     p1 = fields.Boolean()
     p2 = fields.Boolean()
     p3 = fields.Boolean()
+    p4 = fields.Boolean()
+
     @api.onchange('p1')
     def cokoo1(self):
         if self.hidden_name: # 避免空畫面自動load
@@ -364,4 +368,10 @@ class YcPurchaseDisplay(models.TransientModel):
             self.ptime3 = time
             self.save_entry_data()
 
-
+    @api.onchange('p4')
+    def cokoo4(self):
+        if self.hidden_name:
+            now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
+            time = '%s:%s' % (now[8:10], now[10:12])
+            self.fftime = time
+            self.save_entry_data()

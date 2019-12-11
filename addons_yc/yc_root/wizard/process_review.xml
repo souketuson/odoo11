@@ -243,6 +243,11 @@
                                                 <label string="完爐日期" style="font-weight:bold"/>
                                                 <field name="ffday" style="width: 120px"/>
                                                 <field name="fftime" style="width: 50px"/>
+                                                <span style="display:inline-block; width: 40px;">
+                                                    <label for="p4" string="" class="btn btn-sm btn-primary oe_highlight glyphicon glyphicon-time" style="height: 25px;"/>
+                                                    <field name="p4" invisible="1"/>
+                                                    <!--<button type="object" class="oe_highlight" name="cokoo3" icon="fa-clock-o" style="height: 25px;"/>-->
+                                                </span>
                                             </div>
                                             <div style="float:left;">
                                                 <span style="display:inline-block; width: 10px;"></span>

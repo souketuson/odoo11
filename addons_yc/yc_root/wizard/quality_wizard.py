@@ -4,7 +4,6 @@ from odoo.exceptions import ValidationError
 import paramiko
 
 
-
 class YcQualityWizard(models.TransientModel):
     _name = "yc.quality.wizard"
     searchname = fields.Char("工令查詢", help="搜尋工令欄位")
@@ -14,7 +13,6 @@ class YcQualityWizard(models.TransientModel):
     checked = fields.Many2one("yc.purchase", string="已檢驗")
     notchecked = fields.Many2one("yc.purchase", string="未檢驗")
     invalid = fields.Many2one("yc.purchase", string="不合格")
-
 
     day = fields.Date("進貨日期")
     checkstate = fields.Char("檢驗狀態")
@@ -247,6 +245,20 @@ class YcQualityWizard(models.TransientModel):
     HV12OK = fields.Char("HV12OK")
     HV13 = fields.Integer("HV13")
     HV13OK = fields.Char("HV13OK")
+
+    @api.onchange('HV1','HV2','HV3')
+    def _hv123(self):
+        self.HV12 = self.HV1 - self.HV2
+        if self.HV12 > 30:
+            self.HV12OK = "NG"
+        else:
+            self.HV12OK = "OK"
+        self.HV13 = self.HV1 - self.HV3
+        if self.HV13 < -30:
+            self.HV13OK = "NG"
+        else:
+            self.HV13OK = "OK"
+
     hs5 = fields.Boolean("頭部敲擊5")
     hs10 = fields.Boolean("頭部敲擊10")
     hs15 = fields.Boolean("頭部敲擊15")
@@ -286,7 +298,6 @@ class YcQualityWizard(models.TransientModel):
     teamlead2 = fields.Many2one("res.users", string="組長2")
     teamlead3 = fields.Many2one("res.users", string="組長3")
 
-
     # ck1 = fields.Boolean("品名check", help="在搜尋舊檔wizard自動代入篩選")
     # ck2 = fields.Boolean("規格check", help="在搜尋舊檔wizard自動代入篩選")
     # ck3 = fields.Boolean("長度check", help="在搜尋舊檔wizard自動代入篩選")
@@ -322,7 +333,6 @@ class YcQualityWizard(models.TransientModel):
     ckwhrd1v = fields.Boolean("CK華司硬度1值")
     ckwhrd2v = fields.Boolean("CK華司硬度2值")
 
-
     qcnote = fields.Many2one("yc.setqcnote", string="品管備註")
     ckhf = fields.Many2one("yc.sethardness", string="華司硬度規格")
     sskvste = fields.Char("斷面收縮率值起迄")
@@ -353,7 +363,6 @@ class YcQualityWizard(models.TransientModel):
     mgresult = fields.Char("狀態備份")
     file = fields.Binary("檔案")
 
-
     uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
                                 ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
     followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
@@ -368,7 +377,6 @@ class YcQualityWizard(models.TransientModel):
     uqweight = fields.Integer("不合格重量")
     uqbuckets = fields.Integer("不合格桶數")
     produce_details_ids = fields.Many2many("yc.produce.details")
-
 
     # since <img> attr scr can direct get img from directory, this method cloud be abandoned
     # def _default_image(self):
@@ -402,7 +410,7 @@ class YcQualityWizard(models.TransientModel):
                             'invalid', 'followup', 'invalid_followup', 'checked', 'notchecked',
                             'furn_in', 'furn_notin', 'count', 'produce_details_ids']
         invalid_group = ['pweight', 'tweight', 'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
-                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat','notices4']
+                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat', 'notices4']
 
         _action = self.env['ir.actions.act_window']
         Q1 = _action.search([('name', '=', '品質數據主檔_wizard')]).id
@@ -436,7 +444,6 @@ class YcQualityWizard(models.TransientModel):
                            "checked": [("order_furn", "=", self.order_furn.id), ("checkstate", "!=", False)],
                            "invalid": [("order_furn", "=", self.order_furn.id), ("checkstate", "=", "檢驗不合格")]
                            }}
-
 
     def save_quality(self):
         _action = self.env['ir.actions.act_window']
@@ -523,7 +530,6 @@ class YcQualityWizard(models.TransientModel):
             # `report_action()` will call `get_report_values()` and pass `data` automatically.
             return self.env.ref('yc_root.action_quality_examine_report').report_action(self, data=data)
 
-
     def call_quality_unqualified_treatment(self):
         if self.order_name:
             purchase = self.env['yc.purchase']
@@ -539,6 +545,7 @@ class YcQualityWizard(models.TransientModel):
             # `report_action()` will call `get_report_values()` and pass `data` automatically.
             return self.env.ref('yc_root.action_quality_unqualified_treatment').report_action(self, data=data)
 
+
 class YcQualityReport(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
     _name = 'report.yc_root.report_quality_sample'
@@ -551,26 +558,26 @@ class YcQualityReport(models.AbstractModel):
         docs = []
         docs.append({
             'customer_id': r.customer_id.abbrev,
-            'product_code':r.product_code.name,
+            'product_code': r.product_code.name,
             'produceday': r.produceday,
-            'norm_code':r.norm_code.name,
-            'len_code':r.len_code.name,
-            'txtur_code':r.txtur_code.name,
-            'wire_furn':r.wire_furn,
-            'num1':r.num1,
-            'unit1':r.unit1.name,
-            'proces_code':r.proces_code.name,
-            'surface_code':r.surface_code.name,
-            'elecpl_code':r.elecpl_code.name,
-            'name':r.name,
-            'batch':r.batch,
-            'surfhrd':r.surfhrd,
-            'corehrd':r.corehrd,
-            'carburlayer':r.carburlayer,
-            'tensihrd':r.tensihrd,
-            'torsion':r.torsion,
-            'day':r.day,
-            'ck_person':r.ck_person.name,
+            'norm_code': r.norm_code.name,
+            'len_code': r.len_code.name,
+            'txtur_code': r.txtur_code.name,
+            'wire_furn': r.wire_furn,
+            'num1': r.num1,
+            'unit1': r.unit1.name,
+            'proces_code': r.proces_code.name,
+            'surface_code': r.surface_code.name,
+            'elecpl_code': r.elecpl_code.name,
+            'name': r.name,
+            'batch': r.batch,
+            'surfhrd': r.surfhrd,
+            'corehrd': r.corehrd,
+            'carburlayer': r.carburlayer,
+            'tensihrd': r.tensihrd,
+            'torsion': r.torsion,
+            'day': r.day,
+            'ck_person': r.ck_person.name,
             'prodnote1': r.prodnote1,
             'prodnote2': r.prodnote2,
             'prodnote3': r.prodnote3,
@@ -585,6 +592,7 @@ class YcQualityReport(models.AbstractModel):
         return {'doc_id': _id,
                 'doc_model': 'yc.purchase',
                 'docs': docs}
+
 
 class YcQualityExamineReport(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
@@ -607,31 +615,32 @@ class YcQualityExamineReport(models.AbstractModel):
         docs = []
         docs.append({
             'customer_id': r.customer_id.abbrev,
-            'product_code':r.product_code.name,
+            'product_code': r.product_code.name,
             'produceday': r.produceday,
-            'norm_code':r.norm_code.name,
-            'len_code':r.len_code.name,
+            'norm_code': r.norm_code.name,
+            'len_code': r.len_code.name,
             'len_descript': r.len_descript,
-            'txtur_code':r.txtur_code.name,
-            'wire_furn':r.wire_furn,
-            'num1':r.num1,
-            'unit1':r.unit1.name,
-            'proces_code':r.proces_code.name,
-            'surface_code':r.surface_code.name,
-            'elecpl_code':r.elecpl_code.name,
-            'name':r.name,
-            'batch':r.batch,
-            'surfhrd':r.surfhrd,
-            'corehrd':r.corehrd,
-            'carburlayer':r.carburlayer,
-            'tensihrd':r.tensihrd,
-            'torsion':r.torsion,
-            'day':r.day,
-            'ck_person':r.ck_person.name,
+            'txtur_code': r.txtur_code.name,
+            'wire_furn': r.wire_furn,
+            'num1': r.num1,
+            'unit1': r.unit1.name,
+            'proces_code': r.proces_code.name,
+            'surface_code': r.surface_code.name,
+            'elecpl_code': r.elecpl_code.name,
+            'name': r.name,
+            'batch': r.batch,
+            'surfhrd': r.surfhrd,
+            'corehrd': r.corehrd,
+            'carburlayer': r.carburlayer,
+            'tensihrd': r.tensihrd,
+            'torsion': r.torsion,
+            'day': r.day,
+            'ck_person': r.ck_person.name,
         })
         return {'doc_id': _id,
                 'doc_model': 'yc.purchase',
                 'docs': docs}
+
 
 class YcQualityUnqualifiedTreatment(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
@@ -654,28 +663,28 @@ class YcQualityUnqualifiedTreatment(models.AbstractModel):
         docs = []
         docs.append({
             'customer_id': r.customer_id.abbrev,
-            'product_code':r.product_code.name,
+            'product_code': r.product_code.name,
             'produceday': r.produceday,
-            'norm_code':r.norm_code.name,
-            'len_code':r.len_code.name,
+            'norm_code': r.norm_code.name,
+            'len_code': r.len_code.name,
             'len_descript': r.len_descript,
-            'txtur_code':r.txtur_code.name,
-            'wire_furn':r.wire_furn,
-            'num1':r.num1,
-            'unit1':r.unit1.name,
-            'proces_code':r.proces_code.name,
-            'surface_code':r.surface_code.name,
-            'elecpl_code':r.elecpl_code.name,
-            'name':r.name,
-            'batch':r.batch,
-            'surfhrd':r.surfhrd,
-            'corehrd':r.corehrd,
-            'carburlayer':r.carburlayer,
-            'tensihrd':r.tensihrd,
-            'torsion':r.torsion,
-            'day':r.day,
-            'ck_person':r.ck_person.name,
-            'order_furn':r.order_furn.name,
+            'txtur_code': r.txtur_code.name,
+            'wire_furn': r.wire_furn,
+            'num1': r.num1,
+            'unit1': r.unit1.name,
+            'proces_code': r.proces_code.name,
+            'surface_code': r.surface_code.name,
+            'elecpl_code': r.elecpl_code.name,
+            'name': r.name,
+            'batch': r.batch,
+            'surfhrd': r.surfhrd,
+            'corehrd': r.corehrd,
+            'carburlayer': r.carburlayer,
+            'tensihrd': r.tensihrd,
+            'torsion': r.torsion,
+            'day': r.day,
+            'ck_person': r.ck_person.name,
+            'order_furn': r.order_furn.name,
             'net': r.net,
             'produceday1': r.produceday1,
             'ptime1': r.ptime1,
@@ -689,7 +698,6 @@ class YcQualityUnqualifiedTreatment(models.AbstractModel):
             'heatsped': r.heatsped,
             'tempturisped': r.tempturisped,
             'tensile_no': r.tensile_no,
-
 
         })
         return {'doc_id': _id,

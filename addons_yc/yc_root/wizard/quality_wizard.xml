@@ -325,15 +325,16 @@
                                             <field name="ckecl" widget="checkbox" nolabel="1"/>
                                             <label string="脫碳層：" style="font-weight:bold"/>
                                             <span style="display:inline-block; width: 80px;"/>
-                                            <label string="HV2"
-                                                   style="font-weight:bold;left: -20px;position: relative;"/>
-                                            <field name="HV2"
-                                                   style="width:50px;position:relative;top:33px;left:-60px;"/>
-                                            <!-- -->
+
                                             <label string="HV1"
-                                                   style="font-weight:bold;position:relative;top:85px;left:-180px;"/>
+                                                   style="font-weight:bold;position:relative;top:85px;left:-100px;"/>
                                             <field name="HV1"
-                                                   style="width:50px;position:relative;top:112px;left:-218px;"/>
+                                                   style="width:50px;position:relative;top:112px;left:-138px;"/>
+                                            <!-- -->
+                                            <label string="HV2"
+                                                   style="font-weight:bold;left: -108px;position: relative;"/>
+                                            <field name="HV2"
+                                                   style="width:50px;position:relative;top:33px;left:-147px;"/>
                                             <!-- -->
                                             <div class="">
                                                 <div style="width: 100px;margin-left: 100px;margin-top: 28px;">

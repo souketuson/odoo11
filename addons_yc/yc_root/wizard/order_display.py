@@ -19,17 +19,18 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange("customer_id", "order_furn")
     def _filter_order(self):
         if self.customer_id or self.order_furn:
+            st = self.env['yc.setstatus']
             # 先清空list
             domain = ()
             if self.customer_id:
                 domain += ('customer_id', '=', self.customer_id.id),
             if self.order_furn:
                 domain += ('order_furn', '=', self.order_furn.id),
-            if len(domain) > 0:
-                # 已出貨
-                shiped = self.env['yc.setstatus'].search([('name', '=', '已出貨')]).id
+                # 只列出未排程、未進爐
+                not_listed = st.search([('name', '=', '未排程')]).id
+                not_in = st.search([('name', '=', '未進爐')]).id
                 # domain += ('company_id', '=', self.env.user.company_id.id),
-                domain += ('status', '!=', shiped),
+                domain += ('status', 'in', [not_in, not_listed]),
                 purchase = self.env["yc.purchase"]
                 records = purchase.search([d for d in domain], limit=self.record_limit)
                 if len(records) == 0:
@@ -55,13 +56,15 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.onchange("order_furn2")
     def _filter_order2(self):
         if self.order_furn2:
+            st = self.env['yc.setstatus']
             domain = ()
             domain += ('order_furn', '=', self.order_furn2.id),
             if len(domain) > 0:
-                # 排除已出貨
-                shiped = self.env['yc.setstatus'].search([('name', '=', '已出貨')]).id
+                # 只列出未排程、未進爐
+                not_listed = st.search([('name', '=', '未排程')]).id
+                not_in = st.search([('name', '=', '未進爐')]).id
                 # domain += ('company_id', '=', self.env.user.company_id.id),
-                domain += ('status', '!=', shiped),
+                domain += ('status', 'in', [not_in, not_listed]),
                 purchase = self.env["yc.purchase"]
                 records = purchase.search([d for d in domain], order='serial', limit=self.record_limit)
                 if len(records) == 0:
@@ -91,13 +94,14 @@ class YcPurchaseDisplay(models.TransientModel):
             vals = {}
             sort_list = []
             purchase = self.env["yc.purchase"]
+            st = self.env['yc.setstatus']
             # 重新排序要排除99.9、非登入廠、已出貨
-            shiped = self.env['yc.setstatus'].search([('name', '=', '已出貨')]).id
-            unscheduled = self.env['yc.setstatus'].search([('name', '=', '未排程')]).id
+            not_listed = st.search([('name', '=', '未排程')]).id
+            not_in = st.search([('name', '=', '未進爐')]).id
             _domain = ()
             _domain += ('order_furn', '=', self.order_furn2.id),
             # _domain += ('company_id', '=', self.env.user.company_id.id),
-            _domain += ('status', '!=', shiped),
+            _domain += ('status', 'in', [not_listed, not_in]),
             _domain_unscheduled, _domain__scheduled = _domain, _domain
             _domain_unscheduled += (('serial', '=', 99.9)),
             _domain__scheduled += (('serial', '!=', 99.9)),
@@ -105,7 +109,7 @@ class YcPurchaseDisplay(models.TransientModel):
             rows_for_schedule = self.purchase_ids2.search([d for d in _domain__scheduled])
             # 先將99.9 狀態要改成未排程
             for row in rows_for_unscheduled:
-                vals.update({'status': unscheduled})
+                vals.update({'status': not_listed})
                 purchase.search([('id', '=', row.id)]).write(vals)
             # 重新排序、狀態改成未進爐
             for row in rows_for_schedule:
@@ -113,9 +117,8 @@ class YcPurchaseDisplay(models.TransientModel):
             sort_list.sort(key=lambda list: list[1])
             for x in range(len(sort_list)):
                 sort_list[x][1] = x + 1
-                not_infurn = self.env['yc.setstatus'].search([('name', '=', '未進爐')]).id
                 vals.update({'serial': sort_list[x][1],
-                             'status': not_infurn})
+                             'status': not_in})
                 # [(1, id, vals)] 好像無法用在create狀態
                 purchase.search([('id', '=', sort_list[x][0])]).write(vals)
         self._filter_order()
@@ -153,6 +156,7 @@ class YcPurchaseDisplay(models.TransientModel):
             # `report_action()` will call `get_report_values()` and pass `data` automatically.
             return self.env.ref('yc_root.action_furna_quality').report_action(self, data=data)
 
+
 class YcFurnaOrderReport(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
     _name = 'report.yc_root.report_furna_order'
@@ -168,25 +172,25 @@ class YcFurnaOrderReport(models.AbstractModel):
             docs.append({
                 'name': r.name,
                 'customer_id': r.customer_id.name,
-                'product_code':r.product_code.name,
+                'product_code': r.product_code.name,
                 # 'produceday': r.produceday,
-                'norm_code':r.norm_code.name,
-                'len_code':r.len_code.name,
+                'norm_code': r.norm_code.name,
+                'len_code': r.len_code.name,
                 'len_descript': r.len_descript,
-                'txtur_code':r.txtur_code.name,
+                'txtur_code': r.txtur_code.name,
                 # 'wire_furn':r.wire_furn,
-                'num1':r.num1,
-                'unit1':r.unit1.name,
-                'proces_code':r.proces_code.name,
+                'num1': r.num1,
+                'unit1': r.unit1.name,
+                'proces_code': r.proces_code.name,
                 # 'surface_code':r.surface_code.name,
-                'elecpl_code':r.elecpl_code.name,
-                'batch':r.batch,
-                'surfhrd':r.surfhrd,
-                'corehrd':r.corehrd,
+                'elecpl_code': r.elecpl_code.name,
+                'batch': r.batch,
+                'surfhrd': r.surfhrd,
+                'corehrd': r.corehrd,
                 # 'carburlayer':r.carburlayer,
                 # 'tensihrd':r.tensihrd,
                 # 'torsion':r.torsion,
-                'day':r.day,
+                'day': r.day,
                 # 'ck_person':r.ck_person.name,
                 'process1': r.process1.abbrev,
                 'storeplace_id': r.storeplace_id.name,
@@ -220,6 +224,7 @@ class YcFurnaOrderReport(models.AbstractModel):
                 'doc_day': dt.today().strftime('%Y/%m/%d'),
                 'docs': docs}
 
+
 class YcFurnaQualityReport(models.AbstractModel):
     '''restrict form "report.module_name.template_id"'''
     _name = 'report.yc_root.report_furna_quality'
@@ -235,17 +240,17 @@ class YcFurnaQualityReport(models.AbstractModel):
             docs.append({
                 'name': r.name,
                 'customer_id': r.customer_id.name,
-                'product_code':r.product_code.name,
+                'product_code': r.product_code.name,
                 # 'produceday': r.produceday,
-                'norm_code':r.norm_code.name,
+                'norm_code': r.norm_code.name,
                 # 'len_code':r.len_code.name,
                 # 'len_descript': r.len_descript,
                 # 'txtur_code':r.txtur_code.name,
                 # 'wire_furn':r.wire_furn,
-                'num1':r.num1,
-                'unit1':r.unit1.name,
-                'proces_code':r.proces_code.name,
-                'surface_code':r.surface_code.name,
+                'num1': r.num1,
+                'unit1': r.unit1.name,
+                'proces_code': r.proces_code.name,
+                'surface_code': r.surface_code.name,
                 # 'elecpl_code':r.elecpl_code.name,
                 # 'batch':r.batch,
                 # 'surfhrd':r.surfhrd,
@@ -253,7 +258,7 @@ class YcFurnaQualityReport(models.AbstractModel):
                 # 'carburlayer':r.carburlayer,
                 # 'tensihrd':r.tensihrd,
                 # 'torsion':r.torsion,
-                'day':r.day,
+                'day': r.day,
                 # 'ck_person':r.ck_person.name,
                 # 'process1': r.process1.abbrev,
                 # 'storeplace_id': r.storeplace_id.name,
