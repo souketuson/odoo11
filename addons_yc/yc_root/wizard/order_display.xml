@@ -83,7 +83,7 @@
                                             <field name="ckimportdate" invisible="1"/>
                                             <button type="object" name="action_purchase_display_wizard" icon="fa-search"
                                                     class="btn btn-secondary btn-lg"/>
-                                            <field name="order_furn" string="爐號" readonly="1"
+                                            <field name="order_furn" string="爐號" readonly="0"
                                                    options="{'no_open': True,'no_create': True}"/>
                                             <!--<field name="factory_id" readonly="1"/>-->
                                             <field name="serial"/>
