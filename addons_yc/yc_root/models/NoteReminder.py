@@ -31,15 +31,9 @@ class YcPurchase(models.Model):
             note = ['notices1', 'notices2', 'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2',
                     'prodnote3', ]
 
-            note_dictionary = self.env['yc.setpurchasenote']
             for n in note:
                 if vals.get(n):
-                    # 確認這個note是否有在資料庫
-                    vocabulary = note_dictionary.search([('name', '=', vals[n])])
-                    if vocabulary:
-                        reminder.update({n: vocabulary.id})
-                    else:
-                        pass
+                    reminder.update({n: vals[n]})                    
                 else:
                     reminder.update({n: None})
             if rec:
@@ -58,7 +52,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.notices1.name
+                return rec.notices1
             else:
                 return None
 
@@ -70,7 +64,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.notices2.name
+                return rec.notices2
             else:
                 return None
 
@@ -82,7 +76,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.notices3.name
+                return rec.notices3
             else:
                 return None
 
@@ -94,7 +88,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.qcnote1.name
+                return rec.qcnote1
             else:
                 return None
 
@@ -106,7 +100,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.qcnote2.name
+                return rec.qcnote2
             else:
                 return None
 
@@ -118,7 +112,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.qcnote3.name
+                return rec.qcnote3
             else:
                 return None
 
@@ -130,7 +124,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.prodnote1.name
+                return rec.prodnote1
             else:
                 return None
 
@@ -142,7 +136,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.prodnote2.name
+                return rec.prodnote2
             else:
                 return None
 
@@ -154,7 +148,7 @@ class YcPurchase(models.Model):
             db = self.env['yc.setnotereminder']
             rec = db.search([('user', '=', user)])
             if rec:
-                return rec.prodnote3.name
+                return rec.prodnote3
             else:
                 return None
 
@@ -215,12 +209,12 @@ class YcSetnotereminder(models.Model):
     norm_code = fields.Many2one("yc.setnorm", string="規格")
     txtur_code = fields.Many2one("yc.settexture", string="材質")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
-    notices1 = fields.Many2one('yc.setpurchasenote')
-    notices2 = fields.Many2one('yc.setpurchasenote')
-    notices3 = fields.Many2one('yc.setpurchasenote')
-    prodnote1 = fields.Many2one('yc.setpurchasenote')
-    prodnote2 = fields.Many2one('yc.setpurchasenote')
-    prodnote3 = fields.Many2one('yc.setpurchasenote')
-    qcnote1 = fields.Many2one('yc.setpurchasenote')
-    qcnote2 = fields.Many2one('yc.setpurchasenote')
-    qcnote3 = fields.Many2one('yc.setpurchasenote')
+    notices1 = fields.Char()
+    notices2 = fields.Char()
+    notices3 = fields.Char()
+    prodnote1 = fields.Char()
+    prodnote2 = fields.Char()
+    prodnote3 = fields.Char()
+    qcnote1 = fields.Char()
+    qcnote2 = fields.Char()
+    qcnote3 = fields.Char()
