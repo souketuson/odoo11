@@ -340,14 +340,14 @@
                                             <field name="bucket_no"/>
                                             <field name="rawweight"/>
                                             <field name="emptybucket"/>
-                                            <field name="unit"/>
+                                            <field name="unit" options="{'no_open': True,'no_create': True}"/>
                                             <field name="rawnetweight" readonly="1" force_save="1"/>
-                                            <field name="feed_man"/>
+                                            <field name="feed_man" options="{'no_open': True,'no_create': True}"/>
                                             <field name="tweight"/>
                                             <field name="recevieemptybucket"/>
-                                            <field name="recevietunit"/>
+                                            <field name="recevietunit" options="{'no_open': True,'no_create': True}"/>
                                             <field name="tnetweight" readonly="1" force_save="1"/>
-                                            <field name="recevie_man"/>
+                                            <field name="recevie_man" options="{'no_open': True,'no_create': True}"/>
                                             <field name="weightdiff" readonly="1" force_save="1"/>
                                             <field name="note"/>
                                         </tree>

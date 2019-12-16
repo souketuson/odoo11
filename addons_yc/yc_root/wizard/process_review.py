@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 from datetime import datetime as dt
 import pytz
 
+
 class YcPurchaseDisplay(models.TransientModel):
     _name = 'yc.purchase.process'
 
@@ -201,7 +202,6 @@ class YcPurchaseDisplay(models.TransientModel):
             purchase.write(vals)
             self._display_record(purchase.id)
 
-
     # 打錯製程資料時，按這個按鈕可以刪掉所有班別人員時間(藍底區塊)、
     # 以及製造明細(各桶資訊)
     def clear_produce_data(self):
@@ -323,13 +323,25 @@ class YcPurchaseDisplay(models.TransientModel):
             # to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
             _id = purchase.search([('name', '=', self.hidden_name)]).id
             record = purchase.search([('id', '=', _id)])
-            record.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': _no+1})]
+            index = len(record.produce_details_ids) - 1
+            _content = {'name': _id, 'bucket_no': _no + 1, }
+            if index >= 0:
+                # 如果已經有一筆了 抓上一筆的資料: 入料人員、入料單位、收料單位、收料人員
+                last = record.produce_details_ids[index]
+                last_person = last.feed_man.id
+                last_unit = last.unit.id
+                last_runit = last.recevietunit.id
+                last_rperson = last.recevie_man.id
+                # feed_man、unit、recevietunit、recevie_man
+                _content.update({'feed_man': last_person, 'unit': last_unit,
+                                 'recevietunit': last_runit, 'recevie_man': last_rperson})
+            record.produce_details_ids = [(0, 0, _content)]
             self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
 
     def delete_last_line(self):
         if self.hidden_name:
             _no = len(self.produce_details_ids)
-            if _no ==0:
+            if _no == 0:
                 raise ValidationError(_('沒東西刪了'))
             else:
                 _id = self.produce_details_ids[0].name.id
@@ -341,7 +353,6 @@ class YcPurchaseDisplay(models.TransientModel):
                 _delete_id.unlink()
                 self.produce_details_ids = [(6, _, record.produce_details_ids.ids)]
 
-
     p1 = fields.Boolean()
     p2 = fields.Boolean()
     p3 = fields.Boolean()
@@ -349,7 +360,7 @@ class YcPurchaseDisplay(models.TransientModel):
 
     @api.onchange('p1')
     def cokoo1(self):
-        if self.hidden_name: # 避免空畫面自動load
+        if self.hidden_name:  # 避免空畫面自動load
             now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y%m%d%H%M%S")
             time = '%s:%s' % (now[8:10], now[10:12])
             self.ptime1 = time

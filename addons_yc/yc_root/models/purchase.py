@@ -1165,7 +1165,11 @@ class YcProduceDetails(models.Model):
     #     return super(YcProduceDetails, self).create(vals)
 
     def write(self, vals):
-        if self._context.get('params')['action'] == 188 and self.bucket_no == 1:
+        # 產量登錄作業
+        # TODO: 製程登入作業有沒有需要?
+        _action = self.env['ir.actions.act_window']
+        page = _action.search([('name', '=', '產量登錄作業')], limit=1).id
+        if self._context.get('params')['action'] == page and vals.get('tweight'):
             # 找到該工令明細檔的第一桶 磅後重如果大於0 該工令過磅狀態變成已過磅
             if vals['tweight'] > 0:
                 vals.update({'weighstate': '已過磅'})
