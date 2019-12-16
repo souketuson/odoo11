@@ -181,7 +181,7 @@
                                                options="{'no_open': True,'no_create': True}"/>　
                                         <field name="storeplace_id" style="width: 50px;"
                                                options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="totalpack" readonly="1"/>
+                                        <field name="totalpack" readonly="1" force_save="1"/>
 
                                     </group>
                                     <group col="6">

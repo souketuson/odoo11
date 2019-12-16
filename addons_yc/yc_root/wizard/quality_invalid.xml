@@ -675,7 +675,7 @@
                                         <field name="followup" style="width:100px;"/>
                                         <group col="4">
                                             <field name="totalpack" style="width:100px;"/>
-                                            <field name="pweight" style="width:100px;"/>
+                                            <field name="net" style="width:100px;" string="進貨重量"/>
                                             <field name="feedbucket" style="width:100px;"/>
                                             <field name="feedweight" style="width:100px;"/>
                                             <field name="weighbuckets" style="width:100px;"/>

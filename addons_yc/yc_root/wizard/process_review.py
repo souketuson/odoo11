@@ -125,7 +125,9 @@ class YcPurchaseDisplay(models.TransientModel):
             _id = purchase.search([('name', '=', _name)]).id
 
             if _id:
+                # 列出該筆工令數據
                 self._display_record(_id)
+                # 製造日期預設今日
                 now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d")
                 if not self.produceday1:
                     self.produceday1 = now
@@ -136,12 +138,14 @@ class YcPurchaseDisplay(models.TransientModel):
                 if not self.ffday:
                     self.ffday = now
 
-                # 建好六個空項目檔
+                # 建好六個空項目檔，以後可能會再次用到先留著
+                # 用onchange的方式新增line，雖然資料會寫入，但頁面上面不會更新
                 # to_create_order = purchase.search([('id', '=', _id)])
                 # if len(to_create_order.produce_details_ids) == 0:
                 #     for i in range(1, 7):
                 #         # issue: 如果用onchage call只能第六筆，用button才可以完整新增
                 #         to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
+
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
                 self.produce_details_ids = [(6, _, details.ids)]
             else:
@@ -197,27 +201,26 @@ class YcPurchaseDisplay(models.TransientModel):
             purchase.write(vals)
             self._display_record(purchase.id)
 
+
+    # 打錯製程資料時，按這個按鈕可以刪掉所有班別人員時間(藍底區塊)、
+    # 以及製造明細(各桶資訊)
     def clear_produce_data(self):
-        to_clear_field = ['produceday1', 'ptime1', 'shift1', 'op1', 'buckets1', 'pw1', 'teamlead1',
-                          'produceday2', 'ptime2', 'shift2', 'op2', 'buckets2', 'pw2', 'teamlead2',
-                          'produceday3', 'ptime3', 'shift3', 'op3', 'buckets3', 'pw3', 'teamlead3',
-                          'ffday', 'fftime', 'flow', 'cp', 'nh31', 'nh32', 'nh33', 'nh34', 'heat1',
-                          'heat2', 'heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8', 'heattemp',
-                          'heatsped', 'pre_furn', 'tempturing1', 'tempturing2', 'tempturing3', 'tempturing4',
-                          'tempturing5', 'tempturing6', 'tempturisped', 'currnt_furno', 'notices1', 'notices2',
-                          'notices3', 'qcnote1', 'qcnote2', 'qcnote3', 'prodnote1', 'prodnote2', 'prodnote3']
+        to_clear_field = ['ptime1', 'shift1', 'op1', 'buckets1', 'pw1', 'teamlead1',
+                          'ptime2', 'shift2', 'op2', 'buckets2', 'pw2', 'teamlead2',
+                          'ptime3', 'shift3', 'op3', 'buckets3', 'pw3', 'teamlead3',
+                          ]
         db = self.env['yc.purchase']
         _name = self.hidden_name
         # _company = self.env.user.company_id.id
         to_clear_id = db.search([('name', '=', _name)]).id
-        vals = {}
+        to_delete = {}
         for field in to_clear_field:
-            vals.update({field: None})
-        db.search([('id', '=', to_clear_id)]).write({vals})
+            to_delete.update({field: None})
+        db.search([('id', '=', to_clear_id)]).write(to_delete)
         self._display_record(to_clear_id)
 
     def _display_record(self, record_id):
-        # TODO: getattrs and setattrs method to overwrite this.
+        # TODO: use getattrs and setattrs method to overwrite this.
         purchase = self.env["yc.purchase"]
         # self.order_furn = None
         # self.notweighted_order = None

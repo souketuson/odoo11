@@ -10,7 +10,7 @@ class YcPurchase(models.Model):
 
     # 依上一筆資料預設該欄位資料功能
     # 欄位: 備註*9、材質、規格、強度級數、加工方式
-
+    # TODO: 將備註欄的資料庫註銷，改用非關聯式資料型態(char)，並讓系統抓取使用者先前keyin資料即可
     @api.model
     def create(self, vals):
         _action = self.env['ir.actions.act_window']

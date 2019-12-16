@@ -341,14 +341,14 @@
                                             <field name="rawweight"/>
                                             <field name="emptybucket"/>
                                             <field name="unit"/>
-                                            <field name="rawnetweight" readonly="1"/>
+                                            <field name="rawnetweight" readonly="1" force_save="1"/>
                                             <field name="feed_man"/>
                                             <field name="tweight"/>
                                             <field name="recevieemptybucket"/>
                                             <field name="recevietunit"/>
-                                            <field name="tnetweight" readonly="1"/>
+                                            <field name="tnetweight" readonly="1" force_save="1"/>
                                             <field name="recevie_man"/>
-                                            <field name="weightdiff" readonly="1"/>
+                                            <field name="weightdiff" readonly="1" force_save="1"/>
                                             <field name="note"/>
                                         </tree>
                                     </field>

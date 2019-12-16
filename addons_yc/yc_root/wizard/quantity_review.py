@@ -39,22 +39,51 @@ class YcPurchaseDisplay(models.TransientModel):
     num4 = fields.Integer("數量4")
     unit4 = fields.Many2one("yc.setunit", string="單位代號4")
     totalpack = fields.Char("裝袋合計")
-    pweight = fields.Integer("進貨重量", compute="")
+
+    # TODO: pweight 和 net 是同一個東西
+    # pweight = fields.Integer("進貨重量", compute="")
+    net = fields.Integer("進貨重量")
     pre_furn = fields.Char("以前爐號")
-    feedbucket = fields.Integer("入料桶數")
-    feedweight = fields.Integer("入料總重")
+    feedbucket = fields.Integer("入料桶數", compute='_feedbucket_counter')
+
+    # 計算擁有生料淨重的筆數(value> 0)，此為入料桶數
+    @api.depends('produce_details_ids')
+    def _feedbucket_counter(self):
+        buket = 0
+        for rec in self.produce_details_ids:
+            if rec.rawnetweight > 0:
+                buket += 1
+        self.feedbucket = buket
+
+    # 項目檔入料總重總和
+    @api.depends('produce_details_ids')
+    def _feedwieght_counter(self):
+        tatal = 0
+        for rec in self.produce_details_ids:
+            tatal += rec.rawnetweight
+        self.feedweight = tatal
+
+    # 計算擁有磅後淨重的筆數(value> 0)，此為磅後桶數
+    @api.depends('produce_details_ids')
+    def _weighbuckets_counter(self):
+        buket = 0
+        for rec in self.produce_details_ids:
+            if rec.tnetweight > 0:
+                buket += 1
+        self.weighbuckets = buket
+
+    feedweight = fields.Integer("入料總重", compute='_feedwieght_counter')
     currnt_furno = fields.Many2one("yc.setfurnace", string="現在爐號")
-    weighbuckets = fields.Integer("磅後桶數")
-    tweight = fields.Integer("磅後總重")
-    bdiff = fields.Integer("桶數差")
-    wdiff = fields.Integer("重量差")
+    weighbuckets = fields.Integer("磅後桶數", compute='_weighbuckets_counter')
+    tweight = fields.Integer("磅後總重", compute="_tweight_counter")
+    bdiff = fields.Integer("桶數差", compute="_bdiff_counter")
+    wdiff = fields.Integer("重量差", compute="_wdiff_counter")
     op1 = fields.Many2one("res.users", string="操作人員1")
     op2 = fields.Many2one("res.users", string="操作人員2")
     op3 = fields.Many2one("res.users", string="操作人員3")
     notices1 = fields.Char("注意事項1")
     notices2 = fields.Char("注意事項2")
     notices3 = fields.Char("注意事項3")
-
     qcnote1 = fields.Char("品管備註1")
     qcnote2 = fields.Char("品管備註2")
     qcnote3 = fields.Char("品管備註3")
@@ -78,7 +107,7 @@ class YcPurchaseDisplay(models.TransientModel):
                                }
                     }
 
-    # @api.onchange('searchname')
+    @api.onchange('searchname', 'weighted_order', 'notweighted_order')
     def quantity_review_search_name(self):
         _action = self.env['ir.actions.act_window']
         action_id = _action.search([('name', '=', '產量登錄作業')], limit=1).id
@@ -110,8 +139,7 @@ class YcPurchaseDisplay(models.TransientModel):
                          'ptime1': self.ptime1, 'num1': self.num1, 'unit1': self.unit1.id,
                          'num2': self.num2, 'unit2': self.unit2.id, 'num3': self.num3,
                          'unit3': self.unit3.id, 'num4': self.num4, 'unit4': self.unit4.id,
-                         'totalpack': self.totalpack, 'pweight': self.pweight,
-                         'pre_furn': self.pre_furn, 'feedbucket': self.feedbucket,
+                         'totalpack': self.totalpack, 'pre_furn': self.pre_furn, 'feedbucket': self.feedbucket,
                          'feedweight': self.feedweight, 'currnt_furno': self.currnt_furno.id,
                          'weighbuckets': self.weighbuckets, 'tweight': self.tweight,
                          'bdiff': self.bdiff, 'wdiff': self.wdiff, 'op1': self.op1.id,
@@ -147,10 +175,9 @@ class YcPurchaseDisplay(models.TransientModel):
         # 蒐集attr_name list
         # getattr() 返回物件屬性值
         # setattr() 設置物件屬性
-        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
-                            'checked', 'notchecked']
+        functional_group = ['checked', 'notchecked']
         for fn in self._proper_fields._map.keys():
-            if fn == 'id':
+            if fn in ['order_furn', 'notweighted_order', 'weighted_order', 'searchname', 'id']:
                 pass
             elif fn in ['order_name', 'hidden_name']:
                 setattr(self, fn, record.name)
@@ -159,3 +186,21 @@ class YcPurchaseDisplay(models.TransientModel):
             else:
                 _value = getattr(record, fn)
                 setattr(self, fn, _value)
+
+    # 計算磅後總重(tweight)
+    @api.depends('produce_details_ids')
+    def _tweight_counter(self):
+        box = 0
+        for rec in self.produce_details_ids:
+            box += rec.tnetweight
+        self.tweight = box
+
+    # 計算重量差(wdiff)
+    @api.depends('net', 'tweight')
+    def _wdiff_counter(self):
+        self.wdiff = self.net - self.tweight
+
+    # 計算桶數差(bdiff)
+    @api.depends('totalpack', 'weighbuckets')
+    def _bdiff_counter(self):
+        self.bdiff = int(self.totalpack) - int(self.weighbuckets)

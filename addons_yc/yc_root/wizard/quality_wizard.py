@@ -366,7 +366,7 @@ class YcQualityWizard(models.TransientModel):
     uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
                                 ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
     followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
-    pweight = fields.Integer("進貨重量")
+    # pweight = fields.Integer("進貨重量")
     tweight = fields.Integer("磅後總重")
     totalpack = fields.Char("裝袋合計")
     feedbucket = fields.Integer("入料桶數")

@@ -514,7 +514,8 @@ class YcPurchase(models.Model):
     uqtreat = fields.Selection([('重回染', '重回火或重染黑'), ('重做', '重做'),
                                 ('報廢', '報廢'), ('無', '無'), ('部份出貨', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
 
-    pweight = fields.Integer("進貨重量")
+    # TODO: 和net這一欄是相同的東西
+    # pweight = fields.Integer("進貨重量")
     tweight = fields.Integer("磅後總重")
     feedbucket = fields.Integer("入料桶數")
     feedweight = fields.Integer("入料總重")
@@ -1138,10 +1139,16 @@ class YcProduceDetails(models.Model):
     #     sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
     #     p._cr.execute(sql)
 
-    @api.onchange("rawweight", "emptybucket", "tweight")
+    @api.onchange("rawweight", "emptybucket")
     def _get_rawnetweight(self):
         self.rawnetweight = self.rawweight - self.emptybucket
-        self.tnetweight = self.tweight - self.emptybucket
+
+    @api.onchange('tweight', 'recevieemptybucket')
+    def _get_tnetweight(self):
+        self.tnetweight = self.tweight - self.recevieemptybucket
+
+    @api.onchange('rawweight', 'tweight')
+    def _get_weightdiff(self):
         self.weightdiff = self.rawweight - self.tweight
 
     # 製造項目檔有存入一筆就跳過磅狀態為已過磅
