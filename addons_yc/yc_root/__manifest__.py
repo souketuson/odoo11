@@ -6,7 +6,7 @@
     """,
 
     'description': """
-        last update: 20191101
+        last update: 20191212
     """,
     'author': "ArJhe",
     'website': "",

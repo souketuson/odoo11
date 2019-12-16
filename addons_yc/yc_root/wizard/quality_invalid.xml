@@ -309,19 +309,21 @@
                                             <field name="ckecl" widget="checkbox" nolabel="1"/>
                                             <label string="脫碳層：" style="font-weight:bold"/>
                                             <span style="display:inline-block; width: 80px;"/>
-                                            <label string="HV2"
-                                                   style="font-weight:bold;left: -20px;position: relative;"/>
-                                            <field name="HV2"
-                                                   style="width:50px;position:relative;top:33px;left:-60px;"/>
-                                            <!-- -->
+
                                             <label string="HV1"
-                                                   style="font-weight:bold;position:relative;top:85px;left:-180px;"/>
+                                                   style="font-weight:bold;position:relative;top:85px;left:-100px;"/>
                                             <field name="HV1"
-                                                   style="width:50px;position:relative;top:112px;left:-218px;"/>
+                                                   style="width:50px;position:relative;top:112px;left:-138px;"/>
+                                            <!-- -->
+                                            <label string="HV2"
+                                                   style="font-weight:bold;left: -108px;position: relative;"/>
+                                            <field name="HV2"
+                                                   style="width:50px;position:relative;top:33px;left:-147px;"/>
                                             <!-- -->
                                             <div class="">
                                                 <div style="width: 100px;margin-left: 100px;margin-top: 28px;">
                                                     <!--<field name="image" widget='image' options='{"preview_image": "image_big"}' readonly="1"/>-->
+                                                    <!--https://i.imgur.com/2JtX2Db.png 網路空間imgur-->
                                                     <img src='/yc_root/static/src/img/sessional_view.png'/>
                                                 </div>
                                                 <!-- -->
@@ -549,14 +551,14 @@
                                     </group>
                                 </page>
                                 <page string="拉力資料">
-
                                     <div>
-
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="　斷面積" style="font-weight:bold"/>
                                         <field name="ssk" style="width:100px"/>
                                         <span style="display:inline-block; width: 100px;"/>
                                         <field name="file"/>
                                         <br/>
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="最大負荷" style="font-weight:bold"/>
                                         <field name="mxload1" style="width:100px"/>
                                         <field name="mxload2" style="width:100px"/>
@@ -567,6 +569,7 @@
                                         <field name="mxload7" style="width:100px"/>
                                         <field name="mxload8" style="width:100px"/>
                                         <br/>
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="抗拉強度" style="font-weight:bold"/>
                                         <field name="resist1" style="width:100px"/>
                                         <field name="resist2" style="width:100px"/>
@@ -577,6 +580,7 @@
                                         <field name="resist7" style="width:100px"/>
                                         <field name="resist8" style="width:100px"/>
                                         <br/>
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="降伏點kg" style="font-weight:bold"/>
                                         <field name="yield1" style="width:100px"/>
                                         <field name="yield2" style="width:100px"/>
@@ -587,6 +591,7 @@
                                         <field name="yield7" style="width:100px"/>
                                         <field name="yield8" style="width:100px"/>
                                         <br/>
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="降伏強度" style="font-weight:bold"/>
                                         <field name="ystrength1" style="width:100px"/>
                                         <field name="ystrength2" style="width:100px"/>
@@ -597,6 +602,7 @@
                                         <field name="ystrength7" style="width:100px"/>
                                         <field name="ystrength8" style="width:100px"/>
                                         <br/>
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="　伸長率" style="font-weight:bold"/>
                                         <field name="elong1" style="width:100px"/>
                                         <field name="elong2" style="width:100px"/>
@@ -607,6 +613,7 @@
                                         <field name="elong7" style="width:100px"/>
                                         <field name="elong8" style="width:100px"/>
                                         <br/>
+                                        <span style="display:inline-block;width:19px"/>
                                         <label string="　脫碳層" style="font-weight:bold"/>
                                         <field name="decarb1" style="width:100px"/>
                                         <field name="decarb2" style="width:100px"/>
@@ -617,6 +624,7 @@
                                         <field name="decarb7" style="width:100px"/>
                                         <field name="decarb8" style="width:100px"/>
                                         <br/>
+                                        <field name="ckwhrd1v"/>
                                         <label string="華司硬度" style="font-weight:bold"/>
                                         <field name="wxrhrd1" style="width:100px"/>
                                         <field name="wxrhrd2" style="width:100px"/>
@@ -627,7 +635,8 @@
                                         <field name="wxrhrd7" style="width:100px"/>
                                         <field name="wxrhrd8" style="width:100px"/>
                                         <br/>
-                                        <label string="　　　　" style="font-weight:bold"/>
+                                        <field name="ckwhrd2v"/>
+                                        <label string="　　　　" style="width: 55px;font-weight:bold"/>
                                         <field name="whrd2v1" style="width:100px"/>
                                         <field name="whrd2v2" style="width:100px"/>
                                         <field name="whrd2v3" style="width:100px"/>
@@ -637,7 +646,6 @@
                                         <field name="whrd2v7" style="width:100px"/>
                                         <field name="whrd2v8" style="width:100px"/>
                                     </div>
-
                                 </page>
                                 <page string="產量數據">
                                     <div style="float:left;">

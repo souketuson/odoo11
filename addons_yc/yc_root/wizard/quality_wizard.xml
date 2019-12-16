@@ -567,7 +567,6 @@
                                     </group>
                                 </page>
                                 <page string="拉力資料">
-
                                     <div>
                                         <span style="display:inline-block;width:19px"/>
                                         <label string="　斷面積" style="font-weight:bold"/>
@@ -663,7 +662,6 @@
                                         <field name="whrd2v7" style="width:100px"/>
                                         <field name="whrd2v8" style="width:100px"/>
                                     </div>
-
                                 </page>
                                 <page string="金相報告書">
                                     <group>

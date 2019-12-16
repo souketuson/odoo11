@@ -12,7 +12,7 @@
 
                     </style>
                     <header>
-                        <button name="form_refresh" string="重排" type="object"/>
+                        <button name="form_refresh" string="重編" type="object"/>
                     </header>
                     <div>
                         <!--<button name="yc_root.purchase2_action" string="離開" type="action" class="btn btn-sm btn-primary" style="width: 80px; margin: 0 3%;"/>-->

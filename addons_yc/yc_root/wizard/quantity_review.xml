@@ -16,7 +16,7 @@
                         </header>
                         <group>
                             <div style="background-color: #e6e6fa;width:100%">
-                                <div style="overflow-x:auto;width:1000px;">
+                                <div>
 
                                     <div>
                                         <label string="爐號" style="font-weight:bold;font-size: large"/>
@@ -55,7 +55,8 @@
                                         <field name="wire_furn" style="width: 150px"/>
                                         <br/>
                                     </div>
-                                    <div style="float:left;">
+                                    <div style="float:left;width:50%">
+
                                         <label string="　　品名" style="font-weight:bold"/>
                                         <field name="product_code" style="width: 120px"
                                                options="{'no_open': True,'no_create': True}"
@@ -184,7 +185,7 @@
                                         <field name="prodnote2" style="width:24%%;font-size: xx-small;"/>
                                         <field name="prodnote3" style="width:24%%;font-size: xx-small;"/>
                                     </div>
-                                    <div style="float:left;padding:20px;width:600px;position: absolute;top: 100px;left: 450px;">
+                                    <div style="float:left;padding:20px;width:50%;position: absolute;top: 100px;left: 450px;">
                                         <div style="margin-top:30px;">
                                             <button string="清除" type="object"
                                                     class="oe_highlight glyphicon glyphicon-trash"
@@ -194,9 +195,9 @@
                                                     name="save_entry_data" icon="fa-save" style=""/>
                                         </div>
                                         <div style="height:10px;"></div>
-                                        <div>
+                                        <div style="overflow-x: auto;">
                                             <field name="produce_details_ids"
-                                                   style="width: 460px;overflow-x: auto;">
+                                                   style="width: 700px;">
                                                 <tree create="false" delete="false" string="Produce Details"
                                                       editable="bottom">
                                                     <!--<field name="name"/>-->

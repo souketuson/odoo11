@@ -219,12 +219,12 @@ class YcPurchaseDisplay(models.TransientModel):
     def _display_record(self, record_id):
         # TODO: getattrs and setattrs method to overwrite this.
         purchase = self.env["yc.purchase"]
-        self.order_furn = None
-        self.notweighted_order = None
-        self.weighted_order = None
-        self.searchname = None
-        self.furn_in = None
-        self.furn_notin = None
+        # self.order_furn = None
+        # self.notweighted_order = None
+        # self.weighted_order = None
+        # self.searchname = None
+        # self.furn_in = None
+        # self.furn_notin = None
         record = purchase.search([('id', '=', record_id)])
         self.order_name = record.name
         self.hidden_name = record.name

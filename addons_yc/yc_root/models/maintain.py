@@ -171,6 +171,7 @@ class YcSetnorm(models.Model):
         return norm.name_get()
 
 
+
 class YcSetlength(models.Model):
     # 長度 S03N0005
     _name = "yc.setlength"

@@ -39,7 +39,7 @@ class YcPurchaseDisplay(models.TransientModel):
     num4 = fields.Integer("數量4")
     unit4 = fields.Many2one("yc.setunit", string="單位代號4")
     totalpack = fields.Char("裝袋合計")
-    pweight = fields.Integer("進貨重量")
+    pweight = fields.Integer("進貨重量", compute="")
     pre_furn = fields.Char("以前爐號")
     feedbucket = fields.Integer("入料桶數")
     feedweight = fields.Integer("入料總重")
