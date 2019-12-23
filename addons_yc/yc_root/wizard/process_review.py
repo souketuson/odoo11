@@ -122,12 +122,12 @@ class YcPurchaseDisplay(models.TransientModel):
             # S05N0100 製程登錄作業
             purchase = self.env["yc.purchase"]
             _name = self.searchname or self.furn_in.name or self.furn_notin.name
-            # _company = self.env.user.company_id.id
+
             _id = purchase.search([('name', '=', _name)]).id
 
             if _id:
                 # 列出該筆工令數據
-                self._display_record(_id)
+
                 # 製造日期預設今日
                 now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d")
                 if not self.produceday1:
@@ -138,15 +138,19 @@ class YcPurchaseDisplay(models.TransientModel):
                     self.produceday3 = now
                 if not self.ffday:
                     self.ffday = now
-
+                totalpack = 0 if purchase.browse(_id).totalpack == '' else purchase.browse(_id).totalpack
+                detals_no = int(float(totalpack))
                 # 建好六個空項目檔，以後可能會再次用到先留著
                 # 用onchange的方式新增line，雖然資料會寫入，但頁面上面不會更新
-                # to_create_order = purchase.search([('id', '=', _id)])
-                # if len(to_create_order.produce_details_ids) == 0:
-                #     for i in range(1, 7):
-                #         # issue: 如果用onchage call只能第六筆，用button才可以完整新增
-                #         to_create_order.produce_details_ids = [(0, 0, {'name': _id, 'bucket_no': i})]
-
+                to_create_order = purchase.search([('id', '=', _id)])
+                if len(to_create_order.produce_details_ids) == 0:
+                    detail_val = {}
+                    l = []
+                    for i in range(0, detals_no + 5):
+                        l.append((0, 0, {'name': _id, 'bucket_no': i + 1}))
+                    detail_val.update({'produce_details_ids': l})
+                    to_create_order.write(detail_val)
+                self._display_record(_id)
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
                 self.produce_details_ids = [(6, _, details.ids)]
             else:
@@ -158,6 +162,19 @@ class YcPurchaseDisplay(models.TransientModel):
             domain = [('name', '=', self.hidden_name)]
             purchase = self.env['yc.purchase'].search(domain)
             # 儲存會異動的就好
+            skip = ['bucket_no', 'name', 'id', 'display_name', 'create_uid', 'create_date', 'write_uid', 'write_date', '__last_update']
+            detail_list = []
+
+            for rec in self.produce_details_ids:
+                detail_vals = {}
+                for _f in rec._proper_fields._map.keys():
+                    if _f in skip:
+                        pass
+                    elif hasattr(rec[_f], 'id'):
+                        detail_vals.update({_f: getattr(rec[_f], 'id')})
+                    else:
+                        detail_vals.update({_f: rec[_f]})
+                detail_list.append((1, rec.id, detail_vals))
             vals.update({'product_code': self.product_code.id, 'batch': self.batch,
                          'norm_code': self.norm_code.id, 'fullorhalf': self.fullorhalf,
                          'txtur_code': self.txtur_code.id, 'surface_code': self.surface_code.id,
@@ -189,8 +206,9 @@ class YcPurchaseDisplay(models.TransientModel):
                          'tempturing2': self.tempturing2, 'tempturing3': self.tempturing3,
                          'tempturing4': self.tempturing4,
                          'tempturing5': self.tempturing5, 'tempturing6': self.tempturing6,
-                         'tempturisped': self.tempturisped,
+                         'tempturisped': self.tempturisped, 'produce_details_ids': detail_list,
                          })
+            # produce_details_ids
             p1t = '' if not vals.get('ptime1') else vals['ptime1']
             fft = '' if not vals.get('fftime') else vals['fftime']
             if p1t != '' or fft != '':
@@ -389,3 +407,22 @@ class YcPurchaseDisplay(models.TransientModel):
             time = '%s:%s' % (now[8:10], now[10:12])
             self.fftime = time
             self.save_entry_data()
+
+    @api.onchange('produce_details_ids')
+    def _write_produce_details(self):
+        self.save_entry_data()
+
+
+class YcProduceDetails(models.Model):
+    # 製造單項目檔
+    _inherit = "yc.produce.details"
+
+    @api.onchange('recevieemptybucket')
+    def _auto_bring(self):
+        # 輸入收料空桶重，自動跳前一筆收料單位與收料人員
+        l = 0
+        if self.recevieemptybucket != 0 and self.bucket_no != 1:
+            db = self.env[self._name]
+            former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
+            self.recevietunit = former.recevietunit.id
+            self.recevie_man = former.recevie_man.id

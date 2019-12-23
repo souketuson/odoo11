@@ -330,14 +330,14 @@
                                             <button name="delete_last_line" type="object" class="oe_highlight"
                                                     icon="fa-minus"/>
                                             <label string="袋裝合計" style="font-weight:bold;font-size: x-large;"/>
-                                            <field name="num1" style="width:80px;font-size: x-large;"/>
+                                            <field name="totalpack" style="width:80px;font-size: x-large;"/>
                                         </div>
                                     </group>
                                     <field name="produce_details_ids">
                                         <tree string="Produce Details" create="false" edit="true" delete="false"
                                               editable="bottom">
-                                            <!--<field name="name"/>-->
-                                            <field name="bucket_no"/>
+                                            <field name="name" invisible="1"/>
+                                            <field name="bucket_no" readonly="1" force_save="1"/>
                                             <field name="rawweight"/>
                                             <field name="emptybucket"/>
                                             <field name="unit" options="{'no_open': True,'no_create': True}"/>
