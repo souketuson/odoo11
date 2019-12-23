@@ -246,7 +246,7 @@ class YcQualityWizard(models.TransientModel):
     HV13 = fields.Integer("HV13")
     HV13OK = fields.Char("HV13OK")
 
-    @api.onchange('HV1','HV2','HV3')
+    @api.onchange('HV1', 'HV2', 'HV3')
     def _hv123(self):
         self.HV12 = self.HV1 - self.HV2
         if self.HV12 > 30:
@@ -362,10 +362,14 @@ class YcQualityWizard(models.TransientModel):
     mgrtell = fields.Char("狀態備份")
     mgresult = fields.Char("狀態備份")
     file = fields.Binary("檔案")
+    # TODO: 和舊資料有衝突 要先 確認要用哪邊的值，然後改 purchase.py 和 退回相關的程序
+    # uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
+    #                             ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
+    # followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
+    uqtreat = fields.Selection([('重回染', '重回火或重染黑'), ('重做', '重做'),
+                                ('報廢', '報廢'), ('無', '無'), ('部份出貨', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
+    followup = fields.Selection([("轉入進貨單", "轉入進貨單"), ("不轉入進貨單", "不轉入進貨單")], "處理方式")
 
-    uqtreat = fields.Selection([('f0', '重回火或重染黑'), ('f1', '重做'),
-                                ('f2', '報廢'), ('f3', '無'), ('f4', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
-    followup = fields.Selection([("migrate", "轉入進貨單"), ("stay", "不轉入進貨單")], "處理方式")
     # pweight = fields.Integer("進貨重量")
     tweight = fields.Integer("磅後總重")
     totalpack = fields.Char("裝袋合計")
@@ -407,10 +411,10 @@ class YcQualityWizard(models.TransientModel):
         #  oder: yc.purchase > yc.purchase.process > yc.purchase.quantity >
         #        yc.quality.wizard > yc.quality.invalid
         functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
-                            'invalid', 'followup', 'invalid_followup', 'checked', 'notchecked',
+                            'invalid', 'invalid_followup', 'checked', 'notchecked',
                             'furn_in', 'furn_notin', 'count', 'produce_details_ids']
         invalid_group = ['pweight', 'tweight', 'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
-                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'uqtreat', 'notices4']
+                         'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'notices4']
 
         _action = self.env['ir.actions.act_window']
         Q1 = _action.search([('name', '=', '品質數據主檔_wizard')]).id
@@ -476,9 +480,22 @@ class YcQualityWizard(models.TransientModel):
                         vals.update({fn: _val})
             record.write(vals)
         elif self._context['params'].get('action') == Q2:
-            # TO BE CONTINUE
-            pass
-        return
+            vals = {}
+            for fn in self._proper_fields._map.keys():
+                functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
+                                    'invalid', 'invalid_followup', 'produce_details_ids', 'file']
+                _val = getattr(self, fn)
+                # TODO: 找出需要更動的欄位再寫入
+                if fn in functional_group:
+                    pass
+                else:
+                    if fn == 'produce_details_ids':
+                        pass
+                    elif hasattr(_val, 'id'):
+                        vals.update({fn: _val.id})
+                    else:
+                        vals.update({fn: _val})
+            record.write(vals)
 
     def read_data_in_server(self):
         # 172.31.44.77

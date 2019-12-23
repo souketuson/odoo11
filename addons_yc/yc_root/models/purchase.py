@@ -513,6 +513,7 @@ class YcPurchase(models.Model):
     whrd2v8 = fields.Float("華司硬度2值8")
     uqtreat = fields.Selection([('重回染', '重回火或重染黑'), ('重做', '重做'),
                                 ('報廢', '報廢'), ('無', '無'), ('部份出貨', '部分出貨，部分重回火、重染黑、重做')], '不合格品處理')
+    followup = fields.Selection([("轉入進貨單", "轉入進貨單"), ("不轉入進貨單", "不轉入進貨單")], "處理方式")
 
     # TODO: 和net這一欄是相同的東西
     # pweight = fields.Integer("進貨重量")
@@ -524,7 +525,7 @@ class YcPurchase(models.Model):
     wdiff = fields.Integer("重量差")
     uqweight = fields.Integer("不合格重量")
     uqbuckets = fields.Integer("不合格桶數")
-    followup = fields.Selection([("轉入進貨單", "轉入進貨單"), ("不轉入進貨單", "不轉入進貨單")], "處理方式")
+
 
     clnorm = fields.Char("滲碳層規格")
     statecopy = fields.Char("狀態備份")
@@ -586,8 +587,8 @@ class YcPurchase(models.Model):
     @api.onchange('condition')
     def search_purchase(self):
         if self.condition:
-            # 處理方式('followup')為 "轉入進貨單"('migrate')者現身
-            domain = [('followup', '=', 'migrate')]
+            # 處理方式('followup')為 "轉入進貨單"
+            domain = [('followup', '=', '轉入進貨單')]
             if self.condition == 'OT':  # 廠外退回
                 records = self.env['yc.return'].search(domain)
                 self.return_ids = [(6, _, records.ids)]

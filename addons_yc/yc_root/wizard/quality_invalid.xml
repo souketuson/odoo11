@@ -87,7 +87,7 @@
                                 <span style="display:inline-block; width: 50px;"/>
                                 <label string="頭部記號" style="font-weight:bold"/>
                                 <field name="headsign" readonly="1"/>
-
+                                <button string="儲存" type="object" class="oe_highlight" name="save_quality"/>
                                 <!---->
 
                                 <br/>
