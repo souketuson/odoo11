@@ -130,6 +130,19 @@ class YcPurchaseDisplay(models.TransientModel):
         if self.hidden_name:
             purchase = self.env['yc.purchase'].search([('name', '=', self.hidden_name)])
             # 儲存會異動的就好
+            skip = ['bucket_no', 'name', 'id', 'display_name', 'create_uid', 'create_date', 'write_uid', 'write_date',
+                    '__last_update']
+            detail_list = []
+            for rec in self.produce_details_ids:
+                detail_vals = {}
+                for _f in rec._proper_fields._map.keys():
+                    if _f in skip:
+                        pass
+                    elif hasattr(rec[_f], 'id'):
+                        detail_vals.update({_f: getattr(rec[_f], 'id')})
+                    else:
+                        detail_vals.update({_f: rec[_f]})
+                detail_list.append((1, rec.id, detail_vals))
             vals.update({'product_code': self.product_code.id, 'batch': self.batch,
                          'norm_code': self.norm_code.id, 'fullorhalf': self.fullorhalf,
                          'txtur_code': self.txtur_code.id, 'surface_code': self.surface_code.id,
@@ -148,7 +161,7 @@ class YcPurchaseDisplay(models.TransientModel):
                          'qcnote1': self.qcnote1, 'qcnote2': self.qcnote2,
                          'qcnote3': self.qcnote3, 'prodnote1': self.prodnote1,
                          'prodnote2': self.prodnote2, 'prodnote3': self.prodnote3,
-                         # 'produce_details_ids': self.produce_details_ids,
+                         'produce_details_ids': detail_list,
                          })
             lists = self.produce_details_ids
             details = self.env['yc.produce.details'].search([('id', '=', purchase.id)])
@@ -164,7 +177,6 @@ class YcPurchaseDisplay(models.TransientModel):
             else:
                 vals.update({"weighstate": "已過磅"})
             # 更新項目檔
-            purchase.produce_details_ids = self.produce_details_ids
             purchase.write(vals)
 
             self._display_record(purchase.id)
@@ -204,3 +216,8 @@ class YcPurchaseDisplay(models.TransientModel):
     @api.depends('totalpack', 'weighbuckets')
     def _bdiff_counter(self):
         self.bdiff = int(self.totalpack) - int(self.weighbuckets)
+
+    # 為了讓下一筆能抓到上一筆資料，更動明細一定要要先跑儲存
+    @api.onchange('produce_details_ids')
+    def _write_produce_details(self):
+        self.save_entry_data()

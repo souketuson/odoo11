@@ -408,6 +408,7 @@ class YcPurchaseDisplay(models.TransientModel):
             self.fftime = time
             self.save_entry_data()
 
+    # 為了讓下一筆能抓到上一筆資料，更動明細一定要要先跑儲存
     @api.onchange('produce_details_ids')
     def _write_produce_details(self):
         self.save_entry_data()
@@ -420,9 +421,17 @@ class YcProduceDetails(models.Model):
     @api.onchange('recevieemptybucket')
     def _auto_bring(self):
         # 輸入收料空桶重，自動跳前一筆收料單位與收料人員
-        l = 0
         if self.recevieemptybucket != 0 and self.bucket_no != 1:
             db = self.env[self._name]
             former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
             self.recevietunit = former.recevietunit.id
             self.recevie_man = former.recevie_man.id
+
+    @api.onchange('rawweight')
+    def _auto_bring(self):
+        # 輸入生料重，自動跳前一筆入料單位與入料人員
+        if self.rawweight != 0 and self.bucket_no != 1:
+            db = self.env[self._name]
+            former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
+            self.unit = former.unit.id
+            self.feed_man = former.feed_man.id

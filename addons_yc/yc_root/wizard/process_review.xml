@@ -252,69 +252,69 @@
                                             <div style="float:left;">
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="流量" style="font-weight:bold"/>
-                                                <field name="flow" style="width: 80px"/>
+                                                <field name="flow" style="width: 80px" readonly="1"/>
                                                 <label string="CP值" style="font-weight:bold"/>
-                                                <field name="cp" style="width: 90px"/>
+                                                <field name="cp" style="width: 90px" readonly="1"/>
                                                 <label string="氨值" style="font-weight:bold"/>
-                                                <field name="nh31" style="width: 70px"/>
+                                                <field name="nh31" style="width: 70px" readonly="1"/>
                                                 <label string="支" style="font-weight:bold"/>
-                                                <field name="nh32" style="width: 70px"/>
+                                                <field name="nh32" style="width: 70px" readonly="1"/>
                                                 <label string="第" style="font-weight:bold"/>
-                                                <field name="nh33" style="width: 70px"/>
+                                                <field name="nh33" style="width: 70px" readonly="1"/>
                                                 <label string="支" style="font-weight:bold"/>
-                                                <field name="nh34" style="width: 70px"/>
+                                                <field name="nh34" style="width: 70px" readonly="1"/>
                                                 <br/>
                                             </div>
                                             <div style="clear: left;">
                                                 <label string="　加熱爐" style="font-weight:bold"/>
-                                                <field name="heat1" style="width: 50px"/>
-                                                <field name="heat2" style="width: 50px"/>
-                                                <field name="heat3" style="width: 50px"/>
-                                                <field name="heat4" style="width: 50px"/>
-                                                <field name="heat5" style="width: 50px"/>
-                                                <field name="heat6" style="width: 50px"/>
-                                                <field name="heat7" style="width: 50px"/>
-                                                <field name="heat8" style="width: 50px"/>
+                                                <field name="heat1" style="width: 50px" readonly="1"/>
+                                                <field name="heat2" style="width: 50px" readonly="1"/>
+                                                <field name="heat3" style="width: 50px" readonly="1"/>
+                                                <field name="heat4" style="width: 50px" readonly="1"/>
+                                                <field name="heat5" style="width: 50px" readonly="1"/>
+                                                <field name="heat6" style="width: 50px" readonly="1"/>
+                                                <field name="heat7" style="width: 50px" readonly="1"/>
+                                                <field name="heat8" style="width: 50px" readonly="1"/>
                                                 <br/>
                                                 <label string="　　油溫" style="font-weight:bold"/>
-                                                <field name="heattemp" style="width: 50px"/>
+                                                <field name="heattemp" style="width: 50px" readonly="1"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="速度" style="font-weight:bold"/>
-                                                <field name="heatsped" style="width: 50px"/>
+                                                <field name="heatsped" style="width: 50px" readonly="1"/>
                                                 <span style="display:inline-block; width: 260px;"></span>
                                                 <label string="以前爐號" style="font-weight:bold"/>
-                                                <field name="pre_furn" style="width: 50px"/>
+                                                <field name="pre_furn" style="width: 50px" readonly="1"/>
                                                 <br/>
                                                 <label string="　回火爐" style="font-weight:bold"/>
-                                                <field name="tempturing1" style="width: 50px"/>
-                                                <field name="tempturing2" style="width: 50px"/>
-                                                <field name="tempturing3" style="width: 50px"/>
-                                                <field name="tempturing4" style="width: 50px"/>
-                                                <field name="tempturing5" style="width: 50px"/>
-                                                <field name="tempturing6" style="width: 50px"/>
+                                                <field name="tempturing1" style="width: 50px" readonly="1"/>
+                                                <field name="tempturing2" style="width: 50px" readonly="1"/>
+                                                <field name="tempturing3" style="width: 50px" readonly="1"/>
+                                                <field name="tempturing4" style="width: 50px" readonly="1"/>
+                                                <field name="tempturing5" style="width: 50px" readonly="1"/>
+                                                <field name="tempturing6" style="width: 50px" readonly="1"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="速度" style="font-weight:bold"/>
-                                                <field name="tempturisped" style="width: 50px"/>
+                                                <field name="tempturisped" style="width: 50px" readonly="1"/>
                                                 <span style="display:inline-block; width: 10px;"></span>
                                                 <label string="現在爐號" style="font-weight:bold"/>
                                                 <field name="currnt_furno" style="width: 50px"
-                                                       options="{'no_open': True,'no_create': True}"/>
+                                                       options="{'no_open': True,'no_create': True}" readonly="1"/>
                                                 <br/>
                                                 <label string="注意事項" style="font-weight:bold"/>
-                                                <field name="notices1" style="width:275px"/>
-                                                <field name="notices2" style="width:275px"/>
-                                                <field name="notices3" style="width:275px"/>
+                                                <field name="notices1" style="width:275px" readonly="1"/>
+                                                <field name="notices2" style="width:275px" readonly="1"/>
+                                                <field name="notices3" style="width:275px" readonly="1"/>
                                                 <!--<field name="notices4"/>-->
                                                 <br/>
                                                 <label string="品管備註" style="font-weight:bold"/>
-                                                <field name="qcnote1" style="width:275px"/>
-                                                <field name="qcnote2" style="width:275px"/>
-                                                <field name="qcnote3" style="width:275px"/>
+                                                <field name="qcnote1" style="width:275px" readonly="1"/>
+                                                <field name="qcnote2" style="width:275px" readonly="1"/>
+                                                <field name="qcnote3" style="width:275px" readonly="1"/>
                                                 <br/>
                                                 <label string="製造備註" style="font-weight:bold"/>
-                                                <field name="prodnote1" style="width:275px"/>
-                                                <field name="prodnote2" style="width:275px"/>
-                                                <field name="prodnote3" style="width:275px"/>
+                                                <field name="prodnote1" style="width:275px" readonly="1"/>
+                                                <field name="prodnote2" style="width:275px" readonly="1"/>
+                                                <field name="prodnote3" style="width:275px" readonly="1"/>
                                             </div>
                                         </div>
                                     </group>
