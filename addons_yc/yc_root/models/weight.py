@@ -331,7 +331,7 @@ class YcWeightDetails(models.Model):
     @api.onchange("customer_code")
     def _select_customer(self):
         if self.customer_code:
-            self.customer_id = self.env["yc.customer"].search([("code", "=", self.customer_code)])
+            self.customer_id = self.env["yc.customer"].search([("code", "=", self.customer_code.upper())])
 
     @api.multi
     @api.onchange("customer_id")
