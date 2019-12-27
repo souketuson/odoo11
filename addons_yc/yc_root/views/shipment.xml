@@ -77,7 +77,8 @@
                                                 <field name="elecpl_code"/>
                                                 <field name="process1"/>
                                                 <field name="batch"/>
-                                                <field name="fullorhalf" string="牙分類"/>
+                                                <!--<field name="fullorhalf" string="牙分類"/>-->
+                                                <field name="fulorhaf" string="牙分類" options="{'no_open': True,'no_create': True}"/>
                                                 <field name="process2" string="次加工廠"/>
                                                 <field name="day" string="進貨日"/>
                                                 <field name="wire_furn" string="線材爐"/>

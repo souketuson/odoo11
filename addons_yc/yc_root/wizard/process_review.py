@@ -22,7 +22,8 @@ class YcPurchaseDisplay(models.TransientModel):
     product_code = fields.Many2one("yc.setproduct", string="品名")
     batch = fields.Char("客戶批號")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
-    fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+    # fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+    fulorhaf = fields.Many2one('yc.setfulorhalf', string='牙分類')
     txtur_code = fields.Many2one("yc.settexture", string="材質")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
@@ -113,6 +114,11 @@ class YcPurchaseDisplay(models.TransientModel):
             return {"domain": {"furn_in": [("order_furn", "=", self.order_furn.id), ("status", "=", in_furn)],
                                "furn_notin": [("order_furn", "=", self.order_furn.id), ("status", "=", out_of_furn)]}}
 
+    # 製程登錄 搜尋工令
+    # 1. 輸入工令名稱並顯示該工令
+    # 2. 從分爐過來的工令自動更新今天日期
+    # 3. 自動更新 袋裝合計+5筆 明細
+
     @api.onchange('searchname', 'furn_in', 'furn_notin')
     def process_review_search_name(self):
         _action = self.env['ir.actions.act_window']
@@ -122,34 +128,31 @@ class YcPurchaseDisplay(models.TransientModel):
             # S05N0100 製程登錄作業
             purchase = self.env["yc.purchase"]
             _name = self.searchname or self.furn_in.name or self.furn_notin.name
-
             _id = purchase.search([('name', '=', _name)]).id
-
             if _id:
                 # 列出該筆工令數據
-
+                _val = {}
                 # 製造日期預設今日
                 now = dt.now(pytz.timezone('Asia/Taipei')).strftime("%Y-%m-%d")
                 if not self.produceday1:
-                    self.produceday1 = now
+                    _val.update({'produceday1':now})
                 if not self.produceday2:
-                    self.produceday2 = now
+                    _val.update({'produceday2':now})
                 if not self.produceday3:
-                    self.produceday3 = now
+                    _val.update({'produceday3':now})
                 if not self.ffday:
-                    self.ffday = now
+                    _val.update({'ffday':now})
                 totalpack = 0 if purchase.browse(_id).totalpack == '' else purchase.browse(_id).totalpack
                 detals_no = int(float(totalpack))
                 # 建好六個空項目檔，以後可能會再次用到先留著
                 # 用onchange的方式新增line，雖然資料會寫入，但頁面上面不會更新
                 to_create_order = purchase.search([('id', '=', _id)])
                 if len(to_create_order.produce_details_ids) == 0:
-                    detail_val = {}
                     l = []
                     for i in range(0, detals_no + 5):
                         l.append((0, 0, {'name': _id, 'bucket_no': i + 1}))
-                    detail_val.update({'produce_details_ids': l})
-                    to_create_order.write(detail_val)
+                    _val.update({'produce_details_ids': l})
+                to_create_order.write(_val)
                 self._display_record(_id)
                 details = purchase.search([('id', '=', _id)]).produce_details_ids
                 self.produce_details_ids = [(6, _, details.ids)]
@@ -164,7 +167,8 @@ class YcPurchaseDisplay(models.TransientModel):
             # 儲存會異動的就好
             skip = ['bucket_no', 'name', 'id', 'display_name', 'create_uid', 'create_date', 'write_uid', 'write_date', '__last_update']
             detail_list = []
-
+            # 製造明細的儲存，要先執行 抓取上一筆的onchange 在執行儲存才有作用
+            # 目前輸入
             for rec in self.produce_details_ids:
                 detail_vals = {}
                 for _f in rec._proper_fields._map.keys():
@@ -176,7 +180,8 @@ class YcPurchaseDisplay(models.TransientModel):
                         detail_vals.update({_f: rec[_f]})
                 detail_list.append((1, rec.id, detail_vals))
             vals.update({'product_code': self.product_code.id, 'batch': self.batch,
-                         'norm_code': self.norm_code.id, 'fullorhalf': self.fullorhalf,
+                         'norm_code': self.norm_code.id, 'fulorhaf': self.fulorhaf,
+                         # 'fullorhalf': self.fullorhalf,
                          'txtur_code': self.txtur_code.id, 'surface_code': self.surface_code.id,
                          'proces_code': self.proces_code.id, 'tensihrd': self.tensihrd,
                          'surfhrd': self.surfhrd, 'corehrd': self.corehrd,
@@ -255,7 +260,8 @@ class YcPurchaseDisplay(models.TransientModel):
         self.product_code = record.product_code
         self.batch = record.batch
         self.norm_code = record.norm_code
-        self.fullorhalf = record.fullorhalf
+        # self.fullorhalf = record.fullorhalf
+        self.fulorhaf = record.fulorhaf
         self.txtur_code = record.txtur_code
         self.surface_code = record.surface_code
         self.proces_code = record.proces_code
@@ -414,24 +420,8 @@ class YcPurchaseDisplay(models.TransientModel):
         self.save_entry_data()
 
 
-class YcProduceDetails(models.Model):
-    # 製造單項目檔
-    _inherit = "yc.produce.details"
+class YcPurchase(models.Model):
+    _inherit = "yc.purchase"
 
-    @api.onchange('recevieemptybucket')
-    def _auto_bring(self):
-        # 輸入收料空桶重，自動跳前一筆收料單位與收料人員
-        if self.recevieemptybucket != 0 and self.bucket_no != 1:
-            db = self.env[self._name]
-            former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
-            self.recevietunit = former.recevietunit.id
-            self.recevie_man = former.recevie_man.id
+    self_id = fields.Many2one('yc.purchase')
 
-    @api.onchange('rawweight')
-    def _auto_bring(self):
-        # 輸入生料重，自動跳前一筆入料單位與入料人員
-        if self.rawweight != 0 and self.bucket_no != 1:
-            db = self.env[self._name]
-            former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
-            self.unit = former.unit.id
-            self.feed_man = former.feed_man.id

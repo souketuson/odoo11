@@ -190,7 +190,8 @@ class YcPurchase(models.Model):
     norcls = fields.Char("規範分類")
     wxr_txtur = fields.Char("華司材質")
     wxrhard = fields.Char("華司硬度")
-    fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+    # fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+    fulorhaf = fields.Many2one('yc.setfulorhalf', string='牙分類')
 
     notices1 = fields.Char("注意事項1", default=lambda self: self._n1deault())
     notices2 = fields.Char("注意事項2", default=lambda self: self._n2deault())
@@ -627,7 +628,8 @@ class YcPurchase(models.Model):
                       'prodnote2', 'prodnote3', 'flow', 'cp', 'nh31', 'nh32', 'nh33', 'nh34', 'heat1',
                       'heat2', 'heat3', 'heat4', 'heat5', 'heat6', 'heat7', 'heat8', 'heattemp', 'heatsped',
                       'tempturing1', 'tempturing2', 'tempturing3', 'tempturing4', 'tempturing5',
-                      'tempturing6', 'tempturisped', 'fullorhalf'
+                      'tempturing6', 'tempturisped', 'fulorhaf'
+                      # 'fullorhalf',
                       ]
             checked.write({'wizard_check': False})
             record = purchase.search([('name', '=', checked.name)])
@@ -1133,24 +1135,31 @@ class YcProduceDetails(models.Model):
     # def _get_row_number(self):
     #     # condition1 新增: details檔 無關連record count不用檢查
     #     # condition2 修改: details檔 有關連record 可以重置count
-    #
     #     p = self.env['yc.purchase']
     #     self.bucket_no = p.search(
     #         [('name', '=', self.name.name), ('company_id', '=', self.env.user.company_id.id)]).count
     #     sql = "UPDATE yc_purchase SET count =%s WHERE name='%s'" % (str(self.bucket_no + 1), self.name.name)
     #     p._cr.execute(sql)
 
-    @api.onchange("rawweight", "emptybucket")
+    @api.onchange("rawweight", "emptybucket", 'tweight')
     def _get_rawnetweight(self):
         self.rawnetweight = self.rawweight - self.emptybucket
+        self.weightdiff = self.rawweight - self.tweight
+        if self.rawweight != 0 and self.bucket_no != 1:
+            db = self.env[self._name]
+            former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
+            self.unit = former.unit.id
+            self.feed_man = former.feed_man.id if not self.feed_man else self.feed_man
 
     @api.onchange('tweight', 'recevieemptybucket')
     def _get_tnetweight(self):
+        _action = self.env['ir.actions.act_window']
         self.tnetweight = self.tweight - self.recevieemptybucket
-
-    @api.onchange('rawweight', 'tweight')
-    def _get_weightdiff(self):
-        self.weightdiff = self.rawweight - self.tweight
+        if self.recevieemptybucket != 0 and self.bucket_no != 1:
+            db = self.env[self._name]
+            former = db.search([('name', '=', self.name.id), ('bucket_no', '=', self.bucket_no - 1)])
+            self.recevietunit = former.recevietunit.id
+            self.recevie_man = former.recevie_man.id if not self.recevie_man else self.recevie_man
 
     # 製造項目檔有存入一筆就跳過磅狀態為已過磅
     # @api.model

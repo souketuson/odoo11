@@ -110,7 +110,9 @@
                             <field name="strength_level" style="width:100px" class="test" readonly="1"/>
                             <span style="display:inline-block; width: 20px;"/>　
                             <label string="牙分類" style="font-weight:bold"/>
-                            <field name="fullorhalf" style="width:80px" class="test" readonly="1"/>
+                            <!--<field name="fullorhalf" style="width:80px" class="test" readonly="1"/>-->
+                            <field name="fulorhaf" style="width:80px" class="test" readonly="1"
+                                   options="{'no_open': True,'no_create': True}"/>
                             <br/>
                             <label string="加工方式" style="font-weight:bold"/>
                             <field name="proces_code" style="width:100px" class="test" readonly="1"/>

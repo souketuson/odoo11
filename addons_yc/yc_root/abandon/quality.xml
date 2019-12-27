@@ -34,7 +34,8 @@
                             <field name="product_code"/>
                             <field name="pre_furn"/>
                             <field name="norm_code"/>
-                            <field name="fullorhalf"/>
+                            <!--<field name="fullorhalf"/>-->
+                            <field name="fulorhaf" options="{'no_open': True,'no_create': True}"/>
                             <field name="currnt_furno"/>
                             <field name="txtur_code"/>
                             <field name="surface_code"/>

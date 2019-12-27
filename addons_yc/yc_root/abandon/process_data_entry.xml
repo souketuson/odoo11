@@ -66,8 +66,9 @@
                                     readonly="1"/>
                                     <span style="display:inline-block; width: 54px;"></span>
                                     <label string="牙分類" style="font-weight:bold"/>
-                                    <field name="fullorhalf" style="width: 150px"
-                                    readonly="1"/>
+                                    <!--<field name="fullorhalf" style="width: 150px"-->
+                                    <!--readonly="1"/>-->
+                                    <field name="fulorhaf" readonly="1" options="{'no_open': True,'no_create': True}"/>
                                     <br/>
                                     <label string="　　材質" style="font-weight:bold"/>
                                     <field name="txtur_code" style="width: 120px" options="{'no_open': True,'no_create': True}"

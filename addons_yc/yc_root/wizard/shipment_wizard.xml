@@ -29,7 +29,8 @@
                                 <field name="batch" string="客戶批號" readonly="1"/>
                                 <field name="product_code" string="品名" readonly="1"/>
                                 <field name="norm_code" string="規格" readonly="1"/>
-                                <field name="fullorhalf" string="牙分類" readonly="1"/>
+                                <!--<field name="fullorhalf" string="牙分類" readonly="1"/>-->
+                                <field name="fulorhaf" readonly="1" options="{'no_open': True,'no_create': True}"/>
                                 <field name="txtur_code" string="材質" readonly="1"/>
                                 <field name="proces_code" string="加工方式" readonly="1"/>
                                 <field name="elecpl_code" string="電鍍別" readonly="1"/>

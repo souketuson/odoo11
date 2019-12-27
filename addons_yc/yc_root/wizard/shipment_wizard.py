@@ -44,7 +44,8 @@ class YcShipmentWizard(models.TransientModel):
                 (0, 0, {'order': ref.name, 'furnace': ref.order_furn, 'product_code': ref.product_code,
                         'norm_code': ref.norm_code, 'txtur_code': ref.txtur_code, 'buckets': ref.weighbuckets,
                         'unit': ref.unit1, 'tweight': ref.tweight, 'elecpl_code': ref.elecpl_code,
-                        'process1': ref.process1, 'batch': ref.batch, 'fullorhalf': ref.fullorhalf,
+                        'process1': ref.process1, 'batch': ref.batch, 'fulorhaf': ref.fulorhaf,
+                        # 'fullorhalf': ref.fullorhalf,
                         'process2': ref.process2, 'day': ref.day, 'wire_furn': ref.wire_furn,
                         'proces_code': ref.proces_code, }
                  )]

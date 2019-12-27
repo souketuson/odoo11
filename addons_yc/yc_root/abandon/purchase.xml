@@ -199,8 +199,13 @@
                                                     <field name="len_descript" nolabel="1" placeholder="長度說明"
                                                            style="width:120px" tabindex="100"/>
                                                     <label string="牙分類" style="font-weight:bold"/>
-                                                    <field name="fullorhalf"
-                                                           style="width:100px;border: 1px black solid;"/>
+                                                    <!--<field name="fullorhalf"-->
+                                                           <!--style="width:100px;border: 1px black solid;"/>-->
+
+                                                    <field name="fulorhaf" options="{'no_open': True,'no_create': True}"
+                                                           style="width:100px;border: 1px black solid;"
+
+                                                    />
                                                     <br/>
                                                     <!--<span style="display:inline-block; width: 15px;"/>-->
                                                     <!--<field name="ck5" tabindex="-1"/>-->

@@ -43,5 +43,14 @@
             <field name="group_multi_company">True</field>
             <field name="company_share_partner">True</field>
         </record>
+
+
+
+        <record id="setfulorhalf0" model="yc.setfulorhalf">
+            <field name="name">全牙</field>
+        </record>
+        <record id="setfulorhalf1" model="yc.setfulorhalf">
+            <field name="name">半牙</field>
+        </record>
     </data>
 </odoo>

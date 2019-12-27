@@ -54,7 +54,8 @@
                                     <field name="norm_code" style="width: 90px"/>
                                     <span style="display:inline-block; width: 84px;"/>
                                     <label string="牙分類" style="font-weight:bold"/>
-                                    <field name="fullorhalf" style="width: 120px"/>
+                                    <!--<field name="fullorhalf" style="width: 120px"/>-->
+                                    <field name="fulorhaf" style="width: 120px" options="{'no_open': True,'no_create': True}"/>
                                     <br/>
                                     <label string="　　材質" style="font-weight:bold"/>
                                     <field name="txtur_code" style="width: 90px"/>

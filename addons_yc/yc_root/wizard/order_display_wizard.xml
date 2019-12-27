@@ -172,7 +172,8 @@
                                    readonly="1"/>
                             <span style="display:inline-block; width: 10px;"/>　
                             <label string="牙分類" style="font-weight:bold"/>
-                            <field name="fullorhalf" style="width:80px" readonly="1"/>
+                            <!--<field name="fullorhalf" style="width:80px" readonly="1"/>-->
+                            <field name="fulorhaf" style="width:80px" readonly="1" options="{'no_open': True,'no_create': True}"/>
                             <br/>
                             <!--<field name="ck5"/>-->
                             <label string="加工方式" style="font-weight:bold"/>

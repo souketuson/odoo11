@@ -48,7 +48,8 @@
                                     <field name="txtur_code"/>
                                     <field name="surface_code"/>
                                     <field name="strength_level"/>
-                                    <field name="fullorhalf"/>
+                                    <!--<field name="fullorhalf"/>-->
+                                    <field name="fulorhaf" options="{'no_open': True,'no_create': True}"/>
                                     <field name="proces_code"/>
                                 </group>
                                 <group col="6">

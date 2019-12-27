@@ -299,3 +299,8 @@ class YcSettorsion(models.Model):
     parameter1 = fields.Char("扭力值1")
     parameter2 = fields.Char("扭力值2")
 
+class YcSetfulorhalf(models.Model):
+    _name = 'yc.setfulorhalf'
+    name = fields.Char(string='名稱')
+
+

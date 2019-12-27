@@ -64,6 +64,7 @@
                             </header>
                             <div class="block1">
                                 <group col="8">
+                                    <field name="self_id"/>
                                     <field name="day" style="width: 110px; font-size: smaller;"/>
                                     <field name="copy_createdate" attrs="{'readonly': True }"/>
                                     <field name="time" default_focus="1" style=" font-size: smaller;"/>
@@ -154,8 +155,9 @@
                                         <field name="len_code" style="width: 110px; font-size: smaller;"
                                                options="{'no_open': True,'no_create': True}"/>
                                         <field name="len_descript" placeholder="長度說明" style="width: 80px;"/>
-                                        <field name="fullorhalf" style="width: 110px; font-size: smaller;"/>
-
+                                        <!--<field name="fullorhalf" style="width: 110px; font-size: smaller;"/>-->
+                                        <field name="fulorhaf" style="width: 110px; font-size: smaller;"
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <field name="proces_code" options="{'no_open': True,'no_create': True}"
                                                style="width: 60px"/>
                                         <field name="surface_code" style="width: 110px; font-size: smaller;"

@@ -20,7 +20,8 @@ class YcPurchaseDisplay(models.TransientModel):
     product_code = fields.Many2one("yc.setproduct", string="品名")
     batch = fields.Char("客戶批號")
     norm_code = fields.Many2one("yc.setnorm", string="規格")
-    fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+    # fullorhalf = fields.Selection([('半牙', '半牙'), ('全牙', '全牙'), ('無', '無')], '全或半牙')
+    fulorhaf = fields.Many2one('yc.setfulorhalf', string='牙分類')
     txtur_code = fields.Many2one("yc.settexture", string="材質")
     surface_code = fields.Many2one("yc.setsurface", string="表面處理")
     proces_code = fields.Many2one("yc.setprocess", string="加工方式")
@@ -144,7 +145,8 @@ class YcPurchaseDisplay(models.TransientModel):
                         detail_vals.update({_f: rec[_f]})
                 detail_list.append((1, rec.id, detail_vals))
             vals.update({'product_code': self.product_code.id, 'batch': self.batch,
-                         'norm_code': self.norm_code.id, 'fullorhalf': self.fullorhalf,
+                         'norm_code': self.norm_code.id,'fulorhaf': self.fulorhaf,
+                         # 'fullorhalf': self.fullorhalf,
                          'txtur_code': self.txtur_code.id, 'surface_code': self.surface_code.id,
                          'proces_code': self.proces_code.id, 'tensihrd': self.tensihrd,
                          'surfhrd': self.surfhrd, 'corehrd': self.corehrd,
@@ -215,7 +217,7 @@ class YcPurchaseDisplay(models.TransientModel):
     # 計算桶數差(bdiff)
     @api.depends('totalpack', 'weighbuckets')
     def _bdiff_counter(self):
-        self.bdiff = int(self.totalpack) - int(self.weighbuckets)
+        self.bdiff = int(float(0 if not self.totalpack else self.totalpack)) - int(self.weighbuckets)
 
     # 為了讓下一筆能抓到上一筆資料，更動明細一定要要先跑儲存
     @api.onchange('produce_details_ids')

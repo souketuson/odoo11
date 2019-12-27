@@ -71,8 +71,11 @@
                                         attrs="{'readonly': [('order_name', '!=',False)]}"/>
                                         <span style="display:inline-block; width: 84px;"/>
                                         <label string="牙分類" style="font-weight:bold"/>
-                                        <field name="fullorhalf" style="width: 120px"
-                                        attrs="{'readonly': [('order_name', '!=',False)]}"/>
+                                        <!--<field name="fullorhalf" style="width: 120px"-->
+                                        <!--attrs="{'readonly': [('order_name', '!=',False)]}"/>-->
+                                        <field name="fulorhaf" style="width: 120px"
+                                        attrs="{'readonly': [('order_name', '!=',False)]}"
+                                               options="{'no_open': True,'no_create': True}"/>
                                         <br/>
                                         <label string="　　材質" style="font-weight:bold"/>
                                         <field name="txtur_code" style="width: 90px"
@@ -200,7 +203,7 @@
                                                    style="width: 700px;">
                                                 <tree create="false" delete="false" string="Produce Details"
                                                       editable="bottom">
-                                                    <!--<field name="name"/>-->
+                                                    <field name="name" invisible="1"/>
                                                     <field name="bucket_no" readonly="1"/>
                                                     <field name="rawweight"/>
                                                     <field name="emptybucket"/>

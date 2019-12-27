@@ -74,8 +74,11 @@
                                        attrs="{'readonly': [('name', '!=',False)]}"/>
                                 <span style="display:inline-block; width: 10px;"/>
                                 <label string="牙分類" class="custom_label"/>
-                                <field name="fullorhalf" style="width: 100px"
-                                       attrs="{'readonly': [('name', '!=',False)]}"/>
+                                <!--<field name="fullorhalf" style="width: 100px"-->
+                                       <!--attrs="{'readonly': [('name', '!=',False)]}"/>-->
+                                <field name="fulorhaf" style="width: 100px"
+                                        attrs="{'readonly': [('name', '!=',False)]}"
+                                               options="{'no_open': True,'no_create': True}"/>
                                 <span style="display:inline-block; width: 10px;"/>
                                 <label string="材質" class="custom_label"/>
                                 <field name="txtur_code"
