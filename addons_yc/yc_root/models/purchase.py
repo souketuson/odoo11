@@ -280,6 +280,7 @@ class YcPurchase(models.Model):
     wxrhrd6 = fields.Float("華司硬度值6")
     wxrhrd7 = fields.Float("華司硬度值7")
     wxrhrd8 = fields.Float("華司硬度值8")
+    # TODO: icritetia似乎用不到 (和standard重疊)
     icritetia = fields.Char("國際標準")
     tensile_no = fields.Selection([('50T', '50T'), ('100T', '100T')], '拉力機編號')
     sfhn = fields.Many2one("yc.sethardness", string="表面硬度規格")

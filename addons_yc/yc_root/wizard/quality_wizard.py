@@ -391,6 +391,7 @@ class YcQualityWizard(models.TransientModel):
     # image = fields.Binary('Image', default=_default_image, attachment=True,
     #                       help="background img.")
 
+    @api.onchange('searchname', 'checked', 'notchecked', 'invalid')
     def quality_review_search_name(self):
         if bool(self.searchname or self.checked or self.notchecked or self.invalid) == True:
             purchase = self.env["yc.purchase"]
@@ -411,10 +412,10 @@ class YcQualityWizard(models.TransientModel):
         # TODO: 整理進貨主檔，在各資料表那些欄位有需要把資料寫出
         #  oder: yc.purchase > yc.purchase.process > yc.purchase.quantity >
         #        yc.quality.wizard > yc.quality.invalid
-        functional_group = ['order_furn', 'notweighted_order', 'weighted_order', 'searchname',
-                            'invalid', 'invalid_followup', 'checked', 'notchecked',
+        functional_group = ['notweighted_order', 'weighted_order','invalid_followup',
                             'furn_in', 'furn_notin', 'count', 'produce_details_ids']
-        invalid_group = ['pweight', 'tweight', 'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
+        invalid_group = ['invalid', 'order_furn', 'searchname', 'checked', 'notchecked', 'pweight', 'tweight',
+                         'totalpack', 'feedbucket', 'feedweight', 'weighbuckets',
                          'bdiff', 'wdiff', 'uqweight', 'uqbucket', 'produce_details_ids', 'notices4']
 
         _action = self.env['ir.actions.act_window']
@@ -428,6 +429,19 @@ class YcQualityWizard(models.TransientModel):
                     setattr(self, fn, record.name)
                 elif fn in functional_group:
                     setattr(self, fn, None)
+                elif fn in ['sfhn', 'chn']:
+                    if not getattr(record, fn):
+                        db = self.env['yc.mechanicalproperty']
+                        hrd = self.env['yc.sethardness']
+                        std = getattr(record, 'standard')
+                        mp = db.search([('standard', '=', std)])
+                        # surfhrd、corehrd
+                        sfhn = hrd.search([('name', '=', mp.surfaceform)])
+                        chn = hrd.search([('name', '=', mp.coreform)])
+                        if fn == 'sfhn':
+                            setattr(self, fn, sfhn.id)
+                        else:
+                            setattr(self, fn, chn.id)
                 else:
                     _value = getattr(record, fn)
                     setattr(self, fn, _value)

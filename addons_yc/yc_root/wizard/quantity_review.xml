@@ -198,7 +198,7 @@
                                                     name="save_entry_data" icon="fa-save" style=""/>
                                         </div>
                                         <div style="height:10px;"></div>
-                                        <div style="overflow-x: auto;">
+                                        <div style="overflow-x: auto;height: 260px;">
                                             <field name="produce_details_ids"
                                                    style="width: 700px;">
                                                 <tree create="false" delete="false" string="Produce Details"
