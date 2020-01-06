@@ -135,8 +135,11 @@ class YcSetstrength(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
-        if (name[0:1].capitalize() == 'G' and name[1:2]) or (name[0:5].capitalize() == 'GRADE'):
-            domain = [('name', operator, "Grade %s" % name[1:4])]
+        if (name[0:1].capitalize() == 'G' and name[1:2]) or (name[0:5].upper() == 'GRADE'):
+            domain = [('name', operator,
+                       "Grade %s" % name.upper().replace('G', '').replace('R', '').replace('A', '').replace('D',
+                                                                                                            '').replace(
+                           'E', '').replace(' ',''))]
         else:
             domain = [('name', operator, name)]
         product = self.search(domain + args, limit=limit, order='name asc')
@@ -169,7 +172,6 @@ class YcSetnorm(models.Model):
             domain = [('name', operator, name)]
         norm = self.search(domain + args, limit=limit, order='name asc')
         return norm.name_get()
-
 
 
 class YcSetlength(models.Model):
@@ -229,6 +231,7 @@ class YcSeteunit(models.Model):
     name = fields.Char("單位名稱")
     code = fields.Char("單位代碼")
 
+
 class YcSetPurchasenote(models.Model):
     # 製造備註 S03N0012
     _name = "yc.setpurchasenote"
@@ -254,10 +257,12 @@ class YcFactory(models.Model):
     name = fields.Char("廠別名稱")
     code = fields.Char("廠別代碼")
 
+
 class YcSetStoreplace(models.Model):
     _name = "yc.setstoreplace"
     name = fields.Char("存放地點")
     company_id = fields.Many2one("res.company", string='所屬工廠')
+
 
 # S04
 class YcSetproducenote(models.Model):
@@ -289,6 +294,7 @@ class YcSetqcnote(models.Model):
     parameter2 = fields.Char("參數2")
     parameter3 = fields.Char("參數3")
 
+
 class YcSettorsion(models.Model):
     # 品質管理-扭力 S04N0005
     _name = "yc.settorsion"
@@ -299,8 +305,7 @@ class YcSettorsion(models.Model):
     parameter1 = fields.Char("扭力值1")
     parameter2 = fields.Char("扭力值2")
 
+
 class YcSetfulorhalf(models.Model):
     _name = 'yc.setfulorhalf'
     name = fields.Char(string='名稱')
-
-

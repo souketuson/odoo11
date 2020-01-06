@@ -64,7 +64,7 @@
                             </header>
                             <div class="block1">
                                 <group col="8">
-                                    <field name="self_id"/>
+                                    <!--<field name="self_id"/>-->
                                     <field name="day" style="width: 110px; font-size: smaller;"/>
                                     <field name="copy_createdate" attrs="{'readonly': True }"/>
                                     <field name="time" default_focus="1" style=" font-size: smaller;"/>
@@ -130,7 +130,7 @@
                                                    style="width:30px;"/>
                                             <field name="name" readonly="1"/>
                                             <field name="pre_order" readonly="1"/>
-                                            <field name="notices3" readonly="1"/>
+                                            <field name="uqtreat" readonly="1"/>
                                         </tree>
                                     </field>
                                 </div>

@@ -600,6 +600,7 @@ class YcPurchase(models.Model):
                 #   left join (select 前工令號碼 from 進貨單主檔) b on a.工令號碼=b.前工令號碼"
                 #   WHERE 處理方式='轉入進貨單' and b.前工令號碼 is null"
                 #   order by 工令號碼 ASC"
+                domain.append(('pre_order', '=', ''))
                 purchase = self.env['yc.purchase'].search(domain)
                 self.return_in_fac_ids = [(6, _, purchase.ids)]
 

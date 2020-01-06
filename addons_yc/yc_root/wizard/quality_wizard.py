@@ -453,6 +453,20 @@ class YcQualityWizard(models.TransientModel):
                     setattr(self, fn, record.name)
                 elif fn in functional_group:
                     setattr(self, fn, None)
+                elif fn in ['sfhn', 'chn']:
+                    if not getattr(record, fn):
+                        db = self.env['yc.mechanicalproperty']
+                        hrd = self.env['yc.sethardness']
+                        std = getattr(record, 'standard')
+                        # TODO: 目前這裡會遇到標準名字完全一樣的問題，如果搜尋到多筆，會造成錯誤
+                        mp = db.search([('standard', '=', std)])[0]
+                        # surfhrd、corehrd
+                        sfhn = hrd.search([('name', '=', mp.surfaceform)])
+                        chn = hrd.search([('name', '=', mp.coreform)])
+                        if fn == 'sfhn':
+                            setattr(self, fn, sfhn.id)
+                        else:
+                            setattr(self, fn, chn.id)
                 else:
                     _value = getattr(record, fn)
                     setattr(self, fn, _value)

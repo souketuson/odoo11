@@ -95,6 +95,8 @@
                                                    options="{'no_open': True,'no_create': True}"/>
                                             <field name="norm_code" readonly="1"
                                                    options="{'no_open': True,'no_create': True}"/>
+                                            <field name="len_code" readonly="1" options="{'no_open': True,'no_create': True}"/>
+                                            <field name="len_descript" readonly="1"/>
                                             <field name="txtur_code" readonly="1"
                                                    options="{'no_open': True,'no_create': True}"/>
                                             <field name="surface_code" string="表面" readonly="1"
